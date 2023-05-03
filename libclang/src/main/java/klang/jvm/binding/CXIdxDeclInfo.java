@@ -25,7 +25,7 @@ import org.jetbrains.annotations.Nullable;
              "isDefinition", "isContainer", "declAsContainer", "isImplicit", "attributes", "numAttributes"})
 public class CXIdxDeclInfo extends Structure {
     public CXIdxEntityInfo.ByReference entityInfo;
-    public CXCursor.ByValue cursor;
+    public CXCursor.CXCursorByValue cursor;
     public CXIdxLoc.ByValue loc;
     public CXIdxContainerInfo.ByReference semanticContainer;
     public CXIdxContainerInfo.ByReference lexicalContainer;

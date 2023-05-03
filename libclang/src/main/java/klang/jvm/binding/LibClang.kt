@@ -10,9 +10,9 @@ import klang.jvm.TranslationUnit
 interface LibClang : Library {
     fun getClangVersion(): String
     fun getFileName(file: CXFile): String
-    fun getCursorSpelling(cursor: CXCursor.ByValue): String
+    fun getCursorSpelling(cursor: CXCursor.CXCursorByValue): String
     fun getCursorKindSpelling(kind: Int): String
-    fun getCursorType(cursor: CXCursor.ByValue): CXType.ByValue
+    fun getCursorType(cursor: CXCursor.CXCursorByValue): CXType.ByValue
     fun getTypeKindSpelling(kind: Int): String
     fun createIndex(excludeDeclarationsFromPCH: Boolean, displayDiagnostics: Boolean): Index
     fun disposeIndex(index: Index)

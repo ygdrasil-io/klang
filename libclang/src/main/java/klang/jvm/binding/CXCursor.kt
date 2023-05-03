@@ -1,15 +1,17 @@
+package klang.jvm.binding
 
-package klang.jvm.binding;
+import com.sun.jna.Pointer
+import com.sun.jna.Structure
 
-import com.sun.jna.Pointer;
-import com.sun.jna.Structure;
+@Suppress("unused")
+@Structure.FieldOrder("kind", "xdata", "data")
+open class CXCursor : Structure() {
+    @JvmField
+    var kind = 0
+    @JvmField
+    var xdata = 0
+    @JvmField
+    var data = arrayOfNulls<Pointer>(3)
 
-@SuppressWarnings("unused")
-@Structure.FieldOrder({"kind", "xdata", "data"})
-public class CXCursor extends Structure {
-    public int kind;
-    public int xdata;
-    public Pointer[] data = new Pointer[3];
-    
-    public static class ByValue extends CXCursor implements Structure.ByValue {}
+    class CXCursorByValue : CXCursor(), ByValue
 }

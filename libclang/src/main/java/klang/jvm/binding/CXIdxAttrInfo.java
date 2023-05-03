@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 @Structure.FieldOrder({"kind", "cursor", "loc"})
 public class CXIdxAttrInfo extends Structure {
     public int kind;
-    public CXCursor.ByValue cursor;
+    public CXCursor.CXCursorByValue cursor;
     public CXIdxLoc.ByValue loc;
 
     public CXIdxAttrInfo(@NotNull Pointer pointer) {

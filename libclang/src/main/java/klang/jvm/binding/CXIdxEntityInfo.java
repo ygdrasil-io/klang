@@ -13,7 +13,7 @@ public class CXIdxEntityInfo extends Structure {
     public int lang;
     public String name;
     public String USR;
-    public CXCursor.ByValue cursor;
+    public CXCursor.CXCursorByValue cursor;
     @Nullable
     public PointerByReference /* CXIdxAttrInfo */ attributes;
     public int numAttributes;

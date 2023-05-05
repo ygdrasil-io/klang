@@ -29,12 +29,13 @@ class BasicTest : StringSpec({
     }
 
     "test ParseTranslationUnit" {
-        val index = clang_createIndex(false, false)
-        index.parseTranslationUnit(createTempFileWithContents("").absolutePath, arrayOf())
+        createIndex(excludeDeclarationsFromPCH = false, false).use { index ->
+            index.parseTranslationUnit(createTempFileWithContents("").absolutePath, arrayOf())
+        }
     }
 
     "test TranslationException" {
-        val index = clang_createIndex(false, false)
+        val index = createIndex(excludeDeclarationsFromPCH = false, false)
         try {
             index.parseTranslationUnit(null, arrayOf())
             error("TranslationException expected")
@@ -44,7 +45,7 @@ class BasicTest : StringSpec({
     }
 
     "test DiagnosticDisplayOptions" {
-        val index = clang_createIndex(false, false)
+        val index = createIndex(excludeDeclarationsFromPCH = false, false)
         val unit = index.parseTranslationUnit(getDir() + "diagnosticDisplayOptions.h", arrayOf())
         val diagnostics = unit.diagnostics
         diagnostics.size shouldBe 1
@@ -68,7 +69,7 @@ class BasicTest : StringSpec({
     }
 
     "test DiagnosticSeverity" {
-        val index = clang_createIndex(false, false)
+        val index = createIndex(excludeDeclarationsFromPCH = false, false)
         val unit = index.parseTranslationUnit(getDir() + "diagnosticSeverity.h", arrayOf())
         val diagnostics = unit.diagnostics
         val actual: MutableList<Diagnostic.Severity> = ArrayList(diagnostics.size)

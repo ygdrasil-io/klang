@@ -72,7 +72,7 @@ class IndexTest : StringSpec({
     "test IndexObjCAttributes" {
         val sw = StringWriter()
         val out = PrintWriter(sw)
-        val index = clang_createIndex(false, false)
+        val index = createIndex(excludeDeclarationsFromPCH = false, displayDiagnostics = false)
         index.indexSourceFile(object : AbstractIndexerCallback() {
             override fun indexDeclaration(info: DeclarationInfo) {
                 out.println(info.cursor.spelling)
@@ -92,7 +92,7 @@ class IndexTest : StringSpec({
     "test IndexContainerInfo" {
         val sw = StringWriter()
         val out = PrintWriter(sw)
-        val index = clang_createIndex(false, false)
+        val index = createIndex(excludeDeclarationsFromPCH = false, displayDiagnostics = false)
         index.indexSourceFile(object : AbstractIndexerCallback() {
             override fun indexDeclaration(info: DeclarationInfo) {
                 out.println(nonEmptyCursorSpelling(info.cursor))
@@ -127,6 +127,6 @@ private fun getTestDeclarationsFile(): String {
 }
 
 private fun indexTestDeclarations(callback: IndexerCallback): TranslationUnit {
-    val index = clang_createIndex(false, false)
+    val index = createIndex(excludeDeclarationsFromPCH = false, displayDiagnostics = false)
     return index.indexSourceFile(callback, getTestDeclarationsFile(), arrayOf())
 }

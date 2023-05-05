@@ -5,6 +5,7 @@ import klang.jvm.clang_createIndex
 import klang.jvm.Diagnostic
 import klang.jvm.Diagnostic.DisplayOptions
 import klang.jvm.NativePool
+import klang.jvm.createIndex
 import java.io.File
 import java.io.PrintWriter
 import java.io.StringWriter
@@ -25,7 +26,7 @@ class DiagnosticTest : StringSpec({
     files.forEach { file ->
         "test ${file.name}" {
 
-            val index = clang_createIndex(false, false)
+            val index = createIndex(excludeDeclarationsFromPCH = false, displayDiagnostics = false)
             val unit = index.parseTranslationUnit(file.path, arrayOf())
             val diagnostics = unit.diagnostics
             val actual: String = serializeDiagnostics(diagnostics)

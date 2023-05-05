@@ -25,6 +25,10 @@ class Diagnostic : PointerType() {
         return Clang.formatDiagnostic(this, flags)
     }
 
+    fun spelling(): String {
+        return Clang.getDiagnosticSpelling(this)
+    }
+
     val severity: Severity
         get() {
             val severity = Clang.getDiagnosticSeverity(this)

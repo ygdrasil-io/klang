@@ -4,10 +4,11 @@ import com.sun.jna.FunctionMapper
 import com.sun.jna.Library
 import com.sun.jna.Native
 import com.sun.jna.NativeLibrary
+import klang.jvm.binding.CXIndex
 import klang.jvm.binding.LibClang
 import java.lang.reflect.Method
 
-fun clang_createIndex(excludeDeclarationsFromPCH: Boolean, displayDiagnostics: Boolean): Index =
+fun clang_createIndex(excludeDeclarationsFromPCH: Boolean, displayDiagnostics: Boolean = false): CXIndex =
     Clang.createIndex(excludeDeclarationsFromPCH, displayDiagnostics).let {
         NativePool.record(it)
     }

@@ -1,14 +1,16 @@
 package klang.jvm
 
+import klang.jvm.binding.CXIndex
 import klang.jvm.binding.CXIndexAction
+import klang.jvm.binding.CXTranslationUnit
 
 object NativePool {
-    private val translationUnits: MutableList<TranslationUnit> = mutableListOf()
-    private val diagnostics: MutableList<Diagnostic> = mutableListOf()
-    private val indexActions: MutableList<CXIndexAction> = mutableListOf()
-    private val indexes: MutableList<Index> = mutableListOf()
+    private val translationUnits = mutableListOf<CXTranslationUnit>()
+    private val diagnostics = mutableListOf<Diagnostic>()
+    private val indexActions = mutableListOf<CXIndexAction>()
+    private val indexes = mutableListOf<CXIndex>()
 
-    fun record(translationUnit: TranslationUnit): TranslationUnit {
+    fun record(translationUnit: CXTranslationUnit): CXTranslationUnit {
         translationUnits.add(translationUnit)
         return translationUnit
     }
@@ -23,7 +25,7 @@ object NativePool {
         return indexAction
     }
 
-    fun record(index: Index): Index {
+    fun record(index: CXIndex): CXIndex {
         indexes.add(index)
         return index
     }

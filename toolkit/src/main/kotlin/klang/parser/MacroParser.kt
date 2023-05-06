@@ -194,7 +194,7 @@ internal class MacroParser private constructor(
 
         fun reparseConstants(): List<Constant> {
             var last = -1
-            while (macrosByMangledName.size > 0 && last != macrosByMangledName.size) {
+            while (macrosByMangledName.isNotEmpty() && last != macrosByMangledName.size) {
                 last = macrosByMangledName.size
                 // step 1 - try parsing macros as var declarations
                 reparseMacros(false)
@@ -213,7 +213,7 @@ internal class MacroParser private constructor(
                 }
         }
 
-        fun updateTable(typeMaker: TypeMaker, declaration: Cursor) = with(declaration) {
+        private fun updateTable(typeMaker: TypeMaker, declaration: Cursor) = with(declaration) {
             val mangledName = declaration.spelling
             val entry = macrosByMangledName[mangledName]
             declaration.evaluate()?.use { result ->
@@ -240,7 +240,7 @@ internal class MacroParser private constructor(
             }
         }
 
-        fun reparseMacros(recovery: Boolean) {
+        private fun reparseMacros(recovery: Boolean) {
             val snippet = macroDecl(recovery)
             val treeMaker = TreeMaker(parsingContext)
             try {
@@ -256,7 +256,7 @@ internal class MacroParser private constructor(
             }
         }
 
-        fun macroDecl(recovery: Boolean): String {
+        private fun macroDecl(recovery: Boolean): String {
             val buf = StringBuilder()
             if (recovery) {
                 buf.append("#include <stdint.h>\n")

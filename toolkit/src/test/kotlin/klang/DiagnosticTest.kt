@@ -25,12 +25,12 @@ class DiagnosticTest : StringSpec({
 
     files.forEach { file ->
         "test ${file.name}" {
-
-            val index = createIndex(excludeDeclarationsFromPCH = false, displayDiagnostics = false)
-            val unit = index.parseTranslationUnit(file.path, arrayOf())
-            val diagnostics = unit.diagnostics
-            val actual: String = serializeDiagnostics(diagnostics)
-            createOrCompare(actual, file.toString() + EXPECTED_SUFFIX)
+            createIndex(excludeDeclarationsFromPCH = false, displayDiagnostics = false).use { index ->
+                val unit = index.parseTranslationUnit(file.path, arrayOf())
+                val diagnostics = unit.diagnostics
+                val actual: String = serializeDiagnostics(diagnostics)
+                createOrCompare(actual, file.toString() + EXPECTED_SUFFIX)
+            }
         }
     }
 

@@ -90,25 +90,26 @@ class IndexTest : StringSpec({
     }
 
     "test IndexContainerInfo" {
-        val sw = StringWriter()
-        val out = PrintWriter(sw)
-        val index = createIndex(excludeDeclarationsFromPCH = false, displayDiagnostics = false)
-        index.indexSourceFile(object : AbstractIndexerCallback() {
-            override fun indexDeclaration(info: DeclarationInfo) {
-                out.println(nonEmptyCursorSpelling(info.cursor))
-                printContainerCursor(info.semanticContainer)
-                printContainerCursor(info.lexicalContainer)
-                printContainerCursor(info.declAsContainer)
-            }
+        createIndex(excludeDeclarationsFromPCH = false, displayDiagnostics = false).use { index ->
+            val sw = StringWriter()
+            val out = PrintWriter(sw)
+            index.indexSourceFile(object : AbstractIndexerCallback() {
+                override fun indexDeclaration(info: DeclarationInfo) {
+                    out.println(nonEmptyCursorSpelling(info.cursor))
+                    printContainerCursor(info.semanticContainer)
+                    printContainerCursor(info.lexicalContainer)
+                    printContainerCursor(info.declAsContainer)
+                }
 
-            private fun printContainerCursor(container: ContainerInfo?) {
-                if (container == null) return
-                val cursor = container.cursor
-                out.println("  " + cursor.kind + " " + nonEmptyCursorSpelling(cursor))
-            }
-        }, getDir() + "containerInfo.h", arrayOf("-c", "-x", "c++"))
-        out.close()
-        createOrCompare(sw.toString(), getDir() + "containerInfo.txt")
+                private fun printContainerCursor(container: ContainerInfo?) {
+                    if (container == null) return
+                    val cursor = container.cursor
+                    out.println("  " + cursor.kind + " " + nonEmptyCursorSpelling(cursor))
+                }
+            }, getDir() + "containerInfo.h", arrayOf("-c", "-x", "c++"))
+            out.close()
+            createOrCompare(sw.toString(), getDir() + "containerInfo.txt")
+        }
     }
 
 })
@@ -127,6 +128,7 @@ private fun getTestDeclarationsFile(): String {
 }
 
 private fun indexTestDeclarations(callback: IndexerCallback): TranslationUnit {
-    val index = createIndex(excludeDeclarationsFromPCH = false, displayDiagnostics = false)
-    return index.indexSourceFile(callback, getTestDeclarationsFile(), arrayOf())
+    createIndex(excludeDeclarationsFromPCH = false, displayDiagnostics = false).use { index ->
+        return index.indexSourceFile(callback, getTestDeclarationsFile(), arrayOf())
+    }
 }

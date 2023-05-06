@@ -35,52 +35,59 @@ class BasicTest : StringSpec({
     }
 
     "test TranslationException" {
-        val index = createIndex(excludeDeclarationsFromPCH = false, false)
-        try {
-            index.parseTranslationUnit(null, arrayOf())
-            error("TranslationException expected")
-        } catch (_: TranslationException) {
+        createIndex(excludeDeclarationsFromPCH = false, false).use { index ->
+            try {
+                index.parseTranslationUnit(null, arrayOf())
+                error("TranslationException expected")
+            } catch (_: TranslationException) {
 
+            }
         }
     }
 
     "test DiagnosticDisplayOptions" {
-        val index = createIndex(excludeDeclarationsFromPCH = false, false)
-        val unit = index.parseTranslationUnit(getDir() + "diagnosticDisplayOptions.h", arrayOf())
-        val diagnostics = unit.diagnostics
-        diagnostics.size shouldBe 1
-        val diagnostic = diagnostics.iterator().next()
-        val sw = StringWriter()
-        val out = PrintWriter(sw)
-        out.println(diagnostic.format(Diagnostic.DisplayOptions.DISPLAY_SOURCE_LOCATION))
-        out.println(diagnostic.format(
-            Diagnostic.DisplayOptions.DISPLAY_SOURCE_LOCATION,
-            Diagnostic.DisplayOptions.DISPLAY_COLUMN
-        ))
-        out.println(diagnostic.format(
-            Diagnostic.DisplayOptions.DISPLAY_SOURCE_LOCATION,
-            Diagnostic.DisplayOptions.DISPLAY_SOURCE_RANGES
-        ))
-        out.println(diagnostic.format(Diagnostic.DisplayOptions.DISPLAY_OPTION))
-        out.println(diagnostic.format(Diagnostic.DisplayOptions.DISPLAY_CATEGORY_ID))
-        out.println(diagnostic.format(Diagnostic.DisplayOptions.DISPLAY_CATEGORY_NAME))
-        out.close()
-        createOrCompare(sw.toString(), getDir() + "diagnosticDisplayOptions.txt")
+        createIndex(excludeDeclarationsFromPCH = false, false).use { index ->
+            val unit = index.parseTranslationUnit(getDir() + "diagnosticDisplayOptions.h", arrayOf())
+            val diagnostics = unit.diagnostics
+            diagnostics.size shouldBe 1
+            val diagnostic = diagnostics.iterator().next()
+            val sw = StringWriter()
+            val out = PrintWriter(sw)
+            out.println(diagnostic.format(Diagnostic.DisplayOptions.DISPLAY_SOURCE_LOCATION))
+            out.println(
+                diagnostic.format(
+                    Diagnostic.DisplayOptions.DISPLAY_SOURCE_LOCATION,
+                    Diagnostic.DisplayOptions.DISPLAY_COLUMN
+                )
+            )
+            out.println(
+                diagnostic.format(
+                    Diagnostic.DisplayOptions.DISPLAY_SOURCE_LOCATION,
+                    Diagnostic.DisplayOptions.DISPLAY_SOURCE_RANGES
+                )
+            )
+            out.println(diagnostic.format(Diagnostic.DisplayOptions.DISPLAY_OPTION))
+            out.println(diagnostic.format(Diagnostic.DisplayOptions.DISPLAY_CATEGORY_ID))
+            out.println(diagnostic.format(Diagnostic.DisplayOptions.DISPLAY_CATEGORY_NAME))
+            out.close()
+            createOrCompare(sw.toString(), getDir() + "diagnosticDisplayOptions.txt")
+        }
     }
 
     "test DiagnosticSeverity" {
-        val index = createIndex(excludeDeclarationsFromPCH = false, false)
-        val unit = index.parseTranslationUnit(getDir() + "diagnosticSeverity.h", arrayOf())
-        val diagnostics = unit.diagnostics
-        val actual: MutableList<Diagnostic.Severity> = ArrayList(diagnostics.size)
-        for (diagnostic in diagnostics) {
-            actual.add(diagnostic.severity)
+        createIndex(excludeDeclarationsFromPCH = false, false).use { index ->
+            val unit = index.parseTranslationUnit(getDir() + "diagnosticSeverity.h", arrayOf())
+            val diagnostics = unit.diagnostics
+            val actual: MutableList<Diagnostic.Severity> = ArrayList(diagnostics.size)
+            for (diagnostic in diagnostics) {
+                actual.add(diagnostic.severity)
+            }
+            actual shouldBe listOf(
+                Diagnostic.Severity.ERROR,
+                Diagnostic.Severity.WARNING,
+                Diagnostic.Severity.FATAL
+            )
         }
-        actual shouldBe listOf(
-            Diagnostic.Severity.ERROR,
-            Diagnostic.Severity.WARNING,
-            Diagnostic.Severity.FATAL
-        )
     }
 
     "test CursorKinds" {

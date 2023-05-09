@@ -1,3 +1,4 @@
 rootProject.name = "klang"
 
-include("libclang", "toolkit")
+include("jclang")
+//, "libclang", "toolkit")

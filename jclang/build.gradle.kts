@@ -1,13 +1,19 @@
 plugins {
-    id("java")
     kotlin("jvm")
 }
 
-group = "org.example"
-version = "unspecified"
+kotlin {
+    jvmToolchain(17)
 
-repositories {
-    mavenCentral()
+    sourceSets.all {
+        languageSettings {
+            java {
+                sourceCompatibility = JavaVersion.VERSION_17
+                targetCompatibility = JavaVersion.VERSION_17
+            }
+            languageVersion = "2.0"
+        }
+    }
 }
 
 dependencies {

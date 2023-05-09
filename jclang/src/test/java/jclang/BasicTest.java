@@ -29,7 +29,7 @@ public class BasicTest extends ClangTest {
 
     @Test
     public void testVersion() {
-        assertEquals("clang version 3.2 (tags/RELEASE_32/final)", Clang.INSTANCE.getVersion());
+        assertEquals("clang version 9.0.1".trim(), Clang.INSTANCE.getVersion().trim());
     }
 
     @Test

@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 
 /* package */ interface LibClang extends Library {
-    LibClang I = Native.loadLibrary("clang", LibClang.class, new HashMap<>() {{
+    LibClang I = Native.loadLibrary("clang-9.0.1", LibClang.class, new HashMap<>() {{
         put(OPTION_FUNCTION_MAPPER, (FunctionMapper) (library, method) -> "clang_" + method.getName());
     }});
 

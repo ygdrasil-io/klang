@@ -54,7 +54,8 @@ public enum TypeKind {
     FUNCTION_NO_PROTO,
     FUNCTION_PROTO,
     CONSTANT_ARRAY,
-    VECTOR;
+    VECTOR,
+    Incompletearray;
 
     private static final Map<Integer, TypeKind> FROM_NATIVE = new HashMap<Integer, TypeKind>();
     private static final Map<TypeKind, Integer> TO_NATIVE = new EnumMap<TypeKind, Integer>(TypeKind.class);

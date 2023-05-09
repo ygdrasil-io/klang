@@ -15,14 +15,11 @@
   VARIABLE
   def
 6:36 TypedefDecl TYPEDEF UndefinedStruct
-  c:declarations.h@39@T@UndefinedStruct
+  c:declarations.h@T@UndefinedStruct
   TYPEDEF
   def
-6:16 StructDecl RECORD UndefinedStructImpl
-  c:@S@UndefinedStructImpl
-  STRUCT
 11:3 TypedefDecl TYPEDEF Struct
-  c:declarations.h@92@T@Struct
+  c:@T@Struct
   TYPEDEF
   def
 8:9 StructDecl RECORD <no-name>
@@ -55,10 +52,10 @@
   c:@F@quux
   FUNCTION
 21:14 TypedefDecl TYPEDEF Foo
-  c:declarations.h@313@T@Foo
+  c:declarations.h@T@Foo
   TYPEDEF
   def
 22:16 TypedefDecl TYPEDEF Bar
-  c:declarations.h@334@T@Bar
+  c:declarations.h@T@Bar
   TYPEDEF
   def

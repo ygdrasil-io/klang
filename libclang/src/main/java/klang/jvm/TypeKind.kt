@@ -52,7 +52,7 @@ enum class TypeKind {
     FunctionProto,
     FunctionNoProto,
     Half,
-    Auto;
+    Auto,;
 
     /* package */
     fun toNative(): kotlin.Int {

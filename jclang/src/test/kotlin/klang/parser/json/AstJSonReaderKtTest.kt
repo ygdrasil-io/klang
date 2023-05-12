@@ -7,11 +7,6 @@ import klang.parseAstJson
 
 class AstJSonReaderTest: StringSpec({
 
-	beforeTest {
-		DeclarationRepository.clear()
-		ParserRepository.errors.clear()
-	}
-
 	val enumerations = listOf(
 		"EnumName" to listOf("Value1" to 0x2, "Value2" to 0x1),
 		"EnumNameWithoutExplicitValues" to listOf("EnumNameWithoutExplicitValues_Value1" to 0, "EnumNameWithoutExplicitValues_Value2" to 1)
@@ -30,7 +25,6 @@ class AstJSonReaderTest: StringSpec({
 		parseAstJson(filePath)
 
 		// Then
-		ParserRepository.errors.size shouldBe 0
 		enumerations.forEach { (name, values) ->
 			DeclarationRepository.findNativeEnumerationByName(name)
 				.also { it?.name shouldBe name }
@@ -46,7 +40,6 @@ class AstJSonReaderTest: StringSpec({
 		parseAstJson(filePath)
 
 		// Then
-		ParserRepository.errors.size shouldBe 0
 		enumerations.forEach { (name, values) ->
 			DeclarationRepository.findNativeEnumerationByName(name)
 				.also { it?.name shouldBe name }
@@ -62,12 +55,20 @@ class AstJSonReaderTest: StringSpec({
 		parseAstJson(filePath)
 
 		// Then
-		ParserRepository.errors.size shouldBe 0
 		structures.forEach { (name, fields) ->
 			DeclarationRepository.findNativeStructureByName(name)
 				.also { it?.name shouldBe name }
 				.also { it?.fields shouldBe fields }
 		}
 
+	}
+
+	beforeTest {
+		DeclarationRepository.clear()
+		ParserRepository.errors.clear()
+	}
+
+	afterTest {
+		ParserRepository.errors.size shouldBe 0
 	}
 })

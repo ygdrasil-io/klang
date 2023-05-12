@@ -1,5 +1,5 @@
 {
-  "id": "0x7fab71046208",
+  "id": "0x7fe13702d208",
   "kind": "TranslationUnitDecl",
   "loc": {},
   "range": {
@@ -8,7 +8,7 @@
   },
   "inner": [
     {
-      "id": "0x7fab71046a30",
+      "id": "0x7fe13702da30",
       "kind": "TypedefDecl",
       "loc": {},
       "range": {
@@ -22,7 +22,7 @@
       },
       "inner": [
         {
-          "id": "0x7fab710467d0",
+          "id": "0x7fe13702d7d0",
           "kind": "BuiltinType",
           "type": {
             "qualType": "__int128"
@@ -31,7 +31,7 @@
       ]
     },
     {
-      "id": "0x7fab71046aa0",
+      "id": "0x7fe13702daa0",
       "kind": "TypedefDecl",
       "loc": {},
       "range": {
@@ -45,7 +45,7 @@
       },
       "inner": [
         {
-          "id": "0x7fab710467f0",
+          "id": "0x7fe13702d7f0",
           "kind": "BuiltinType",
           "type": {
             "qualType": "unsigned __int128"
@@ -54,7 +54,7 @@
       ]
     },
     {
-      "id": "0x7fab71046db0",
+      "id": "0x7fe13702ddb0",
       "kind": "TypedefDecl",
       "loc": {},
       "range": {
@@ -68,13 +68,13 @@
       },
       "inner": [
         {
-          "id": "0x7fab71046b80",
+          "id": "0x7fe13702db80",
           "kind": "RecordType",
           "type": {
             "qualType": "struct __NSConstantString_tag"
           },
           "decl": {
-            "id": "0x7fab71046af8",
+            "id": "0x7fe13702daf8",
             "kind": "RecordDecl",
             "name": "__NSConstantString_tag"
           }
@@ -82,7 +82,7 @@
       ]
     },
     {
-      "id": "0x7fab71046e58",
+      "id": "0x7fe13702de58",
       "kind": "TypedefDecl",
       "loc": {},
       "range": {
@@ -96,14 +96,14 @@
       },
       "inner": [
         {
-          "id": "0x7fab71046e10",
+          "id": "0x7fe13702de10",
           "kind": "PointerType",
           "type": {
             "qualType": "char *"
           },
           "inner": [
             {
-              "id": "0x7fab710462b0",
+              "id": "0x7fe13702d2b0",
               "kind": "BuiltinType",
               "type": {
                 "qualType": "char"
@@ -114,7 +114,7 @@
       ]
     },
     {
-      "id": "0x7fab71047148",
+      "id": "0x7fe13702e148",
       "kind": "TypedefDecl",
       "loc": {},
       "range": {
@@ -128,7 +128,7 @@
       },
       "inner": [
         {
-          "id": "0x7fab710470f0",
+          "id": "0x7fe13702e0f0",
           "kind": "ConstantArrayType",
           "type": {
             "qualType": "struct __va_list_tag[1]"
@@ -136,13 +136,13 @@
           "size": 1,
           "inner": [
             {
-              "id": "0x7fab71046f30",
+              "id": "0x7fe13702df30",
               "kind": "RecordType",
               "type": {
                 "qualType": "struct __va_list_tag"
               },
               "decl": {
-                "id": "0x7fab71046eb0",
+                "id": "0x7fe13702deb0",
                 "kind": "RecordDecl",
                 "name": "__va_list_tag"
               }
@@ -152,7 +152,7 @@
       ]
     },
     {
-      "id": "0x7fab7108e200",
+      "id": "0x7fe13582d600",
       "kind": "EnumDecl",
       "loc": {
         "offset": 7,
@@ -177,7 +177,7 @@
       "name": "EnumName",
       "inner": [
         {
-          "id": "0x7fab7108e300",
+          "id": "0x7fe13582d700",
           "kind": "EnumConstantDecl",
           "loc": {
             "offset": 20,
@@ -203,7 +203,7 @@
           },
           "inner": [
             {
-              "id": "0x7fab7108e2e0",
+              "id": "0x7fe13582d6e0",
               "kind": "ConstantExpr",
               "range": {
                 "begin": {
@@ -224,7 +224,7 @@
               "value": "2",
               "inner": [
                 {
-                  "id": "0x7fab7108e2c0",
+                  "id": "0x7fe13582d6c0",
                   "kind": "IntegerLiteral",
                   "range": {
                     "begin": {
@@ -249,7 +249,7 @@
           ]
         },
         {
-          "id": "0x7fab7108e390",
+          "id": "0x7fe13582d790",
           "kind": "EnumConstantDecl",
           "loc": {
             "offset": 36,
@@ -275,7 +275,7 @@
           },
           "inner": [
             {
-              "id": "0x7fab7108e370",
+              "id": "0x7fe13582d770",
               "kind": "ConstantExpr",
               "range": {
                 "begin": {
@@ -296,7 +296,7 @@
               "value": "1",
               "inner": [
                 {
-                  "id": "0x7fab7108e350",
+                  "id": "0x7fe13582d750",
                   "kind": "IntegerLiteral",
                   "range": {
                     "begin": {
@@ -323,7 +323,7 @@
       ]
     },
     {
-      "id": "0x7fab7108e3e0",
+      "id": "0x7fe13582d7e0",
       "kind": "EnumDecl",
       "loc": {
         "offset": 58,
@@ -347,7 +347,7 @@
       "name": "EnumNameWithoutExplicitValues",
       "inner": [
         {
-          "id": "0x7fab7108e4a0",
+          "id": "0x7fe13582d8a0",
           "kind": "EnumConstantDecl",
           "loc": {
             "offset": 92,
@@ -373,7 +373,7 @@
           }
         },
         {
-          "id": "0x7fab7108e4f0",
+          "id": "0x7fe13582d8f0",
           "kind": "EnumConstantDecl",
           "loc": {
             "offset": 132,

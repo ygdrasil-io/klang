@@ -1,4 +1,4 @@
-package klang.parser.json
+package klang.parser.json.domain
 
 import kotlinx.serialization.json.*
 import mu.KotlinLogging

@@ -2,21 +2,27 @@
 
 package klang
 
-import klang.parser.json.*
+import klang.parser.json.ParserRepository
+import klang.parser.json.domain.Node
+import klang.parser.json.domain.TranslationUnitKind
+import klang.parser.json.domain.TranslationUnitNode
+import klang.parser.json.domain.toNode
+import klang.parser.json.type.isTypeDefEnumeration
+import klang.parser.json.type.toNativeEnumeration
+import klang.parser.json.type.toNativeStructure
+import klang.parser.json.type.toNativeTypeDefEnumeration
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.*
 import mu.KotlinLogging
 import java.io.FileInputStream
 
 private val logger = KotlinLogging.logger {}
-private val errors = mutableListOf<java.lang.RuntimeException>()
 
 fun main() {
 	parseAstJson("jclang/v16/include/dump.json")
 
-	logger.info { "parsing ended with ${errors.size} errors" }
-	errors.forEach { logger.error { it } }
-	//translationUnitKinds.generateEnum("TranslationUnitKind")
+	logger.info { "parsing ended with ${ParserRepository.errors.size} errors" }
+	ParserRepository.errors.forEach { logger.error { it } }
 }
 
 fun parseAstJson(filePath: String) = FileInputStream(filePath)
@@ -31,11 +37,15 @@ fun List<TranslationUnitNode>.parse(depth: Int = 0) {
 
 	while (index != size) {
 		val node = this[index]
-		val (kind, _) = node.content
+		val (kind, json) = node.content
 
-		logger.info { "${(0..depth).map { "+" }}$kind" }
 
 		when (kind) {
+			TranslationUnitKind.RecordDecl -> {
+				node.toNativeStructure()
+					.let(DeclarationRepository::save)
+			}
+
 			TranslationUnitKind.EnumDecl -> {
 				try {
 					when {
@@ -44,19 +54,15 @@ fun List<TranslationUnitNode>.parse(depth: Int = 0) {
 							node.toNativeTypeDefEnumeration(this[index])
 						}
 
-						else -> {
-							node.toNativeEnumeration()
-						}
-					}
-						.also { logger.info { "enum added: $it" } }
-						.let(DeclarationRepository::save)
+						else -> node.toNativeEnumeration()
+					}.let(DeclarationRepository::save)
 				} catch (e: RuntimeException) {
-					errors.add(e)
+					ParserRepository.errors.add(e)
 				}
 			}
 
 			else -> {
-				//logger.error { "not yet supported: $kind $root" }
+				logger.info { "${(0..depth).map { "+" }}$kind${json["id"]}" }
 			}
 		}
 

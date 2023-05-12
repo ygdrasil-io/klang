@@ -1,24 +1,26 @@
-package klang.parser.json
+package klang.parser.json.type
 
 import klang.domain.NativeEnumeration
+import klang.parser.json.domain.TranslationUnitKind
+import klang.parser.json.domain.TranslationUnitNode
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.intOrNull
 import kotlinx.serialization.json.jsonPrimitive
 
 internal fun TranslationUnitNode.toNativeTypeDefEnumeration(sibling: TranslationUnitNode) = NativeEnumeration(
 	name = sibling.content.second.enumerationName(),
-	values = this.extractValues()
+	values = this.extractFields()
 )
 
 internal fun TranslationUnitNode.toNativeEnumeration() = NativeEnumeration(
 	name = content.second.enumerationName(),
-	values = this.extractValues()
+	values = this.extractFields()
 )
 
 internal fun TranslationUnitNode.isTypeDefEnumeration(sibling: List<TranslationUnitNode>) =
-	isTypeDefEnumeration(sibling, sibling.indexOf(this))
+	isTypeDefStructure(sibling, sibling.indexOf(this))
 
-private fun TranslationUnitNode.isTypeDefEnumeration(
+private fun TranslationUnitNode.isTypeDefStructure(
 	sibling: List<TranslationUnitNode>,
 	index: Int
 ): Boolean =
@@ -26,12 +28,12 @@ private fun TranslationUnitNode.isTypeDefEnumeration(
 			&& sibling[index + 1].content.first == TranslationUnitKind.TypedefDecl
 			&& content.second.nullableEnumerationName() == null
 
-private fun TranslationUnitNode.extractValues(): List<Pair<String, Int>> =
+private fun TranslationUnitNode.extractFields(): List<Pair<String, Int>> =
 	children.filter { it.content.first == TranslationUnitKind.EnumConstantDecl }
-		.map { it.extractValue(children) }
+		.map { it.extractField(children) }
 
 
-private fun TranslationUnitNode.extractValue(sibling: List<TranslationUnitNode>): Pair<String, Int> {
+private fun TranslationUnitNode.extractField(sibling: List<TranslationUnitNode>): Pair<String, Int> {
 	val name = content.second["name"]?.jsonPrimitive?.content
 		?: error("no name for : $this")
 	val value = children.firstOrNull { it.content.first == TranslationUnitKind.ConstantExpr }

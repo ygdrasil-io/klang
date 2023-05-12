@@ -1,5 +1,5 @@
 {
-  "id": "0x7f8c23840008",
+  "id": "0x7f7db2046208",
   "kind": "TranslationUnitDecl",
   "loc": {},
   "range": {
@@ -8,7 +8,7 @@
   },
   "inner": [
     {
-      "id": "0x7f8c23840830",
+      "id": "0x7f7db2046a30",
       "kind": "TypedefDecl",
       "loc": {},
       "range": {
@@ -22,7 +22,7 @@
       },
       "inner": [
         {
-          "id": "0x7f8c238405d0",
+          "id": "0x7f7db20467d0",
           "kind": "BuiltinType",
           "type": {
             "qualType": "__int128"
@@ -31,7 +31,7 @@
       ]
     },
     {
-      "id": "0x7f8c238408a0",
+      "id": "0x7f7db2046aa0",
       "kind": "TypedefDecl",
       "loc": {},
       "range": {
@@ -45,7 +45,7 @@
       },
       "inner": [
         {
-          "id": "0x7f8c238405f0",
+          "id": "0x7f7db20467f0",
           "kind": "BuiltinType",
           "type": {
             "qualType": "unsigned __int128"
@@ -54,7 +54,7 @@
       ]
     },
     {
-      "id": "0x7f8c23840bb0",
+      "id": "0x7f7db2046db0",
       "kind": "TypedefDecl",
       "loc": {},
       "range": {
@@ -68,13 +68,13 @@
       },
       "inner": [
         {
-          "id": "0x7f8c23840980",
+          "id": "0x7f7db2046b80",
           "kind": "RecordType",
           "type": {
             "qualType": "struct __NSConstantString_tag"
           },
           "decl": {
-            "id": "0x7f8c238408f8",
+            "id": "0x7f7db2046af8",
             "kind": "RecordDecl",
             "name": "__NSConstantString_tag"
           }
@@ -82,7 +82,7 @@
       ]
     },
     {
-      "id": "0x7f8c23840c58",
+      "id": "0x7f7db2046e58",
       "kind": "TypedefDecl",
       "loc": {},
       "range": {
@@ -96,14 +96,14 @@
       },
       "inner": [
         {
-          "id": "0x7f8c23840c10",
+          "id": "0x7f7db2046e10",
           "kind": "PointerType",
           "type": {
             "qualType": "char *"
           },
           "inner": [
             {
-              "id": "0x7f8c238400b0",
+              "id": "0x7f7db20462b0",
               "kind": "BuiltinType",
               "type": {
                 "qualType": "char"
@@ -114,7 +114,7 @@
       ]
     },
     {
-      "id": "0x7f8c23840f48",
+      "id": "0x7f7db2047148",
       "kind": "TypedefDecl",
       "loc": {},
       "range": {
@@ -128,7 +128,7 @@
       },
       "inner": [
         {
-          "id": "0x7f8c23840ef0",
+          "id": "0x7f7db20470f0",
           "kind": "ConstantArrayType",
           "type": {
             "qualType": "struct __va_list_tag[1]"
@@ -136,13 +136,13 @@
           "size": 1,
           "inner": [
             {
-              "id": "0x7f8c23840d30",
+              "id": "0x7f7db2046f30",
               "kind": "RecordType",
               "type": {
                 "qualType": "struct __va_list_tag"
               },
               "decl": {
-                "id": "0x7f8c23840cb0",
+                "id": "0x7f7db2046eb0",
                 "kind": "RecordDecl",
                 "name": "__va_list_tag"
               }
@@ -152,7 +152,7 @@
       ]
     },
     {
-      "id": "0x7f8c23888000",
+      "id": "0x7f7db3015c00",
       "kind": "EnumDecl",
       "loc": {
         "offset": 10,
@@ -176,7 +176,7 @@
       },
       "inner": [
         {
-          "id": "0x7f8c23888100",
+          "id": "0x7f7db3015d00",
           "kind": "EnumConstantDecl",
           "loc": {
             "offset": 19,
@@ -202,7 +202,7 @@
           },
           "inner": [
             {
-              "id": "0x7f8c238880e0",
+              "id": "0x7f7db3015ce0",
               "kind": "ConstantExpr",
               "range": {
                 "begin": {
@@ -223,7 +223,7 @@
               "value": "2",
               "inner": [
                 {
-                  "id": "0x7f8c238880c0",
+                  "id": "0x7f7db3015cc0",
                   "kind": "IntegerLiteral",
                   "range": {
                     "begin": {
@@ -248,7 +248,7 @@
           ]
         },
         {
-          "id": "0x7f8c23888190",
+          "id": "0x7f7db3015d90",
           "kind": "EnumConstantDecl",
           "loc": {
             "offset": 35,
@@ -274,7 +274,7 @@
           },
           "inner": [
             {
-              "id": "0x7f8c23888170",
+              "id": "0x7f7db3015d70",
               "kind": "ConstantExpr",
               "range": {
                 "begin": {
@@ -295,7 +295,7 @@
               "value": "1",
               "inner": [
                 {
-                  "id": "0x7f8c23888150",
+                  "id": "0x7f7db3015d50",
                   "kind": "IntegerLiteral",
                   "range": {
                     "begin": {
@@ -322,7 +322,7 @@
       ]
     },
     {
-      "id": "0x7f8c23888238",
+      "id": "0x7f7db3015e38",
       "kind": "TypedefDecl",
       "loc": {
         "offset": 50,
@@ -351,25 +351,25 @@
       },
       "inner": [
         {
-          "id": "0x7f8c238881e0",
+          "id": "0x7f7db3015de0",
           "kind": "ElaboratedType",
           "type": {
             "qualType": "enum EnumName"
           },
           "ownedTagDecl": {
-            "id": "0x7f8c23888000",
+            "id": "0x7f7db3015c00",
             "kind": "EnumDecl",
             "name": ""
           },
           "inner": [
             {
-              "id": "0x7f8c238880a0",
+              "id": "0x7f7db3015ca0",
               "kind": "EnumType",
               "type": {
                 "qualType": "EnumName"
               },
               "decl": {
-                "id": "0x7f8c23888000",
+                "id": "0x7f7db3015c00",
                 "kind": "EnumDecl",
                 "name": ""
               }
@@ -379,7 +379,7 @@
       ]
     },
     {
-      "id": "0x7f8c238882a8",
+      "id": "0x7f7db3015ea8",
       "kind": "EnumDecl",
       "loc": {
         "offset": 69,
@@ -402,7 +402,7 @@
       },
       "inner": [
         {
-          "id": "0x7f8c23888370",
+          "id": "0x7f7db3015f70",
           "kind": "EnumConstantDecl",
           "loc": {
             "offset": 78,
@@ -428,7 +428,7 @@
           }
         },
         {
-          "id": "0x7f8c238883c0",
+          "id": "0x7f7db3015fc0",
           "kind": "EnumConstantDecl",
           "loc": {
             "offset": 118,
@@ -456,7 +456,7 @@
       ]
     },
     {
-      "id": "0x7f8c23888468",
+      "id": "0x7f7db3016068",
       "kind": "TypedefDecl",
       "loc": {
         "offset": 157,
@@ -485,25 +485,25 @@
       },
       "inner": [
         {
-          "id": "0x7f8c23888410",
+          "id": "0x7f7db3016010",
           "kind": "ElaboratedType",
           "type": {
             "qualType": "enum EnumNameWithoutExplicitValues"
           },
           "ownedTagDecl": {
-            "id": "0x7f8c238882a8",
+            "id": "0x7f7db3015ea8",
             "kind": "EnumDecl",
             "name": ""
           },
           "inner": [
             {
-              "id": "0x7f8c23888350",
+              "id": "0x7f7db3015f50",
               "kind": "EnumType",
               "type": {
                 "qualType": "EnumNameWithoutExplicitValues"
               },
               "decl": {
-                "id": "0x7f8c238882a8",
+                "id": "0x7f7db3015ea8",
                 "kind": "EnumDecl",
                 "name": ""
               }

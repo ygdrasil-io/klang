@@ -97,14 +97,19 @@ class AstJSonReaderTest : StringSpec({
 		// Then
 		DeclarationRepository.findNativeFunctionByName("function")
 			.also { it?.name shouldBe "function" }
-			.also { it?.returnType shouldBe "void" }
+			.also { it?.returnType shouldBe "char" }
 			.also {
 				it?.arguments shouldBe listOf(
 					"a" to "int *",
 					"b" to "void *",
 					"enum" to "EnumName"
-				).map { type -> type to "arg_$type" }
+				)
 			}
+
+		DeclarationRepository.findNativeFunctionByName("function2")
+			.also { it?.name shouldBe "function" }
+			.also { it?.returnType shouldBe "void *" }
+			.also { it?.arguments shouldBe listOf() }
 	}
 
 	beforeTest {

@@ -42,6 +42,14 @@ fun List<TranslationUnitNode>.parse(depth: Int = 0) {
 
 
 		when (kind) {
+			TranslationUnitKind.FunctionDecl -> {
+				try {
+					node.toNativeFunction()
+						.let(DeclarationRepository::save)
+				} catch (e: RuntimeException) {
+					ParserRepository.errors.add(e)
+				}
+			}
 			TranslationUnitKind.RecordDecl -> {
 				try {
 					when {

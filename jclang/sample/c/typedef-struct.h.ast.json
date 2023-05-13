@@ -1,5 +1,5 @@
 {
-  "id": "0x7f9469846208",
+  "id": "0x7fa61a046208",
   "kind": "TranslationUnitDecl",
   "loc": {},
   "range": {
@@ -8,7 +8,7 @@
   },
   "inner": [
     {
-      "id": "0x7f9469846a30",
+      "id": "0x7fa61a046a30",
       "kind": "TypedefDecl",
       "loc": {},
       "range": {
@@ -22,7 +22,7 @@
       },
       "inner": [
         {
-          "id": "0x7f94698467d0",
+          "id": "0x7fa61a0467d0",
           "kind": "BuiltinType",
           "type": {
             "qualType": "__int128"
@@ -31,7 +31,7 @@
       ]
     },
     {
-      "id": "0x7f9469846aa0",
+      "id": "0x7fa61a046aa0",
       "kind": "TypedefDecl",
       "loc": {},
       "range": {
@@ -45,7 +45,7 @@
       },
       "inner": [
         {
-          "id": "0x7f94698467f0",
+          "id": "0x7fa61a0467f0",
           "kind": "BuiltinType",
           "type": {
             "qualType": "unsigned __int128"
@@ -54,7 +54,7 @@
       ]
     },
     {
-      "id": "0x7f9469846db0",
+      "id": "0x7fa61a046db0",
       "kind": "TypedefDecl",
       "loc": {},
       "range": {
@@ -68,13 +68,13 @@
       },
       "inner": [
         {
-          "id": "0x7f9469846b80",
+          "id": "0x7fa61a046b80",
           "kind": "RecordType",
           "type": {
             "qualType": "struct __NSConstantString_tag"
           },
           "decl": {
-            "id": "0x7f9469846af8",
+            "id": "0x7fa61a046af8",
             "kind": "RecordDecl",
             "name": "__NSConstantString_tag"
           }
@@ -82,7 +82,7 @@
       ]
     },
     {
-      "id": "0x7f9469846e58",
+      "id": "0x7fa61a046e58",
       "kind": "TypedefDecl",
       "loc": {},
       "range": {
@@ -96,14 +96,14 @@
       },
       "inner": [
         {
-          "id": "0x7f9469846e10",
+          "id": "0x7fa61a046e10",
           "kind": "PointerType",
           "type": {
             "qualType": "char *"
           },
           "inner": [
             {
-              "id": "0x7f94698462b0",
+              "id": "0x7fa61a0462b0",
               "kind": "BuiltinType",
               "type": {
                 "qualType": "char"
@@ -114,7 +114,7 @@
       ]
     },
     {
-      "id": "0x7f9469847148",
+      "id": "0x7fa61a047148",
       "kind": "TypedefDecl",
       "loc": {},
       "range": {
@@ -128,7 +128,7 @@
       },
       "inner": [
         {
-          "id": "0x7f94698470f0",
+          "id": "0x7fa61a0470f0",
           "kind": "ConstantArrayType",
           "type": {
             "qualType": "struct __va_list_tag[1]"
@@ -136,13 +136,13 @@
           "size": 1,
           "inner": [
             {
-              "id": "0x7f9469846f30",
+              "id": "0x7fa61a046f30",
               "kind": "RecordType",
               "type": {
                 "qualType": "struct __va_list_tag"
               },
               "decl": {
-                "id": "0x7f9469846eb0",
+                "id": "0x7fa61a046eb0",
                 "kind": "RecordDecl",
                 "name": "__va_list_tag"
               }
@@ -152,7 +152,7 @@
       ]
     },
     {
-      "id": "0x7f946988e200",
+      "id": "0x7fa61b015c00",
       "kind": "EnumDecl",
       "loc": {
         "offset": 6,
@@ -177,7 +177,7 @@
       "name": "EnumName",
       "inner": [
         {
-          "id": "0x7f946988e300",
+          "id": "0x7fa61b015d00",
           "kind": "EnumConstantDecl",
           "loc": {
             "offset": 19,
@@ -203,7 +203,7 @@
           },
           "inner": [
             {
-              "id": "0x7f946988e2e0",
+              "id": "0x7fa61b015ce0",
               "kind": "ConstantExpr",
               "range": {
                 "begin": {
@@ -224,7 +224,7 @@
               "value": "2",
               "inner": [
                 {
-                  "id": "0x7f946988e2c0",
+                  "id": "0x7fa61b015cc0",
                   "kind": "IntegerLiteral",
                   "range": {
                     "begin": {
@@ -249,7 +249,7 @@
           ]
         },
         {
-          "id": "0x7f946988e390",
+          "id": "0x7fa61b015d90",
           "kind": "EnumConstantDecl",
           "loc": {
             "offset": 35,
@@ -275,7 +275,7 @@
           },
           "inner": [
             {
-              "id": "0x7f946988e370",
+              "id": "0x7fa61b015d70",
               "kind": "ConstantExpr",
               "range": {
                 "begin": {
@@ -296,7 +296,7 @@
               "value": "1",
               "inner": [
                 {
-                  "id": "0x7f946988e350",
+                  "id": "0x7fa61b015d50",
                   "kind": "IntegerLiteral",
                   "range": {
                     "begin": {
@@ -323,7 +323,7 @@
       ]
     },
     {
-      "id": "0x7f946988e3e0",
+      "id": "0x7fa61b015de0",
       "kind": "EnumDecl",
       "loc": {
         "offset": 60,
@@ -346,7 +346,7 @@
       },
       "inner": [
         {
-          "id": "0x7f946988e4e0",
+          "id": "0x7fa61b015ee0",
           "kind": "EnumConstantDecl",
           "loc": {
             "offset": 70,
@@ -372,7 +372,7 @@
           },
           "inner": [
             {
-              "id": "0x7f946988e4c0",
+              "id": "0x7fa61b015ec0",
               "kind": "ConstantExpr",
               "range": {
                 "begin": {
@@ -393,7 +393,7 @@
               "value": "2",
               "inner": [
                 {
-                  "id": "0x7f946988e4a0",
+                  "id": "0x7fa61b015ea0",
                   "kind": "IntegerLiteral",
                   "range": {
                     "begin": {
@@ -418,7 +418,7 @@
           ]
         },
         {
-          "id": "0x7f946988e570",
+          "id": "0x7fa61b015f70",
           "kind": "EnumConstantDecl",
           "loc": {
             "offset": 86,
@@ -444,7 +444,7 @@
           },
           "inner": [
             {
-              "id": "0x7f946988e550",
+              "id": "0x7fa61b015f50",
               "kind": "ConstantExpr",
               "range": {
                 "begin": {
@@ -465,7 +465,7 @@
               "value": "1",
               "inner": [
                 {
-                  "id": "0x7f946988e530",
+                  "id": "0x7fa61b015f30",
                   "kind": "IntegerLiteral",
                   "range": {
                     "begin": {
@@ -492,7 +492,7 @@
       ]
     },
     {
-      "id": "0x7f946988e618",
+      "id": "0x7fa61b016018",
       "kind": "TypedefDecl",
       "loc": {
         "offset": 101,
@@ -522,25 +522,25 @@
       },
       "inner": [
         {
-          "id": "0x7f946988e5c0",
+          "id": "0x7fa61b015fc0",
           "kind": "ElaboratedType",
           "type": {
             "qualType": "enum EnumName2"
           },
           "ownedTagDecl": {
-            "id": "0x7f946988e3e0",
+            "id": "0x7fa61b015de0",
             "kind": "EnumDecl",
             "name": ""
           },
           "inner": [
             {
-              "id": "0x7f946988e480",
+              "id": "0x7fa61b015e80",
               "kind": "EnumType",
               "type": {
                 "qualType": "EnumName2"
               },
               "decl": {
-                "id": "0x7f946988e3e0",
+                "id": "0x7fa61b015de0",
                 "kind": "EnumDecl",
                 "name": ""
               }
@@ -550,7 +550,7 @@
       ]
     },
     {
-      "id": "0x7f946988e688",
+      "id": "0x7fa61b016088",
       "kind": "RecordDecl",
       "loc": {
         "offset": 121,
@@ -575,7 +575,7 @@
       "completeDefinition": true,
       "inner": [
         {
-          "id": "0x7f946988e7e8",
+          "id": "0x7fa61b0161e8",
           "kind": "FieldDecl",
           "loc": {
             "offset": 149,
@@ -601,7 +601,7 @@
           }
         },
         {
-          "id": "0x7f946988e870",
+          "id": "0x7fa61b016270",
           "kind": "FieldDecl",
           "loc": {
             "offset": 171,
@@ -625,11 +625,11 @@
           "type": {
             "desugaredQualType": "EnumName2",
             "qualType": "EnumName2",
-            "typeAliasDeclId": "0x7f946988e618"
+            "typeAliasDeclId": "0x7fa61b016018"
           }
         },
         {
-          "id": "0x7f946988e8d0",
+          "id": "0x7fa61b0162d0",
           "kind": "FieldDecl",
           "loc": {
             "offset": 188,
@@ -657,7 +657,7 @@
       ]
     },
     {
-      "id": "0x7f946988e978",
+      "id": "0x7fa61b016378",
       "kind": "TypedefDecl",
       "loc": {
         "offset": 198,
@@ -687,25 +687,25 @@
       },
       "inner": [
         {
-          "id": "0x7f946988e920",
+          "id": "0x7fa61b016320",
           "kind": "ElaboratedType",
           "type": {
             "qualType": "struct StructName"
           },
           "ownedTagDecl": {
-            "id": "0x7f946988e688",
+            "id": "0x7fa61b016088",
             "kind": "RecordDecl",
             "name": ""
           },
           "inner": [
             {
-              "id": "0x7f946988e710",
+              "id": "0x7fa61b016110",
               "kind": "RecordType",
               "type": {
                 "qualType": "StructName"
               },
               "decl": {
-                "id": "0x7f946988e688",
+                "id": "0x7fa61b016088",
                 "kind": "RecordDecl",
                 "name": ""
               }
@@ -715,7 +715,7 @@
       ]
     },
     {
-      "id": "0x7f946988e9e8",
+      "id": "0x7fa61b0163e8",
       "kind": "RecordDecl",
       "loc": {
         "offset": 219,
@@ -740,7 +740,7 @@
       "completeDefinition": true,
       "inner": [
         {
-          "id": "0x7f946988eac0",
+          "id": "0x7fa61b0164c0",
           "kind": "FieldDecl",
           "loc": {
             "offset": 243,
@@ -764,11 +764,11 @@
           "type": {
             "desugaredQualType": "StructName",
             "qualType": "StructName",
-            "typeAliasDeclId": "0x7f946988e978"
+            "typeAliasDeclId": "0x7fa61b016378"
           }
         },
         {
-          "id": "0x7f946988eb80",
+          "id": "0x7fa61b016580",
           "kind": "FieldDecl",
           "loc": {
             "offset": 267,
@@ -794,7 +794,7 @@
           }
         },
         {
-          "id": "0x7f946988ebe0",
+          "id": "0x7fa61b0165e0",
           "kind": "FieldDecl",
           "loc": {
             "offset": 284,
@@ -822,7 +822,7 @@
       ]
     },
     {
-      "id": "0x7f946988ecf8",
+      "id": "0x7fa61b0166f8",
       "kind": "TypedefDecl",
       "loc": {
         "offset": 294,
@@ -851,25 +851,25 @@
       },
       "inner": [
         {
-          "id": "0x7f946988eca0",
+          "id": "0x7fa61b0166a0",
           "kind": "ElaboratedType",
           "type": {
             "qualType": "struct StructName2"
           },
           "ownedTagDecl": {
-            "id": "0x7f946988e9e8",
+            "id": "0x7fa61b0163e8",
             "kind": "RecordDecl",
             "name": ""
           },
           "inner": [
             {
-              "id": "0x7f946988ea70",
+              "id": "0x7fa61b016470",
               "kind": "RecordType",
               "type": {
                 "qualType": "StructName2"
               },
               "decl": {
-                "id": "0x7f946988e9e8",
+                "id": "0x7fa61b0163e8",
                 "kind": "RecordDecl",
                 "name": ""
               }

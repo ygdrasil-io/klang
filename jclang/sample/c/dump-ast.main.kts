@@ -16,7 +16,7 @@ files
 	.filter { (source, _) -> source.let(::File).exists().not() }
 	.forEach { (source, output) ->
 		"clang -Xclang -ast-dump=json -fsyntax-only -I./ ./$source > ./$output".run {
-			println("failed to dump ast for $source")
+			println("failed to dump ast for $source with error:\n$this")
 		}
 	}
 

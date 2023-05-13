@@ -5,3 +5,4 @@ enum EnumName {
 };
 
 char function(int *a, void* b, EnumName enum);
+void* function2();

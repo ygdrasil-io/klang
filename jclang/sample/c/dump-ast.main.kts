@@ -8,7 +8,8 @@ val files = listOf(
 	"typedef-enum.h" to "typedef-enum.h.ast.json",
 	"enum.h" to "enum.h.ast.json",
 	"struct.h" to "struct.h.ast.json",
-	"typedef-struct.h " to "typedef-struct.h.ast.json"
+	"typedef-struct.h " to "typedef-struct.h.ast.json",
+	"functions.h " to "functions.h.ast.json"
 )
 
 files

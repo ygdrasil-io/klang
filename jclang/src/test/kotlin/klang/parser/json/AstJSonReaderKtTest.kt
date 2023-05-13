@@ -5,11 +5,14 @@ import io.kotest.matchers.shouldBe
 import klang.DeclarationRepository
 import klang.parseAstJson
 
-class AstJSonReaderTest: StringSpec({
+class AstJSonReaderTest : StringSpec({
 
 	val enumerations = listOf(
 		"EnumName" to listOf("Value1" to 0x2, "Value2" to 0x1),
-		"EnumNameWithoutExplicitValues" to listOf("EnumNameWithoutExplicitValues_Value1" to 0, "EnumNameWithoutExplicitValues_Value2" to 1)
+		"EnumNameWithoutExplicitValues" to listOf(
+			"EnumNameWithoutExplicitValues_Value1" to 0,
+			"EnumNameWithoutExplicitValues_Value2" to 1
+		)
 	)
 
 	val structures = listOf(
@@ -81,7 +84,27 @@ class AstJSonReaderTest: StringSpec({
 				.also { it?.name shouldBe name }
 				.also { it?.fields shouldBe fields }
 		}
+	}
 
+
+	"function parsing" {
+		// Given
+		val filePath = "sample/c/functions.h.ast.json"
+
+		// When
+		parseAstJson(filePath)
+
+		// Then
+		DeclarationRepository.findNativeFunctionByName("function")
+			.also { it?.name shouldBe "function" }
+			.also { it?.returnType shouldBe "void" }
+			.also {
+				it?.arguments shouldBe listOf(
+					"a" to "int *",
+					"b" to "void *",
+					"enum" to "EnumName"
+				).map { type -> type to "arg_$type" }
+			}
 	}
 
 	beforeTest {

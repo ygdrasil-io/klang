@@ -17,6 +17,11 @@ class AstJSonReaderTest: StringSpec({
 		"StructName2" to listOf("field1" to "struct StructName", "field2" to "struct StructName *", "field3" to "char")
 	)
 
+	val typeDefStructures = listOf(
+		"StructName" to listOf("field1" to "enum EnumName *", "field2" to "EnumName2", "field3" to "char"),
+		"StructName2" to listOf("field1" to "StructName", "field2" to "StructName *", "field3" to "char")
+	)
+
 	"test enum parsing" {
 		// Given
 		val filePath = "sample/c/enum.h.ast.json"
@@ -56,6 +61,22 @@ class AstJSonReaderTest: StringSpec({
 
 		// Then
 		structures.forEach { (name, fields) ->
+			DeclarationRepository.findNativeStructureByName(name)
+				.also { it?.name shouldBe name }
+				.also { it?.fields shouldBe fields }
+		}
+
+	}
+
+	"typedef struct parsing" {
+		// Given
+		val filePath = "sample/c/typedef-struct.h.ast.json"
+
+		// When
+		parseAstJson(filePath)
+
+		// Then
+		typeDefStructures.forEach { (name, fields) ->
 			DeclarationRepository.findNativeStructureByName(name)
 				.also { it?.name shouldBe name }
 				.also { it?.fields shouldBe fields }

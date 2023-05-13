@@ -7,6 +7,7 @@ import klang.parser.json.domain.Node
 import klang.parser.json.domain.TranslationUnitKind
 import klang.parser.json.domain.TranslationUnitNode
 import klang.parser.json.domain.toNode
+import klang.parser.json.type.*
 import klang.parser.json.type.isTypeDefEnumeration
 import klang.parser.json.type.toNativeEnumeration
 import klang.parser.json.type.toNativeStructure
@@ -42,8 +43,18 @@ fun List<TranslationUnitNode>.parse(depth: Int = 0) {
 
 		when (kind) {
 			TranslationUnitKind.RecordDecl -> {
-				node.toNativeStructure()
-					.let(DeclarationRepository::save)
+				try {
+					when {
+						node.isTypeDefStructure(this) -> {
+							index++
+							node.toNativeTypeDefStructure(this[index])
+						}
+
+						else -> node.toNativeStructure()
+					}.let(DeclarationRepository::save)
+				} catch (e: RuntimeException) {
+					ParserRepository.errors.add(e)
+				}
 			}
 
 			TranslationUnitKind.EnumDecl -> {

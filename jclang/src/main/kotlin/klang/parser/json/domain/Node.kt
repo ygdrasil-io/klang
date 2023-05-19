@@ -9,6 +9,9 @@ data class Node<T>(val content: T, val children: List<Node<T>>) {
 
 typealias TranslationUnitNode = Node<Pair<TranslationUnitKind, JsonObject>>
 
+val TranslationUnitNode.json: JsonObject
+	get() = content.second
+
 private val logger = KotlinLogging.logger {}
 
 internal fun JsonObject.toNode(): TranslationUnitNode = Node(

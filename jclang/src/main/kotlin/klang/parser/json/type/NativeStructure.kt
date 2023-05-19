@@ -3,18 +3,19 @@ package klang.parser.json.type
 import klang.domain.NativeStructure
 import klang.parser.json.domain.TranslationUnitKind
 import klang.parser.json.domain.TranslationUnitNode
+import klang.parser.json.domain.json
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 
 
 internal fun TranslationUnitNode.toNativeTypeDefStructure(sibling: TranslationUnitNode) = NativeStructure(
-	name = sibling.content.second.enumerationName(),
+	name = sibling.json.enumerationName(),
 	fields = this.extractFields()
 )
 
 internal fun TranslationUnitNode.toNativeStructure() = NativeStructure(
-	name = content.second.enumerationName(),
+	name = json.enumerationName(),
 	fields = this.extractFields()
 )
 
@@ -27,7 +28,7 @@ private fun TranslationUnitNode.isTypeDefStructure(
 ): Boolean =
 	notLastOf(sibling)
 			&& sibling[index + 1].content.first == TranslationUnitKind.TypedefDecl
-			&& content.second.nullableEnumerationName() == null
+			&& json.nullableEnumerationName() == null
 
 private fun TranslationUnitNode.extractFields(): List<Pair<String, String>> =
 	children.filter { it.content.first == TranslationUnitKind.FieldDecl }
@@ -35,9 +36,9 @@ private fun TranslationUnitNode.extractFields(): List<Pair<String, String>> =
 
 
 private fun TranslationUnitNode.extractField(): Pair<String, String> {
-	val name = content.second["name"]?.jsonPrimitive?.content
+	val name = json["name"]?.jsonPrimitive?.content
 		?: error("no name for : $this")
-	val value = content.second["type"]?.jsonObject?.get("qualType")?.jsonPrimitive?.content
+	val value = json["type"]?.jsonObject?.get("qualType")?.jsonPrimitive?.content
 		?: error("no type for : $this")
 	return name to value
 }

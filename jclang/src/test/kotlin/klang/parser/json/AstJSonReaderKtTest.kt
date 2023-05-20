@@ -25,6 +25,11 @@ class AstJSonReaderTest : StringSpec({
 		"StructName2" to listOf("field1" to "StructName", "field2" to "StructName *", "field3" to "char")
 	)
 
+	val typeDef = listOf(
+		"NewType" to "void *",
+		"NewStructureType" to "struct OldStructureType *"
+	)
+
 	"test enum parsing" {
 		// Given
 		val filePath = "sample/c/enum.h.ast.json"
@@ -34,7 +39,7 @@ class AstJSonReaderTest : StringSpec({
 
 		// Then
 		enumerations.forEach { (name, values) ->
-			DeclarationRepository.findNativeEnumerationByName(name)
+			DeclarationRepository.findEnumerationByName(name)
 				.also { it?.name shouldBe name }
 				.also { it?.values shouldBe values }
 		}
@@ -49,7 +54,7 @@ class AstJSonReaderTest : StringSpec({
 
 		// Then
 		enumerations.forEach { (name, values) ->
-			DeclarationRepository.findNativeEnumerationByName(name)
+			DeclarationRepository.findEnumerationByName(name)
 				.also { it?.name shouldBe name }
 				.also { it?.values shouldBe values }
 		}
@@ -64,7 +69,7 @@ class AstJSonReaderTest : StringSpec({
 
 		// Then
 		structures.forEach { (name, fields) ->
-			DeclarationRepository.findNativeStructureByName(name)
+			DeclarationRepository.findStructureByName(name)
 				.also { it?.name shouldBe name }
 				.also { it?.fields shouldBe fields }
 		}
@@ -80,12 +85,26 @@ class AstJSonReaderTest : StringSpec({
 
 		// Then
 		typeDefStructures.forEach { (name, fields) ->
-			DeclarationRepository.findNativeStructureByName(name)
+			DeclarationRepository.findStructureByName(name)
 				.also { it?.name shouldBe name }
 				.also { it?.fields shouldBe fields }
 		}
 	}
 
+	"typedef parsing" {
+		// Given
+		val filePath = "sample/c/typedef.h.ast.json"
+
+		// When
+		parseAstJson(filePath)
+
+		// Then
+		typeDef.forEach { (name, type) ->
+			DeclarationRepository.findTypeAliasByName(name)
+					.also { it?.name shouldBe name }
+					.also { it?.type shouldBe type }
+		}
+	}
 
 	"function parsing" {
 		// Given
@@ -95,7 +114,7 @@ class AstJSonReaderTest : StringSpec({
 		parseAstJson(filePath)
 
 		// Then
-		DeclarationRepository.findNativeFunctionByName("function")
+		DeclarationRepository.findFunctionByName("function")
 			.also { it?.name shouldBe "function" }
 			.also { it?.returnType shouldBe "char" }
 			.also {
@@ -106,7 +125,7 @@ class AstJSonReaderTest : StringSpec({
 				)
 			}
 
-		DeclarationRepository.findNativeFunctionByName("function2")
+		DeclarationRepository.findFunctionByName("function2")
 			.also { it?.name shouldBe "function2" }
 			.also { it?.returnType shouldBe "void *" }
 			.also { it?.arguments shouldBe listOf() }

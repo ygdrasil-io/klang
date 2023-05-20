@@ -1,9 +1,6 @@
 package klang
 
-import klang.domain.NativeDeclaration
-import klang.domain.NativeEnumeration
-import klang.domain.NativeFunction
-import klang.domain.NativeStructure
+import klang.domain.*
 import mu.KotlinLogging
 
 object DeclarationRepository {
@@ -25,16 +22,20 @@ object DeclarationRepository {
 		nativeDeclarations.clear()
 	}
 
-	fun findNativeEnumerationByName(name: String) = nativeDeclarations
+	fun findEnumerationByName(name: String) = nativeDeclarations
 			.filterIsInstance<NativeEnumeration>()
 			.find { it.name == name }
 
-	fun findNativeStructureByName(name: String) = nativeDeclarations
+	fun findStructureByName(name: String) = nativeDeclarations
 			.filterIsInstance<NativeStructure>()
 			.find { it.name == name }
 
-	fun findNativeFunctionByName(name: String) = nativeDeclarations
+	fun findFunctionByName(name: String) = nativeDeclarations
 			.filterIsInstance<NativeFunction>()
+			.find { it.name == name }
+
+	fun findTypeAliasByName(name: String)= nativeDeclarations
+			.filterIsInstance<NativeTypeAlias>()
 			.find { it.name == name }
 
 }

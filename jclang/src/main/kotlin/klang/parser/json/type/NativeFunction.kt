@@ -28,7 +28,8 @@ private fun TranslationUnitNode.extractArguments(): Pair<String, String> {
 
 private fun JsonObject.returnType() = this["type"]
 	?.jsonObject?.get("qualType")?.jsonPrimitive?.content
-	?.let { it.substring(0, it.indexOf("(") - 1) }
+	?.let { it.substring(0, it.indexOf("(")) }
+	?.trim()
 	?: error("no return type: $this")
 
 

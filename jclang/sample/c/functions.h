@@ -4,5 +4,5 @@ enum EnumName {
   Value2 = 0x1
 };
 
-char function(int *a, void* b, EnumName enum);
+char function(int *a, void* b, enum EnumName myEnum);
 void* function2();

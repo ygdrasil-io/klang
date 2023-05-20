@@ -102,12 +102,12 @@ class AstJSonReaderTest : StringSpec({
 				it?.arguments shouldBe listOf(
 					"a" to "int *",
 					"b" to "void *",
-					"enum" to "EnumName"
+					"myEnum" to "enum EnumName"
 				)
 			}
 
 		DeclarationRepository.findNativeFunctionByName("function2")
-			.also { it?.name shouldBe "function" }
+			.also { it?.name shouldBe "function2" }
 			.also { it?.returnType shouldBe "void *" }
 			.also { it?.arguments shouldBe listOf() }
 	}

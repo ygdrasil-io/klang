@@ -1,5 +1,6 @@
 package klang
 
+import klang.domain.NativeDeclaration
 import klang.domain.NativeEnumeration
 import klang.domain.NativeFunction
 import klang.domain.NativeStructure
@@ -8,33 +9,32 @@ import mu.KotlinLogging
 object DeclarationRepository {
 
 	private val logger = KotlinLogging.logger {}
-	private val nativeEnumerations = mutableSetOf<NativeEnumeration>()
-	private val nativeStructures = mutableSetOf<NativeStructure>()
-	private val nativeFunctions = mutableSetOf<NativeFunction>()
+	private val nativeDeclarations = mutableSetOf<NativeDeclaration>()
 
-	fun save(nativeEnumeration: NativeEnumeration) {
-		logger.debug { "enum added: $nativeEnumeration" }
-		nativeEnumerations.add(nativeEnumeration)
-	}
-
-	fun save(nativeStructure: NativeStructure) {
-		logger.debug { "structure added: $nativeStructure" }
-		nativeStructures.add(nativeStructure)
-	}
-
-	fun save(nativeFunction: NativeFunction) {
-		logger.debug { "function added: $nativeFunction" }
-		nativeFunctions.add(nativeFunction)
+	fun save(nativeEnumeration: NativeDeclaration) {
+		when (nativeEnumeration) {
+			is NativeEnumeration -> logger.debug { "enum added: $nativeEnumeration" }
+			is NativeStructure -> logger.debug { "structure added: $nativeEnumeration" }
+			is NativeFunction -> logger.debug { "function added: $nativeEnumeration" }
+			else -> throw IllegalArgumentException("Unknown native declaration type: $nativeEnumeration")
+		}
+		nativeDeclarations.add(nativeEnumeration)
 	}
 
 	fun clear() {
-		nativeStructures.clear()
-		nativeEnumerations.clear()
-		nativeFunctions.clear()
+		nativeDeclarations.clear()
 	}
 
-	fun findNativeEnumerationByName(name: String) = nativeEnumerations.find { it.name == name }
-	fun findNativeStructureByName(name: String) = nativeStructures.find { it.name == name }
-	fun findNativeFunctionByName(name: String) = nativeFunctions.find { it.name == name }
+	fun findNativeEnumerationByName(name: String) = nativeDeclarations
+			.filterIsInstance<NativeEnumeration>()
+			.find { it.name == name }
+
+	fun findNativeStructureByName(name: String) = nativeDeclarations
+			.filterIsInstance<NativeStructure>()
+			.find { it.name == name }
+
+	fun findNativeFunctionByName(name: String) = nativeDeclarations
+			.filterIsInstance<NativeFunction>()
+			.find { it.name == name }
 
 }

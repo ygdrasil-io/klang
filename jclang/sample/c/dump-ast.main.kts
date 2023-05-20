@@ -9,11 +9,12 @@ val files = listOf(
 	"enum.h" to "enum.h.ast.json",
 	"struct.h" to "struct.h.ast.json",
 	"typedef-struct.h " to "typedef-struct.h.ast.json",
-	"functions.h " to "functions.h.ast.json"
+	"functions.h " to "functions.h.ast.json",
+	"typedef.h " to "typedef.h.ast.json"
 )
 
 files
-	.filter { (source, _) -> source.let(::File).exists().not() }
+	.filter { (_, output) -> output.let(::File).exists().not() }
 	.forEach { (source, output) ->
 		"clang -Xclang -ast-dump=json -fsyntax-only -I./ ./$source > ./$output".run {
 			println("failed to dump ast for $source with error:\n$this")

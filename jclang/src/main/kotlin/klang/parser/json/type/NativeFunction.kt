@@ -14,16 +14,15 @@ internal fun TranslationUnitNode.toNativeFunction() = NativeFunction(
 	arguments = arguments()
 )
 
-private fun TranslationUnitNode.arguments(): List<Pair<String, String>> =
+private fun TranslationUnitNode.arguments() =
 		children.filter { it.content.first == TranslationUnitKind.ParmVarDecl }
 			.map { it.extractArguments() }
 
-private fun TranslationUnitNode.extractArguments(): Pair<String, String> {
+private fun TranslationUnitNode.extractArguments(): NativeFunction.Argument {
 	val name = json["name"]?.jsonPrimitive?.content
-		?: error("no name for : $this")
 	val type = json["type"]?.jsonObject?.get("qualType")?.jsonPrimitive?.content
 		?: error("no type for : $this")
-	return name to type
+	return NativeFunction.Argument(name,  type)
 }
 
 private fun JsonObject.returnType() = this["type"]

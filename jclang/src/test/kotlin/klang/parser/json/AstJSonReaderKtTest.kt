@@ -118,7 +118,8 @@ class AstJSonReaderTest : StringSpec({
 			.also { it?.name shouldBe "function" }
 			.also { it?.returnType shouldBe "char" }
 			.also {
-				it?.arguments shouldBe listOf(
+				it?.arguments
+					?.map { (name, type) -> name to type }shouldBe listOf(
 					"a" to "int *",
 					"b" to "void *",
 					"myEnum" to "enum EnumName"

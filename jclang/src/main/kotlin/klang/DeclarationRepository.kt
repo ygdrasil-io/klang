@@ -13,6 +13,7 @@ object DeclarationRepository {
 			is NativeEnumeration -> logger.debug { "enum added: $nativeEnumeration" }
 			is NativeStructure -> logger.debug { "structure added: $nativeEnumeration" }
 			is NativeFunction -> logger.debug { "function added: $nativeEnumeration" }
+			is NativeTypeAlias -> logger.debug { "type alias added: $nativeEnumeration" }
 			else -> throw IllegalArgumentException("Unknown native declaration type: $nativeEnumeration")
 		}
 		nativeDeclarations.add(nativeEnumeration)

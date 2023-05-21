@@ -1,4 +1,4 @@
-@file:OptIn(ExperimentalSerializationApi::class)
+@file:OptIn(ExperimentalSerializationApi::class, ExperimentalSerializationApi::class)
 
 package klang
 
@@ -42,6 +42,14 @@ fun List<TranslationUnitNode>.parse(depth: Int = 0) {
 
 
 		when (kind) {
+			TranslationUnitKind.TypedefDecl -> {
+				try {
+					node.toNativeTypeAlias()
+						.let(DeclarationRepository::save)
+				} catch (e: RuntimeException) {
+					ParserRepository.errors.add(e)
+				}
+			}
 			TranslationUnitKind.VarDecl -> {
 				try {
 					if (node.isExternalDeclaration().not()) {

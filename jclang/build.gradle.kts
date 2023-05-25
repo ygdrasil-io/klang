@@ -5,13 +5,13 @@ plugins {
 }
 
 kotlin {
-    jvmToolchain(17)
+    jvmToolchain(20)
 
     sourceSets.all {
         languageSettings {
             java {
-                sourceCompatibility = JavaVersion.VERSION_17
-                targetCompatibility = JavaVersion.VERSION_17
+                sourceCompatibility = JavaVersion.VERSION_20
+                targetCompatibility = JavaVersion.VERSION_20
             }
             languageVersion = "2.0"
         }

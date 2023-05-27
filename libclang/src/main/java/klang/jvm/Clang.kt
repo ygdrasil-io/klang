@@ -15,7 +15,7 @@ fun clang_createIndex(excludeDeclarationsFromPCH: Boolean, displayDiagnostics: B
 
 
 val Clang = Native.load(
-    "clang-14.0.0", 
+    "clang",
     LibClang::class.java,
     object : HashMap<String?, Any?>() {
     init {

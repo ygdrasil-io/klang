@@ -5,7 +5,7 @@ import java.lang.invoke.MethodHandle
 import java.lang.invoke.MethodHandles
 import java.lang.invoke.MethodType
 
-internal object RuntimeHelper {
+object RuntimeHelper {
     private val LINKER = Linker.nativeLinker()
     private val LOADER = RuntimeHelper::class.java.classLoader
     private val MH_LOOKUP = MethodHandles.lookup()
@@ -29,11 +29,11 @@ internal object RuntimeHelper {
     }
 
     fun lookupGlobalVariable(name: String?, layout: MemoryLayout): MemorySegment? {
-        return SYMBOL_LOOKUP!!.find(name).map { symbol: MemorySegment -> MemorySegment.ofAddress(symbol.address(), layout.byteSize(), symbol.scope()) }.orElse(null)
+        return SYMBOL_LOOKUP.find(name).map { symbol: MemorySegment -> MemorySegment.ofAddress(symbol.address(), layout.byteSize(), symbol.scope()) }.orElse(null)
     }
 
     fun downcallHandle(name: String?, fdesc: FunctionDescriptor?): MethodHandle? {
-        return SYMBOL_LOOKUP!!.find(name).map { addr: MemorySegment? -> LINKER.downcallHandle(addr, fdesc) }.orElse(null)
+        return SYMBOL_LOOKUP.find(name).map { addr: MemorySegment? -> LINKER.downcallHandle(addr, fdesc) }.orElse(null)
     }
 
     fun downcallHandle(fdesc: FunctionDescriptor?): MethodHandle {
@@ -41,7 +41,7 @@ internal object RuntimeHelper {
     }
 
     fun downcallHandleVariadic(name: String?, fdesc: FunctionDescriptor): MethodHandle? {
-        return SYMBOL_LOOKUP!!.find(name).map { addr: MemorySegment? -> VarargsInvoker.make(addr, fdesc) }.orElse(null)
+        return SYMBOL_LOOKUP.find(name).map { addr: MemorySegment? -> VarargsInvoker.make(addr, fdesc) }.orElse(null)
     }
 
     fun <Z> upcallStub(fi: Class<Z>?, z: Z, fdesc: FunctionDescriptor, scope: SegmentScope?): MemorySegment {

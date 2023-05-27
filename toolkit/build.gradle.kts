@@ -1,7 +1,7 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
 plugins {
     kotlin("jvm")
+	id("org.jetbrains.kotlinx.kover")
 }
 
 repositories {

@@ -1,10 +1,6 @@
 package libclang
 
-
-import jdk.jfr.MemoryAddress
-import org.openjdk.jextract.clang.libclang.Index_h
 import java.lang.foreign.*
-import java.lang.invoke.MethodHandles
 
 
 val C_BOOL_LAYOUT = ValueLayout.JAVA_BOOLEAN
@@ -101,7 +97,7 @@ fun main() = Arena.openConfined().use { session ->
 	val index = clang_createIndex_method_handler!!.invokeExact(0, 0) as MemorySegment
 	val action = clang_IndexAction_create_method_handler!!.invokeExact(index) as MemorySegment
 
-	val client_data = session.allocate(Index_h.C_POINTER)
+	val client_data = session.allocate(C_POINTER_LAYOUT)
 	//IndexerCallbacks *index_callbacks
 	val index_callbacks = session.allocate(IndexerCallbacksLayout)
 	val enteredMainFile = IndexerCallbacksEnteredMainFile { client_data, mainFile, reserved ->
@@ -128,7 +124,7 @@ fun main() = Arena.openConfined().use { session ->
 	//unsigned num_unsaved_files,
 	val num_unsaved_files = 0
 	//CXTranslationUnit *out_TU,
-	val out_TU = session.allocate(Index_h.C_POINTER);
+	val out_TU = session.allocate(C_POINTER_LAYOUT)
 	// unsigned TU_options
 	val TU_options = 0
 

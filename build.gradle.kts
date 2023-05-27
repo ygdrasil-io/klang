@@ -11,7 +11,7 @@ allprojects {
 }
 
 kotlin {
-    jvmToolchain(20)
+    jvmToolchain(17)
 
     sourceSets.all {
         languageSettings {

@@ -2,7 +2,6 @@ plugins {
     kotlin("jvm") version "1.9.0-Beta"
     kotlin("plugin.serialization") version "1.8.21"
     id("org.jetbrains.kotlinx.kover") version "0.6.1"
-	id("org.sonarqube") version "4.1.0.3113"
 }
 
 allprojects {
@@ -23,12 +22,4 @@ kotlin {
             languageVersion = "2.0"
         }
     }
-}
-
-sonarqube {
-	properties {
-		property("sonar.projectKey", "ygdrasil-io_klang")
-		property("sonar.organization", "ygdrasil-io")
-		property("sonar.host.url", "https://sonarcloud.io")
-	}
 }

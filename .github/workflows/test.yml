@@ -21,6 +21,14 @@ jobs:
           java-version: 20
       - name: Build with Gradle
         run: gradle test
+      - name: Bundle the build report
+        if: failure()
+        run: find . -type d -name 'reports' | zip -@ -r build-reports.zip
+      - name: Upload the build report
+        if: failure()
+        uses: actions/upload-artifact@v3
+        with:
+          path: build-reports.zip
       - name: Generate kover coverage report
         run: gradle koverXmlReport
       - name: Add coverage report to PR
@@ -44,6 +52,14 @@ jobs:
           java-version: 20
       - name: Build with Gradle
         run: gradle test
+      - name: Bundle the build report
+        if: failure()
+        run: find . -type d -name 'reports' | zip -@ -r build-reports.zip
+      - name: Upload the build report
+        if: failure()
+        uses: actions/upload-artifact@v3
+        with:
+          path: build-reports.zip
   test-windows:
     runs-on: windows-latest
     steps:

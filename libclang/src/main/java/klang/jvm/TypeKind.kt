@@ -48,11 +48,11 @@ enum class TypeKind {
     CONSTANT_ARRAY,
     Vector,
     IncompleteArray,
-    Elaborated,
-    FunctionProto,
-    FunctionNoProto,
-    Half,
-    Auto,;
+	VariableArray,
+	DependentSizedArray,
+	MemberPointer,
+	Auto,
+    Elaborated;
 
     /* package */
     fun toNative(): kotlin.Int {

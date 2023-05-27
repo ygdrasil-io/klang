@@ -90,23 +90,15 @@ class TypeMaker(private val treeMaker: TreeMaker, val parsingContext: ParsingCon
                 parsingContext.findTyped(type.elementType)
             )
             TypeKind.IncompleteArray -> Array.Incomplete(parsingContext.findTyped(type.elementType))
-            TypeKind.FunctionProto, TypeKind.FunctionNoProto -> Lambda(
-                type.isVariadic,
-                (0 until type.numberOfArgs).map { lowerFunctionType(type.argType(it)) },
-                lowerFunctionType(type.resultType)
-            )
             TypeKind.Enum, TypeKind.Record -> Typed.Declared(
                 type.declarationCursor.fullName,
                 treeMaker.createTree(type.declarationCursor) as Scoped
             )
             TypeKind.BlockPointer, TypeKind.Pointer ->
-                if (type.pointeeType.kind == TypeKind.FunctionProto) {
-                    parsingContext.findTyped(type.pointeeType)
-                } else {
-                    reference(type.pointeeType)
+				reference(type.pointeeType)
                         .apply { if (isUnresolved) resolve() }
                         .get()
-                }.let { Pointer(it) }
+                		.let { Pointer(it) }
             TypeKind.Typedef -> typedef(
                 type.spelling,
                 parsingContext.findTyped(type.canonicalType)
@@ -122,7 +114,6 @@ class TypeMaker(private val treeMaker: TreeMaker, val parsingContext: ParsingCon
             )
             TypeKind.WChar -> Primitive(Primitive.Kind.WChar)
             TypeKind.Char16 -> Primitive(Primitive.Kind.Char16)
-            TypeKind.Half -> Primitive(Primitive.Kind.HalfFloat)
             TypeKind.Int128 -> Primitive(Primitive.Kind.Int128)
             TypeKind.LongDouble -> Primitive(Primitive.Kind.LongDouble)
             TypeKind.UInt128 -> {

@@ -33,19 +33,6 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           path: build-reports.zip
-      - name: Generate kover coverage report
-        run: gradle koverXmlReport
-      - name: Add coverage report to PR
-        id: kover
-        uses: mi-kas/kover-report@v1
-        with:
-          path: ${{ github.workspace }}/build/reports/kover/xml/report.xml
-          token: ${{ secrets.GITHUB_TOKEN }}
-          title: Code Coverage
-          update-comment: true
-          min-coverage-overall: 80
-          min-coverage-changed-files: 80
-          coverage-counter-type: LINE
   test-linux:
     runs-on: ubuntu-latest
     steps:

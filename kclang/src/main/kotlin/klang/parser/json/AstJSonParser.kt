@@ -1,17 +1,13 @@
 @file:OptIn(ExperimentalSerializationApi::class, ExperimentalSerializationApi::class)
 
-package klang
+package klang.parser.json
 
-import klang.parser.json.ParserRepository
+import klang.DeclarationRepository
 import klang.parser.json.domain.Node
 import klang.parser.json.domain.TranslationUnitKind
 import klang.parser.json.domain.TranslationUnitNode
 import klang.parser.json.domain.toNode
 import klang.parser.json.type.*
-import klang.parser.json.type.isTypeDefEnumeration
-import klang.parser.json.type.toNativeEnumeration
-import klang.parser.json.type.toNativeStructure
-import klang.parser.json.type.toNativeTypeDefEnumeration
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.*
 import mu.KotlinLogging

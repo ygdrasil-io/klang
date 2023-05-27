@@ -1,19 +1,12 @@
 package klang.parser.json
 
-import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import klang.DeclarationRepository
-import klang.parseAstJson
+import klang.parser.ParserTestCommon
+import klang.parser.TestData
+import klang.parser.validateEnumerations
 
-class AstJSonReaderTest : StringSpec({
-
-	val enumerations = listOf(
-		"EnumName" to listOf("Value1" to 0x2, "Value2" to 0x1),
-		"EnumNameWithoutExplicitValues" to listOf(
-			"EnumNameWithoutExplicitValues_Value1" to 0,
-			"EnumNameWithoutExplicitValues_Value2" to 1
-		)
-	)
+class AstJSonReaderTest : ParserTestCommon({
 
 	val structures = listOf(
 		"StructName" to listOf("field1" to "enum EnumName *", "field2" to "EnumName2", "field3" to "char"),
@@ -38,11 +31,7 @@ class AstJSonReaderTest : StringSpec({
 		parseAstJson(filePath)
 
 		// Then
-		enumerations.forEach { (name, values) ->
-			DeclarationRepository.findEnumerationByName(name)
-				.also { it?.name shouldBe name }
-				.also { it?.values shouldBe values }
-		}
+		validateEnumerations(TestData.enumerations)
 	}
 
 	"test typedef enum parsing" {
@@ -53,11 +42,8 @@ class AstJSonReaderTest : StringSpec({
 		parseAstJson(filePath)
 
 		// Then
-		enumerations.forEach { (name, values) ->
-			DeclarationRepository.findEnumerationByName(name)
-				.also { it?.name shouldBe name }
-				.also { it?.values shouldBe values }
-		}
+		validateEnumerations(TestData.enumerations)
+
 	}
 
 	"test struct parsing" {
@@ -132,12 +118,6 @@ class AstJSonReaderTest : StringSpec({
 			.also { it?.arguments shouldBe listOf() }
 	}
 
-	beforeTest {
-		DeclarationRepository.clear()
-		ParserRepository.errors.clear()
-	}
-
-	afterTest {
-		ParserRepository.errors.size shouldBe 0
-	}
 })
+
+

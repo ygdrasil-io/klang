@@ -27,7 +27,7 @@ interface LibClang : Library {
     fun IndexAction_dispose(action: CXIndexAction)
     fun indexSourceFile(
         action: CXIndexAction, clientData: Void?, indexCallbacks: NativeIndexerCallbacks,
-        indexCallbacksSize: Int, indexOptions: Int, sourceFilename: String?, commandLineArgs: Array<String?>?,
+        indexCallbacksSize: Int, indexOptions: Int, sourceFilename: String?, commandLineArgs: Array<String>?,
         numCommandLineArgs: Int, unsavedFiles: Void?, numUnsavedFiles: Int,
         /* CXTranslationUnit */translationUnit: PointerByReference?, tuOptions: Int
     ): Int

@@ -4,7 +4,7 @@ import klang.jvm.binding.CXIdxDeclInfo
 
 class DeclarationInfo(info: CXIdxDeclInfo) {
     val entityInfo: EntityInfo = EntityInfo(info.entityInfo)
-    val cursor: Cursor= Cursor(info.cursor)
+    val cursor: Cursor = Cursor(info.cursor)
     val location: IndexLocation= IndexLocation(info.loc)
     val semanticContainer: ContainerInfo= ContainerInfo(info.semanticContainer)
     val lexicalContainer: ContainerInfo= ContainerInfo(info.lexicalContainer)

@@ -39,4 +39,18 @@ object DeclarationRepository {
 			.filterIsInstance<NativeTypeAlias>()
 			.find { it.name == name }
 
+	fun update(nativeEnumeration: NativeDeclaration, provider: () -> NativeDeclaration): NativeDeclaration {
+		when (nativeEnumeration) {
+			is NativeEnumeration -> logger.debug { "enum updated: $nativeEnumeration" }
+			is NativeStructure -> logger.debug { "structure updated: $nativeEnumeration" }
+			is NativeFunction -> logger.debug { "function updated: $nativeEnumeration" }
+			is NativeTypeAlias -> logger.debug { "type alias updated: $nativeEnumeration" }
+			else -> throw IllegalArgumentException("Unknown native declaration type: $nativeEnumeration")
+		}
+		nativeDeclarations.remove(nativeEnumeration)
+		val newValue = provider()
+		nativeDeclarations.add(newValue)
+		return newValue
+	}
+
 }

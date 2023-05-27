@@ -35,7 +35,7 @@ class Index(private val ptr: CXIndex) : AutoCloseable {
 
     @Throws(IndexException::class)
     fun indexSourceFile(
-        callback: IndexerCallback, sourceFilename: String?, args: Array<String?>,
+        callback: IndexerCallback, sourceFilename: String, args: Array<String>? = null,
         vararg options: TranslationUnit.Flag
     ): TranslationUnit {
         val action = NativePool.record(Clang.IndexAction_create(ptr))
@@ -44,7 +44,7 @@ class Index(private val ptr: CXIndex) : AutoCloseable {
         val tuRef = PointerByReference()
         val exitCode = Clang.indexSourceFile(
             action, null, callbacks, callbacks.size(), 0 /* TODO: CXIndexOptFlags */,
-            sourceFilename, args, args.size, null, 0, tuRef, flags
+            sourceFilename, args, args?.size ?: 0, null, 0, tuRef, flags
         )
         if (exitCode != 0) {
             throw IndexException(exitCode)

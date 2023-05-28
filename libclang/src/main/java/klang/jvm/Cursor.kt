@@ -3,6 +3,7 @@ package klang.jvm
 import com.sun.jna.Pointer
 import klang.jvm.binding.CXChildVisitResult
 import klang.jvm.binding.CXCursor
+import klang.jvm.binding.CXCursorVisitor
 
 class Cursor(private val cursor: CXCursor.CXCursorByValue) {
 
@@ -56,7 +57,7 @@ class Cursor(private val cursor: CXCursor.CXCursorByValue) {
 
         val children = mutableListOf<Cursor>()
 
-        val visitCursor = { cursor: CXCursor.CXCursorByValue, parent: CXCursor, data: Pointer? ->
+        val visitCursor = CXCursorVisitor { cursor, parent, data ->
             children.add(Cursor(cursor))
             CXChildVisitResult.CXChildVisit_Continue
         }

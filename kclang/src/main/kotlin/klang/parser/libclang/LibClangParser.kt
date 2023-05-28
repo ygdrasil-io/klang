@@ -3,14 +3,16 @@ package klang.parser.libclang
 import klang.DeclarationRepository
 import klang.domain.NativeDeclaration
 import klang.domain.NativeEnumeration
+import klang.domain.NativeFunction
 import klang.domain.NativeStructure
 import klang.jvm.AbstractIndexerCallback
 import klang.jvm.CursorKind
 import klang.jvm.DeclarationInfo
 import klang.jvm.createIndex
+import klang.parser.libclang.type.declareFunction
 import klang.parser.tools.OneTimeProvider
 
-private data class ParsingContext(
+internal data class ParsingContext(
 	var currentDefinition: NativeDeclaration? = null,
 	var lastTypeDefName: OneTimeProvider<String> = OneTimeProvider()
 ) {
@@ -31,6 +33,7 @@ fun parseFile(file: String) {
 					CursorKind.STRUCT_DECL -> declareStructure(info)
 					CursorKind.ENUM_CONSTANT_DECL -> updateEnumerationField(info)
 					CursorKind.FIELD_DECL -> updateStructureField(info)
+					CursorKind.FUNCTION_DECL -> declareFunction(info)
 
 					else -> println("not found ${info.cursor.kind} ${info.cursor.spelling}")
 				}
@@ -43,8 +46,6 @@ fun parseFile(file: String) {
 					println()
 				}
 			}
-
-
 		}, file)
 	}
 }
@@ -72,8 +73,9 @@ private fun ParsingContext.updateEnumerationField(info: DeclarationInfo) {
 private fun ParsingContext.declareStructure(info: DeclarationInfo) {
 	currentDefinition = NativeStructure(lastTypeDefName.consume() ?: info.cursor.spelling)
 		.also(DeclarationRepository::save)
-
 }
+
+
 
 private fun ParsingContext.declareEnumeration(info: DeclarationInfo) {
 	currentDefinition = NativeEnumeration(lastTypeDefName.consume() ?: info.cursor.spelling)

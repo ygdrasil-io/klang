@@ -68,7 +68,7 @@ interface LibClang : Library {
     fun getTranslationUnitCursor(pointer: CXTranslationUnit): CXCursor.CXCursorByValue
     fun visitChildren(
         parrent: CXCursor.CXCursorByValue,
-        visitor: (CXCursor.CXCursorByValue, CXCursor, Pointer?) -> Int,
+        visitor: CXCursorVisitor,
         client_data: Pointer?
     )
 

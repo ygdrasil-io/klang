@@ -126,5 +126,6 @@ interface LibClang : Library {
     fun getArgType(type: CXType.ByValue, idx: Int): CXType.ByValue
     fun getResultType(type: CXType.ByValue): CXType.ByValue
     fun getPointeeType(type: CXType.ByValue): CXType.ByValue
+	fun getTypedefDeclUnderlyingType(cursor: CXCursor.CXCursorByValue): CXType.ByValue
 
 }

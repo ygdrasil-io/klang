@@ -29,15 +29,16 @@ class Cursor(private val cursor: CXCursor.CXCursorByValue) {
         get() = isPreprocessing && kind == CursorKind.MACRO_DEFINITION
     val isDeclaration: Boolean
         get() = Clang.isDeclaration(kind.ordinal) != 0
-
+	val isMacroFunctionLike: Boolean
+		get() = Clang.Cursor_isMacroFunctionLike(cursor) != 0
     val sourceLocation: SourceLocation?
         get() = Clang.getCursorLocation(cursor)
             .let {
                 if (Clang.equalLocations(it, Clang.getNullLocation()) != 0) null
                 else SourceLocation(it)
             }
-    val isMacroFunctionLike: Boolean
-        get() = Clang.Cursor_isMacroFunctionLike(cursor) != 0
+	val underlyingType: Type
+		get() = Type(Clang.getTypedefDeclUnderlyingType(cursor))
     val spelling: String
         get() = Clang.getCursorSpelling(cursor)
     val kind: CursorKind // We should've called clang_getCursorKind here, but this works and is more efficient

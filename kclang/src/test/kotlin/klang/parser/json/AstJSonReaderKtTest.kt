@@ -5,23 +5,11 @@ import klang.DeclarationRepository
 import klang.parser.ParserTestCommon
 import klang.parser.TestData
 import klang.parser.validateEnumerations
+import klang.parser.validateStructures
 
 class AstJSonReaderTest : ParserTestCommon({
 
-	val structures = listOf(
-		"StructName" to listOf("field1" to "enum EnumName *", "field2" to "EnumName2", "field3" to "char"),
-		"StructName2" to listOf("field1" to "struct StructName", "field2" to "struct StructName *", "field3" to "char")
-	)
 
-	val typeDefStructures = listOf(
-		"StructName" to listOf("field1" to "enum EnumName *", "field2" to "EnumName2", "field3" to "char"),
-		"StructName2" to listOf("field1" to "StructName", "field2" to "StructName *", "field3" to "char")
-	)
-
-	val typeDef = listOf(
-		"NewType" to "void *",
-		"NewStructureType" to "struct OldStructureType *"
-	)
 
 	"test enum parsing" {
 		// Given
@@ -54,12 +42,7 @@ class AstJSonReaderTest : ParserTestCommon({
 		parseAstJson(filePath)
 
 		// Then
-		structures.forEach { (name, fields) ->
-			DeclarationRepository.findStructureByName(name)
-				.also { it?.name shouldBe name }
-				.also { it?.fields shouldBe fields }
-		}
-
+		validateStructures(TestData.structures)
 	}
 
 	"typedef struct parsing" {
@@ -70,11 +53,7 @@ class AstJSonReaderTest : ParserTestCommon({
 		parseAstJson(filePath)
 
 		// Then
-		typeDefStructures.forEach { (name, fields) ->
-			DeclarationRepository.findStructureByName(name)
-				.also { it?.name shouldBe name }
-				.also { it?.fields shouldBe fields }
-		}
+		validateStructures(TestData.typeDefStructures)
 	}
 
 	"typedef parsing" {
@@ -85,7 +64,7 @@ class AstJSonReaderTest : ParserTestCommon({
 		parseAstJson(filePath)
 
 		// Then
-		typeDef.forEach { (name, type) ->
+		TestData.typeDef.forEach { (name, type) ->
 			DeclarationRepository.findTypeAliasByName(name)
 					.also { it?.name shouldBe name }
 					.also { it?.type shouldBe type }

@@ -28,3 +28,11 @@ fun validateEnumerations(enumerations: List<Pair<String, List<Pair<String, Long>
 			.also { it?.values shouldBe values }
 	}
 }
+
+fun validateStructures(structures: List<Pair<String, List<Pair<String, String>>>>) {
+	structures.forEach { (name, fields) ->
+		DeclarationRepository.findStructureByName(name)
+			.also { it?.name shouldBe name }
+			.also { it?.fields shouldBe fields }
+	}
+}

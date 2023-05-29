@@ -15,7 +15,7 @@ open class CXIdxContainerInfo(pointer: Pointer?) : Structure(pointer) {
 	constructor() : this(null)
 }
 
-@Structure.FieldOrder("cursor")
+@Suppress("unused")
 class CXIdxContainerInfoReference(pointer: Pointer?) : CXIdxContainerInfo(pointer), ByReference {
 
 	constructor() : this(null)

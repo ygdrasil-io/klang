@@ -1,11 +1,12 @@
+@file:Suppress("unused")
 package klang.jvm.binding
 
 import com.sun.jna.Pointer
 import com.sun.jna.Structure
 import com.sun.jna.Structure.ByReference
+
 import klang.jvm.binding.CXCursor.CXCursorByValue
 
-@Suppress("unused")
 @Structure.FieldOrder("cursor")
 open class CXIdxContainerInfo(pointer: Pointer?) : Structure(pointer) {
 
@@ -15,7 +16,6 @@ open class CXIdxContainerInfo(pointer: Pointer?) : Structure(pointer) {
 	constructor() : this(null)
 }
 
-@Suppress("unused")
 class CXIdxContainerInfoReference(pointer: Pointer?) : CXIdxContainerInfo(pointer), ByReference {
 
 	constructor() : this(null)

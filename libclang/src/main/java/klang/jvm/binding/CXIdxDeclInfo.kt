@@ -13,38 +13,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package klang.jvm.binding
 
-package klang.jvm.binding;
+import com.sun.jna.Structure
+import com.sun.jna.ptr.PointerByReference
+import klang.jvm.binding.CXCursor.CXCursorByValue
 
-import com.sun.jna.Structure;
-import com.sun.jna.ptr.PointerByReference;
-import org.jetbrains.annotations.Nullable;
+@Suppress("unused")
+@Structure.FieldOrder("entityInfo", "cursor", "loc", "semanticContainer", "lexicalContainer", "isRedeclaration", "isDefinition", "isContainer", "declAsContainer", "isImplicit", "attributes", "numAttributes")
+open class CXIdxDeclInfo : Structure() {
+	@JvmField
+    var entityInfo: CXIdxEntityInfo.ByReference = CXIdxEntityInfo.ByReference()
+	@JvmField
+    var cursor: CXCursorByValue = CXCursorByValue()
+	@JvmField
+    var loc: CXIdxLoc.ByValue = CXIdxLoc.ByValue()
+	@JvmField
+    var semanticContainer: CXIdxContainerInfoReference = CXIdxContainerInfoReference()
+	@JvmField
+    var lexicalContainer: CXIdxContainerInfoReference = CXIdxContainerInfoReference()
+	@JvmField
+    var isRedeclaration = false
+	@JvmField
+    var isDefinition = false
+	@JvmField
+    var isContainer = false
+	@JvmField
+    var declAsContainer: CXIdxContainerInfoReference = CXIdxContainerInfoReference()
+	@JvmField
+    var isImplicit = false
+	@JvmField
+    var  /* CXIdxAttrInfo */attributes: PointerByReference = PointerByReference()
+	@JvmField
+    var numAttributes = 0
 
-@SuppressWarnings("unused")
-@Structure.FieldOrder({"entityInfo", "cursor", "loc", "semanticContainer", "lexicalContainer", "isRedeclaration",
-             "isDefinition", "isContainer", "declAsContainer", "isImplicit", "attributes", "numAttributes"})
-public class CXIdxDeclInfo extends Structure {
-    public CXIdxEntityInfo.ByReference entityInfo;
-    public CXCursor.CXCursorByValue cursor;
-    public CXIdxLoc.ByValue loc;
-    public CXIdxContainerInfoReference semanticContainer;
-    public CXIdxContainerInfoReference lexicalContainer;
-    public boolean isRedeclaration;
-    public boolean isDefinition;
-    public boolean isContainer;
-    public CXIdxContainerInfoReference declAsContainer;
-    public boolean isImplicit;
-    @Nullable
-    public PointerByReference /* CXIdxAttrInfo */ attributes;
-    public int numAttributes;
-
-    public static class ByReference extends CXIdxDeclInfo implements Structure.ByReference {
-        public ByReference() {
-            super();
-        }
-    }
-
-    public CXIdxDeclInfo() {
-        super();
-    }
+    class ByReference : CXIdxDeclInfo(), Structure.ByReference
 }

@@ -1,14 +1,15 @@
+package klang.jvm.binding
 
-package klang.jvm.binding;
+import com.sun.jna.Pointer
+import com.sun.jna.Structure
 
-import com.sun.jna.Pointer;
-import com.sun.jna.Structure;
+@Suppress("unused")
+@Structure.FieldOrder("kind", "data")
+open class CXType : Structure() {
+	@JvmField
+    var kind = 0
+	@JvmField
+    var data = arrayOfNulls<Pointer>(2)
 
-@SuppressWarnings("unused")
-@Structure.FieldOrder({"kind", "data"})
-public class CXType extends Structure {
-    public int kind;
-    public Pointer[] data = new Pointer[2];
-
-    public static class ByValue extends CXType implements Structure.ByValue {}
+    class ByValue : CXType(), Structure.ByValue
 }

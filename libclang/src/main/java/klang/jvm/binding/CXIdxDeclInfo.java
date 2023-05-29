@@ -27,12 +27,12 @@ public class CXIdxDeclInfo extends Structure {
     public CXIdxEntityInfo.ByReference entityInfo;
     public CXCursor.CXCursorByValue cursor;
     public CXIdxLoc.ByValue loc;
-    public CXIdxContainerInfo.ByReference semanticContainer;
-    public CXIdxContainerInfo.ByReference lexicalContainer;
+    public CXIdxContainerInfoReference semanticContainer;
+    public CXIdxContainerInfoReference lexicalContainer;
     public boolean isRedeclaration;
     public boolean isDefinition;
     public boolean isContainer;
-    public CXIdxContainerInfo.ByReference declAsContainer;
+    public CXIdxContainerInfoReference declAsContainer;
     public boolean isImplicit;
     @Nullable
     public PointerByReference /* CXIdxAttrInfo */ attributes;

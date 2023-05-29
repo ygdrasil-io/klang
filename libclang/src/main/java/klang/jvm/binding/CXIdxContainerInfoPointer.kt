@@ -1,12 +1,22 @@
+package klang.jvm.binding
 
-package klang.jvm.binding;
+import com.sun.jna.Pointer
+import com.sun.jna.Structure
+import com.sun.jna.Structure.ByReference
+import klang.jvm.binding.CXCursor.CXCursorByValue
 
-import com.sun.jna.Structure;
+@Suppress("unused")
+@Structure.FieldOrder("cursor")
+open class CXIdxContainerInfo(pointer: Pointer?) : Structure(pointer) {
 
-@SuppressWarnings("unused")
-@Structure.FieldOrder({"cursor"})
-public class CXIdxContainerInfo extends Structure {
-    public CXCursor.CXCursorByValue cursor;
+	@JvmField
+	var cursor: CXCursorByValue = CXCursorByValue()
 
-    public static class ByReference extends CXIdxContainerInfo implements Structure.ByReference {}
+	constructor() : this(null)
+}
+
+@Structure.FieldOrder("cursor")
+class CXIdxContainerInfoReference(pointer: Pointer?) : CXIdxContainerInfo(pointer), ByReference {
+
+	constructor() : this(null)
 }

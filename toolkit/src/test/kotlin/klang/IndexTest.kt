@@ -128,7 +128,7 @@ private fun getTestDeclarationsFile(): String {
 }
 
 private fun indexTestDeclarations(callback: IndexerCallback): TranslationUnit {
-    createIndex(excludeDeclarationsFromPCH = false, displayDiagnostics = false).use { index ->
+    createIndex(excludeDeclarationsFromPCH = false, displayDiagnostics = true).use { index ->
         return index.indexSourceFile(callback, getTestDeclarationsFile(), arrayOf())
     }
 }

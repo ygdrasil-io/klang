@@ -23,40 +23,35 @@ internal data class ParsingContext(
 }
 
 fun parseFile(file: String) {
-	ParsingContext().apply {
-		val index = createIndex(excludeDeclarationsFromPCH = false, displayDiagnostics = false)
-		index.indexSourceFile(object : AbstractIndexerCallback() {
-			override fun indexDeclaration(info: DeclarationInfo) {
-				when (info.cursor.kind) {
-					CursorKind.TYPEDEF_DECL -> when {
-						isEnumOrStruct(info) -> storeSpelling(info)
-						else -> declareTypeAlias(info)
-					}
-					CursorKind.ENUM_DECL -> declareEnumeration(info)
-					CursorKind.STRUCT_DECL -> declareStructure(info)
-					CursorKind.ENUM_CONSTANT_DECL -> updateEnumerationField(info)
-					CursorKind.FIELD_DECL -> updateStructureField(info)
-					CursorKind.FUNCTION_DECL -> declareFunction(info)
-
-					else -> println("not found ${info.cursor.kind} ${info.cursor.spelling}")
-				}
-
-				for (attribute in info.attributes) {
-					val location = attribute.location
-					print("  " + location.getLine() + ":" + location.getColumn())
-					print(" " + attribute.kind)
-					print(" " + attribute.cursor.kind)
-					println()
-				}
+	ParsingContext().parse(file) { info ->
+		when (info.cursor.kind) {
+			CursorKind.TYPEDEF_DECL -> when {
+				isEnumOrStruct(info) -> storeSpelling(info)
+				else -> declareTypeAlias(info)
 			}
 
-			private fun isEnumOrStruct(info: DeclarationInfo) = info.cursor.children().isNotEmpty()
-				&& info.cursor.children().first().kind in listOf(CursorKind.ENUM_DECL, CursorKind.STRUCT_DECL)
+			CursorKind.ENUM_DECL -> declareEnumeration(info)
+			CursorKind.STRUCT_DECL -> declareStructure(info)
+			CursorKind.ENUM_CONSTANT_DECL -> updateEnumerationField(info)
+			CursorKind.FIELD_DECL -> updateStructureField(info)
+			CursorKind.FUNCTION_DECL -> declareFunction(info)
 
-
-		}, file)
+			else -> println("not found ${info.cursor.kind} ${info.cursor.spelling}")
+		}
 	}
 }
+
+private fun ParsingContext.parse(file: String, block: ParsingContext.(DeclarationInfo) -> Unit) =
+	createIndex(excludeDeclarationsFromPCH = false, displayDiagnostics = false).use { index ->
+		index.indexSourceFile(object : AbstractIndexerCallback() {
+			override fun indexDeclaration(info: DeclarationInfo) {
+				block(info)
+			}
+		}, file)
+	}
+
+private fun isEnumOrStruct(info: DeclarationInfo) = info.cursor.children().isNotEmpty()
+	&& info.cursor.children().first().kind in listOf(CursorKind.ENUM_DECL, CursorKind.STRUCT_DECL)
 
 private fun ParsingContext.declareTypeAlias(info: DeclarationInfo) {
 	val name = info.cursor.spelling
@@ -89,7 +84,6 @@ private fun ParsingContext.declareStructure(info: DeclarationInfo) {
 	currentDefinition = NativeStructure(lastTypeDefName.consume() ?: info.cursor.spelling)
 		.also(DeclarationRepository::save)
 }
-
 
 private fun ParsingContext.declareEnumeration(info: DeclarationInfo) {
 	currentDefinition = NativeEnumeration(lastTypeDefName.consume() ?: info.cursor.spelling)

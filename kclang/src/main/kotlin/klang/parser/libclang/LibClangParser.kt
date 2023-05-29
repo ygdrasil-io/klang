@@ -51,6 +51,7 @@ fun parseFile(file: String) {
 			}
 
 			private fun isEnumOrStruct(info: DeclarationInfo) = info.cursor.children().isNotEmpty()
+				&& info.cursor.children().first().kind in listOf(CursorKind.ENUM_DECL, CursorKind.STRUCT_DECL)
 
 
 		}, file)

@@ -1,20 +1,18 @@
+package klang.jvm.binding
 
-package klang.jvm.binding;
+import com.sun.jna.Pointer
+import com.sun.jna.Structure
+import klang.jvm.binding.CXCursor.CXCursorByValue
 
-import com.sun.jna.Pointer;
-import com.sun.jna.Structure;
-import org.jetbrains.annotations.NotNull;
+@Suppress("unused")
+@Structure.FieldOrder("kind", "cursor", "loc")
+class CXIdxAttrInfo(pointer: Pointer) : Structure(pointer) {
 
-@SuppressWarnings("unused")
-@Structure.FieldOrder({"kind", "cursor", "loc"})
-public class CXIdxAttrInfo extends Structure {
-    public int kind;
-    public CXCursor.CXCursorByValue cursor;
-    public CXIdxLoc.ByValue loc;
+    var kind = 0
+    var cursor = CXCursorByValue()
+    var loc = CXIdxLoc.ByValue()
 
-    public CXIdxAttrInfo(@NotNull Pointer pointer) {
-        super(pointer);
-        read();
+    init {
+        read()
     }
-
 }

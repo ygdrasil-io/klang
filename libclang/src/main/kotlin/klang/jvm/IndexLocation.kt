@@ -12,6 +12,7 @@ class IndexLocation(private val location: CXIdxLoc.ByValue) {
     private var line = 0
     private var column = 0
     private var offset = 0
+
     private fun retrieveLocation() {
         if (isComputed) return
         isComputed = true
@@ -50,6 +51,6 @@ class IndexLocation(private val location: CXIdxLoc.ByValue) {
     }
 
     override fun toString(): String {
-        return getFile().toString() + "[" + getOffset() + "]:" + getLine() + ":" + getColumn()
+        return getFile().toString() + "[offest=" + getOffset() + "]:line=" + getLine() + ":column=" + getColumn()
     }
 }

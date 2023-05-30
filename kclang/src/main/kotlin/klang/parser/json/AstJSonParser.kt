@@ -3,10 +3,7 @@
 package klang.parser.json
 
 import klang.DeclarationRepository
-import klang.parser.json.domain.Node
-import klang.parser.json.domain.TranslationUnitKind
-import klang.parser.json.domain.TranslationUnitNode
-import klang.parser.json.domain.toNode
+import klang.parser.json.domain.*
 import klang.parser.json.type.*
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.*
@@ -15,19 +12,13 @@ import java.io.FileInputStream
 
 private val logger = KotlinLogging.logger {}
 
-fun main() {
-	parseAstJson("jclang/v16/include/dump.json")
-
-	logger.info { "parsing ended with ${ParserRepository.errors.size} errors" }
-	ParserRepository.errors.forEach { logger.error { it } }
-}
-
 fun parseAstJson(filePath: String) = FileInputStream(filePath)
 	.let<FileInputStream, JsonObject>(Json.Default::decodeFromStream)
 	.toNode()
 	.flattenRootNode()
 	.removeImplicitDeclarations()
 	.parse()
+
 
 fun List<TranslationUnitNode>.parse(depth: Int = 0) {
 	var index = 0
@@ -46,6 +37,7 @@ fun List<TranslationUnitNode>.parse(depth: Int = 0) {
 					ParserRepository.errors.add(e)
 				}
 			}
+
 			TranslationUnitKind.VarDecl -> {
 				try {
 					if (node.isExternalDeclaration().not()) {
@@ -55,6 +47,7 @@ fun List<TranslationUnitNode>.parse(depth: Int = 0) {
 					ParserRepository.errors.add(e)
 				}
 			}
+
 			TranslationUnitKind.FunctionDecl -> {
 				try {
 					node.toNativeFunction()
@@ -63,6 +56,7 @@ fun List<TranslationUnitNode>.parse(depth: Int = 0) {
 					ParserRepository.errors.add(e)
 				}
 			}
+
 			TranslationUnitKind.RecordDecl -> {
 				try {
 					when {

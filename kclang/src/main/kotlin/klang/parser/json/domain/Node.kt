@@ -9,6 +9,9 @@ data class Node<T>(val content: T, val children: List<Node<T>>) {
 
 typealias TranslationUnitNode = Node<Pair<TranslationUnitKind, JsonObject>>
 
+val TranslationUnitNode.kind: TranslationUnitKind
+	get() = content.first
+
 val TranslationUnitNode.json: JsonObject
 	get() = content.second
 

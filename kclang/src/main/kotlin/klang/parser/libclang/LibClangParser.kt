@@ -11,6 +11,9 @@ import klang.jvm.DeclarationInfo
 import klang.jvm.createIndex
 import klang.parser.libclang.type.declareFunction
 import klang.parser.tools.OneTimeProvider
+import mu.KotlinLogging
+
+private val logger = KotlinLogging.logger {}
 
 internal data class ParsingContext(
 	var currentDefinition: NativeDeclaration? = null,
@@ -23,7 +26,8 @@ internal data class ParsingContext(
 }
 
 fun parseFile(file: String) {
-	ParsingContext().parse(file) { info ->
+	ParsingContext().parse(file) { info: DeclarationInfo ->
+		logger.debug { "parsing unit at ${info.location}" }
 		when (info.cursor.kind) {
 			CursorKind.TYPEDEF_DECL -> when {
 				isEnumOrStruct(info) -> storeSpelling(info)

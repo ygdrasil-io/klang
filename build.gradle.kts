@@ -5,9 +5,11 @@ plugins {
 }
 
 allprojects {
+
     repositories {
         mavenCentral()
     }
+
 }
 
 kotlin {

@@ -1,4 +1,4 @@
 rootProject.name = "klang"
 
-include("kclang", "libclang", "toolkit")
+include("docker-toolkit", "kclang", "libclang", "toolkit")
 include("libclang-generator")

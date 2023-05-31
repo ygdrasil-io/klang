@@ -1,0 +1,1 @@
+docker build -t ubuntu-clang-16 -f ./ubuntu-clang-16 .

@@ -15,14 +15,19 @@ class CommandRunner internal constructor(
 	val errorOutputFile: File = errorOutputFile ?: File.createTempFile("klang", ".error.output")
 		.also(File::deleteOnExit)
 	private val finalCommand = "$command ${arguments.joinToString(" ")}"
+	var exitCode = 0
+		private set
 	internal fun run() {
 		logger.info { "will run command: $finalCommand" }
 		ProcessBuilder()
 			.command("bash", "-c", finalCommand)
 			.redirectOutput(outputFile)
 			.redirectError(errorOutputFile)
-			.start()
-			.waitFor()
+			.start().apply {
+				waitFor()
+				exitCode = exitValue()
+			}
+		logger.info { "process exit with code $exitCode" }
 		logger.info { "output file: ${outputFile.absolutePath}" }
 		logger.info { "error output file: ${errorOutputFile.absolutePath}" }
 	}

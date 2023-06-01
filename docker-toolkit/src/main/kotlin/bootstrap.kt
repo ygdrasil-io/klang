@@ -1,16 +1,8 @@
-import com.github.dockerjava.core.DefaultDockerClientConfig
-import com.github.dockerjava.core.DockerClientConfig
-import com.github.dockerjava.core.DockerClientImpl
-import com.github.dockerjava.httpclient5.ApacheDockerHttpClient
-import com.github.dockerjava.transport.DockerHttpClient
 import klang.tools.ClangQueryCommandBuilder
 import klang.tools.runCommand
 import mu.KotlinLogging
-import java.io.BufferedReader
 import java.io.File
-import java.io.FileReader
 import java.nio.file.Files
-import java.time.Duration
 
 
 val files = listOf(
@@ -22,16 +14,22 @@ val files = listOf(
 	"typedef.h " to "typedef.h.ast"
 )
 
-const val baseContainerDirectory = "/test_container"
+const val baseContainerDirectory = "/workspace"
 const val dockerImage = "ubuntu-clang-16"
 private val logger = KotlinLogging.logger {}
 
+
+val sourcePath = File(".")
+	.resolve("clang")
+	.resolve("14.0.0")
+val clangQueryAstOutput = sourcePath
+	.resolve("clang-query-ast.log")
+val clangAstOutput = sourcePath
+	.resolve("clang-ast.log")
+val clangJsonAstOutput = sourcePath
+	.resolve("clang-ast.json")
+
 fun main() {
-	val sourcePath = File(".")
-		.resolve("clang")
-		.resolve("14.0.0")
-	val outputFile = sourcePath
-		.resolve("temp.log")
 
 	val dockerCommand = listOf(
 		"run", "--rm", "--mount", "src=\"${sourcePath.absolutePath}\",target=$baseContainerDirectory,type=bind", dockerImage
@@ -44,7 +42,23 @@ fun main() {
 
 	"docker".runCommand(
 		arguments = dockerCommand + clangQueryCommand,
-		outputFile
+		clangQueryAstOutput
+	).apply {
+		Files.readAllLines(errorOutputFile.toPath())
+			.forEach { logger.error { it } }
+	}
+
+	"docker".runCommand(
+		arguments = dockerCommand + listOf("clang-16", "-Xclang", "-ast-dump", "-fsyntax-only", "-I", "$baseContainerDirectory", "$baseContainerDirectory/clang-c/Index.h"),
+		clangAstOutput
+	).apply {
+		Files.readAllLines(errorOutputFile.toPath())
+			.forEach { logger.error { it } }
+	}
+
+	"docker".runCommand(
+		arguments = dockerCommand + listOf("clang-16", "-Xclang", "-ast-dump=json", "-fsyntax-only", "-I", "$baseContainerDirectory", "$baseContainerDirectory/clang-c/Index.h"),
+		clangJsonAstOutput
 	).apply {
 		Files.readAllLines(errorOutputFile.toPath())
 			.forEach { logger.error { it } }

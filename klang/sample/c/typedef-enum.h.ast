@@ -1,0 +1,35 @@
+TranslationUnitDecl 0x561bbb7feed8 <<invalid sloc>> <invalid sloc>
+|-TypedefDecl 0x561bbb7ff700 <<invalid sloc>> <invalid sloc> implicit __int128_t '__int128'
+| `-BuiltinType 0x561bbb7ff4a0 '__int128'
+|-TypedefDecl 0x561bbb7ff770 <<invalid sloc>> <invalid sloc> implicit __uint128_t 'unsigned __int128'
+| `-BuiltinType 0x561bbb7ff4c0 'unsigned __int128'
+|-TypedefDecl 0x561bbb7ffa78 <<invalid sloc>> <invalid sloc> implicit __NSConstantString 'struct __NSConstantString_tag'
+| `-RecordType 0x561bbb7ff850 'struct __NSConstantString_tag'
+|   `-Record 0x561bbb7ff7c8 '__NSConstantString_tag'
+|-TypedefDecl 0x561bbb7ffb10 <<invalid sloc>> <invalid sloc> implicit __builtin_ms_va_list 'char *'
+| `-PointerType 0x561bbb7ffad0 'char *'
+|   `-BuiltinType 0x561bbb7fef80 'char'
+|-TypedefDecl 0x561bbb7ffe08 <<invalid sloc>> <invalid sloc> implicit __builtin_va_list 'struct __va_list_tag[1]'
+| `-ConstantArrayType 0x561bbb7ffdb0 'struct __va_list_tag[1]' 1 
+|   `-RecordType 0x561bbb7ffbf0 'struct __va_list_tag'
+|     `-Record 0x561bbb7ffb68 '__va_list_tag'
+|-EnumDecl 0x561bbb85b030 </workspace/typedef-enum.h:3:9, line:6:1> line:3:9
+| |-EnumConstantDecl 0x561bbb85b130 <line:4:3, col:12> col:3 Value1 'int'
+| | `-ConstantExpr 0x561bbb85b110 <col:12> 'int'
+| |   |-value: Int 2
+| |   `-IntegerLiteral 0x561bbb85b0f0 <col:12> 'int' 2
+| `-EnumConstantDecl 0x561bbb85b1c0 <line:5:3, col:12> col:3 Value2 'int'
+|   `-ConstantExpr 0x561bbb85b1a0 <col:12> 'int'
+|     |-value: Int 1
+|     `-IntegerLiteral 0x561bbb85b180 <col:12> 'int' 1
+|-TypedefDecl 0x561bbb85b268 <line:3:1, line:6:3> col:3 EnumName 'enum EnumName':'EnumName'
+| `-ElaboratedType 0x561bbb85b210 'enum EnumName' sugar
+|   `-EnumType 0x561bbb85b0d0 'EnumName'
+|     `-Enum 0x561bbb85b030 ''
+|-EnumDecl 0x561bbb85b2d8 <line:8:9, line:11:1> line:8:9
+| |-EnumConstantDecl 0x561bbb85b3a0 <line:9:3> col:3 EnumNameWithoutExplicitValues_Value1 'int'
+| `-EnumConstantDecl 0x561bbb85b3f0 <line:10:3> col:3 EnumNameWithoutExplicitValues_Value2 'int'
+`-TypedefDecl 0x561bbb85b498 <line:8:1, line:11:3> col:3 EnumNameWithoutExplicitValues 'enum EnumNameWithoutExplicitValues':'EnumNameWithoutExplicitValues'
+  `-ElaboratedType 0x561bbb85b440 'enum EnumNameWithoutExplicitValues' sugar
+    `-EnumType 0x561bbb85b380 'EnumNameWithoutExplicitValues'
+      `-Enum 0x561bbb85b2d8 ''

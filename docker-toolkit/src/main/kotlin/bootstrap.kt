@@ -1,67 +1,49 @@
-import klang.tools.ClangQueryCommandBuilder
-import klang.tools.runCommand
-import mu.KotlinLogging
+import klang.tools.generateAstFromDocker
 import java.io.File
-import java.nio.file.Files
-
-
-val files = listOf(
-	"typedef-enum.h" to "typedef-enum.h.ast",
-	"enum.h" to "enum.h.ast",
-	"struct.h" to "struct.h.ast",
-	"typedef-struct.h " to "typedef-struct.h.ast",
-	"functions.h " to "functions.h.ast",
-	"typedef.h " to "typedef.h.ast"
-)
-
-const val baseContainerDirectory = "/workspace"
-const val dockerImage = "ubuntu-clang-16"
-private val logger = KotlinLogging.logger {}
-
-
-val sourcePath = File(".")
-	.resolve("clang")
-	.resolve("14.0.0")
-val clangQueryAstOutput = sourcePath
-	.resolve("clang-query-ast.log")
-val clangAstOutput = sourcePath
-	.resolve("clang-ast.log")
-val clangJsonAstOutput = sourcePath
-	.resolve("clang-ast.json")
 
 fun main() {
+	generateClangAst("14.0.0")
 
-	val dockerCommand = listOf(
-		"run", "--rm", "--mount", "src=\"${sourcePath.absolutePath}\",target=$baseContainerDirectory,type=bind", dockerImage
+	val files = listOf(
+		"typedef-enum.h" to "typedef-enum.h.ast",
+		"enum.h" to "enum.h.ast",
+		"struct.h" to "struct.h.ast",
+		"typedef-struct.h " to "typedef-struct.h.ast",
+		"functions.h " to "functions.h.ast",
+		"typedef.h " to "typedef.h.ast"
 	)
 
-	val clangQueryCommand = ClangQueryCommandBuilder(
-		buildPath = File(baseContainerDirectory),
-		sourcePath = File("$baseContainerDirectory/clang-c/Index.h"),
-	).build()
+	val sampleSourcePath = File(".")
+		.resolve("klang")
+		.resolve("sample")
+		.resolve("c")
 
-	"docker".runCommand(
-		arguments = dockerCommand + clangQueryCommand,
-		clangQueryAstOutput
-	).apply {
-		Files.readAllLines(errorOutputFile.toPath())
-			.forEach { logger.error { it } }
+	files.forEach { (source, output) ->
+		generateAstFromDocker(
+			sampleSourcePath.absolutePath,
+			source,
+			clangAstOutput = sampleSourcePath.resolve(output)
+		)
 	}
+}
 
-	"docker".runCommand(
-		arguments = dockerCommand + listOf("clang-16", "-Xclang", "-ast-dump", "-fsyntax-only", "-I", "$baseContainerDirectory", "$baseContainerDirectory/clang-c/Index.h"),
-		clangAstOutput
-	).apply {
-		Files.readAllLines(errorOutputFile.toPath())
-			.forEach { logger.error { it } }
-	}
+fun generateClangAst(version: String) {
+	val clangSourcePath = File(".")
+		.resolve("clang")
+		.resolve(version)
+	val clangQueryAstOutput = clangSourcePath
+		.resolve("clang-query.ast")
+	val clangAstOutput = clangSourcePath
+		.resolve("clang.ast")
+	val clangJsonAstOutput = clangSourcePath
+		.resolve("clang.ast.json")
 
-	"docker".runCommand(
-		arguments = dockerCommand + listOf("clang-16", "-Xclang", "-ast-dump=json", "-fsyntax-only", "-I", "$baseContainerDirectory", "$baseContainerDirectory/clang-c/Index.h"),
-		clangJsonAstOutput
-	).apply {
-		Files.readAllLines(errorOutputFile.toPath())
-			.forEach { logger.error { it } }
-	}
+	generateAstFromDocker(
+		clangSourcePath.absolutePath,
+		"clang-c/Index.h",
+		clangAstOutput = clangAstOutput,
+		clangQueryAstOutput = null,
+		clangJsonAstOutput = null
+	)
 }
 

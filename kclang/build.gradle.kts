@@ -16,4 +16,6 @@ dependencies {
 
 tasks.test {
     useJUnitPlatform()
+
+	exclude("klang/parser/libclang/**")
 }

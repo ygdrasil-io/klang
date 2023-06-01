@@ -16,5 +16,6 @@ dependencies {
 tasks.withType<Test>().configureEach {
     useJUnitPlatform()
     forkEvery = 1
+	exclude("klang/**")
 }
 

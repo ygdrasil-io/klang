@@ -20,7 +20,7 @@ fun parseAstJson(filePath: String) = FileInputStream(filePath)
 	.parse()
 
 
-fun List<TranslationUnitNode>.parse(depth: Int = 0) {
+internal fun List<TranslationUnitNode>.parse(depth: Int = 0) {
 	var index = 0
 
 	while (index != size) {

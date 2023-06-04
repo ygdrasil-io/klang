@@ -3,16 +3,19 @@ package klang.parser.json.domain
 import kotlinx.serialization.json.*
 import mu.KotlinLogging
 
-data class Node<T>(val content: T, val children: List<Node<T>>) {
+internal data class Node<T>(
+	val content: T,
+	var children: List<Node<T>> = emptyList(),
+) {
 	fun notLastOf(sibling: List<Node<T>>): Boolean = sibling.last() != this
 }
 
-typealias TranslationUnitNode = Node<Pair<TranslationUnitKind, JsonObject>>
+internal typealias TranslationUnitNode = Node<Pair<TranslationUnitKind, JsonObject>>
 
-val TranslationUnitNode.kind: TranslationUnitKind
+internal val TranslationUnitNode.kind: TranslationUnitKind
 	get() = content.first
 
-val TranslationUnitNode.json: JsonObject
+internal val TranslationUnitNode.json: JsonObject
 	get() = content.second
 
 private val logger = KotlinLogging.logger {}

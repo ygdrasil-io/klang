@@ -5,7 +5,7 @@ import mu.KotlinLogging
 import java.io.BufferedReader
 import java.io.File
 
-typealias RawTranslationUnitNode = Node<String>
+internal typealias RawTranslationUnitNode = Node<String>
 
 private val logger = KotlinLogging.logger {}
 
@@ -15,16 +15,31 @@ private class RawAstPasserContext(
 	val stack: MutableList<RawTranslationUnitNode> = mutableListOf()
 )
 
-fun rawAst(astStream: File) : Result<List<RawTranslationUnitNode>> = runCatching {
+internal fun rawAst(astStream: File) : Result<List<RawTranslationUnitNode>> = runCatching {
 	astStream.bufferedReader().use { buffer ->
 		buffer.checkInitialLine()
 		return RawAstPasserContext(buffer).apply {
 			while (buffer.ready()) {
-				logger.info { buffer.readLine() }
+				buffer.readLine()
+					.toNode()
+					?.let(nodes::add)
 			}
 		}.nodes
 			.toResult()
 	}
+}
+
+private fun String.toNode(): RawTranslationUnitNode? {
+	val position = getPositionOnHierarchy()
+	val nodes = RawTranslationUnitNode(this)
+	logger.info { "at $position $this" }
+	TODO("Not yet implemented")
+}
+
+internal fun String.getPositionOnHierarchy(): Int? {
+	return indexOf("-")
+		.takeIf { it != -1 }
+		?.let { (it + 1) / 2 }
 }
 
 private fun MutableList<RawTranslationUnitNode>.toResult(): Result<List<RawTranslationUnitNode>>

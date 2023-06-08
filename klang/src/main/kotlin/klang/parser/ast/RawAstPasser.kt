@@ -13,7 +13,20 @@ private class RawAstPasserContext(
 	val buffer: BufferedReader,
 	val nodes: MutableList<RawTranslationUnitNode> = mutableListOf(),
 	val stack: MutableList<RawTranslationUnitNode> = mutableListOf()
-)
+) {
+	fun insertIntoStack(node: Node<String>, position: Int) {
+		val index = position - 1
+		if (stack.size < position) {
+			stack.add(node)
+		} else {
+			stack[index] = node
+		}
+
+		if(position > 1) {
+			stack[index - 1].children = stack[index - 1].children + listOf(node)
+		}
+	}
+}
 
 internal fun rawAst(astStream: File) : Result<List<RawTranslationUnitNode>> = runCatching {
 	astStream.bufferedReader().use { buffer ->
@@ -21,20 +34,29 @@ internal fun rawAst(astStream: File) : Result<List<RawTranslationUnitNode>> = ru
 		return RawAstPasserContext(buffer).apply {
 			while (buffer.ready()) {
 				buffer.readLine()
-					.toNode()
+					.toNode(this)
 					?.let(nodes::add)
 			}
-		}.nodes
+		}
+			.nodes
 			.toResult()
 	}
 }
 
-private fun String.toNode(): RawTranslationUnitNode? {
-	val position = getPositionOnHierarchy()
-	val nodes = RawTranslationUnitNode(this)
-	logger.info { "at $position $this" }
-	TODO("Not yet implemented")
+private fun String.toNode(context: RawAstPasserContext): RawTranslationUnitNode? {
+	val position = getPositionOnHierarchy() ?: return null
+	val content = contentFromPosition(position)
+	val node = RawTranslationUnitNode(content)
+	context.insertIntoStack(node, position)
+	logger.info { "at $position $content" }
+
+	return when (position) {
+		1 -> node
+		else -> null
+	}
 }
+
+private fun String.contentFromPosition(position: Int) = substring(position * 2)
 
 internal fun String.getPositionOnHierarchy(): Int? {
 	return indexOf("-")

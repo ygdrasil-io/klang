@@ -18,10 +18,7 @@ class RawAstPasserTest : StringSpec({
 		}
 	}
 
-
-	"test raw ast parsing" {
-		// Given
-		val fakeAst = """
+	val fakeAst = """
 		FakeAst
 		|-TestLevel1
 		| |-TestLevel2
@@ -31,8 +28,14 @@ class RawAstPasserTest : StringSpec({
 		  `-TestLevel2
 		    `-TestLevel3
 		""".trimIndent()
-		val fakeAstFile = File.createTempFile("fakeAst", ".ast")
-		fakeAstFile.writeText(fakeAst)
+
+	"test raw ast parsing" {
+		// Given
+
+		val fakeAstFile = File
+			.createTempFile("fakeAst", ".ast")
+			.also(File::deleteOnExit)
+			.also { it.writeText(fakeAst) }
 
 		// When
 		val ast = rawAst(fakeAstFile)

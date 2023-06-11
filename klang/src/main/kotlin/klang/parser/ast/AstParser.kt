@@ -9,4 +9,7 @@ import java.io.File
 private val logger = KotlinLogging.logger {}
 
 fun parseAst(filePath: String): Nothing = rawAst(File(filePath))
+	.map(List<RawTranslationUnitNode>::tokenize)
 	.let { TODO("$it") }
+
+

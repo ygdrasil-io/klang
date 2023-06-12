@@ -16,6 +16,8 @@ dependencies {
 
 tasks.test {
     useJUnitPlatform()
+	maxHeapSize = "4g"
+	minHeapSize = "512m"
 
 	exclude("klang/parser/libclang/**")
 }

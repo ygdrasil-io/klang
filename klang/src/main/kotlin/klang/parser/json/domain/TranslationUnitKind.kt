@@ -18,15 +18,31 @@ enum class TranslationUnitKind {
 	DisableTailCallsAttr, ConditionalOperator, DeclStmt, PureAttr, FloatingLiteral,
 	ReturnsTwiceAttr, FormatAttr, CharacterLiteral, FormatArgAttr, WarnUnusedResultAttr,
 	AllocSizeAttr, AllocAlignAttr, NoEscapeAttr, MaxFieldAlignmentAttr, QualType,
-	EnumExtensibilityAttr, CFConsumedAttr, SwitchStmt, CaseStmt, DefaultStmt,
-	BreakStmt, FlagEnumAttr,
+	EnumExtensibilityAttr, SwitchStmt, CaseStmt, DefaultStmt,
+	BreakStmt, FlagEnumAttr, IndirectFieldDecl, AttributedType, UnavailableAttr,
+	EmptyDecl, NonNullAttr, RestrictAttr, NotTailCalledAttr, SentinelAttr,
+	InitListExpr, UnusedAttr, AlignedAttr, UsedAttr, IncompleteArrayType,
+	DecayedType,
+
+	// Mac NS
+	NSReturnsRetainedAttr, NSConsumedAttr, NSConsumesSelfAttr, NSErrorDomainAttr,
+	// Mac CF
+	CFConsumedAttr, GCCAsmStmt, CFReturnsRetainedAttr, CFReturnsNotRetainedAttr,
 
 	// Swift
-	SwiftNewTypeAttr, SwiftNameAttr,
+	SwiftNewTypeAttr, SwiftNameAttr, SwiftAttrAttr, SwiftPrivateAttr, SwiftErrorAttr,
+	SwiftAsyncAttr, SwiftAsyncNameAttr, SwiftBridgedTypedefAttr,
+
+	// Objective-C ARC
+	ArcWeakrefUnavailableAttr,
+	WeakImportAttr,
 
 	// Objective-C
 	ObjCObjectPointerType, ObjCObjectType, ObjCInterfaceDecl, ObjCBridgeAttr, ObjCBridgeMutableAttr,
-	ObjCBoxableAttr,
+	ObjCBoxableAttr, ObjCProtocolDecl, ObjCMethodDecl, ObjCPropertyDecl, ObjCRootClassAttr,
+	ObjCIvarDecl, ObjCDesignatedInitializerAttr, ObjCInterfaceType, ObjCIndependentClassAttr,
+	ObjCCategoryDecl, ObjCMessageExpr, ObjCTypeParamDecl, ObjCReturnsInnerPointerAttr,
+	ObjCBoolLiteralExpr, ObjCExceptionAttr,
 	;
 
     companion object {

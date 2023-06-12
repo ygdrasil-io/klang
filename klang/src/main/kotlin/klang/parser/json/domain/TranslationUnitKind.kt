@@ -14,9 +14,19 @@ enum class TranslationUnitKind {
 	// Found in metal, likely common
 	CompoundStmt, ReturnStmt, CStyleCastExpr, ImplicitCastExpr, CallExpr, BuiltinAttr,
 	NoThrowAttr, ConstAttr, PackedAttr, MemberExpr, IfStmt, AlwaysInlineAttr,
+	ArraySubscriptExpr, UnaryExprOrTypeTraitExpr, CompoundAssignOperator, ColdAttr,
+	DisableTailCallsAttr, ConditionalOperator, DeclStmt, PureAttr, FloatingLiteral,
+	ReturnsTwiceAttr, FormatAttr, CharacterLiteral, FormatArgAttr, WarnUnusedResultAttr,
+	AllocSizeAttr, AllocAlignAttr, NoEscapeAttr, MaxFieldAlignmentAttr, QualType,
+	EnumExtensibilityAttr, CFConsumedAttr, SwitchStmt, CaseStmt, DefaultStmt,
+	BreakStmt, FlagEnumAttr,
+
+	// Swift
+	SwiftNewTypeAttr, SwiftNameAttr,
 
 	// Objective-C
-	ObjCObjectPointerType, ObjCObjectType, ObjCInterfaceDecl,
+	ObjCObjectPointerType, ObjCObjectType, ObjCInterfaceDecl, ObjCBridgeAttr, ObjCBridgeMutableAttr,
+	ObjCBoxableAttr,
 	;
 
     companion object {

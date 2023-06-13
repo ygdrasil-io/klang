@@ -1,3 +1,6 @@
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat
+import org.gradle.api.tasks.testing.logging.TestLogEvent
+
 plugins {
     kotlin("jvm")
     kotlin("plugin.serialization")
@@ -16,6 +19,16 @@ dependencies {
 
 tasks.test {
     useJUnitPlatform()
+	maxHeapSize = "4g"
+	minHeapSize = "512m"
+
+	testLogging {
+		events = setOf(TestLogEvent.STARTED, TestLogEvent.PASSED, TestLogEvent.SKIPPED, TestLogEvent.FAILED)
+		exceptionFormat = TestExceptionFormat.FULL
+		showExceptions = true
+		showStackTraces = true
+		showStandardStreams = true
+	}
 
 	exclude("klang/parser/libclang/**")
 }

@@ -23,7 +23,6 @@ tasks.test {
 	minHeapSize = "512m"
 
 	testLogging {
-		//events = setOf(TestLogEvent.STARTED, TestLogEvent.PASSED, TestLogEvent.SKIPPED, TestLogEvent.FAILED)
 		events = setOf(TestLogEvent.STARTED, TestLogEvent.PASSED, TestLogEvent.SKIPPED, TestLogEvent.FAILED)
 		exceptionFormat = TestExceptionFormat.FULL
 		showExceptions = true

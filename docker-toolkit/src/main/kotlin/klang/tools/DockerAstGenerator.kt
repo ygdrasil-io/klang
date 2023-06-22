@@ -11,6 +11,7 @@ private val logger = KotlinLogging.logger {}
 fun generateAstFromDocker(
 	sourcePath: String,
 	sourceFile: String,
+	isObjectiveC: Boolean = false,
 	clangAstOutput: File? = null,
 	clangJsonAstOutput: File? = null,
 	clangQueryAstOutput: File? = null,
@@ -47,7 +48,7 @@ private fun generateJsonAstFromClang(dockerCommand: List<String>, sourceFile: St
 	}
 }
 
-private fun generateAstFromClang(dockerCommand: List<String>, sourceFile: String, clangAstOutput: File) {
+private fun generateAstFromClang(dockerCommand: List<String>, sourceFile: String, clangAstOutput: File, isObjectiveC: Boolean = false) {
 	"docker".runCommand(
 		arguments = dockerCommand + listOf("clang-16", "-Xclang", "-ast-dump", "-fsyntax-only", "-I", "$baseContainerDirectory", "$baseContainerDirectory/$sourceFile"),
 		clangAstOutput

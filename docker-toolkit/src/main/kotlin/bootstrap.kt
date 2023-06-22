@@ -1,9 +1,39 @@
 import klang.tools.generateAstFromDocker
 import java.io.File
+import java.util.*
+
+
+private val OS = System.getProperty("os.name").lowercase(Locale.getDefault())
 
 fun main() {
 	generateClangAst("14.0.0")
+	generateCSampleAst()
+	if (isMac()) {
+		//generateObjectiveCSampleAst()
+	}
+}
 
+fun generateObjectiveCSampleAst() {
+	val files = listOf(
+		"class.h" to "class.h.ast",
+	)
+
+	val sampleSourcePath = File(".")
+		.resolve("klang")
+		.resolve("sample")
+		.resolve("objective-c")
+
+	files.forEach { (source, output) ->
+		generateAstFromDocker(
+			sampleSourcePath.absolutePath,
+			source,
+			isObjectiveC = true,
+			clangAstOutput = sampleSourcePath.resolve(output)
+		)
+	}
+}
+
+private fun generateCSampleAst() {
 	val files = listOf(
 		"typedef-enum.h" to "typedef-enum.h.ast",
 		"enum.h" to "enum.h.ast",
@@ -47,3 +77,6 @@ fun generateClangAst(version: String) {
 	)
 }
 
+private fun isMac(): Boolean {
+	return OS.indexOf("mac") >= 0
+}

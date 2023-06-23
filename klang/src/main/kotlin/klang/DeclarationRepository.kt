@@ -14,6 +14,7 @@ object DeclarationRepository {
 			is NativeStructure -> logger.debug { "structure added: $nativeEnumeration" }
 			is NativeFunction -> logger.debug { "function added: $nativeEnumeration" }
 			is NativeTypeAlias -> logger.debug { "type alias added: $nativeEnumeration" }
+			is ObjectiveCClass -> logger.debug { "objective-c class added: $nativeEnumeration" }
 			else -> throw IllegalArgumentException("Unknown native declaration type: $nativeEnumeration")
 		}
 		nativeDeclarations.add(nativeEnumeration)
@@ -38,6 +39,11 @@ object DeclarationRepository {
 	fun findTypeAliasByName(name: String)= nativeDeclarations
 			.filterIsInstance<NativeTypeAlias>()
 			.find { it.name == name }
+
+
+	fun findObjectiveCClassByName(name: String)= nativeDeclarations
+		.filterIsInstance<ObjectiveCClass>()
+		.find { it.name == name }
 
 	fun update(nativeEnumeration: NativeDeclaration, provider: () -> NativeDeclaration): NativeDeclaration {
 		val newValue = provider()

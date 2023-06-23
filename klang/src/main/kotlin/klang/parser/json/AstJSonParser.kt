@@ -3,7 +3,11 @@
 package klang.parser.json
 
 import klang.DeclarationRepository
-import klang.parser.json.domain.*
+import klang.domain.NativeDeclaration
+import klang.parser.json.domain.Node
+import klang.parser.json.domain.TranslationUnitKind
+import klang.parser.json.domain.TranslationUnitNode
+import klang.parser.json.domain.toNode
 import klang.parser.json.type.*
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.*
@@ -12,7 +16,7 @@ import java.io.FileInputStream
 
 private val logger = KotlinLogging.logger {}
 
-fun parseAstJson(filePath: String) = FileInputStream(filePath)
+fun parseAstJson(filePath: String, isObjectiveC: Boolean = false) = FileInputStream(filePath)
 	.let<FileInputStream, JsonObject>(Json.Default::decodeFromStream)
 	.toNode()
 	.flattenRootNode()
@@ -28,68 +32,44 @@ fun List<TranslationUnitNode>.parse(depth: Int = 0) {
 		val (kind, json) = node.content
 
 
-		when (kind) {
-			TranslationUnitKind.TypedefDecl -> {
-				try {
-					node.toNativeTypeAlias()
-						.let(DeclarationRepository::save)
-				} catch (e: RuntimeException) {
-					ParserRepository.errors.add(e)
-				}
-			}
-
-			TranslationUnitKind.VarDecl -> {
-				try {
+		try {
+			when (kind) {
+				TranslationUnitKind.ObjCInterfaceDecl -> node.toObjectiveCClass()
+				TranslationUnitKind.TypedefDecl -> node.toNativeTypeAlias()
+				TranslationUnitKind.VarDecl -> {
 					if (node.isExternalDeclaration().not()) {
 						error("not yet supported : $node")
 					}
-				} catch (e: RuntimeException) {
-					ParserRepository.errors.add(e)
+					null
 				}
-			}
 
-			TranslationUnitKind.FunctionDecl -> {
-				try {
-					node.toNativeFunction()
-						.let(DeclarationRepository::save)
-				} catch (e: RuntimeException) {
-					ParserRepository.errors.add(e)
+				TranslationUnitKind.FunctionDecl -> node.toNativeFunction()
+				TranslationUnitKind.RecordDecl -> when {
+					node.isTypeDefStructure(this) -> {
+						index++
+						node.toNativeTypeDefStructure(this[index])
+					}
+
+					else -> node.toNativeStructure()
 				}
-			}
 
-			TranslationUnitKind.RecordDecl -> {
-				try {
-					when {
-						node.isTypeDefStructure(this) -> {
-							index++
-							node.toNativeTypeDefStructure(this[index])
-						}
+				TranslationUnitKind.EnumDecl -> when {
+					node.isTypeDefEnumeration(this) -> {
+						index++
+						node.toNativeTypeDefEnumeration(this[index])
+					}
 
-						else -> node.toNativeStructure()
-					}.let(DeclarationRepository::save)
-				} catch (e: RuntimeException) {
-					ParserRepository.errors.add(e)
+					else -> node.toNativeEnumeration()
 				}
-			}
 
-			TranslationUnitKind.EnumDecl -> {
-				try {
-					when {
-						node.isTypeDefEnumeration(this) -> {
-							index++
-							node.toNativeTypeDefEnumeration(this[index])
-						}
-
-						else -> node.toNativeEnumeration()
-					}.let(DeclarationRepository::save)
-				} catch (e: RuntimeException) {
-					ParserRepository.errors.add(e)
+				else -> {
+					logger.info { "${(0..depth).map { "+" }}$kind${json["id"]}" }
+					null
 				}
-			}
-
-			else -> {
-				logger.info { "${(0..depth).map { "+" }}$kind${json["id"]}" }
-			}
+			}.takeIf { it is NativeDeclaration }
+				?.let(DeclarationRepository::save)
+		} catch (e: RuntimeException) {
+			ParserRepository.errors.add(e)
 		}
 
 		index++
@@ -97,6 +77,7 @@ fun List<TranslationUnitNode>.parse(depth: Int = 0) {
 	}
 
 }
+
 
 private fun <T> Node<T>.flattenRootNode() = children
 

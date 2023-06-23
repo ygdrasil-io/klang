@@ -7,9 +7,7 @@ import klang.parser.TestData
 import klang.parser.validateEnumerations
 import klang.parser.validateStructures
 
-class AstJSonReaderTest : ParserTestCommon({
-
-
+class AstJSonCParserTest : ParserTestCommon({
 
 	"test enum parsing" {
 		// Given

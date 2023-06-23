@@ -1,3 +1,3 @@
 package klang.domain
 
-interface NativeDeclaration
+sealed interface NativeDeclaration

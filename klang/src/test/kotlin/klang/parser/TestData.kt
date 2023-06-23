@@ -1,6 +1,11 @@
 package klang.parser
 
 object TestData {
+
+	val objectiveCClass = listOf(
+		"TestClass" to mapOf<String, String>()
+	)
+
 	val enumerations = listOf(
 		"EnumName" to listOf("Value1" to 0x2L, "Value2" to 0x1L),
 		"EnumNameWithoutExplicitValues" to listOf(

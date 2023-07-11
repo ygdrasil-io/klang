@@ -16,8 +16,8 @@ internal fun TranslationUnitNode.toObjectiveCClass(): ObjectiveCClass? {
 }
 
 private fun JsonObject.methods(): List<ObjectiveCClass.Method> = inner()
-	?.map { it.jsonObject }
 	?.filter { it.kind() == TranslationUnitKind.ObjCMethodDecl }
+	?.filter { !(it.nullableBooleanValueOf("isImplicit") ?: false) }
 	?.map { it.toMethod() } ?: listOf()
 
 private fun JsonObject.toMethod() = ObjectiveCClass.Method(
@@ -28,7 +28,6 @@ private fun JsonObject.toMethod() = ObjectiveCClass.Method(
 )
 
 private fun JsonObject.arguments(): List<ObjectiveCClass.Method.Argument> = inner()
-	?.map { it.jsonObject }
 	?.map { it.toArgument() } ?: listOf()
 
 private fun JsonObject.toArgument() = ObjectiveCClass.Method.Argument(
@@ -37,7 +36,6 @@ private fun JsonObject.toArgument() = ObjectiveCClass.Method.Argument(
 )
 
 private fun JsonObject.properties(): List<ObjectiveCClass.Property> = inner()
-	?.map { it.jsonObject }
 	?.filter { it.kind() == TranslationUnitKind.ObjCPropertyDecl }
 	?.map { it.toProperty() } ?: listOf()
 

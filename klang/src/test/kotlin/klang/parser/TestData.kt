@@ -1,9 +1,11 @@
 package klang.parser
 
+import klang.domain.ObjectiveCClass
+
 object TestData {
 
 	val objectiveCClass = listOf(
-		"TestClass" to mapOf<String, String>()
+		"TestClass" to listOf(ObjectiveCClass.Property("testProperty", "NSString *", nonatomic = true, assign = true))
 	)
 
 	val enumerations = listOf(

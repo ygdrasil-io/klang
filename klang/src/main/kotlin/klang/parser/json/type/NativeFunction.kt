@@ -10,7 +10,7 @@ import kotlinx.serialization.json.jsonPrimitive
 
 internal fun TranslationUnitNode.toNativeFunction() = NativeFunction(
 	name = json.functionName(),
-	returnType = json.returnType(),
+	returnType = json.type().adapt(),
 	arguments = arguments()
 )
 
@@ -25,12 +25,8 @@ private fun TranslationUnitNode.extractArguments(): NativeFunction.Argument {
 	return NativeFunction.Argument(name,  type)
 }
 
-private fun JsonObject.returnType() = this["type"]
-	?.jsonObject?.get("qualType")?.jsonPrimitive?.content
-	?.let { it.substring(0, it.indexOf("(")) }
-	?.trim()
-	?: error("no return type: $this")
-
+private fun String.adapt() = let { it.substring(0, it.indexOf("(")) }
+	.trim()
 
 private fun JsonObject.nullableFunctionName() = this["name"]?.jsonPrimitive?.content
 

@@ -11,12 +11,32 @@ internal fun TranslationUnitNode.toObjectiveCClass(): ObjectiveCClass? {
 	return ObjectiveCClass(
 		name = json.name(),
 		properties = json.properties(),
-		methods = listOf()
+		methods = json.methods()
 	)
 }
 
-private fun JsonObject.properties(): List<ObjectiveCClass.Property> = this["inner"]
-	?.jsonArray
+private fun JsonObject.methods(): List<ObjectiveCClass.Method> = inner()
+	?.map { it.jsonObject }
+	?.filter { it.kind() == TranslationUnitKind.ObjCMethodDecl }
+	?.map { it.toMethod() } ?: listOf()
+
+private fun JsonObject.toMethod() = ObjectiveCClass.Method(
+	name = name(),
+	returnType = returnType(),
+	instance = booleanValueOf("instance"),
+	arguments = arguments()
+)
+
+private fun JsonObject.arguments(): List<ObjectiveCClass.Method.Argument> = inner()
+	?.map { it.jsonObject }
+	?.map { it.toArgument() } ?: listOf()
+
+private fun JsonObject.toArgument() = ObjectiveCClass.Method.Argument(
+	name = name(),
+	type = type()
+)
+
+private fun JsonObject.properties(): List<ObjectiveCClass.Property> = inner()
 	?.map { it.jsonObject }
 	?.filter { it.kind() == TranslationUnitKind.ObjCPropertyDecl }
 	?.map { it.toProperty() } ?: listOf()
@@ -30,13 +50,3 @@ private fun JsonObject.toProperty(): ObjectiveCClass.Property = ObjectiveCClass.
 	unsafe_unretained = booleanValueOf("unsafe_unretained")
 )
 
-private fun JsonObject.type() = nullableType()
-	?: error("type found: $this")
-
-private fun JsonObject.name() = nullableName()
-	?: error("name found: $this")
-
-private fun JsonObject.booleanValueOf(key: String)
-	= this[key]?.jsonPrimitive?.booleanOrNull ?: error("fail to find boolean with key $key")
-private fun JsonObject.nullableType() = this["type"]?.jsonObject?.get("qualType")?.jsonPrimitive?.content
-private fun JsonObject.nullableName() = this["name"]?.jsonPrimitive?.content

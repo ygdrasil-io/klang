@@ -3,7 +3,7 @@ package klang.domain
 data class ObjectiveCClass(
 	val name: String,
 	val properties: List<Property>,
-	val methods: List<String>
+	val methods: List<Method>
 ) : NativeDeclaration {
 
 	data class Property(
@@ -16,10 +16,11 @@ data class ObjectiveCClass(
 	) : NameableDeclaration
 
 	data class Method(
-		val name: String,
+		override val name: String,
 		val returnType: String,
-		val arguments: List<NativeFunction.Argument>
-	) {
+		val instance: Boolean,
+		val arguments: List<Argument> = listOf()
+	) : NameableDeclaration {
 		data class Argument(
 			val name: String,
 			val type: String

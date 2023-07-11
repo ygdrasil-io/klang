@@ -17,18 +17,19 @@ class AstJSonObjectiveCParserTest : ParserTestCommon({
 		val filePath = "sample/objective-c/class.m.ast.json"
 
 		// When
-		parseAstJson(filePath, isObjectiveC = true)
+		parseAstJson(filePath)
 
 		// Then
 		validateObjectiveCClass(TestData.objectiveCClass)
 	}
 })
 
-fun validateObjectiveCClass(objectiveCClasses: List<Pair<String, List<ObjectiveCClass.Property>>>) {
+fun validateObjectiveCClass(objectiveCClasses: List<Pair<String, List<NameableDeclaration>>>) {
 	objectiveCClasses.forEach { (className, properties) ->
 		DeclarationRepository.findObjectiveCClassByName(className)
 			.also { it?.name shouldBe className }
-			.also { it?.properties shouldContains properties }
+			.also { it?.properties shouldContains properties.filterIsInstance<ObjectiveCClass.Property>() }
+			.also { it?.methods shouldContains properties.filterIsInstance<ObjectiveCClass.Method>() }
 	}
 }
 

@@ -10,12 +10,12 @@ import kotlinx.serialization.json.jsonPrimitive
 
 
 internal fun TranslationUnitNode.toNativeTypeDefStructure(sibling: TranslationUnitNode) = NativeStructure(
-	name = sibling.json.typeAliasName(),
+	name = sibling.json.name(),
 	fields = this.extractFields()
 )
 
 internal fun TranslationUnitNode.toNativeStructure() = NativeStructure(
-	name = json.typeAliasName(),
+	name = json.name(),
 	fields = this.extractFields()
 )
 
@@ -28,7 +28,7 @@ private fun TranslationUnitNode.isTypeDefStructure(
 ): Boolean =
 	notLastOf(sibling)
 			&& sibling[index + 1].content.first == TranslationUnitKind.TypedefDecl
-			&& json.nullableTypeAlias() == null
+			&& json.nullableName() == null
 
 private fun TranslationUnitNode.extractFields(): List<Pair<String, String>> =
 	children.filter { it.content.first == TranslationUnitKind.FieldDecl }
@@ -42,8 +42,3 @@ private fun TranslationUnitNode.extractField(): Pair<String, String> {
 		?: error("no type for : $this")
 	return name to value
 }
-
-private fun JsonObject.nullableTypeAlias() = this["name"]?.jsonPrimitive?.content
-
-private fun JsonObject.typeAliasName() = nullableTypeAlias()
-	?: error("no enumeration name: $this")

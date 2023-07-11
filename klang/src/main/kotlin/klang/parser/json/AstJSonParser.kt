@@ -16,7 +16,7 @@ import java.io.FileInputStream
 
 private val logger = KotlinLogging.logger {}
 
-fun parseAstJson(filePath: String, isObjectiveC: Boolean = false) = FileInputStream(filePath)
+fun parseAstJson(filePath: String) = FileInputStream(filePath)
 	.let<FileInputStream, JsonObject>(Json.Default::decodeFromStream)
 	.toNode()
 	.flattenRootNode()

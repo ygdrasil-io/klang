@@ -1,6 +1,5 @@
 import klang.parser.json.ParserRepository
 import klang.parser.json.parseAstJson
-import klang.parser.libclang.parseFile
 import mu.KotlinLogging
 
 const val clangHeaderPath = "clang/14.0.0/clang-c/Index.h"

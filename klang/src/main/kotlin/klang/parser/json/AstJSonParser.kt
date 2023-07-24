@@ -25,6 +25,7 @@ fun parseAstJson(filePath: String) = FileInputStream(filePath)
 
 
 fun List<TranslationUnitNode>.parse(depth: Int = 0) {
+	logger.info { "start processing nodes" }
 	var index = 0
 
 	while (index != size) {
@@ -33,6 +34,7 @@ fun List<TranslationUnitNode>.parse(depth: Int = 0) {
 
 
 		try {
+			logger.info { "will process node of kind $kind" }
 			when (kind) {
 				TranslationUnitKind.ObjCInterfaceDecl -> node.toObjectiveCClass()
 				TranslationUnitKind.TypedefDecl -> node.toNativeTypeAlias()
@@ -69,6 +71,7 @@ fun List<TranslationUnitNode>.parse(depth: Int = 0) {
 			}.takeIf { it is NativeDeclaration }
 				?.let(DeclarationRepository::save)
 		} catch (e: RuntimeException) {
+			logger.error { "fail with error $e" }
 			ParserRepository.errors.add(e)
 		}
 

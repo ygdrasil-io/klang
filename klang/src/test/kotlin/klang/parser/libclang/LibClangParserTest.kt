@@ -9,7 +9,7 @@ import klang.parser.validateStructures
 
 class LibClangParserTest : ParserTestCommon({
 
-	"test enum parsing" {
+	"test enum parsing" - {
 		// Given
 		val filePath = "sample/c/enum.h"
 
@@ -20,7 +20,7 @@ class LibClangParserTest : ParserTestCommon({
 		validateEnumerations(TestData.enumerations)
 	}
 
-	"test typedef enum parsing" {
+	"test typedef enum parsing" - {
 		// Given
 		val filePath = "sample/c/typedef-enum.h"
 
@@ -32,7 +32,7 @@ class LibClangParserTest : ParserTestCommon({
 
 	}
 
-	"test struct parsing" {
+	"test struct parsing" - {
 		// Given
 		val filePath = "sample/c/struct.h"
 
@@ -43,7 +43,7 @@ class LibClangParserTest : ParserTestCommon({
 		validateStructures(TestData.structures)
 	}
 
-	"typedef struct parsing" {
+	"typedef struct parsing" - {
 		// Given
 		val filePath = "sample/c/typedef-struct.h"
 

@@ -4,14 +4,29 @@ import klang.domain.ObjectiveCClass
 
 object TestData {
 
+	val objectiveCEnumeration = listOf(
+		"MyEnum" to listOf(
+			"kValue1" to 0L,
+			"kValue2" to 1L,
+			"kValue3" to 2L
+		),
+		"MyEnum2" to listOf(
+			"kValue4" to 0L,
+			"kValue5" to 1L,
+			"kValue6" to 2L
+		)
+	)
+
 	val objectiveCClass = listOf(
 		"TestClass" to listOf(
 			ObjectiveCClass.Property("testProperty", "NSString *", nonatomic = true, assign = true),
 			ObjectiveCClass.Method("testMethod", "void", true),
-			ObjectiveCClass.Method("testMethod:withParameter:", "BOOL", false, listOf(
-				ObjectiveCClass.Method.Argument("parameter", "NSString *"),
-				ObjectiveCClass.Method.Argument("testParameter", "NSString *"),
-			)),
+			ObjectiveCClass.Method(
+				"testMethod:withParameter:", "BOOL", false, listOf(
+					ObjectiveCClass.Method.Argument("parameter", "NSString *"),
+					ObjectiveCClass.Method.Argument("testParameter", "NSString *"),
+				)
+			),
 		)
 	)
 

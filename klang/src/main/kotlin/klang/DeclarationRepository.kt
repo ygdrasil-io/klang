@@ -10,7 +10,19 @@ object DeclarationRepository {
 
 	fun save(nativeEnumeration: NativeDeclaration) {
 		when (nativeEnumeration) {
-			is NativeEnumeration -> logger.debug { "enum added: $nativeEnumeration" }
+			is NativeEnumeration -> {
+				if (nativeEnumeration.values.isEmpty()) {
+					logger.warn { "try to add enumeration with no value" }
+					return
+				}
+
+				if (findEnumerationByName(nativeEnumeration.name) != null) {
+					logger.warn { "try to add enumeration multiple time" }
+					return
+				}
+
+				logger.debug { "enum added: $nativeEnumeration" }
+			}
 			is NativeStructure -> logger.debug { "structure added: $nativeEnumeration" }
 			is NativeFunction -> logger.debug { "function added: $nativeEnumeration" }
 			is NativeTypeAlias -> logger.debug { "type alias added: $nativeEnumeration" }

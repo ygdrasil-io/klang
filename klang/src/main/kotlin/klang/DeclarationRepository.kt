@@ -23,6 +23,7 @@ object DeclarationRepository {
 
 				logger.debug { "enum added: $nativeEnumeration" }
 			}
+
 			is NativeStructure -> logger.debug { "structure added: $nativeEnumeration" }
 			is NativeFunction -> logger.debug { "function added: $nativeEnumeration" }
 			is NativeTypeAlias -> logger.debug { "type alias added: $nativeEnumeration" }
@@ -37,23 +38,27 @@ object DeclarationRepository {
 	}
 
 	fun findEnumerationByName(name: String) = nativeDeclarations
-			.filterIsInstance<NativeEnumeration>()
-			.find { it.name == name }
+		.asSequence()
+		.filterIsInstance<NativeEnumeration>()
+		.find { it.name == name }
 
 	fun findStructureByName(name: String) = nativeDeclarations
-			.filterIsInstance<NativeStructure>()
-			.find { it.name == name }
+		.asSequence()
+		.filterIsInstance<NativeStructure>()
+		.find { it.name == name }
 
 	fun findFunctionByName(name: String) = nativeDeclarations
-			.filterIsInstance<NativeFunction>()
-			.find { it.name == name }
+		.asSequence()
+		.filterIsInstance<NativeFunction>()
+		.find { it.name == name }
 
-	fun findTypeAliasByName(name: String)= nativeDeclarations
-			.filterIsInstance<NativeTypeAlias>()
-			.find { it.name == name }
+	fun findTypeAliasByName(name: String) = nativeDeclarations
+		.asSequence()
+		.filterIsInstance<NativeTypeAlias>()
+		.find { it.name == name }
 
-
-	fun findObjectiveCClassByName(name: String)= nativeDeclarations
+	fun findObjectiveCClassByName(name: String) = nativeDeclarations
+		.asSequence()
 		.filterIsInstance<ObjectiveCClass>()
 		.find { it.name == name }
 
@@ -70,5 +75,11 @@ object DeclarationRepository {
 		nativeDeclarations.add(newValue)
 		return newValue
 	}
+
+	fun findDeclarationByName(declarationName: String) = nativeDeclarations
+		.asSequence()
+		.filterIsInstance<NameableDeclaration>()
+		.first { it.name == declarationName }
+
 
 }

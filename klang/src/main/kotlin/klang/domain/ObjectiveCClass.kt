@@ -1,10 +1,10 @@
 package klang.domain
 
 data class ObjectiveCClass(
-	val name: String,
+	override val name: String,
 	val properties: List<Property>,
 	val methods: List<Method>
-) : NativeDeclaration {
+) : NameableDeclaration, NativeDeclaration {
 
 	data class Property(
 		override val name: String,

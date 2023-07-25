@@ -1,3 +1,3 @@
 package klang.domain
 
-data class NativeTypeAlias(val name: String, val type: String) :NativeDeclaration
+data class NativeTypeAlias(override val name: String, val type: String) :NameableDeclaration, NativeDeclaration

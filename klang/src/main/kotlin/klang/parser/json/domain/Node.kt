@@ -26,7 +26,6 @@ internal fun JsonObject.toNode(): TranslationUnitNode = Node(
 		?: emptyList()
 )
 
-
 internal fun JsonObject.kind() = (this["kind"]
 	?.let(JsonElement::jsonPrimitive)
 	?.let(JsonPrimitive::content)

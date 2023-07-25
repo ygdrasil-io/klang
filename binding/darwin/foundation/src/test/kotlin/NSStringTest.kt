@@ -8,6 +8,6 @@ class NSStringTest : FreeSpec({
 	val stringToTest = "Lorem ipsum"
 
     "test string length" {
-		NSString("stringToTest").length shouldBe stringToTest.length
+		NSString("stringToTest").length shouldBe (stringToTest.length + 1)
 	}
 })

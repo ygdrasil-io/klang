@@ -1,6 +1,6 @@
 package klang.domain
 
 data class NativeEnumeration(
-	val name: String,
+	override val name: String,
 	val values: List<Pair<String, Long>> = emptyList()
-) : NativeDeclaration
+) : NameableDeclaration, NativeDeclaration

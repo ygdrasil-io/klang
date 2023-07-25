@@ -1,10 +1,10 @@
 package klang.domain
 
 data class NativeFunction(
-	val name: String,
+	override val name: String,
 	val returnType: String,
 	val arguments: List<Argument>
-): NativeDeclaration {
+): NameableDeclaration, NativeDeclaration {
 
 	data class Argument(
 		val name: String?,

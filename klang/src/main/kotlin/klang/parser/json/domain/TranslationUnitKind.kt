@@ -9,7 +9,12 @@ enum class TranslationUnitKind {
 	VarDecl, AsmLabelAttr, AvailabilityAttr, EnumType, VerbatimBlockComment,
 	VerbatimBlockLineComment, DeprecatedAttr, BinaryOperator, DeclRefExpr,
 	UnaryOperator, ParenType, FunctionProtoType, BlockPointerType,
-	VerbatimLineComment, ParenExpr, ImportDecl,
+	VerbatimLineComment, ParenExpr, ImportDecl, VectorType, NoDebugAttr, TargetAttr,
+	MinVectorWidthAttr,
+	CompoundLiteralExpr,
+	ShuffleVectorExpr,
+	MayAliasAttr,
+	ConvertVectorExpr,
 
 	// Found in metal, likely common
 	CompoundStmt, ReturnStmt, CStyleCastExpr, ImplicitCastExpr, CallExpr, BuiltinAttr,

@@ -1,13 +1,12 @@
-@file:OptIn(ExperimentalSerializationApi::class, ExperimentalSerializationApi::class)
+@file:OptIn(
+	ExperimentalSerializationApi::class
+)
 
 package klang.parser.json
 
 import klang.DeclarationRepository
 import klang.domain.NativeDeclaration
-import klang.parser.json.domain.Node
-import klang.parser.json.domain.TranslationUnitKind
-import klang.parser.json.domain.TranslationUnitNode
-import klang.parser.json.domain.toNode
+import klang.parser.json.domain.*
 import klang.parser.json.type.*
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.*
@@ -16,16 +15,35 @@ import java.io.FileInputStream
 
 private val logger = KotlinLogging.logger {}
 
+val unknownKind = mutableSetOf<String>()
+
 fun parseAstJson(filePath: String) = FileInputStream(filePath)
 	.let<FileInputStream, JsonObject>(Json.Default::decodeFromStream)
+	.validateKinds()
+	.also { unknownKind.forEach { println("$it,") } }
 	.toNode()
 	.flattenRootNode()
 	.removeImplicitDeclarations()
 	.parse()
 
+private fun JsonObject.validateKinds(): JsonObject = this.apply {
+	try {
+		kind()
+	} catch (e: RuntimeException) {
+		this["kind"]
+			?.let(JsonElement::jsonPrimitive)
+			?.let(JsonPrimitive::content)
+			?.let(unknownKind::add)
+	}
+	this["inner"]
+		?.jsonArray
+		?.mapNotNull { (it as? JsonObject) }
+		?.map { it.validateKinds() }
+}
+
 
 fun List<TranslationUnitNode>.parse(depth: Int = 0) {
-	logger.info { "start processing nodes" }
+	logger.debug { "start processing nodes" }
 	var index = 0
 
 	while (index != size) {
@@ -34,7 +52,7 @@ fun List<TranslationUnitNode>.parse(depth: Int = 0) {
 
 
 		try {
-			logger.info { "will process node of kind $kind" }
+			logger.debug { "will process node of kind $kind" }
 			when (kind) {
 				TranslationUnitKind.ObjCInterfaceDecl -> node.toObjectiveCClass()
 				TranslationUnitKind.TypedefDecl -> node.toNativeTypeAlias()
@@ -70,9 +88,9 @@ fun List<TranslationUnitNode>.parse(depth: Int = 0) {
 				}
 			}.takeIf { it is NativeDeclaration }
 				?.let(DeclarationRepository::save)
-		} catch (e: RuntimeException) {
-			logger.error { "fail with error $e" }
-			ParserRepository.errors.add(e)
+		} catch (error: RuntimeException) {
+			logger.error(error) { "fail to parse node at $json" }
+			ParserRepository.errors.add(error)
 		}
 
 		index++
@@ -80,7 +98,6 @@ fun List<TranslationUnitNode>.parse(depth: Int = 0) {
 	}
 
 }
-
 
 private fun <T> Node<T>.flattenRootNode() = children
 

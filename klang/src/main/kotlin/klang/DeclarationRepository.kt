@@ -8,30 +8,17 @@ object DeclarationRepository {
 	private val logger = KotlinLogging.logger {}
 	private val nativeDeclarations = mutableSetOf<NativeDeclaration>()
 
-	fun save(nativeEnumeration: NativeDeclaration) {
-		when (nativeEnumeration) {
-			is NativeEnumeration -> {
-				if (nativeEnumeration.values.isEmpty()) {
-					logger.warn { "try to add enumeration with no value" }
-					return
-				}
-
-				if (findEnumerationByName(nativeEnumeration.name) != null) {
-					logger.warn { "try to add enumeration multiple time" }
-					return
-				}
-
-				logger.debug { "enum added: $nativeEnumeration" }
-			}
-
-			is NativeStructure -> logger.debug { "structure added: $nativeEnumeration" }
-			is NativeFunction -> logger.debug { "function added: $nativeEnumeration" }
-			is NativeTypeAlias -> logger.debug { "type alias added: $nativeEnumeration" }
-			is ObjectiveCClass -> logger.debug { "objective-c class added: $nativeEnumeration" }
-			else -> throw IllegalArgumentException("Unknown native declaration type: $nativeEnumeration")
+	fun save(declaration: NativeDeclaration) = nativeDeclarations
+		.asSequence()
+		.filter { it::class == declaration::class }
+		.firstOrNull()
+		?.also { logger.debug { "will merge ${it::class.qualifiedName}" } }
+		?.merge(declaration)
+		?: declaration.let {
+			logger.debug { "will insert ${it::class.qualifiedName}}" }
+			nativeDeclarations.add(it)
 		}
-		nativeDeclarations.add(nativeEnumeration)
-	}
+
 
 	fun clear() {
 		nativeDeclarations.clear()
@@ -79,7 +66,7 @@ object DeclarationRepository {
 	fun findDeclarationByName(declarationName: String) = nativeDeclarations
 		.asSequence()
 		.filterIsInstance<NameableDeclaration>()
-		.first { it.name == declarationName }
+		.firstOrNull { it.name == declarationName }
 
 
 }

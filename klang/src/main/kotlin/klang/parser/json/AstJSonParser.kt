@@ -89,7 +89,7 @@ fun List<TranslationUnitNode>.parse(depth: Int = 0) {
 			}.takeIf { it is NativeDeclaration }
 				?.let(DeclarationRepository::save)
 		} catch (error: RuntimeException) {
-			logger.error(error) { "fail to parse node at $json" }
+			//logger.error(error) { "fail to parse node at $json" }
 			ParserRepository.errors.add(error)
 		}
 

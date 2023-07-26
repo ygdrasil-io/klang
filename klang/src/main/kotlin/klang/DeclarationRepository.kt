@@ -8,9 +8,11 @@ object DeclarationRepository {
 	private val logger = KotlinLogging.logger {}
 	private val nativeDeclarations = mutableSetOf<NativeDeclaration>()
 
-	fun save(declaration: NativeDeclaration) = nativeDeclarations
+	fun save(declaration: NameableDeclaration) = nativeDeclarations
 		.asSequence()
 		.filter { it::class == declaration::class }
+		.filterIsInstance<NameableDeclaration>()
+		.filter { it.name == declaration.name }
 		.firstOrNull()
 		?.also { logger.debug { "will merge ${it::class.qualifiedName}" } }
 		?.merge(declaration)

@@ -2,9 +2,9 @@ package klang.domain
 
 data class ObjectiveCClass(
 	override val name: String,
-	val properties: List<Property>,
-	val methods: List<Method>
-) : NameableDeclaration, NativeDeclaration {
+	var properties: List<Property>,
+	var methods: List<Method>
+) : NameableDeclaration {
 
 	data class Property(
 		override val name: String,
@@ -27,4 +27,10 @@ data class ObjectiveCClass(
 		)
 	}
 
+	override fun <T : NativeDeclaration> merge(other: T) {
+		if (other is ObjectiveCClass) {
+			properties += other.properties
+			methods += other.methods
+		} else super.merge(other)
+	}
 }

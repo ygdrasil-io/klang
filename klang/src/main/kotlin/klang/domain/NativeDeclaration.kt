@@ -1,10 +1,10 @@
 package klang.domain
 
 sealed interface NativeDeclaration {
-	fun merge(other: NativeDeclaration) = UnsupportedOperationException()
+	fun <T: NativeDeclaration> merge(other: T): Unit = throw UnsupportedOperationException()
 }
 
-interface NameableDeclaration {
+interface NameableDeclaration: NativeDeclaration {
 	val name: String
 
 }

@@ -18,15 +18,22 @@ object TestData {
 	)
 
 	val objectiveCClass = listOf(
-		"TestClass" to listOf(
-			ObjectiveCClass.Property("testProperty", "NSString *", nonatomic = true, assign = true),
-			ObjectiveCClass.Method("testMethod", "void", true),
-			ObjectiveCClass.Method(
-				"testMethod:withParameter:", "BOOL", false, listOf(
-					ObjectiveCClass.Method.Argument("parameter", "NSString *"),
-					ObjectiveCClass.Method.Argument("testParameter", "NSString *"),
-				)
+		ObjectiveCClass(
+			name = "TestClass",
+			superType = "NSObject",
+			protocols = setOf("NSCopying"),
+			properties = listOf(
+				ObjectiveCClass.Property("testProperty", "NSString *", nonatomic = true, assign = true)
 			),
+			methods = listOf(
+				ObjectiveCClass.Method("testMethod", "void", true),
+				ObjectiveCClass.Method(
+					"testMethod:withParameter:", "BOOL", false, listOf(
+						ObjectiveCClass.Method.Argument("parameter", "NSString *"),
+						ObjectiveCClass.Method.Argument("testParameter", "NSString *"),
+					)
+				)
+			)
 		)
 	)
 

@@ -38,13 +38,15 @@ class AstJSonObjectiveCParserTest : ParserTestCommon({
 	}
 })
 
-suspend fun FreeSpecContainerScope.validateObjectiveCClass(objectiveCClasses: List<Pair<String, List<NameableDeclaration>>>) {
-	objectiveCClasses.forEach { (className, properties) ->
-		"test $className" {
-		DeclarationRepository.findObjectiveCClassByName(className)
-			.also { it?.name shouldBe className }
-			.also { it?.properties shouldContains properties.filterIsInstance<ObjectiveCClass.Property>() }
-			.also { it?.methods shouldContains properties.filterIsInstance<ObjectiveCClass.Method>() }
+suspend fun FreeSpecContainerScope.validateObjectiveCClass(objectiveCClasses: List<ObjectiveCClass>) {
+	objectiveCClasses.forEach { objectiveCClass ->
+		"test ${objectiveCClass.name}" {
+		DeclarationRepository.findObjectiveCClassByName(objectiveCClass.name)
+			.also { it?.name shouldBe objectiveCClass.name }
+			.also { it?.superType shouldBe objectiveCClass.superType }
+			.also { it?.protocols shouldBe objectiveCClass.protocols }
+			.also { it?.properties shouldContains objectiveCClass.properties }
+			.also { it?.methods shouldContains objectiveCClass.methods }
 		}
 	}
 }

@@ -18,8 +18,10 @@ class FoundationItTest: FreeSpec ({
 		parseAstJson(filePath)
 
 		println(DeclarationRepository.findDeclarationByName("NSString"))
+		println(DeclarationRepository.findDeclarationByName("NSMutableString"))
 		println(DeclarationRepository.findDeclarationByName("NSArray"))
 		println(DeclarationRepository.findDeclarationByName("CGFloat"))
+
 
 	}
 

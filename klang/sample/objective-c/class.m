@@ -1,6 +1,6 @@
 #import <Foundation/Foundation.h>
 
-@interface TestClass : NSObject
+@interface TestClass : NSObject <NSCopying>
 
 @property (nonatomic, assign) NSString *testProperty;
 

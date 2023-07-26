@@ -2,6 +2,8 @@ package klang.domain
 
 data class ObjectiveCClass(
 	override val name: String,
+	val superType: String,
+	val protocols: Set<String>,
 	var properties: List<Property>,
 	var methods: List<Method>
 ) : NameableDeclaration {

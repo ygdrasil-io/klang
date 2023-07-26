@@ -7,13 +7,27 @@ import klang.parser.json.domain.json
 import klang.parser.json.domain.kind
 import kotlinx.serialization.json.*
 
-internal fun TranslationUnitNode.toObjectiveCClass(): ObjectiveCClass? {
+internal fun TranslationUnitNode.toObjectiveCClass(): ObjectiveCClass {
 	return ObjectiveCClass(
 		name = json.name(),
+		superType = json.superType(),
+		protocols = json.protocols(),
 		properties = json.properties(),
 		methods = json.methods()
 	)
 }
+
+private fun JsonObject.protocols(): Set<String> = this["protocols"]
+	?.jsonArray
+	?.map { it.jsonObject.get("name")?.jsonPrimitive?.content }
+	?.filterNotNull()
+	?.toSet() ?: setOf()
+
+private fun JsonObject.superType(): String = this["super"]
+	?.jsonObject
+	?.get("name")
+	?.jsonPrimitive
+	?.content ?: error("fail to find supertype")
 
 private fun JsonObject.methods(): List<ObjectiveCClass.Method> = inner()
 	?.filter { it.kind() == TranslationUnitKind.ObjCMethodDecl }

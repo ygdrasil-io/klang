@@ -1,7 +1,16 @@
 package klang.domain
 
-class ObjectiveCCategory(
+import klang.DeclarationRepository
+
+data class ObjectiveCCategory(
 	override val name: String,
-	val superType: String,
-	var methods: List<ObjectiveCClass.Method>
-) : NameableDeclaration
+	var superType: TypeRef,
+	val methods: List<ObjectiveCClass.Method>
+) : NameableDeclaration, ResolvableDeclaration {
+
+	override fun DeclarationRepository.resolve() {
+		superType = with(superType) { resolve() }
+		// TODO uncomment when ready
+		//methods.forEach { with(it) { resolve() } }
+	}
+}

@@ -2,6 +2,7 @@ package klang.parser.json.type
 
 import klang.domain.ObjectiveCCategory
 import klang.domain.ObjectiveCClass
+import klang.domain.UnresolvedTypeRef
 import klang.parser.json.domain.TranslationUnitKind
 import klang.parser.json.domain.TranslationUnitNode
 import klang.parser.json.domain.json
@@ -19,11 +20,12 @@ internal fun TranslationUnitNode.toObjectiveCCategory(): ObjectiveCCategory {
 	)
 }
 
-private fun JsonObject.superType(): String = this["interface"]
+private fun JsonObject.superType() = this["interface"]
 	?.jsonObject
 	?.get("name")
 	?.jsonPrimitive
-	?.content ?: error("fail to find supertype")
+	?.content
+	?.let(::UnresolvedTypeRef)?: error("fail to find supertype")
 
 private fun JsonObject.methods(): List<ObjectiveCClass.Method> = inner()
 	?.filter { it.kind() == TranslationUnitKind.ObjCMethodDecl }

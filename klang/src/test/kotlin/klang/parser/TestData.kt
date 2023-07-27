@@ -23,7 +23,7 @@ object TestData {
 	val objectiveCCategory = listOf(
 		ObjectiveCCategory(
 			name = "MyCategory",
-			superType = "MyClass",
+			superType = UnresolvedTypeRef("MyClass"),
 			methods = listOf(
 				ObjectiveCClass.Method("newMethod", "void", true),
 			)

@@ -20,4 +20,11 @@ fun DeclarationRepository.insertObjectiveCDefaultDeclaration() {
 	save(ObjectiveCProtocol("NSXMLNode", setOf(), listOf(), listOf()))
 	save(ObjectiveCProtocol("NSClassDescription", setOf(), listOf(), listOf()))
 	save(ObjectiveCProtocol("NSUserScriptTask", setOf(), listOf(), listOf()))
+
+	save(ObjectiveCProtocol("NSScanner", setOf(), listOf(), listOf()))
+	save(ObjectiveCProtocol("NSOrderedSet", setOf(), listOf(), listOf()))
+	save(ObjectiveCProtocol("NSMutableOrderedSet", setOf(), listOf(), listOf()))
+	save(ObjectiveCProtocol("NSProcessInfo", setOf(), listOf(), listOf()))
+	save(ObjectiveCProtocol("NSXMLParser", setOf(), listOf(), listOf()))
+	save(ObjectiveCProtocol("NSProtocolChecker", setOf(), listOf(), listOf()))
 }

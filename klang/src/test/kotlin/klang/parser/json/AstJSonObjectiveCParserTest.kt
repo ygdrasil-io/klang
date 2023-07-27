@@ -7,6 +7,7 @@ import io.kotest.matchers.shouldNotBe
 import klang.DeclarationRepository
 import klang.domain.NameableDeclaration
 import klang.domain.ObjectiveCClass
+import klang.domain.ObjectiveCProtocol
 import klang.parser.ParserTestCommon
 import klang.parser.TestData
 import klang.parser.validateEnumerations
@@ -36,8 +37,30 @@ class AstJSonObjectiveCParserTest : ParserTestCommon({
 		// Then
 		validateEnumerations(TestData.objectiveCEnumeration)
 	}
-})
 
+	"test protocol parsing" - {
+
+		// Given
+		val filePath = "sample/objective-c/protocol.m.ast.json"
+
+		// When
+		parseAstJson(filePath)
+
+		// Then
+		validateObjectiveCProtocol(TestData.objectiveCProtocol)
+	}
+})
+suspend fun FreeSpecContainerScope.validateObjectiveCProtocol(objectiveCClasses: List<ObjectiveCProtocol>) {
+	objectiveCClasses.forEach { objectiveCClass ->
+		"test ${objectiveCClass.name}" {
+			DeclarationRepository.findObjectiveCProtocolByName(objectiveCClass.name)
+				.also { it?.name shouldBe objectiveCClass.name }
+				.also { it?.protocols shouldBe objectiveCClass.protocols }
+				.also { it?.properties shouldContains objectiveCClass.properties }
+				.also { it?.methods shouldContains objectiveCClass.methods }
+		}
+	}
+}
 suspend fun FreeSpecContainerScope.validateObjectiveCClass(objectiveCClasses: List<ObjectiveCClass>) {
 	objectiveCClasses.forEach { objectiveCClass ->
 		"test ${objectiveCClass.name}" {

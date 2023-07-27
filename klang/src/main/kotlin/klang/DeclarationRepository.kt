@@ -51,6 +51,11 @@ object DeclarationRepository {
 		.filterIsInstance<ObjectiveCClass>()
 		.find { it.name == name }
 
+	fun findObjectiveCProtocolByName(name: String) = nativeDeclarations
+		.asSequence()
+		.filterIsInstance<ObjectiveCProtocol>()
+		.find { it.name == name }
+
 	fun update(nativeEnumeration: NativeDeclaration, provider: () -> NativeDeclaration): NativeDeclaration {
 		val newValue = provider()
 		when (nativeEnumeration) {

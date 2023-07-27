@@ -55,6 +55,7 @@ fun List<TranslationUnitNode>.parse(depth: Int = 0) {
 			logger.debug { "will process node of kind $kind" }
 			when (kind) {
 				TranslationUnitKind.ObjCInterfaceDecl -> node.toObjectiveCClass()
+				TranslationUnitKind.ObjCProtocolDecl -> node.toObjectiveCProtocol()
 				TranslationUnitKind.TypedefDecl -> node.toNativeTypeAlias()
 				TranslationUnitKind.VarDecl -> {
 					if (node.isExternalDeclaration().not()) {

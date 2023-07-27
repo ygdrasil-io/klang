@@ -1,6 +1,7 @@
 package klang.parser
 
 import klang.domain.ObjectiveCClass
+import klang.domain.ObjectiveCProtocol
 
 object TestData {
 
@@ -14,6 +15,18 @@ object TestData {
 			"kValue4" to 0L,
 			"kValue5" to 1L,
 			"kValue6" to 2L
+		)
+	)
+
+	val objectiveCProtocol = listOf(
+		ObjectiveCProtocol(
+			name = "MyProtocol",
+			protocols = setOf("NSObject"),
+			properties = listOf(),
+			methods = listOf(
+				ObjectiveCClass.Method("method1", "void", true),
+				ObjectiveCClass.Method("method2", "NSString *", true)
+			)
 		)
 	)
 

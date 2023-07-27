@@ -7,7 +7,7 @@ import darwin.ObjectiveC
 
 internal annotation class NativeName(val name: String) {
 	companion object {
-		val OPTIONS = mapOf(
+		val options = mapOf(
 			Library.OPTION_FUNCTION_MAPPER to FunctionMapper { _, method ->
 				method.getAnnotation(NativeName::class.java)?.name ?: method.name
 			}
@@ -16,7 +16,7 @@ internal annotation class NativeName(val name: String) {
 }
 
 internal inline fun <reified T : Library> NativeLoad(name: String): T =
-	Native.load(name, T::class.java, NativeName.OPTIONS) as T
+	Native.load(name, T::class.java, NativeName.options) as T
 
 internal typealias ID = Long
 

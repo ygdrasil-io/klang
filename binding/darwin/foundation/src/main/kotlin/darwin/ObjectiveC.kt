@@ -9,7 +9,7 @@ import darwin.internal.NativeLoad
 import darwin.internal.NativeName
 
 // https://developer.apple.com/documentation/objectivec/objective-c_runtime
-interface ObjectiveC : Library {
+interface ObjectiveCLibrary : Library {
 	fun objc_copyProtocolList(outCount: IntArray): Pointer
 	fun protocol_getName(protocol: Long): String
 
@@ -81,5 +81,6 @@ interface ObjectiveC : Library {
 	fun ivar_getName(ivar: Pointer?): String?
 	fun ivar_getTypeEncoding(ivar: Pointer?): String?
 
-	companion object : ObjectiveC by NativeLoad("objc")
 }
+
+val ObjectiveC by lazy { NativeLoad<ObjectiveCLibrary>("objc") }

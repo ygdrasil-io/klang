@@ -1,0 +1,46 @@
+package klang.parser.json.type
+
+import klang.domain.ObjectiveCCategory
+import klang.domain.ObjectiveCClass
+import klang.parser.json.domain.TranslationUnitKind
+import klang.parser.json.domain.TranslationUnitNode
+import klang.parser.json.domain.json
+import klang.parser.json.domain.kind
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
+
+
+internal fun TranslationUnitNode.toObjectiveCCategory(): ObjectiveCCategory {
+	return ObjectiveCCategory(
+		name = json.name(),
+		superType = json.superType(),
+		methods = json.methods()
+	)
+}
+
+private fun JsonObject.superType(): String = this["interface"]
+	?.jsonObject
+	?.get("name")
+	?.jsonPrimitive
+	?.content ?: error("fail to find supertype")
+
+private fun JsonObject.methods(): List<ObjectiveCClass.Method> = inner()
+	?.filter { it.kind() == TranslationUnitKind.ObjCMethodDecl }
+	?.filter { !(it.nullableBooleanValueOf("isImplicit") ?: false) }
+	?.map { it.toMethod() } ?: listOf()
+
+private fun JsonObject.toMethod() = ObjectiveCClass.Method(
+	name = name(),
+	returnType = returnType(),
+	instance = booleanValueOf("instance"),
+	arguments = arguments()
+)
+
+private fun JsonObject.arguments(): List<ObjectiveCClass.Method.Argument> = inner()
+	?.map { it.toArgument() } ?: listOf()
+
+private fun JsonObject.toArgument() = ObjectiveCClass.Method.Argument(
+	name = name(),
+	type = type()
+)

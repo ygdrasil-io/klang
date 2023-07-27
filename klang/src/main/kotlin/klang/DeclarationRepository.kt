@@ -56,6 +56,12 @@ object DeclarationRepository {
 		.filterIsInstance<ObjectiveCProtocol>()
 		.find { it.name == name }
 
+	fun findObjectiveCCategoryByName(name: String)= nativeDeclarations
+		.asSequence()
+		.filterIsInstance<ObjectiveCCategory>()
+		.find { it.name == name }
+
+
 	fun update(nativeEnumeration: NativeDeclaration, provider: () -> NativeDeclaration): NativeDeclaration {
 		val newValue = provider()
 		when (nativeEnumeration) {
@@ -74,6 +80,7 @@ object DeclarationRepository {
 		.asSequence()
 		.filterIsInstance<NameableDeclaration>()
 		.firstOrNull { it.name == declarationName }
+
 
 
 }

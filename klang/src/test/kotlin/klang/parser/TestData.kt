@@ -1,5 +1,6 @@
 package klang.parser
 
+import klang.domain.ObjectiveCCategory
 import klang.domain.ObjectiveCClass
 import klang.domain.ObjectiveCProtocol
 
@@ -15,6 +16,16 @@ object TestData {
 			"kValue4" to 0L,
 			"kValue5" to 1L,
 			"kValue6" to 2L
+		)
+	)
+
+	val objectiveCCategory = listOf(
+		ObjectiveCCategory(
+			name = "MyCategory",
+			superType = "MyClass",
+			methods = listOf(
+				ObjectiveCClass.Method("newMethod", "void", true),
+			)
 		)
 	)
 

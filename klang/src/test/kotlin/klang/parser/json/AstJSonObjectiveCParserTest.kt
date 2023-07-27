@@ -6,6 +6,7 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import klang.DeclarationRepository
 import klang.domain.NameableDeclaration
+import klang.domain.ObjectiveCCategory
 import klang.domain.ObjectiveCClass
 import klang.domain.ObjectiveCProtocol
 import klang.parser.ParserTestCommon
@@ -24,6 +25,18 @@ class AstJSonObjectiveCParserTest : ParserTestCommon({
 
 		// Then
 		validateObjectiveCClass(TestData.objectiveCClass)
+	}
+
+	"test categories parsing" - {
+
+		// Given
+		val filePath = "sample/objective-c/category.m.ast.json"
+
+		// When
+		parseAstJson(filePath)
+
+		// Then
+		validateObjectiveCCategory(TestData.objectiveCCategory)
 	}
 
 	"test enum parsing" - {
@@ -50,6 +63,18 @@ class AstJSonObjectiveCParserTest : ParserTestCommon({
 		validateObjectiveCProtocol(TestData.objectiveCProtocol)
 	}
 })
+
+suspend fun FreeSpecContainerScope.validateObjectiveCCategory(objectiveCCategories: List<ObjectiveCCategory>) {
+	objectiveCCategories.forEach { objectiveCCategory ->
+		"test ${objectiveCCategory.name}" {
+			DeclarationRepository.findObjectiveCCategoryByName(objectiveCCategory.name)
+				.also { it?.name shouldBe objectiveCCategory.name }
+				.also { it?.superType shouldBe objectiveCCategory.superType }
+				.also { it?.methods shouldContains objectiveCCategory.methods }
+		}
+	}
+}
+
 suspend fun FreeSpecContainerScope.validateObjectiveCProtocol(objectiveCClasses: List<ObjectiveCProtocol>) {
 	objectiveCClasses.forEach { objectiveCClass ->
 		"test ${objectiveCClass.name}" {

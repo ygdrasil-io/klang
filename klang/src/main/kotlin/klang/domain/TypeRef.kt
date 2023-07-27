@@ -13,7 +13,7 @@ sealed class TypeRef(
 		return refName == (other as? TypeRef)?.refName
 	}
 
-	fun DeclarationRepository.resolve(): TypeRef = findDeclarationByName(refName)
+	fun DeclarationRepository.resolve(): TypeRef = findDeclarationByName<NameableDeclaration>(refName)
 		?.let { ResolvedTypeRef(refName, it) }
 		?: (UnresolvedTypeRef(refName)
 			.also { logger.warn { "fail to resolve type ref: $it" } })

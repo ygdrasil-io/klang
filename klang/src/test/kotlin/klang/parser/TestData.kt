@@ -45,7 +45,7 @@ object TestData {
 	val objectiveCClass = listOf(
 		ObjectiveCClass(
 			name = "TestClass",
-			superType = "NSObject",
+			superType = UnresolvedTypeRef("NSObject"),
 			protocols = setOf(UnresolvedTypeRef("NSCopying")),
 			properties = listOf(
 				ObjectiveCClass.Property("testProperty", "NSString *", nonatomic = true, assign = true)

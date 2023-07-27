@@ -4,11 +4,11 @@ import klang.DeclarationRepository
 
 data class ObjectiveCClass(
 	override val name: String,
-	val superType: String,
+	var superType: TypeRef,
 	var protocols: Set<TypeRef>,
 	var properties: List<Property>,
 	var methods: List<Method>
-) : NameableDeclaration {
+) : NameableDeclaration, ResolvableDeclaration {
 
 	data class Property(
 		override val name: String,
@@ -24,11 +24,20 @@ data class ObjectiveCClass(
 		val returnType: String,
 		val instance: Boolean,
 		val arguments: List<Argument> = listOf()
-	) : NameableDeclaration {
+	) : NameableDeclaration, ResolvableDeclaration {
 		data class Argument(
 			val name: String,
 			val type: String
-		)
+		) : ResolvableDeclaration {
+
+			override fun DeclarationRepository.resolve() {
+				TODO()
+			}
+		}
+
+		override fun DeclarationRepository.resolve() {
+			arguments.forEach { with(it) { resolve() } }
+		}
 	}
 
 	override fun <T : NativeDeclaration> merge(other: T) {
@@ -38,9 +47,10 @@ data class ObjectiveCClass(
 		} else super.merge(other)
 	}
 
-	fun DeclarationRepository.resolve() {
+	override fun DeclarationRepository.resolve() {
 		protocols = protocols
 			.map { with(it) { resolve() } }
 			.toSet()
+		superType = with(superType) { resolve() }
 	}
 }

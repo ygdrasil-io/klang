@@ -18,16 +18,12 @@ class FoundationItTest : FreeSpec({
 		parseAstJson(filePath)
 
 		with(DeclarationRepository) {
+
+			resolve()
+
 			findDeclarationsByName("NSString")
-				.also { it.forEach { println(it) } }
-				.filterIsInstance<klang.domain.ObjectiveCClass>()
-				.also { it.forEach { with(it) { resolve() } } }
 				.forEach { println(it) }
-			findDeclarationsByName("NSMutableString")
-				.forEach { println(it) }
-			findDeclarationsByName("NSArray")
-				.forEach { println(it) }
-			findDeclarationsByName("CGFloat")
+			findDeclarationsByName("CFString")
 				.forEach { println(it) }
 		}
 

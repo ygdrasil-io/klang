@@ -8,6 +8,14 @@ object DeclarationRepository {
 	private val logger = KotlinLogging.logger {}
 	private val nativeDeclarations = mutableSetOf<NativeDeclaration>()
 
+	val declarations: Set<NativeDeclaration>
+		get() = nativeDeclarations
+
+
+	init {
+		insertObjectiveCDefaultDeclaration()
+	}
+
 	fun save(declaration: NameableDeclaration) = nativeDeclarations
 		.asSequence()
 		.filter { it::class == declaration::class }
@@ -21,55 +29,33 @@ object DeclarationRepository {
 			nativeDeclarations.add(it)
 		}
 
-
 	fun clear() {
 		nativeDeclarations.clear()
 	}
 
-	fun findEnumerationByName(name: String) = nativeDeclarations
-		.asSequence()
-		.filterIsInstance<NativeEnumeration>()
-		.find { it.name == name }
+	fun findEnumerationByName(name: String) = findDeclarationByName<NativeEnumeration>(name)
 
-	fun findStructureByName(name: String) = nativeDeclarations
-		.asSequence()
-		.filterIsInstance<NativeStructure>()
-		.find { it.name == name }
+	fun findStructureByName(name: String) = findDeclarationByName<NativeStructure>(name)
 
-	fun findFunctionByName(name: String) = nativeDeclarations
-		.asSequence()
-		.filterIsInstance<NativeFunction>()
-		.find { it.name == name }
+	fun findFunctionByName(name: String) = findDeclarationByName<NativeFunction>(name)
 
-	fun findTypeAliasByName(name: String) = nativeDeclarations
-		.asSequence()
-		.filterIsInstance<NativeTypeAlias>()
-		.find { it.name == name }
+	fun findTypeAliasByName(name: String) = findDeclarationByName<NativeTypeAlias>(name)
 
-	fun findObjectiveCClassByName(name: String) = nativeDeclarations
-		.asSequence()
-		.filterIsInstance<ObjectiveCClass>()
-		.find { it.name == name }
+	fun findObjectiveCClassByName(name: String) = findDeclarationByName<ObjectiveCClass>(name)
 
-	fun findObjectiveCProtocolByName(name: String) = nativeDeclarations
-		.asSequence()
-		.filterIsInstance<ObjectiveCProtocol>()
-		.find { it.name == name }
+	fun findObjectiveCProtocolByName(name: String) = findDeclarationByName<ObjectiveCProtocol>(name)
 
-	fun findObjectiveCCategoryByName(name: String)= nativeDeclarations
-		.asSequence()
-		.filterIsInstance<ObjectiveCCategory>()
-		.find { it.name == name }
+	fun findObjectiveCCategoryByName(name: String) = findDeclarationByName<ObjectiveCCategory>(name)
 
-	fun findDeclarationsByName(declarationName: String) = nativeDeclarations
+	fun findDeclarationsByName(declarationName: String) = declarations
 		.asSequence()
 		.filterIsInstance<NameableDeclaration>()
 		.filter { it.name == declarationName }
 		.toList()
 
-	fun findDeclarationByName(declarationName: String) = nativeDeclarations
+	inline fun <reified T : NameableDeclaration> findDeclarationByName(declarationName: String) = declarations
 		.asSequence()
-		.filterIsInstance<NameableDeclaration>()
+		.filterIsInstance<T>()
 		.firstOrNull { it.name == declarationName }
 
 	fun update(nativeEnumeration: NativeDeclaration, provider: () -> NativeDeclaration): NativeDeclaration {
@@ -87,6 +73,11 @@ object DeclarationRepository {
 	}
 
 
-
+	fun DeclarationRepository.resolve() {
+		nativeDeclarations
+			.asSequence()
+			.filterIsInstance<ResolvableDeclaration>()
+			.forEach { with(it) { resolve() } }
+	}
 
 }

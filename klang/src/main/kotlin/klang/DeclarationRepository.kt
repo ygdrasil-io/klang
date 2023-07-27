@@ -61,6 +61,16 @@ object DeclarationRepository {
 		.filterIsInstance<ObjectiveCCategory>()
 		.find { it.name == name }
 
+	fun findDeclarationsByName(declarationName: String) = nativeDeclarations
+		.asSequence()
+		.filterIsInstance<NameableDeclaration>()
+		.filter { it.name == declarationName }
+		.toList()
+
+	fun findDeclarationByName(declarationName: String) = nativeDeclarations
+		.asSequence()
+		.filterIsInstance<NameableDeclaration>()
+		.firstOrNull { it.name == declarationName }
 
 	fun update(nativeEnumeration: NativeDeclaration, provider: () -> NativeDeclaration): NativeDeclaration {
 		val newValue = provider()
@@ -76,10 +86,6 @@ object DeclarationRepository {
 		return newValue
 	}
 
-	fun findDeclarationByName(declarationName: String) = nativeDeclarations
-		.asSequence()
-		.filterIsInstance<NameableDeclaration>()
-		.firstOrNull { it.name == declarationName }
 
 
 

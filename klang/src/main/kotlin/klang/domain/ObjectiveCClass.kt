@@ -1,9 +1,11 @@
 package klang.domain
 
+import klang.DeclarationRepository
+
 data class ObjectiveCClass(
 	override val name: String,
 	val superType: String,
-	val protocols: Set<String>,
+	var protocols: Set<TypeRef>,
 	var properties: List<Property>,
 	var methods: List<Method>
 ) : NameableDeclaration {
@@ -34,5 +36,11 @@ data class ObjectiveCClass(
 			properties += other.properties
 			methods += other.methods
 		} else super.merge(other)
+	}
+
+	fun DeclarationRepository.resolve() {
+		protocols = protocols
+			.map { with(it) { resolve() } }
+			.toSet()
 	}
 }

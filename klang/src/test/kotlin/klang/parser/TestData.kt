@@ -3,6 +3,7 @@ package klang.parser
 import klang.domain.ObjectiveCCategory
 import klang.domain.ObjectiveCClass
 import klang.domain.ObjectiveCProtocol
+import klang.domain.UnresolvedTypeRef
 
 object TestData {
 
@@ -45,7 +46,7 @@ object TestData {
 		ObjectiveCClass(
 			name = "TestClass",
 			superType = "NSObject",
-			protocols = setOf("NSCopying"),
+			protocols = setOf(UnresolvedTypeRef("NSCopying")),
 			properties = listOf(
 				ObjectiveCClass.Property("testProperty", "NSString *", nonatomic = true, assign = true)
 			),

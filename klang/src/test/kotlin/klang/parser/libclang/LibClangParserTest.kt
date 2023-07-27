@@ -11,7 +11,7 @@ class LibClangParserTest : ParserTestCommon({
 
 	"test enum parsing" - {
 		// Given
-		val filePath = "sample/c/enum.h"
+		val filePath = "src/test/c/enum.h"
 
 		// When
 		parseFile(filePath)
@@ -22,7 +22,7 @@ class LibClangParserTest : ParserTestCommon({
 
 	"test typedef enum parsing" - {
 		// Given
-		val filePath = "sample/c/typedef-enum.h"
+		val filePath = "src/test/c/typedef-enum.h"
 
 		// When
 		parseFile(filePath)
@@ -34,7 +34,7 @@ class LibClangParserTest : ParserTestCommon({
 
 	"test struct parsing" - {
 		// Given
-		val filePath = "sample/c/struct.h"
+		val filePath = "src/test/c/struct.h"
 
 		// When
 		parseFile(filePath)
@@ -45,7 +45,7 @@ class LibClangParserTest : ParserTestCommon({
 
 	"typedef struct parsing" - {
 		// Given
-		val filePath = "sample/c/typedef-struct.h"
+		val filePath = "src/test/c/typedef-struct.h"
 
 		// When
 		parseFile(filePath)
@@ -56,7 +56,7 @@ class LibClangParserTest : ParserTestCommon({
 
 	"typedef parsing" {
 		// Given
-		val filePath = "sample/c/typedef.h"
+		val filePath = "src/test/c/typedef.h"
 
 		// When
 		parseFile(filePath)
@@ -71,7 +71,7 @@ class LibClangParserTest : ParserTestCommon({
 
 	"function parsing" {
 		// Given
-		val filePath = "sample/c/functions.h"
+		val filePath = "src/test/c/functions.h"
 
 		// When
 		parseFile(filePath)

@@ -11,7 +11,7 @@ class AstJSonCParserTest : ParserTestCommon({
 
 	"test enum parsing" - {
 		// Given
-		val filePath = "sample/c/enum.h.ast.json"
+		val filePath = "src/test/c/enum.h.ast.json"
 
 		// When
 		parseAstJson(filePath)
@@ -22,7 +22,7 @@ class AstJSonCParserTest : ParserTestCommon({
 
 	"test typedef enum parsing" - {
 		// Given
-		val filePath = "sample/c/typedef-enum.h.ast.json"
+		val filePath = "src/test/c/typedef-enum.h.ast.json"
 
 		// When
 		parseAstJson(filePath)
@@ -34,7 +34,7 @@ class AstJSonCParserTest : ParserTestCommon({
 
 	"test struct parsing" - {
 		// Given
-		val filePath = "sample/c/struct.h.ast.json"
+		val filePath = "src/test/c/struct.h.ast.json"
 
 		// When
 		parseAstJson(filePath)
@@ -45,7 +45,7 @@ class AstJSonCParserTest : ParserTestCommon({
 
 	"typedef struct parsing" - {
 		// Given
-		val filePath = "sample/c/typedef-struct.h.ast.json"
+		val filePath = "src/test/c/typedef-struct.h.ast.json"
 
 		// When
 		parseAstJson(filePath)
@@ -56,7 +56,7 @@ class AstJSonCParserTest : ParserTestCommon({
 
 	"typedef parsing" - {
 		// Given
-		val filePath = "sample/c/typedef.h.ast.json"
+		val filePath = "src/test/c/typedef.h.ast.json"
 
 		// When
 		parseAstJson(filePath)
@@ -73,7 +73,7 @@ class AstJSonCParserTest : ParserTestCommon({
 
 	"function parsing" - {
 		// Given
-		val filePath = "sample/c/functions.h.ast.json"
+		val filePath = "src/test/c/functions.h.ast.json"
 
 		// When
 		parseAstJson(filePath)

@@ -25,7 +25,7 @@ internal data class ParsingContext(
 	}
 }
 
-fun parseFile(file: String) {
+fun parseFile(file: String) = with(DeclarationRepository) {
 	ParsingContext().parse(file) { info: DeclarationInfo ->
 		logger.debug { "parsing unit at ${info.location}" }
 		when (info.cursor.kind) {

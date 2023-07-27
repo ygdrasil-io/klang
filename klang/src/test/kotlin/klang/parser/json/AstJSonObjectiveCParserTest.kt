@@ -18,7 +18,7 @@ class AstJSonObjectiveCParserTest : ParserTestCommon({
 	"test class parsing" - {
 
 		// Given
-		val filePath = "sample/objective-c/class.m.ast.json"
+		val filePath = "src/test/objective-c/class.m.ast.json"
 
 		// When
 		parseAstJson(filePath)
@@ -30,7 +30,7 @@ class AstJSonObjectiveCParserTest : ParserTestCommon({
 	"test categories parsing" - {
 
 		// Given
-		val filePath = "sample/objective-c/category.m.ast.json"
+		val filePath = "src/test/objective-c/category.m.ast.json"
 
 		// When
 		parseAstJson(filePath)
@@ -42,7 +42,7 @@ class AstJSonObjectiveCParserTest : ParserTestCommon({
 	"test enum parsing" - {
 
 		// Given
-		val filePath = "sample/objective-c/nsenum.m.ast.json"
+		val filePath = "src/test/objective-c/nsenum.m.ast.json"
 
 		// When
 		parseAstJson(filePath)
@@ -54,7 +54,7 @@ class AstJSonObjectiveCParserTest : ParserTestCommon({
 	"test protocol parsing" - {
 
 		// Given
-		val filePath = "sample/objective-c/protocol.m.ast.json"
+		val filePath = "src/test/objective-c/protocol.m.ast.json"
 
 		// When
 		parseAstJson(filePath)

@@ -7,7 +7,7 @@ import klang.parser.json.parseAstJson
 val IS_OS_DARWIN = System.getProperty("os.name").contains("mac", ignoreCase = true)
 val INTEGRATION_ENABLED = System.getenv("integration.test").equals("enabled", ignoreCase = true)
 
-class FoundationItTest: FreeSpec ({
+class FoundationItTest : FreeSpec({
 
 	"test foundation parsing".config(enabled = IS_OS_DARWIN && INTEGRATION_ENABLED) {
 
@@ -17,11 +17,19 @@ class FoundationItTest: FreeSpec ({
 		// When
 		parseAstJson(filePath)
 
-		println(DeclarationRepository.findDeclarationByName("NSString"))
-		println(DeclarationRepository.findDeclarationByName("NSMutableString"))
-		println(DeclarationRepository.findDeclarationByName("NSArray"))
-		println(DeclarationRepository.findDeclarationByName("CGFloat"))
-
+		with(DeclarationRepository) {
+			findDeclarationsByName("NSString")
+				.also { it.forEach { println(it) } }
+				.filterIsInstance<klang.domain.ObjectiveCClass>()
+				.also { it.forEach { with(it) { resolve() } } }
+				.forEach { println(it) }
+			findDeclarationsByName("NSMutableString")
+				.forEach { println(it) }
+			findDeclarationsByName("NSArray")
+				.forEach { println(it) }
+			findDeclarationsByName("CGFloat")
+				.forEach { println(it) }
+		}
 
 	}
 

@@ -4,8 +4,10 @@
 #clang -Xclang -ast-dump=json -fsyntax-only -fmodules ./nsenum.m > ./nsenum.m.ast.json
 #clang -Xclang -ast-dump -fsyntax-only -fmodules -fdiagnostics-color=never ./protocol.m > ./protocol.m.ast
 #clang -Xclang -ast-dump=json -fsyntax-only -fmodules ./protocol.m > ./protocol.m.ast.json
-clang -Xclang -ast-dump -fsyntax-only -fmodules -fdiagnostics-color=never ./category.m > ./category.m.ast
-clang -Xclang -ast-dump=json -fsyntax-only -fmodules ./category.m > ./category.m.ast.json
+#clang -Xclang -ast-dump -fsyntax-only -fmodules -fdiagnostics-color=never ./category.m > ./category.m.ast
+#clang -Xclang -ast-dump=json -fsyntax-only -fmodules ./category.m > ./category.m.ast.json
+
+clang -Xclang -ast-dump -fsyntax-only -fmodules -fdiagnostics-color=never ./test.m > ./test.m.ast
 
 #/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/
 #docker run --mount src="/Users/chaos/Workspace/klang2/./klang/sample/objective-c",target=/workspace,type=bind \

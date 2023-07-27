@@ -1,6 +1,7 @@
 package klang.parser.json.type
 
 import klang.domain.ObjectiveCClass
+import klang.domain.UnresolvedTypeRef
 import klang.parser.json.domain.TranslationUnitKind
 import klang.parser.json.domain.TranslationUnitNode
 import klang.parser.json.domain.json
@@ -17,10 +18,11 @@ internal fun TranslationUnitNode.toObjectiveCClass(): ObjectiveCClass {
 	)
 }
 
-private fun JsonObject.protocols(): Set<String> = this["protocols"]
+private fun JsonObject.protocols(): Set<UnresolvedTypeRef> = this["protocols"]
 	?.jsonArray
 	?.map { it.jsonObject.get("name")?.jsonPrimitive?.content }
 	?.filterNotNull()
+	?.map(::UnresolvedTypeRef)
 	?.toSet() ?: setOf()
 
 private fun JsonObject.superType(): String = this["super"]

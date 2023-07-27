@@ -42,12 +42,12 @@ private fun JsonObject.validateKinds(): JsonObject = this.apply {
 }
 
 
-fun List<TranslationUnitNode>.parse(depth: Int = 0) {
+fun List<TranslationUnitNode>.parse(depth: Int = 0) = with (DeclarationRepository){
 	logger.debug { "start processing nodes" }
 	var index = 0
 
 	while (index != size) {
-		val node = this[index]
+		val node = get(index)
 		val (kind, json) = node.content
 
 
@@ -68,18 +68,18 @@ fun List<TranslationUnitNode>.parse(depth: Int = 0) {
 
 				TranslationUnitKind.FunctionDecl -> node.toNativeFunction()
 				TranslationUnitKind.RecordDecl -> when {
-					node.isTypeDefStructure(this) -> {
+					node.isTypeDefStructure(this@parse) -> {
 						index++
-						node.toNativeTypeDefStructure(this[index])
+						node.toNativeTypeDefStructure(get(index))
 					}
 
 					else -> node.toNativeStructure()
 				}
 
 				TranslationUnitKind.EnumDecl -> when {
-					node.isTypeDefEnumeration(this) -> {
+					node.isTypeDefEnumeration(this@parse) -> {
 						index++
-						node.toNativeTypeDefEnumeration(this[index])
+						node.toNativeTypeDefEnumeration(get(index))
 					}
 
 					else -> node.toNativeEnumeration()

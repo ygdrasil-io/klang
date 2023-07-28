@@ -7,12 +7,12 @@ import klang.parser.INTEGRATION_ENABLED
 import klang.parser.IS_OS_DARWIN
 import klang.parser.json.parseAstJson
 
-class FoundationItTest : FreeSpec({
+class MetalItTest : FreeSpec({
 
-	"test foundation parsing".config(enabled = IS_OS_DARWIN && INTEGRATION_ENABLED) {
+	"test coco parsing".config(enabled = IS_OS_DARWIN && INTEGRATION_ENABLED) {
 
 		// Given
-		val filePath = "src/integrationTest/objective-c/foundation.m.ast.json"
+		val filePath = "src/integrationTest/objective-c/metal.m.ast.json"
 
 		// When
 		parseAstJson(filePath)

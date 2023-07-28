@@ -47,7 +47,9 @@ enum class TranslationUnitKind {
 	ObjCBoxableAttr, ObjCProtocolDecl, ObjCMethodDecl, ObjCPropertyDecl, ObjCRootClassAttr,
 	ObjCIvarDecl, ObjCDesignatedInitializerAttr, ObjCInterfaceType, ObjCIndependentClassAttr,
 	ObjCCategoryDecl, ObjCMessageExpr, ObjCTypeParamDecl, ObjCReturnsInnerPointerAttr,
-	ObjCBoolLiteralExpr, ObjCExceptionAttr,
+	ObjCBoolLiteralExpr, ObjCExceptionAttr, ObjCExplicitProtocolImplAttr, ObjCBridgeRelatedAttr,
+	IBActionAttr, IBOutletAttr, IBOutletCollectionAttr, ObjCSubscriptRefExpr, ObjCPropertyImplDecl,
+	ObjCRequiresSuperAttr, ObjCRequiresPropertyDefsAttr,
 	;
 
     companion object {

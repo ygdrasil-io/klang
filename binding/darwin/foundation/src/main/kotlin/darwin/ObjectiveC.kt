@@ -1,14 +1,14 @@
 package darwin
 
-import com.sun.jna.Callback
-import com.sun.jna.Library
-import com.sun.jna.NativeLong
-import com.sun.jna.Pointer
+import com.sun.jna.*
 import darwin.internal.ID
 import darwin.internal.NativeLoad
 import darwin.internal.NativeName
+import darwin.internal.msgSend
 
-// https://developer.apple.com/documentation/objectivec/objective-c_runtime
+/**
+ * https://developer.apple.com/documentation/objectivec/objective-c_runtime
+ */
 interface ObjectiveCLibrary : Library {
 	fun objc_copyProtocolList(outCount: IntArray): Pointer
 	fun protocol_getName(protocol: Long): String
@@ -42,6 +42,8 @@ interface ObjectiveCLibrary : Library {
 	fun objc_msgSendFloat(vararg args: Any?): Float
 	@NativeName("objc_msgSend_stret")
 	fun objc_msgSend_stret(structPtr: Any?, vararg args: Any?)
+	@NativeName("objc_msgSend_stret")
+	fun objc_msgSend_stret(stretAddr: Structure, theReceiver: Long, theSelector: Long, vararg args: Any?): Unit
 
 	fun method_getName(m: Long): Long
 	@NativeName("method_getName")
@@ -83,4 +85,17 @@ interface ObjectiveCLibrary : Library {
 
 }
 
-val ObjectiveC by lazy { NativeLoad<ObjectiveCLibrary>("objc") }
+val ObjectiveC by lazy {
+	NativeLoad<Library>("/System/Library/Frameworks/CoreGraphics.framework/Versions/A/CoreGraphics")
+	NativeLoad<ObjectiveCLibrary>("objc")
+}
+
+fun <T> nsAutoreleasePool(block: () -> T): T {
+	val pool = NSClass("NSAutoreleasePool").alloc().msgSend("init")
+	try {
+		return block()
+	} finally {
+		pool.msgSend("release")
+	}
+}
+

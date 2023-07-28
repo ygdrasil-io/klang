@@ -9,7 +9,7 @@ import klang.parser.json.parseAstJson
 
 class CocoaItTest : FreeSpec({
 
-	"test cocoa parsing".config(enabled = IS_OS_DARWIN && INTEGRATION_ENABLED) {
+	"test cocoa parsing".config(enabled = IS_OS_DARWIN /*&& INTEGRATION_ENABLED*/) {
 
 		// Given
 		val filePath = "src/integrationTest/objective-c/cocoa.m.ast.json"
@@ -22,7 +22,7 @@ class CocoaItTest : FreeSpec({
 			declarations
 				.asSequence()
 				.filterIsInstance<NameableDeclaration>()
-				.filter { it.name.startsWith("NS") }
+				.filter { it.name == "NSWindow" }
 				.forEach { println(it) }
 		}
 

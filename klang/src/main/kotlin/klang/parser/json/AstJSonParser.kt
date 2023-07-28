@@ -5,6 +5,7 @@
 package klang.parser.json
 
 import klang.DeclarationRepository
+import klang.InMemoryDeclarationRepository
 import klang.domain.NativeDeclaration
 import klang.parser.json.domain.*
 import klang.parser.json.type.*
@@ -42,7 +43,7 @@ private fun JsonObject.validateKinds(): JsonObject = this.apply {
 }
 
 
-fun List<TranslationUnitNode>.parse(depth: Int = 0) = with (DeclarationRepository){
+fun List<TranslationUnitNode>.parse(depth: Int = 0) = InMemoryDeclarationRepository().apply {
 	logger.debug { "start processing nodes" }
 	var index = 0
 

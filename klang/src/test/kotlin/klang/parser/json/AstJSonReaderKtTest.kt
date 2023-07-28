@@ -14,10 +14,10 @@ class AstJSonCParserTest : ParserTestCommon({
 		val filePath = "src/test/c/enum.h.ast.json"
 
 		// When
-		parseAstJson(filePath)
+		val repository = parseAstJson(filePath)
 
 		// Then
-		validateEnumerations(TestData.enumerations)
+		validateEnumerations(repository, TestData.enumerations)
 	}
 
 	"test typedef enum parsing" - {
@@ -25,10 +25,10 @@ class AstJSonCParserTest : ParserTestCommon({
 		val filePath = "src/test/c/typedef-enum.h.ast.json"
 
 		// When
-		parseAstJson(filePath)
+		val repository = parseAstJson(filePath)
 
 		// Then
-		validateEnumerations(TestData.enumerations)
+		validateEnumerations(repository, TestData.enumerations)
 
 	}
 
@@ -37,10 +37,10 @@ class AstJSonCParserTest : ParserTestCommon({
 		val filePath = "src/test/c/struct.h.ast.json"
 
 		// When
-		parseAstJson(filePath)
+		val repository = parseAstJson(filePath)
 
 		// Then
-		validateStructures(TestData.structures)
+		validateStructures(repository, TestData.structures)
 	}
 
 	"typedef struct parsing" - {
@@ -48,10 +48,10 @@ class AstJSonCParserTest : ParserTestCommon({
 		val filePath = "src/test/c/typedef-struct.h.ast.json"
 
 		// When
-		parseAstJson(filePath)
+		val repository = parseAstJson(filePath)
 
 		// Then
-		validateStructures(TestData.typeDefStructures)
+		validateStructures(repository, TestData.typeDefStructures)
 	}
 
 	"typedef parsing" - {
@@ -59,12 +59,12 @@ class AstJSonCParserTest : ParserTestCommon({
 		val filePath = "src/test/c/typedef.h.ast.json"
 
 		// When
-		parseAstJson(filePath)
+		val repository = parseAstJson(filePath)
 
 		// Then
 		TestData.typeDef.forEach { (name, type) ->
 			"test $name" {
-				DeclarationRepository.findTypeAliasByName(name)
+				repository.findTypeAliasByName(name)
 					.also { it?.name shouldBe name }
 					.also { it?.type shouldBe type }
 			}
@@ -76,11 +76,11 @@ class AstJSonCParserTest : ParserTestCommon({
 		val filePath = "src/test/c/functions.h.ast.json"
 
 		// When
-		parseAstJson(filePath)
+		val repository = parseAstJson(filePath)
 
 		// Then
 		"test function" {
-			DeclarationRepository.findFunctionByName("function")
+			repository.findFunctionByName("function")
 				.also { it?.name shouldBe "function" }
 				.also { it?.returnType shouldBe "char" }
 				.also {
@@ -94,7 +94,7 @@ class AstJSonCParserTest : ParserTestCommon({
 		}
 
 		"test function" {
-			DeclarationRepository.findFunctionByName("function2")
+			repository.findFunctionByName("function2")
 				.also { it?.name shouldBe "function2" }
 				.also { it?.returnType shouldBe "void *" }
 				.also { it?.arguments shouldBe listOf() }

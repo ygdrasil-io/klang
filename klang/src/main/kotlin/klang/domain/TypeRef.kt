@@ -1,6 +1,7 @@
 package klang.domain
 
 import klang.DeclarationRepository
+import klang.findDeclarationByName
 import mu.KotlinLogging
 
 sealed class TypeRef(

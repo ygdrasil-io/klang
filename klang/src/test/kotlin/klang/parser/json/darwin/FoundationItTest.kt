@@ -15,9 +15,7 @@ class FoundationItTest : FreeSpec({
 		val filePath = "src/integrationTest/objective-c/foundation.m.ast.json"
 
 		// When
-		parseAstJson(filePath)
-
-		with(DeclarationRepository) {
+		with(parseAstJson(filePath)) {
 
 			resolve()
 

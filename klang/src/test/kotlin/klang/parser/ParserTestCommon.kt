@@ -13,7 +13,6 @@ import klang.parser.json.ParserRepository
 open class ParserTestCommon(body: FreeSpec.() -> Unit = {}) : FreeSpec({
 
 	beforeContainer {
-		DeclarationRepository.clear()
 		ParserRepository.errors.clear()
 	}
 
@@ -24,20 +23,20 @@ open class ParserTestCommon(body: FreeSpec.() -> Unit = {}) : FreeSpec({
 	body()
 })
 
- suspend fun FreeSpecContainerScope.validateEnumerations(enumerations: List<Pair<String, List<Pair<String, Long>>>>) {
+ suspend fun FreeSpecContainerScope.validateEnumerations(repository: DeclarationRepository, enumerations: List<Pair<String, List<Pair<String, Long>>>>) {
 	enumerations.forEach { (name, values) ->
 		"test $name" {
-			DeclarationRepository.findEnumerationByName(name)
+			repository.findEnumerationByName(name)
 				.also { it?.name shouldBe name }
 				.also { it?.values shouldBe values }
 		}
 	}
 }
 
-suspend fun FreeSpecContainerScope.validateStructures(structures: List<Pair<String, List<Pair<String, String>>>>) {
+suspend fun FreeSpecContainerScope.validateStructures(repository: DeclarationRepository, structures: List<Pair<String, List<Pair<String, String>>>>) {
 	structures.forEach { (name, fields) ->
 		"test $name" {
-			DeclarationRepository.findStructureByName(name)
+			repository.findStructureByName(name)
 				.also { it?.name shouldBe name }
 				.also { it?.fields shouldBe fields }
 		}

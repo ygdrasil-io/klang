@@ -15,9 +15,7 @@ class MetalItTest : FreeSpec({
 		val filePath = "src/integrationTest/objective-c/metal.m.ast.json"
 
 		// When
-		parseAstJson(filePath)
-
-		with(DeclarationRepository) {
+		with(parseAstJson(filePath)) {
 
 			resolve()
 

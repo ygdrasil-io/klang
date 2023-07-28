@@ -14,10 +14,10 @@ class LibClangParserTest : ParserTestCommon({
 		val filePath = "src/test/c/enum.h"
 
 		// When
-		parseFile(filePath)
+		val repository = parseFile(filePath)
 
 		// Then
-		validateEnumerations(TestData.enumerations)
+		validateEnumerations(repository, TestData.enumerations)
 	}
 
 	"test typedef enum parsing" - {
@@ -25,10 +25,10 @@ class LibClangParserTest : ParserTestCommon({
 		val filePath = "src/test/c/typedef-enum.h"
 
 		// When
-		parseFile(filePath)
+		val repository = parseFile(filePath)
 
 		// Then
-		validateEnumerations(TestData.enumerations)
+		validateEnumerations(repository, TestData.enumerations)
 
 	}
 
@@ -37,10 +37,10 @@ class LibClangParserTest : ParserTestCommon({
 		val filePath = "src/test/c/struct.h"
 
 		// When
-		parseFile(filePath)
+		val repository = parseFile(filePath)
 
 		// Then
-		validateStructures(TestData.structures)
+		validateStructures(repository, TestData.structures)
 	}
 
 	"typedef struct parsing" - {
@@ -48,10 +48,10 @@ class LibClangParserTest : ParserTestCommon({
 		val filePath = "src/test/c/typedef-struct.h"
 
 		// When
-		parseFile(filePath)
+		val repository = parseFile(filePath)
 
 		// Then
-		validateStructures(TestData.typeDefStructures)
+		validateStructures(repository, TestData.typeDefStructures)
 	}
 
 	"typedef parsing" {
@@ -59,11 +59,11 @@ class LibClangParserTest : ParserTestCommon({
 		val filePath = "src/test/c/typedef.h"
 
 		// When
-		parseFile(filePath)
+		val repository = parseFile(filePath)
 
 		// Then
 		TestData.typeDef.forEach { (name, type) ->
-			DeclarationRepository.findTypeAliasByName(name)
+			repository.findTypeAliasByName(name)
 				.also { it?.name shouldBe name }
 				.also { it?.type shouldBe type }
 		}
@@ -74,10 +74,10 @@ class LibClangParserTest : ParserTestCommon({
 		val filePath = "src/test/c/functions.h"
 
 		// When
-		parseFile(filePath)
+		val repository = parseFile(filePath)
 
 		// Then
-		DeclarationRepository.findFunctionByName("function")
+		repository.findFunctionByName("function")
 			.also { it?.name shouldBe "function" }
 			.also { it?.returnType shouldBe "char" }
 			.also {
@@ -89,7 +89,7 @@ class LibClangParserTest : ParserTestCommon({
 				)
 			}
 
-		DeclarationRepository.findFunctionByName("function2")
+		repository.findFunctionByName("function2")
 			.also { it?.name shouldBe "function2" }
 			.also { it?.returnType shouldBe "void *" }
 			.also { it?.arguments shouldBe listOf() }

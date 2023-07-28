@@ -15,9 +15,7 @@ class CocoaItTest : FreeSpec({
 		val filePath = "src/integrationTest/objective-c/cocoa.m.ast.json"
 
 		// When
-		parseAstJson(filePath)
-
-		with(DeclarationRepository) {
+		with(parseAstJson(filePath)) {
 
 			resolve()
 

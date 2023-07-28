@@ -21,10 +21,10 @@ class AstJSonObjectiveCParserTest : ParserTestCommon({
 		val filePath = "src/test/objective-c/class.m.ast.json"
 
 		// When
-		parseAstJson(filePath)
+		val repository = parseAstJson(filePath)
 
 		// Then
-		validateObjectiveCClass(TestData.objectiveCClass)
+		validateObjectiveCClass(repository, TestData.objectiveCClass)
 	}
 
 	"test categories parsing" - {
@@ -33,10 +33,10 @@ class AstJSonObjectiveCParserTest : ParserTestCommon({
 		val filePath = "src/test/objective-c/category.m.ast.json"
 
 		// When
-		parseAstJson(filePath)
+		val repository = parseAstJson(filePath)
 
 		// Then
-		validateObjectiveCCategory(TestData.objectiveCCategory)
+		validateObjectiveCCategory(repository, TestData.objectiveCCategory)
 	}
 
 	"test enum parsing" - {
@@ -45,10 +45,10 @@ class AstJSonObjectiveCParserTest : ParserTestCommon({
 		val filePath = "src/test/objective-c/nsenum.m.ast.json"
 
 		// When
-		parseAstJson(filePath)
+		val repository = parseAstJson(filePath)
 
 		// Then
-		validateEnumerations(TestData.objectiveCEnumeration)
+		validateEnumerations(repository, TestData.objectiveCEnumeration)
 	}
 
 	"test protocol parsing" - {
@@ -57,17 +57,17 @@ class AstJSonObjectiveCParserTest : ParserTestCommon({
 		val filePath = "src/test/objective-c/protocol.m.ast.json"
 
 		// When
-		parseAstJson(filePath)
+		val repository = parseAstJson(filePath)
 
 		// Then
-		validateObjectiveCProtocol(TestData.objectiveCProtocol)
+		validateObjectiveCProtocol(repository, TestData.objectiveCProtocol)
 	}
 })
 
-suspend fun FreeSpecContainerScope.validateObjectiveCCategory(objectiveCCategories: List<ObjectiveCCategory>) {
+suspend fun FreeSpecContainerScope.validateObjectiveCCategory(repository: DeclarationRepository, objectiveCCategories: List<ObjectiveCCategory>) {
 	objectiveCCategories.forEach { objectiveCCategory ->
 		"test ${objectiveCCategory.name}" {
-			DeclarationRepository.findObjectiveCCategoryByName(objectiveCCategory.name)
+			repository.findObjectiveCCategoryByName(objectiveCCategory.name)
 				.also { it?.name shouldBe objectiveCCategory.name }
 				.also { it?.superType shouldBe objectiveCCategory.superType }
 				.also { it?.methods shouldContains objectiveCCategory.methods }
@@ -75,10 +75,10 @@ suspend fun FreeSpecContainerScope.validateObjectiveCCategory(objectiveCCategori
 	}
 }
 
-suspend fun FreeSpecContainerScope.validateObjectiveCProtocol(objectiveCClasses: List<ObjectiveCProtocol>) {
+suspend fun FreeSpecContainerScope.validateObjectiveCProtocol(repository: DeclarationRepository, objectiveCClasses: List<ObjectiveCProtocol>) {
 	objectiveCClasses.forEach { objectiveCClass ->
 		"test ${objectiveCClass.name}" {
-			DeclarationRepository.findObjectiveCProtocolByName(objectiveCClass.name)
+			repository.findObjectiveCProtocolByName(objectiveCClass.name)
 				.also { it?.name shouldBe objectiveCClass.name }
 				.also { it?.protocols shouldBe objectiveCClass.protocols }
 				.also { it?.properties shouldContains objectiveCClass.properties }
@@ -86,10 +86,10 @@ suspend fun FreeSpecContainerScope.validateObjectiveCProtocol(objectiveCClasses:
 		}
 	}
 }
-suspend fun FreeSpecContainerScope.validateObjectiveCClass(objectiveCClasses: List<ObjectiveCClass>) {
+suspend fun FreeSpecContainerScope.validateObjectiveCClass(repository: DeclarationRepository, objectiveCClasses: List<ObjectiveCClass>) {
 	objectiveCClasses.forEach { objectiveCClass ->
 		"test ${objectiveCClass.name}" {
-		DeclarationRepository.findObjectiveCClassByName(objectiveCClass.name)
+			repository.findObjectiveCClassByName(objectiveCClass.name)
 			.also { it?.name shouldBe objectiveCClass.name }
 			.also { it?.superType shouldBe objectiveCClass.superType }
 			.also { it?.protocols shouldBe objectiveCClass.protocols }

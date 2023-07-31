@@ -4,7 +4,7 @@ import klang.DeclarationRepository
 
 data class ObjectiveCClass(
 	override val name: String,
-	var superType: TypeRef,
+	var superType: TypeRef?,
 	var protocols: Set<TypeRef>,
 	var properties: List<Property>,
 	var methods: List<Method>,
@@ -53,7 +53,7 @@ data class ObjectiveCClass(
 		protocols = protocols
 			.map { with(it) { resolve() } }
 			.toSet()
-		superType = with(superType) { resolve() }
+		superType = superType?.let { with(it) { resolve() } }
 		categories = declarations
 			.asSequence()
 			.filterIsInstance<ObjectiveCCategory>()

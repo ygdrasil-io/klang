@@ -9,7 +9,7 @@ dependencies {
 	api ("net.java.dev.jna:jna:5.13.0")
 	implementation(project(":klang"))
 	testImplementation("org.junit.jupiter:junit-jupiter")
-	testImplementation("io.kotest:kotest-runner-junit5-jvm:5.6.1")
+	testImplementation(libs.kotest)
 }
 
 tasks.test {

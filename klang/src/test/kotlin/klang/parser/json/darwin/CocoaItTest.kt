@@ -19,6 +19,7 @@ class CocoaItTest : FreeSpec({
 		// When
 		with(parseAstJson(filePath)) {
 
+
 			ParserRepository.errors shouldBe emptyList()
 
 			resolve()

@@ -1,5 +1,6 @@
 package klang.parser.json.type
 
+import klang.domain.AnonymousCategoryName
 import klang.domain.ObjectiveCCategory
 import klang.domain.ObjectiveCClass
 import klang.domain.UnresolvedTypeRef
@@ -14,7 +15,7 @@ import kotlinx.serialization.json.jsonPrimitive
 
 internal fun TranslationUnitNode.toObjectiveCCategory(): ObjectiveCCategory {
 	return ObjectiveCCategory(
-		name = json.name(),
+		name = json.nullableName() ?: AnonymousCategoryName,
 		superType = json.superType(),
 		methods = json.methods()
 	)
@@ -40,6 +41,7 @@ private fun JsonObject.toMethod() = ObjectiveCClass.Method(
 )
 
 private fun JsonObject.arguments(): List<ObjectiveCClass.Method.Argument> = inner()
+	?.filter { it.kind() == TranslationUnitKind.ParmVarDecl }
 	?.map { it.toArgument() } ?: listOf()
 
 private fun JsonObject.toArgument() = ObjectiveCClass.Method.Argument(

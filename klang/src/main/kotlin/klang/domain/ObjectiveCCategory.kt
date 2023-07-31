@@ -2,6 +2,8 @@ package klang.domain
 
 import klang.DeclarationRepository
 
+internal val AnonymousCategoryName = "AnonymousCategory"
+
 data class ObjectiveCCategory(
 	override val name: String,
 	var superType: TypeRef,

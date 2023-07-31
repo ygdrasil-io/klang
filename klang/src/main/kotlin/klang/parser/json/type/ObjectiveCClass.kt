@@ -7,11 +7,15 @@ import klang.parser.json.domain.TranslationUnitKind
 import klang.parser.json.domain.TranslationUnitNode
 import klang.parser.json.domain.json
 import klang.parser.json.domain.kind
-import kotlinx.serialization.json.*
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.jsonArray
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
 
 internal fun TranslationUnitNode.toObjectiveCClass(): ObjectiveCClass {
+	val name = json.name()
 	return ObjectiveCClass(
-		name = json.name(),
+		name = name,
 		superType = json.superType(),
 		protocols = json.protocols(),
 		properties = json.properties(),
@@ -26,12 +30,12 @@ private fun JsonObject.protocols(): Set<UnresolvedTypeRef> = this["protocols"]
 	?.map(::UnresolvedTypeRef)
 	?.toSet() ?: setOf()
 
-private fun JsonObject.superType(): TypeRef = this["super"]
+private fun JsonObject.superType(): TypeRef? = this["super"]
 	?.jsonObject
 	?.get("name")
 	?.jsonPrimitive
 	?.content
-	?.let(::UnresolvedTypeRef) ?: error("fail to find supertype $this")
+	?.let(::UnresolvedTypeRef)
 
 private fun JsonObject.methods(): List<ObjectiveCClass.Method> = inner()
 	?.filter { it.kind() == TranslationUnitKind.ObjCMethodDecl }
@@ -46,6 +50,7 @@ private fun JsonObject.toMethod() = ObjectiveCClass.Method(
 )
 
 private fun JsonObject.arguments(): List<ObjectiveCClass.Method.Argument> = inner()
+	?.filter { it.kind() == TranslationUnitKind.ParmVarDecl }
 	?.map { it.toArgument() } ?: listOf()
 
 private fun JsonObject.toArgument() = ObjectiveCClass.Method.Argument(
@@ -60,9 +65,9 @@ private fun JsonObject.properties(): List<ObjectiveCClass.Property> = inner()
 private fun JsonObject.toProperty(): ObjectiveCClass.Property = ObjectiveCClass.Property(
 	name = name(),
 	type = type(),
-	assign = booleanValueOf("assign"),
-	readwrite = booleanValueOf("readwrite"),
-	nonatomic = booleanValueOf("nonatomic"),
-	unsafe_unretained = booleanValueOf("unsafe_unretained")
+	assign = nullableBooleanValueOf("assign"),
+	readwrite = nullableBooleanValueOf("readwrite"),
+	nonatomic = nullableBooleanValueOf("nonatomic"),
+	unsafe_unretained = nullableBooleanValueOf("unsafe_unretained")
 )
 

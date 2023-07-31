@@ -19,7 +19,6 @@ class FoundationItTest : FreeSpec({
 		// When
 		with(parseAstJson(filePath)) {
 
-			ParserRepository.errors.first().printStackTrace()
 			ParserRepository.errors shouldBe emptyList()
 
 			resolve()

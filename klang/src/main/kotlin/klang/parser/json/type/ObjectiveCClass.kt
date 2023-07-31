@@ -31,7 +31,7 @@ private fun JsonObject.superType(): TypeRef = this["super"]
 	?.get("name")
 	?.jsonPrimitive
 	?.content
-	?.let(::UnresolvedTypeRef) ?: error("fail to find supertype")
+	?.let(::UnresolvedTypeRef) ?: error("fail to find supertype $this")
 
 private fun JsonObject.methods(): List<ObjectiveCClass.Method> = inner()
 	?.filter { it.kind() == TranslationUnitKind.ObjCMethodDecl }

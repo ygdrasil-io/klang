@@ -1,5 +1,7 @@
 package klang.domain
 
+val AnonymousEnumeration = "AnonymousEnumeration"
+
 data class NativeEnumeration(
 	override val name: String,
 	var values: List<Pair<String, Long>> = emptyList()

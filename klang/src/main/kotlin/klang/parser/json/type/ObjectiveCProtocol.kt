@@ -36,6 +36,7 @@ private fun JsonObject.toMethod() = ObjectiveCClass.Method(
 )
 
 private fun JsonObject.arguments(): List<ObjectiveCClass.Method.Argument> = inner()
+	?.filter { it.kind() == TranslationUnitKind.ParmVarDecl }
 	?.map { it.toArgument() } ?: listOf()
 
 private fun JsonObject.toArgument() = ObjectiveCClass.Method.Argument(
@@ -50,9 +51,9 @@ private fun JsonObject.properties(): List<ObjectiveCClass.Property> = inner()
 private fun JsonObject.toProperty(): ObjectiveCClass.Property = ObjectiveCClass.Property(
 	name = name(),
 	type = type(),
-	assign = booleanValueOf("assign"),
-	readwrite = booleanValueOf("readwrite"),
-	nonatomic = booleanValueOf("nonatomic"),
-	unsafe_unretained = booleanValueOf("unsafe_unretained")
+	assign = nullableBooleanValueOf("assign"),
+	readwrite = nullableBooleanValueOf("readwrite"),
+	nonatomic = nullableBooleanValueOf("nonatomic"),
+	unsafe_unretained = nullableBooleanValueOf("unsafe_unretained")
 )
 

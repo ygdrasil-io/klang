@@ -7,7 +7,7 @@
 import java.io.File
 
 "jq".runCommand(
-	listOf("'.inner | map(select(.id == \"0x7fe0b80dc600\"))'", "./foundation.m.ast.json"),
+	listOf("'.inner | map(select(.id == \"0x7fe0b829ac88\"))'", "./foundation.m.ast.json"),
 	File("result.json"),
 	File("error.txt")
 )

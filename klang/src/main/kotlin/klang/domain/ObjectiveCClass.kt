@@ -14,10 +14,10 @@ data class ObjectiveCClass(
 	data class Property(
 		override val name: String,
 		val type: String,
-		val assign: Boolean = true,
-		val readwrite: Boolean = true,
-		val nonatomic: Boolean = true,
-		val unsafe_unretained: Boolean = true
+		val assign: Boolean? = null,
+		val readwrite: Boolean? = null,
+		val nonatomic: Boolean? = null,
+		val unsafe_unretained: Boolean? = null
 	) : NameableDeclaration
 
 	data class Method(

@@ -60,13 +60,6 @@ fun List<TranslationUnitNode>.parse(depth: Int = 0) = InMemoryDeclarationReposit
 				TranslationUnitKind.ObjCInterfaceDecl -> node.toObjectiveCClass()
 				TranslationUnitKind.ObjCProtocolDecl -> node.toObjectiveCProtocol()
 				TranslationUnitKind.TypedefDecl -> node.toNativeTypeAlias()
-				TranslationUnitKind.VarDecl -> {
-					if (node.isExternalDeclaration().not()) {
-						error("not yet supported : $node")
-					}
-					null
-				}
-
 				TranslationUnitKind.FunctionDecl -> node.toNativeFunction()
 				TranslationUnitKind.RecordDecl -> when {
 					node.isTypeDefStructure(this@parse) -> {
@@ -84,6 +77,11 @@ fun List<TranslationUnitNode>.parse(depth: Int = 0) = InMemoryDeclarationReposit
 					}
 
 					else -> node.toNativeEnumeration()
+				}
+
+				TranslationUnitKind.VarDecl -> { //TODO: check if need to cover this, skipping it for now
+					logger.debug { "skip VarDecl" }
+					null
 				}
 
 				else -> {

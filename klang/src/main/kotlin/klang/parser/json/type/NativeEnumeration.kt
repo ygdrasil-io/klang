@@ -1,5 +1,6 @@
 package klang.parser.json.type
 
+import klang.domain.AnonymousEnumeration
 import klang.domain.NativeEnumeration
 import klang.parser.json.domain.TranslationUnitKind
 import klang.parser.json.domain.TranslationUnitNode
@@ -46,4 +47,4 @@ private fun TranslationUnitNode.extractField(sibling: List<TranslationUnitNode>)
 private fun JsonObject.nullableTypeAlias() = this["name"]?.jsonPrimitive?.content
 
 private fun JsonObject.typeAliasName() = nullableTypeAlias()
-	?: error("no enumeration name: $this")
+	?: AnonymousEnumeration

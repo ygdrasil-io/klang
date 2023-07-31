@@ -7,7 +7,8 @@ data class ObjectiveCClass(
 	var superType: TypeRef,
 	var protocols: Set<TypeRef>,
 	var properties: List<Property>,
-	var methods: List<Method>
+	var methods: List<Method>,
+	var categories: Set<ObjectiveCCategory> = setOf()
 ) : NameableDeclaration, ResolvableDeclaration {
 
 	data class Property(
@@ -42,6 +43,7 @@ data class ObjectiveCClass(
 
 	override fun <T : NativeDeclaration> merge(other: T) {
 		if (other is ObjectiveCClass) {
+			protocols += other.protocols
 			properties += other.properties
 			methods += other.methods
 		} else super.merge(other)
@@ -52,5 +54,11 @@ data class ObjectiveCClass(
 			.map { with(it) { resolve() } }
 			.toSet()
 		superType = with(superType) { resolve() }
+		categories = declarations
+			.asSequence()
+			.filterIsInstance<ObjectiveCCategory>()
+			.filter { it.superType.refName == name }
+			.toSet()
 	}
+
 }

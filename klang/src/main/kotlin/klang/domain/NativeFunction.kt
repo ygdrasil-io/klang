@@ -10,4 +10,5 @@ data class NativeFunction(
 		val name: String?,
 		val type: String
 	)
+
 }

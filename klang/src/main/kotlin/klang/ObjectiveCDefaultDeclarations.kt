@@ -1,10 +1,12 @@
 package klang
 
 import klang.domain.NameableDeclaration
+import klang.domain.NativeDeclaration
 import klang.domain.ObjectiveCProtocol
 
-private object ObjectiveCRootClass: NameableDeclaration {
+object ObjectiveCRootClass: NameableDeclaration {
 	override val name: String = "NSObject"
+
 }
 
 

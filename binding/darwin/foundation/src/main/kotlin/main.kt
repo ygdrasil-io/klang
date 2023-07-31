@@ -13,7 +13,7 @@ fun main() {
 	nsAutoreleasePool {
 		val application = NSApplication.sharedApplication()
 
-		val frame = NSScreen.mainScreen()!!.frame
+		val frame = NSScreen2.mainScreen()!!.frame
 		val windowRect = NSRect().apply {
 			x = 0.0
 			y = 0.0
@@ -21,7 +21,7 @@ fun main() {
 			height = frame.height * 0.5
 		}
 
-		val window = NSWindow(windowRect, windowStyle, NSBackingStoreBuffered, false)
+		val window = NSWindow2(windowRect, windowStyle, NSBackingStoreBuffered, false)
 		val device = MTLCreateSystemDefaultDevice() ?: error("fail to create device")
 		println(window.id)
 		/*val mtkView = MTKView(windowRect, device).apply {

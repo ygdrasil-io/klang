@@ -2,11 +2,11 @@ package darwin
 
 import darwin.internal.msgSend
 
-val NSWindowClass by lazy { NSClass("NSWindow") }
+val NSWindowClass2 by lazy { NSClass("NSWindow") }
 
-class NSWindow(id: Long) : NSObject(id) {
+class NSWindow2(id: Long) : NSObject(id) {
 
 	constructor(id: NSRect, windowStyle: Int, NSBackingStoreBuffered: Int, b: Boolean)
-		: this(NSWindowClass.alloc().msgSend("initWithContentRect:styleMask:backing:defer:", id, windowStyle, NSBackingStoreBuffered, b))
+		: this(NSWindowClass2.alloc().msgSend("initWithContentRect:styleMask:backing:defer:", id, windowStyle, NSBackingStoreBuffered, b))
 
 }

@@ -18,7 +18,7 @@ private val logger = KotlinLogging.logger {}
 
 val unknownKind = mutableSetOf<String>()
 
-fun parseAstJson(filePath: String) = FileInputStream(filePath)
+fun parseAstJson(filePath: String): DeclarationRepository = FileInputStream(filePath)
 	.let<FileInputStream, JsonObject>(Json.Default::decodeFromStream)
 	.validateKinds()
 	.also { unknownKind.forEach { println("$it,") } }

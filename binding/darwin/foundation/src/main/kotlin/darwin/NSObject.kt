@@ -15,7 +15,6 @@ open class NSObject(val id: Long) : NativeMapped {
 
 	companion object : NSClass("NSObject")
 
-
 	override fun toNative(): Any = this.id
 
 	override fun fromNative(nativeValue: Any, context: FromNativeContext?): Any = NSObject((nativeValue as Number).toLong())

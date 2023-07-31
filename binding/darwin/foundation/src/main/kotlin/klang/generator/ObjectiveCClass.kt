@@ -7,17 +7,20 @@ internal fun ObjectiveCClass.generateKotlinFile(outputDirectory: String) {
 	val outputFile = File("$outputDirectory${name}ObjectiveCClass.kt")
 
 	"""
-		package darwin
+package darwin
 		
-		import darwin.internal.*
+import darwin.internal.*
 		
-		val ${name}Class by lazy { NSClass("${name}") }
+val ${name}Class by lazy { NSClass("${name}") }
 
-		open class ${name}(id: Long) : NSObject(id) {
-			${generateMethods()}
-		}
+open class ${name}(id: Long) : NSObject(id) {
+${generateMethods()}
 
-		
+	companion object {
+${generateMethods()}
+	}
+}
+
 	""".trimIndent()
 		.let(outputFile::writeText)
 
@@ -28,5 +31,8 @@ private fun ObjectiveCClass.generateMethods(): String =
 		.joinToString(separator = "\n")
 
 private fun ObjectiveCClass.Method.generateMethod(): String {
-	return "fun ${name}(${arguments.joinToString { "${it.name}: ${it.type}" }}): $returnType = ObjectiveC.objc_msgSend(id, sel(\"${name}\"), ${arguments.joinToString { it.name }})"
+	return "\tfun ${name.toMethodName()}(${arguments.joinToString { "${it.name}: ${it.type}" }}): $returnType = ObjectiveC.objc_msgSend(id, sel(\"${name}\"), ${arguments.joinToString { it.name }})"
 }
+
+private fun String.toMethodName(): String
+	= split(":").first()

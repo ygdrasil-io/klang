@@ -22,7 +22,7 @@ data class ObjectiveCClass(
 
 	data class Method(
 		override val name: String,
-		val returnType: String,
+		val returnType: TypeRef,
 		val instance: Boolean,
 		val arguments: List<Argument> = listOf()
 	) : NameableDeclaration, ResolvableDeclaration {

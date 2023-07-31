@@ -14,10 +14,10 @@ import darwin.internal.*
 val ${name}Class by lazy { NSClass("${name}") }
 
 open class ${name}(id: Long) : NSObject(id) {
-${generateMethods()}
+${generateInstanceMethods()}
 
 	companion object {
-${generateMethods()}
+${generateClassMethods()}
 	}
 }
 
@@ -26,9 +26,14 @@ ${generateMethods()}
 
 }
 
-private fun ObjectiveCClass.generateMethods(): String =
-	methods.map { it.generateMethod() }
-		.joinToString(separator = "\n")
+private fun ObjectiveCClass.generateClassMethods() = generateMethods(false)
+
+private fun ObjectiveCClass.generateInstanceMethods() = generateMethods(true)
+
+private fun ObjectiveCClass.generateMethods(instance: Boolean): String =
+	methods.asSequence()
+		.filter { it.instance == instance }
+		.joinToString(separator = "\n") { it.generateMethod() }
 
 private fun ObjectiveCClass.Method.generateMethod(): String {
 	return "\tfun ${name.toMethodName()}(${arguments.joinToString { "${it.name}: ${it.type}" }}): $returnType = ObjectiveC.objc_msgSend(id, sel(\"${name}\"), ${arguments.joinToString { it.name }})"

@@ -1,5 +1,6 @@
 package klang.parser.json.type
 
+import klang.domain.UnresolvedTypeRef
 import kotlinx.serialization.json.*
 
 internal fun JsonObject.inner() = this["inner"]
@@ -7,6 +8,7 @@ internal fun JsonObject.inner() = this["inner"]
 	?.map { it.jsonObject }
 
 internal fun JsonObject.returnType() = nullableReturnType()
+	?.let(::UnresolvedTypeRef)
 	?: error("return type not found: $this")
 
 internal fun JsonObject.type() = nullableType()

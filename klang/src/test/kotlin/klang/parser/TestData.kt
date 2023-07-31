@@ -25,7 +25,7 @@ object TestData {
 			name = "MyCategory",
 			superType = UnresolvedTypeRef("MyClass"),
 			methods = listOf(
-				ObjectiveCClass.Method("newMethod", "void", true),
+				ObjectiveCClass.Method("newMethod", UnresolvedTypeRef("void"), true),
 			)
 		)
 	)
@@ -36,8 +36,8 @@ object TestData {
 			protocols = setOf("NSObject"),
 			properties = listOf(),
 			methods = listOf(
-				ObjectiveCClass.Method("method1", "void", true),
-				ObjectiveCClass.Method("method2", "NSString *", true)
+				ObjectiveCClass.Method("method1", UnresolvedTypeRef("void"), true),
+				ObjectiveCClass.Method("method2", UnresolvedTypeRef("NSString *"), true)
 			)
 		)
 	)
@@ -51,9 +51,9 @@ object TestData {
 				ObjectiveCClass.Property("testProperty", "NSString *", nonatomic = true, assign = true)
 			),
 			methods = listOf(
-				ObjectiveCClass.Method("testMethod", "void", true),
+				ObjectiveCClass.Method("testMethod", UnresolvedTypeRef("void"), true),
 				ObjectiveCClass.Method(
-					"testMethod:withParameter:", "BOOL", false, listOf(
+					"testMethod:withParameter:", UnresolvedTypeRef("BOOL"), false, listOf(
 						ObjectiveCClass.Method.Argument("parameter", "NSString *"),
 						ObjectiveCClass.Method.Argument("testParameter", "NSString *"),
 					)

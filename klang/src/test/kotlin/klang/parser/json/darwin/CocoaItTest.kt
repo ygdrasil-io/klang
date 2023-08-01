@@ -2,9 +2,7 @@ package klang.parser.json.darwin
 
 import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.shouldBe
-import klang.DeclarationRepository
 import klang.domain.NameableDeclaration
-import klang.parser.INTEGRATION_ENABLED
 import klang.parser.IS_OS_DARWIN
 import klang.parser.json.ParserRepository
 import klang.parser.json.parseAstJson
@@ -22,7 +20,7 @@ class CocoaItTest : FreeSpec({
 
 			ParserRepository.errors shouldBe emptyList()
 
-			resolve()
+			resolveTypes()
 
 			declarations
 				.asSequence()

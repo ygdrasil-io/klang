@@ -48,7 +48,7 @@ class InMemoryDeclarationRepository : DeclarationRepository{
 	}
 
 
-	override fun DeclarationRepository.resolve() {
+	override fun DeclarationRepository.resolveTypes() {
 		nativeDeclarations
 			.asSequence()
 			.filterIsInstance<ResolvableDeclaration>()

@@ -29,5 +29,5 @@ tasks.test {
 }
 
 sourceSets.main {
-	java.srcDirs("src/main/generated")
+	//java.srcDirs("src/main/generated")
 }

@@ -1,5 +1,6 @@
 package klang.generator
 
+import generation.toKotlinType
 import klang.domain.ObjectiveCClass
 import java.io.File
 
@@ -36,7 +37,7 @@ private fun ObjectiveCClass.generateMethods(instance: Boolean): String =
 		.joinToString(separator = "\n") { it.generateMethod() }
 
 private fun ObjectiveCClass.Method.generateMethod(): String {
-	return "\tfun ${name.toMethodName()}(${arguments.joinToString { "${it.name}: ${it.type}" }}): $returnType = ObjectiveC.objc_msgSend(id, sel(\"${name}\"), ${arguments.joinToString { it.name }})"
+	return "\tfun ${name.toMethodName()}(${arguments.joinToString { "${it.name}: ${it.type.toKotlinType()}" }}): ${returnType.toKotlinType()} = ObjectiveC.objc_msgSend(id, sel(\"${name}\"), ${arguments.joinToString { it.name }})"
 }
 
 private fun String.toMethodName(): String

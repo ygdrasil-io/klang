@@ -8,7 +8,6 @@ internal fun JsonObject.inner() = this["inner"]
 	?.map { it.jsonObject }
 
 internal fun JsonObject.returnType() = nullableReturnType()
-	?.let(::UnresolvedTypeRef)
 	?: error("return type not found: $this")
 
 internal fun JsonObject.type() = nullableType()
@@ -23,5 +22,6 @@ internal fun JsonObject.booleanValueOf(key: String)
 internal fun JsonObject.nullableBooleanValueOf(key: String)
 	= this[key]?.jsonPrimitive?.booleanOrNull
 internal fun JsonObject.nullableReturnType() = this["returnType"]?.jsonObject?.get("qualType")?.jsonPrimitive?.content
+	?.let(::UnresolvedTypeRef)
 internal fun JsonObject.nullableType() = this["type"]?.jsonObject?.get("qualType")?.jsonPrimitive?.content
 internal fun JsonObject.nullableName() = this["name"]?.jsonPrimitive?.content

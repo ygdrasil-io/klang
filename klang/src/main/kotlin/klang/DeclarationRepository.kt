@@ -9,7 +9,7 @@ interface DeclarationRepository {
 	fun save(declaration: NameableDeclaration)
 	fun clear()
 	fun update(nativeEnumeration: NativeDeclaration, provider: () -> NativeDeclaration): NativeDeclaration
-	fun DeclarationRepository.resolve()
+	fun DeclarationRepository.resolveTypes()
 
 	fun findEnumerationByName(name: String) = findDeclarationByName<NativeEnumeration>(name)
 

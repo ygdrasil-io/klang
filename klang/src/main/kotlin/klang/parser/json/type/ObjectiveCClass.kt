@@ -55,7 +55,7 @@ private fun JsonObject.arguments(): List<ObjectiveCClass.Method.Argument> = inne
 
 private fun JsonObject.toArgument() = ObjectiveCClass.Method.Argument(
 	name = name(),
-	type = type()
+	type = type().let(::UnresolvedTypeRef)
 )
 
 private fun JsonObject.properties(): List<ObjectiveCClass.Property> = inner()

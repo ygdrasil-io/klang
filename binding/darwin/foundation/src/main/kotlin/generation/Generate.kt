@@ -27,7 +27,7 @@ fun main() {
 				it.printStackTrace()
 			}
 
-		resolve()
+		resolveTypes()
 
 		findDeclarationByName<NameableDeclaration>("NSWindow")
 			?.let { println(it) }

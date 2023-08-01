@@ -22,21 +22,22 @@ data class ObjectiveCClass(
 
 	data class Method(
 		override val name: String,
-		val returnType: TypeRef,
+		var returnType: TypeRef,
 		val instance: Boolean,
 		val arguments: List<Argument> = listOf()
 	) : NameableDeclaration, ResolvableDeclaration {
 		data class Argument(
 			val name: String,
-			val type: String
+			var type: TypeRef
 		) : ResolvableDeclaration {
 
 			override fun DeclarationRepository.resolve() {
-				TODO()
+				type = with(type) { resolve() }
 			}
 		}
 
 		override fun DeclarationRepository.resolve() {
+			returnType = with(returnType) { resolve() }
 			arguments.forEach { with(it) { resolve() } }
 		}
 	}
@@ -59,6 +60,8 @@ data class ObjectiveCClass(
 			.filterIsInstance<ObjectiveCCategory>()
 			.filter { it.superType.refName == name }
 			.toSet()
+
+		methods.forEach { with(it) { resolve() } }
 	}
 
 }

@@ -48,14 +48,14 @@ object TestData {
 			superType = UnresolvedTypeRef("NSObject"),
 			protocols = setOf(UnresolvedTypeRef("NSCopying")),
 			properties = listOf(
-				ObjectiveCClass.Property("testProperty", "NSString *", nonatomic = true, assign = true)
+				ObjectiveCClass.Property("testProperty", "NSString *", nonatomic = true, assign = true, unsafe_unretained = true, readwrite = true)
 			),
 			methods = listOf(
 				ObjectiveCClass.Method("testMethod", UnresolvedTypeRef("void"), true),
 				ObjectiveCClass.Method(
 					"testMethod:withParameter:", UnresolvedTypeRef("BOOL"), false, listOf(
-						ObjectiveCClass.Method.Argument("parameter", "NSString *"),
-						ObjectiveCClass.Method.Argument("testParameter", "NSString *"),
+						ObjectiveCClass.Method.Argument("parameter", UnresolvedTypeRef("NSString *")),
+						ObjectiveCClass.Method.Argument("testParameter", UnresolvedTypeRef("NSString *")),
 					)
 				)
 			)

@@ -2,6 +2,7 @@ package klang.parser.json.type
 
 import klang.domain.ObjectiveCClass
 import klang.domain.ObjectiveCProtocol
+import klang.domain.UnresolvedTypeRef
 import klang.parser.json.domain.TranslationUnitKind
 import klang.parser.json.domain.TranslationUnitNode
 import klang.parser.json.domain.json
@@ -41,7 +42,7 @@ private fun JsonObject.arguments(): List<ObjectiveCClass.Method.Argument> = inne
 
 private fun JsonObject.toArgument() = ObjectiveCClass.Method.Argument(
 	name = name(),
-	type = type()
+	type = type().let(::UnresolvedTypeRef)
 )
 
 private fun JsonObject.properties(): List<ObjectiveCClass.Property> = inner()

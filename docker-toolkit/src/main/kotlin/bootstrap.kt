@@ -6,7 +6,8 @@ import java.util.*
 private val OS = System.getProperty("os.name").lowercase(Locale.getDefault())
 
 fun main() {
-	generateClangAst("14.0.0")
+	//generateCppSampleAst()
+	//generateClangAst("14.0.0")
 	generateCSampleAst()
 	if (isMac()) {
 		//generateObjectiveCSampleAst()
@@ -40,19 +41,44 @@ private fun generateCSampleAst() {
 		"struct.h" to "struct.h.ast",
 		"typedef-struct.h " to "typedef-struct.h.ast",
 		"functions.h " to "functions.h.ast",
-		"typedef.h " to "typedef.h.ast"
+		"typedef.h " to "typedef.h.ast",
+		"exhaustive-typedef.h " to "exhaustive-typedef.h.ast",
 	)
 
 	val sampleSourcePath = File(".")
 		.resolve("klang")
-		.resolve("sample")
+		.resolve("src")
+		.resolve("test")
 		.resolve("c")
 
 	files.forEach { (source, output) ->
 		generateAstFromDocker(
 			sampleSourcePath.absolutePath,
 			source,
-			clangAstOutput = sampleSourcePath.resolve(output)
+			clangAstOutput = sampleSourcePath.resolve(output),
+			clangJsonAstOutput = sampleSourcePath.resolve("$output.json")
+		)
+	}
+}
+
+
+private fun generateCppSampleAst() {
+	val files = listOf(
+		"class.hpp" to "class.hpp.ast"
+	)
+
+	val sampleSourcePath = File(".")
+		.resolve("klang")
+		.resolve("src")
+		.resolve("test")
+		.resolve("cpp")
+
+	files.forEach { (source, output) ->
+		generateAstFromDocker(
+			sampleSourcePath.absolutePath,
+			source,
+			clangAstOutput = sampleSourcePath.resolve(output),
+			clangJsonAstOutput = sampleSourcePath.resolve("$output.json")
 		)
 	}
 }

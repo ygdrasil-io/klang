@@ -21,6 +21,16 @@ fun typeOf(reference: String): Either<String, TypeRef> = either{
 		true
 	} ?: false
 
+	val isStructure = tokens.takeIf { it.first() == "struct" }?.let {
+		it.removeFirst()
+		true
+	} ?: false
+
+	val isEnumeration = tokens.takeIf { it.first() == "enum" }?.let {
+		it.removeFirst()
+		true
+	} ?: false
+
 	ensure(tokens.isNotEmpty()) { "type name not found $reference" }
 	val typeName = tokens.takeIf { it.first() == "unsigned" }?.let {
 		it.removeFirst()
@@ -33,13 +43,27 @@ fun typeOf(reference: String): Either<String, TypeRef> = either{
 		true
 	} ?: false
 
+	val isNullable = tokens.takeIf { it.firstOrNull() == "_Nullable" }?.let {
+		it.removeFirst()
+		true
+	} ?: tokens.takeIf { it.firstOrNull() == "_Nonnull" }?.let {
+		it.removeFirst()
+		false
+	}
+
+	if (isEnumeration) {
+		ensure(!isStructure) {
+			"type cannot be an enumeration and a structure $reference"
+		}
+	}
 	UnresolvedTypeRef(
 		reference,
 		typeName,
 		isConstant,
 		isPointer,
-		isStructure = false,
-		isEnumeration = false
+		isStructure,
+		isEnumeration,
+		isNullable
 	)
 }
 
@@ -51,11 +75,11 @@ sealed interface TypeRef{
 	val isPointer: Boolean
 	val isStructure: Boolean
 	val isEnumeration: Boolean
+	val isNullable: Boolean?
 
 	fun DeclarationRepository.resolveType(): TypeRef = findDeclarationByName<NameableDeclaration>(typeName)
 		?.let { ResolvedTypeRef(this@TypeRef, it) }
-		?: (this@TypeRef
-			.also { logger.warn { "fail to resolve type : $it" } })
+		?: (this@TypeRef.also { logger.warn { "fail to resolve type : $it" } })
 
 }
 
@@ -65,7 +89,8 @@ class UnresolvedTypeRef internal constructor(
 	override val isConstant: Boolean,
 	override val isPointer: Boolean,
 	override val isStructure: Boolean,
-	override val isEnumeration: Boolean
+	override val isEnumeration: Boolean,
+	override val isNullable: Boolean?
 ) : TypeRef {
 
 	override fun toString() = "UnresolvedType($typeName from declaration $referenceAsString)"

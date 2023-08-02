@@ -58,7 +58,7 @@ data class ObjectiveCClass(
 		categories = declarations
 			.asSequence()
 			.filterIsInstance<ObjectiveCCategory>()
-			.filter { it.superType.refName == name }
+			.filter { it.superType.referenceAsString == name }
 			.toSet()
 
 		methods.forEach { with(it) { resolve() } }

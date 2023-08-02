@@ -9,9 +9,9 @@ internal fun ObjectiveCClass.generateKotlinFile(outputDirectory: String) {
 
 	"""
 package darwin
-		
+
 import darwin.internal.*
-		
+
 val ${name}Class by lazy { NSClass("${name}") }
 
 open class ${name}(id: Long) : NSObject(id) {

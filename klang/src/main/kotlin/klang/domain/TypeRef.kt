@@ -5,14 +5,21 @@ import klang.findDeclarationByName
 import mu.KotlinLogging
 
 @JvmInline
-value class TypeNotResolve(val name: String)
+value class TypeNotResolved(val name: String)
+
+fun tokenizeTypeRef(type: String): List<String> {
+	val regexPattern = Regex("""\w+\s*<[^>]+>|\*|\w+""")
+	return regexPattern.findAll(type).map { it.value.trim() }.toList()
+}
 
 sealed class TypeRef(
-	val refName: String
+	val referenceAsString: String
 ) {
 
+	private val tokens = tokenizeTypeRef(referenceAsString)
+
 	val typeName by lazy {
-		refName.split(" ").first()
+		referenceAsString.split(" ").first()
 	}
 
 	private val logger = KotlinLogging.logger {}
@@ -29,9 +36,9 @@ sealed class TypeRef(
 }
 
 class UnresolvedTypeRef(refName: String) : TypeRef(refName) {
-	override fun toString() = "UnresolvedType($typeName from declaration $refName)"
+	override fun toString() = "UnresolvedType($typeName from declaration $referenceAsString)"
 }
 
 class ResolvedTypeRef(refName: String, val type: NativeDeclaration) : TypeRef(refName) {
-	override fun toString() = "ResolvedType($typeName from declaration $refName)"
+	override fun toString() = "ResolvedType($typeName from declaration $referenceAsString)"
 }

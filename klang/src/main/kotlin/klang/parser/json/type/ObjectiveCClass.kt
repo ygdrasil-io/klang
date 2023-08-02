@@ -1,8 +1,11 @@
 package klang.parser.json.type
 
+import arrow.core.Either
+import arrow.core.getOrElse
 import klang.domain.ObjectiveCClass
 import klang.domain.TypeRef
 import klang.domain.UnresolvedTypeRef
+import klang.domain.typeOf
 import klang.parser.json.domain.TranslationUnitKind
 import klang.parser.json.domain.TranslationUnitNode
 import klang.parser.json.domain.json
@@ -23,11 +26,12 @@ internal fun TranslationUnitNode.toObjectiveCClass(): ObjectiveCClass {
 	)
 }
 
-private fun JsonObject.protocols(): Set<UnresolvedTypeRef> = this["protocols"]
+private fun JsonObject.protocols(): Set<TypeRef> = this["protocols"]
 	?.jsonArray
 	?.map { it.jsonObject.get("name")?.jsonPrimitive?.content }
 	?.filterNotNull()
-	?.map(::UnresolvedTypeRef)
+	?.map(::typeOf)
+	?.mapNotNull(Either<String, TypeRef>::getOrNull)
 	?.toSet() ?: setOf()
 
 private fun JsonObject.superType(): TypeRef? = this["super"]
@@ -35,7 +39,8 @@ private fun JsonObject.superType(): TypeRef? = this["super"]
 	?.get("name")
 	?.jsonPrimitive
 	?.content
-	?.let(::UnresolvedTypeRef)
+	?.let(::typeOf)
+	?.getOrNull()
 
 private fun JsonObject.methods(): List<ObjectiveCClass.Method> = inner()
 	?.filter { it.kind() == TranslationUnitKind.ObjCMethodDecl }
@@ -55,7 +60,7 @@ private fun JsonObject.arguments(): List<ObjectiveCClass.Method.Argument> = inne
 
 private fun JsonObject.toArgument() = ObjectiveCClass.Method.Argument(
 	name = name(),
-	type = type().let(::UnresolvedTypeRef)
+	type = type().let(::typeOf).getOrElse { error("fail to parse type $this") }
 )
 
 private fun JsonObject.properties(): List<ObjectiveCClass.Property> = inner()

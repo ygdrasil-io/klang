@@ -1,44 +1,92 @@
 package klang.domain
 
+import arrow.core.Either
+import arrow.core.raise.either
+import arrow.core.raise.ensure
 import klang.DeclarationRepository
 import klang.findDeclarationByName
 import mu.KotlinLogging
 
+private val logger = KotlinLogging.logger {}
+
 @JvmInline
 value class TypeNotResolved(val name: String)
 
-fun tokenizeTypeRef(type: String): List<String> {
-	val regexPattern = Regex("""\w+\s*<[^>]+>|\*|\w+""")
-	return regexPattern.findAll(type).map { it.value.trim() }.toList()
+fun typeOf(reference: String): Either<String, TypeRef> = either{
+	val tokens = tokenizeTypeRef(reference).toMutableList()
+	ensure(tokens.isNotEmpty()) { "fail to tokenize type $reference" }
+
+	val isConstant = tokens.takeIf { it.first() == "const" }?.let {
+		it.removeFirst()
+		true
+	} ?: false
+
+	ensure(tokens.isNotEmpty()) { "type name not found $reference" }
+	val typeName = tokens.takeIf { it.first() == "unsigned" }?.let {
+		it.removeFirst()
+		ensure(tokens.isNotEmpty()) { "type name not found $reference" }
+		"unsigned ${tokens.removeFirst()}"
+	} ?: tokens.removeFirst()
+
+	val isPointer = tokens.takeIf { it.firstOrNull() == "*" }?.let {
+		it.removeFirst()
+		true
+	} ?: false
+
+	UnresolvedTypeRef(
+		reference,
+		typeName,
+		isConstant,
+		isPointer,
+		isStructure = false,
+		isEnumeration = false
+	)
 }
 
-sealed class TypeRef(
+sealed interface TypeRef{
+
 	val referenceAsString: String
-) {
+	val typeName: String
+	val isConstant: Boolean
+	val isPointer: Boolean
+	val isStructure: Boolean
+	val isEnumeration: Boolean
 
-	private val tokens = tokenizeTypeRef(referenceAsString)
+	fun DeclarationRepository.resolveType(): TypeRef = findDeclarationByName<NameableDeclaration>(typeName)
+		?.let { ResolvedTypeRef(this@TypeRef, it) }
+		?: (this@TypeRef
+			.also { logger.warn { "fail to resolve type : $it" } })
 
-	val typeName by lazy {
-		referenceAsString.split(" ").first()
-	}
+}
 
-	private val logger = KotlinLogging.logger {}
+class UnresolvedTypeRef internal constructor(
+	override val referenceAsString: String,
+	override val typeName: String,
+	override val isConstant: Boolean,
+	override val isPointer: Boolean,
+	override val isStructure: Boolean,
+	override val isEnumeration: Boolean
+) : TypeRef {
+
+	override fun toString() = "UnresolvedType($typeName from declaration $referenceAsString)"
 
 	override fun equals(other: Any?): Boolean {
 		return typeName == (other as? TypeRef)?.typeName
 	}
 
-	fun DeclarationRepository.resolve(): TypeRef = findDeclarationByName<NameableDeclaration>(typeName)
-		?.let { ResolvedTypeRef(typeName, it) }
-		?: (UnresolvedTypeRef(typeName)
-			.also { logger.warn { "fail to resolve type : $it" } })
-
+	override fun hashCode(): Int {
+		return typeName.hashCode()
+	}
 }
 
-class UnresolvedTypeRef(refName: String) : TypeRef(refName) {
-	override fun toString() = "UnresolvedType($typeName from declaration $referenceAsString)"
-}
-
-class ResolvedTypeRef(refName: String, val type: NativeDeclaration) : TypeRef(refName) {
+class ResolvedTypeRef internal constructor(private val typeRef: TypeRef, val type: NativeDeclaration) : TypeRef by typeRef {
 	override fun toString() = "ResolvedType($typeName from declaration $referenceAsString)"
+
+	override fun equals(other: Any?) = typeRef == other
+	override fun hashCode(): Int = typeRef.hashCode()
+}
+
+private fun tokenizeTypeRef(type: String): List<String> {
+	val regexPattern = Regex("""\w+\s*<[^>]+>|\*|\w+""")
+	return regexPattern.findAll(type).map { it.value.trim() }.toList()
 }

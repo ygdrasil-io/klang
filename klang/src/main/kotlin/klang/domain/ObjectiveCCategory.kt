@@ -11,7 +11,7 @@ data class ObjectiveCCategory(
 ) : NameableDeclaration, ResolvableDeclaration {
 
 	override fun DeclarationRepository.resolve() {
-		superType = with(superType) { resolve() }
+		superType = with(superType) { resolveType() }
 		// TODO uncomment when ready
 		//methods.forEach { with(it) { resolve() } }
 	}

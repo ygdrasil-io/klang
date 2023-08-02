@@ -1,9 +1,8 @@
 package klang.parser
 
-import klang.domain.ObjectiveCCategory
-import klang.domain.ObjectiveCClass
-import klang.domain.ObjectiveCProtocol
-import klang.domain.UnresolvedTypeRef
+import klang.domain.*
+
+fun testType(name: String) = typeOf(name).getOrNull() ?: error("fail to create type $name")
 
 object TestData {
 
@@ -23,9 +22,9 @@ object TestData {
 	val objectiveCCategory = listOf(
 		ObjectiveCCategory(
 			name = "MyCategory",
-			superType = UnresolvedTypeRef("MyClass"),
+			superType = testType("MyClass"),
 			methods = listOf(
-				ObjectiveCClass.Method("newMethod", UnresolvedTypeRef("void"), true),
+				ObjectiveCClass.Method("newMethod", testType("void"), true),
 			)
 		)
 	)
@@ -36,8 +35,8 @@ object TestData {
 			protocols = setOf("NSObject"),
 			properties = listOf(),
 			methods = listOf(
-				ObjectiveCClass.Method("method1", UnresolvedTypeRef("void"), true),
-				ObjectiveCClass.Method("method2", UnresolvedTypeRef("NSString *"), true)
+				ObjectiveCClass.Method("method1", testType("void"), true),
+				ObjectiveCClass.Method("method2", testType("NSString *"), true)
 			)
 		)
 	)
@@ -45,17 +44,17 @@ object TestData {
 	val objectiveCClass = listOf(
 		ObjectiveCClass(
 			name = "TestClass",
-			superType = UnresolvedTypeRef("NSObject"),
-			protocols = setOf(UnresolvedTypeRef("NSCopying")),
+			superType = testType("NSObject"),
+			protocols = setOf(testType("NSCopying")),
 			properties = listOf(
 				ObjectiveCClass.Property("testProperty", "NSString *", nonatomic = true, assign = true, unsafe_unretained = true, readwrite = true)
 			),
 			methods = listOf(
-				ObjectiveCClass.Method("testMethod", UnresolvedTypeRef("void"), true),
+				ObjectiveCClass.Method("testMethod", testType("void"), true),
 				ObjectiveCClass.Method(
-					"testMethod:withParameter:", UnresolvedTypeRef("BOOL"), false, listOf(
-						ObjectiveCClass.Method.Argument("parameter", UnresolvedTypeRef("NSString *")),
-						ObjectiveCClass.Method.Argument("testParameter", UnresolvedTypeRef("NSString *")),
+					"testMethod:withParameter:", testType("BOOL"), false, listOf(
+						ObjectiveCClass.Method.Argument("parameter", testType("NSString *")),
+						ObjectiveCClass.Method.Argument("testParameter", testType("NSString *")),
 					)
 				)
 			)

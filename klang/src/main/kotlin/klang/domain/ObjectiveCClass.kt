@@ -32,12 +32,12 @@ data class ObjectiveCClass(
 		) : ResolvableDeclaration {
 
 			override fun DeclarationRepository.resolve() {
-				type = with(type) { resolve() }
+				type = with(type) { resolveType() }
 			}
 		}
 
 		override fun DeclarationRepository.resolve() {
-			returnType = with(returnType) { resolve() }
+			returnType = with(returnType) { resolveType() }
 			arguments.forEach { with(it) { resolve() } }
 		}
 	}
@@ -52,9 +52,9 @@ data class ObjectiveCClass(
 
 	override fun DeclarationRepository.resolve() {
 		protocols = protocols
-			.map { with(it) { resolve() } }
+			.map { with(it) { resolveType() } }
 			.toSet()
-		superType = superType?.let { with(it) { resolve() } }
+		superType = superType?.let { with(it) { resolveType() } }
 		categories = declarations
 			.asSequence()
 			.filterIsInstance<ObjectiveCCategory>()

@@ -1,15 +1,14 @@
 package klang.generator
 
-private fun Set<String>.generateEnum(name: String) {
-	println(
-		"""
-			enum class $name {
-				${joinToString { it }};
-				
-				companion object {
-					fun of(value: String): TranslationUnitKind? = values().find { it.name == value }
-				}
-			}
-		""".trimIndent()
-	)
+import klang.domain.KotlinEnumeration
+
+internal fun KotlinEnumeration.generateCode() = """
+enum class $name(val value: $type) {
+${values.joinToString(separator = ",\n") { "\t${it.first}(${it.second})" }};
+
+	companion object {
+		fun of(value: $type): $name? = entries.find { it.value == value }
+	}
 }
+""".trimIndent()
+

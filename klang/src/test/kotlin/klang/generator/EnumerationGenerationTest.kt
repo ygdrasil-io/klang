@@ -29,4 +29,23 @@ enum class MyEnum(val value: Long) {
 }
 		""".trimIndent()
 	}
+
+	"generate kotlin enumeration v2" {
+		enumeration.generateCode2().toString() shouldBe """
+public enum class MyEnum(
+  public val nativeValue: Long,
+) {
+  FIRST(1),
+  SECOND(2),
+  THIRD(3),
+  ;
+
+  public companion object {
+    public fun of(nativeValue: Long): MyEnum? = entries.find { it.nativeValue == nativeValue }
+  }
+}
+
+		""".trimIndent()
+	}
 })
+

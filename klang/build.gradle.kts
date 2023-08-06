@@ -33,5 +33,6 @@ dependencies {
 	api(project(":libclang"))
 	implementation(libs.arrow.core)
 	implementation(libs.arrow.fx.coroutines)
+	api(libs.kotlinpoet)
 	testImplementation(libs.kotest)
 }

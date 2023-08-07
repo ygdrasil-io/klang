@@ -3,6 +3,8 @@ package klang.generator
 import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.shouldBe
 import klang.domain.KotlinEnumeration
+import klang.domain.NativeEnumeration
+import klang.mapper.toSpec
 
 class EnumerationGenerationTest : FreeSpec({
 
@@ -16,7 +18,7 @@ class EnumerationGenerationTest : FreeSpec({
 		)
 	)
 
-	"generate kotlin enumeration" {
+	"generate kotlin enumeration v1" {
 		enumeration.generateCode() shouldBe """
 enum class MyEnum(val value: Long) {
 	FIRST(1),
@@ -30,8 +32,17 @@ enum class MyEnum(val value: Long) {
 		""".trimIndent()
 	}
 
-	"generate kotlin enumeration v2" {
-		enumeration.generateCode2().toString() shouldBe """
+	val enumeration2 = NativeEnumeration(
+		name = "MyEnum",
+		values = listOf(
+			Pair("FIRST", 1),
+			Pair("SECOND", 2),
+			Pair("THIRD", 3)
+		)
+	)
+
+	"generate kotlin enumeration" {
+		enumeration2.toSpec().toString() shouldBe """
 public enum class MyEnum(
   public val nativeValue: Long,
 ) {

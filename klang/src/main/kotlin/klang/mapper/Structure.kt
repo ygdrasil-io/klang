@@ -4,14 +4,13 @@ import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
-import klang.domain.NativeEnumeration
+import klang.domain.NativeStructure
 
-
-internal fun NativeEnumeration.toSpec() = ClassName("", name)
-	.let { enumerationClass ->
+internal fun NativeStructure.toSpec() = ClassName("", name)
+	.let { structureClass ->
 		val valueType = ClassName("", "Long")
 		val valueName = "nativeValue"
-		TypeSpec.enumBuilder(enumerationClass)
+		TypeSpec.classBuilder(structureClass)
 			.primaryConstructor(
 				FunSpec.constructorBuilder()
 					.addParameter(valueName, valueType)
@@ -27,19 +26,13 @@ internal fun NativeEnumeration.toSpec() = ClassName("", name)
 					.addFunction(
 						FunSpec.builder("of")
 							.addParameter(valueName, valueType)
-							.returns(enumerationClass.copy(nullable = true))
+							.returns(structureClass.copy(nullable = true))
 							.addStatement("return entries.find { it.$valueName == $valueName }")
 							.build()
 					)
 					.build()
 			)
 			.apply {
-				values.forEach { (name, value) ->
-					addEnumConstant(
-						name, TypeSpec.anonymousClassBuilder()
-							.addSuperclassConstructorParameter("%L", value)
-							.build()
-					)
-				}
+
 			}.build()
 	}

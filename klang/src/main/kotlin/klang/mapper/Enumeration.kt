@@ -6,8 +6,8 @@ import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
 import klang.domain.NativeEnumeration
 
-
-internal fun NativeEnumeration.toSpec() = ClassName("", name)
+// TODO: switch to internal
+public fun NativeEnumeration.toSpec() = ClassName("", name)
 	.let { enumerationClass ->
 		val valueType = ClassName("", "Long")
 		val valueName = "nativeValue"

@@ -2,6 +2,7 @@ package generation
 
 import klang.domain.NameableDeclaration
 import klang.domain.NativeDeclaration
+import klang.domain.NativeEnumeration
 import klang.domain.ObjectiveCClass
 import klang.findDeclarationByName
 import klang.generator.generateKotlinFile
@@ -11,7 +12,7 @@ import java.io.File
 
 const val baseDirectory = "binding/darwin/foundation/"
 const val astPath = "${baseDirectory}src/main/objective-c/cocoa.m.ast.json"
-const val outputDirectory = "${baseDirectory}src/main/generated/darwin/"
+const val outputDirectory = "${baseDirectory}src/main/generated/"
 
 fun main() {
 
@@ -37,7 +38,7 @@ fun main() {
 		declarations
 			.filterIsInstance<NameableDeclaration>()
 			.filter { it.name != "NSString" }
-			.filter { it.name == "NSWindow" }
+			.filter { it.name == "NSWindow" || it is NativeEnumeration }
 			.forEach(::generateKotlinFile)
 
 
@@ -48,7 +49,8 @@ fun main() {
 
 private fun generateKotlinFile(declaration: NativeDeclaration) {
 	when (declaration) {
-		is ObjectiveCClass -> declaration.generateKotlinFile(outputDirectory)
+		is ObjectiveCClass -> declaration.generateKotlinFile("${outputDirectory}darwin/")
+		is NativeEnumeration -> declaration.generateKotlinFile(outputDirectory)
 		else -> println("Not implemented: $declaration")
 	}
 }

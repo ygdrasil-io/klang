@@ -13,12 +13,12 @@ class FunctionGenerationTest : FreeSpec({
 		TestData.functions.toInterfaceSpec("Interface").toString() shouldBe """
 public interface Interface {
   public fun function(
-    a: Pointer,
-    b: Pointer,
+    a: com.sun.jna.Pointer,
+    b: com.sun.jna.Pointer,
     myEnum: EnumName,
   ): char
 
-  public fun function2(): Pointer 
+  public fun function2(): com.sun.jna.Pointer
 }
 
 """.trimIndent()

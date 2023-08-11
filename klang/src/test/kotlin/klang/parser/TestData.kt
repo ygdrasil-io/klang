@@ -9,16 +9,16 @@ object TestData {
 	val functions = listOf(
 		NativeFunction(
 			name = "function",
-			returnType = "char",
+			returnType = testType("char"),
 			arguments = listOf(
-				NativeFunction.Argument("a", "int *"),
-				NativeFunction.Argument("b", "void *"),
-				NativeFunction.Argument("myEnum", "enum EnumName"),
+				NativeFunction.Argument("a", testType("int *")),
+				NativeFunction.Argument("b", testType("void *")),
+				NativeFunction.Argument("myEnum", testType("enum EnumName")),
 			)
 		),
 		NativeFunction(
 			name = "function2",
-			returnType = "void *",
+			returnType = testType("void *"),
 			arguments = listOf()
 		)
 	)

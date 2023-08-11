@@ -22,14 +22,16 @@ class StructureGenerationTest : FreeSpec({
 		structure.toSpec().toString() shouldBe """
 @com.sun.jna.Structure.FieldOrder("first", "second")
 public open class MyStructure(
-  pointer: com.sun.jna.Pointer? = null
+  pointer: com.sun.jna.Pointer? = null,
 ) : com.sun.jna.Structure(pointer) {
-  @JvmField var first: Long = 0
-  @JvmField var second: Int = 0
+  @JvmField
+  public var first: Long = 0
 
+  @JvmField
+  public var second: Int = 0
 
-    class ByReference(pointer: Pointer? = null) : MyStructure(pointer), ByReference
-    class ByValue(pointer: Pointer? = null) : MyStructure(pointer), ByValue
+  class ByReference(pointer: Pointer? = null) : MyStructure(pointer), ByReference
+  class ByValue(pointer: Pointer? = null) : MyStructure(pointer), ByValue
 }
 
 		""".trimIndent()

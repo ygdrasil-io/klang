@@ -10,7 +10,7 @@ internal fun NativeStructure.toSpec() = ClassName("", name)
 		TypeSpec.classBuilder(structureClass)
 			.addAnnotation(
 				AnnotationSpec.builder(jnaFieldOrder)
-					.addMember(fields.joinToString(", ") { "${it.first}" })
+					.addMember(fields.joinToString(", ") { "\"${it.first}\"" })
 					.build()
 			)
 			.addModifiers(KModifier.OPEN)
@@ -18,15 +18,22 @@ internal fun NativeStructure.toSpec() = ClassName("", name)
 			.addSuperclassConstructorParameter("pointer")
 			.primaryConstructor(
 				FunSpec.constructorBuilder()
-					.addParameter("pointer", jnaPointer.copy(nullable = true))
-					.build()
-			)
-			.addProperty(
-				PropertySpec.builder(valueName, valueType)
-					.initializer(valueName)
+					.addParameter(
+						ParameterSpec.builder("pointer", jnaPointer.copy(nullable = true))
+							.defaultValue("null")
+							.build()
+					)
 					.build()
 			)
 			.apply {
-
+				fields.forEach { (name, type) ->
+					addProperty(
+						PropertySpec.builder(name, ClassName("", type))
+							.addAnnotation(jnaJvmField)
+							.initializer("0")
+							.mutable(true)
+							.build()
+					)
+				}
 			}.build()
 	}

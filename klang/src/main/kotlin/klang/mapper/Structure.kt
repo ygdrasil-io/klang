@@ -23,6 +23,7 @@ internal fun NativeStructure.toSpec() = ClassName("", name)
 					.build()
 			)
 			.addModifiers(KModifier.OPEN)
+			.superclass(jnaStructure)
 			.primaryConstructor(
 				FunSpec.constructorBuilder()
 					.addParameter(
@@ -32,7 +33,6 @@ internal fun NativeStructure.toSpec() = ClassName("", name)
 					)
 					.build()
 			)
-			.addSuperinterface(jnaStructure, "pointer")
 			.apply {
 				fields.forEach { (name, type) ->
 					addProperty(
@@ -47,6 +47,7 @@ internal fun NativeStructure.toSpec() = ClassName("", name)
 			}
 			.addType(
 				TypeSpec.classBuilder("ByReference")
+					.superclass(structureClass)
 					.primaryConstructor(
 						FunSpec.constructorBuilder()
 							.addParameter(
@@ -56,12 +57,13 @@ internal fun NativeStructure.toSpec() = ClassName("", name)
 							)
 							.build()
 					)
-					.addSuperinterface(structureClass, constructorParameter = "pointer")
+					.addSuperclassConstructorParameter("pointer")
 					.addSuperinterface(jnaByReference)
 					.build()
 			)
 			.addType(
 				TypeSpec.classBuilder("ByValue")
+					.superclass(structureClass)
 					.primaryConstructor(
 						FunSpec.constructorBuilder()
 							.addParameter(
@@ -71,7 +73,7 @@ internal fun NativeStructure.toSpec() = ClassName("", name)
 							)
 							.build()
 					)
-					.addSuperinterface(structureClass, constructorParameter = "pointer")
+					.addSuperclassConstructorParameter("pointer")
 					.addSuperinterface(jnaByValue)
 					.build()
 			)

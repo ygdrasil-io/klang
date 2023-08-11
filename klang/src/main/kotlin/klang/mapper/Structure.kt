@@ -3,17 +3,6 @@ package klang.mapper
 import com.squareup.kotlinpoet.*
 import klang.domain.NativeStructure
 
-val test = TypeSpec.classBuilder(jnaStructure)
-	.primaryConstructor(
-		FunSpec.constructorBuilder()
-			.addParameter(
-				ParameterSpec.builder("pointer", jnaPointer.copy(nullable = true))
-					.defaultValue("null")
-					.build()
-			)
-			.build()
-	).build()
-
 internal fun NativeStructure.toSpec() = ClassName("", name)
 	.let { structureClass ->
 		TypeSpec.classBuilder(structureClass)

@@ -32,11 +32,11 @@ public open class MyStructure(
 
   public class ByReference(
     pointer: com.sun.jna.Pointer? = null,
-  ) : MyStructure(pointer), com.sun.jna.ByReference
+  ) : MyStructure(pointer), com.sun.jna.Structure.ByReference
   
   public class ByValue(
     pointer: com.sun.jna.Pointer? = null,
-  ) : MyStructure(pointer), com.sun.jna.ByValue
+  ) : MyStructure(pointer), com.sun.jna.Structure.ByValue
 }
 
 		""".trimIndent()

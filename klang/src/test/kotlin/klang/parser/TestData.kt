@@ -6,6 +6,23 @@ fun testType(name: String) = typeOf(name).getOrNull() ?: error("fail to create t
 
 object TestData {
 
+	val functions = listOf(
+		NativeFunction(
+			name = "function",
+			returnType = "char",
+			arguments = listOf(
+				NativeFunction.Argument("a", "int *"),
+				NativeFunction.Argument("b", "void *"),
+				NativeFunction.Argument("myEnum", "enum EnumName"),
+			)
+		),
+		NativeFunction(
+			name = "function2",
+			returnType = "void *",
+			arguments = listOf()
+		)
+	)
+
 	val objectiveCEnumeration = listOf(
 		"MyEnum" to listOf(
 			"kValue1" to 0L,

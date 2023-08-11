@@ -30,8 +30,13 @@ public open class MyStructure(
   @JvmField
   public var second: Int = 0
 
-  class ByReference(pointer: Pointer? = null) : MyStructure(pointer), ByReference
-  class ByValue(pointer: Pointer? = null) : MyStructure(pointer), ByValue
+  public class ByReference(
+    pointer: com.sun.jna.Pointer? = null,
+  ) : MyStructure(pointer), com.sun.jna.ByReference
+  
+  public class ByValue(
+    pointer: com.sun.jna.Pointer? = null,
+  ) : MyStructure(pointer), com.sun.jna.ByValue
 }
 
 		""".trimIndent()

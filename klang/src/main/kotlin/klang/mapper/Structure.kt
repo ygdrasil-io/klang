@@ -3,10 +3,19 @@ package klang.mapper
 import com.squareup.kotlinpoet.*
 import klang.domain.NativeStructure
 
+val test = TypeSpec.classBuilder(jnaStructure)
+	.primaryConstructor(
+		FunSpec.constructorBuilder()
+			.addParameter(
+				ParameterSpec.builder("pointer", jnaPointer.copy(nullable = true))
+					.defaultValue("null")
+					.build()
+			)
+			.build()
+	).build()
+
 internal fun NativeStructure.toSpec() = ClassName("", name)
 	.let { structureClass ->
-		val valueType = ClassName("", "Long")
-		val valueName = "nativeValue"
 		TypeSpec.classBuilder(structureClass)
 			.addAnnotation(
 				AnnotationSpec.builder(jnaFieldOrder)
@@ -14,8 +23,6 @@ internal fun NativeStructure.toSpec() = ClassName("", name)
 					.build()
 			)
 			.addModifiers(KModifier.OPEN)
-			.addSuperinterface(jnaStructure)
-			.addSuperclassConstructorParameter("pointer")
 			.primaryConstructor(
 				FunSpec.constructorBuilder()
 					.addParameter(
@@ -25,6 +32,7 @@ internal fun NativeStructure.toSpec() = ClassName("", name)
 					)
 					.build()
 			)
+			.addSuperinterface(jnaStructure, "pointer")
 			.apply {
 				fields.forEach { (name, type) ->
 					addProperty(
@@ -35,5 +43,37 @@ internal fun NativeStructure.toSpec() = ClassName("", name)
 							.build()
 					)
 				}
-			}.build()
+				superclassConstructorParameters.add(CodeBlock.of("pointer"))
+			}
+			.addType(
+				TypeSpec.classBuilder("ByReference")
+					.primaryConstructor(
+						FunSpec.constructorBuilder()
+							.addParameter(
+								ParameterSpec.builder("pointer", jnaPointer.copy(nullable = true))
+									.defaultValue("null")
+									.build()
+							)
+							.build()
+					)
+					.addSuperinterface(structureClass, constructorParameter = "pointer")
+					.addSuperinterface(jnaByReference)
+					.build()
+			)
+			.addType(
+				TypeSpec.classBuilder("ByValue")
+					.primaryConstructor(
+						FunSpec.constructorBuilder()
+							.addParameter(
+								ParameterSpec.builder("pointer", jnaPointer.copy(nullable = true))
+									.defaultValue("null")
+									.build()
+							)
+							.build()
+					)
+					.addSuperinterface(structureClass, constructorParameter = "pointer")
+					.addSuperinterface(jnaByValue)
+					.build()
+			)
+			.build()
 	}

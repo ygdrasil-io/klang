@@ -10,5 +10,4 @@ internal fun NativeEnumeration.generateKotlinFile(outputDirectory: String) {
 		.addType(this.toSpec())
 		.build()
 		.writeTo(File(outputDirectory))
-
 }

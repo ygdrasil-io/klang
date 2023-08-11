@@ -1,5 +1,6 @@
 package darwin
 
+import com.sun.jna.Pointer
 import com.sun.jna.Structure
 
 @Structure.FieldOrder("x", "y", "width", "height")
@@ -39,4 +40,14 @@ open class NSRect : Structure {
 	}
 
 	override fun toString(): String = "NSRect($x, $y, $width, $height)"
+}
+
+@Structure.FieldOrder("scancode", "sym", "mod", "unused")
+open class SDL_Keysym(pointer: Pointer? = null) : Structure(pointer) {
+	@JvmField var scancode: Int = 0
+	@JvmField var sym: Int = 0
+	@JvmField var mod: Int = 0
+	@JvmField var unused: Int = 0
+
+	class Ref(pointer: Pointer? = null) : SDL_Keysym(pointer), ByReference
 }

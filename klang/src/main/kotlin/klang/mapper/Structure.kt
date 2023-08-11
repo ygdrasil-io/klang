@@ -1,9 +1,6 @@
 package klang.mapper
 
-import com.squareup.kotlinpoet.ClassName
-import com.squareup.kotlinpoet.FunSpec
-import com.squareup.kotlinpoet.PropertySpec
-import com.squareup.kotlinpoet.TypeSpec
+import com.squareup.kotlinpoet.*
 import klang.domain.NativeStructure
 
 internal fun NativeStructure.toSpec() = ClassName("", name)
@@ -11,25 +8,22 @@ internal fun NativeStructure.toSpec() = ClassName("", name)
 		val valueType = ClassName("", "Long")
 		val valueName = "nativeValue"
 		TypeSpec.classBuilder(structureClass)
+			.addAnnotation(
+				AnnotationSpec.builder(jnaFieldOrder)
+					.addMember(fields.joinToString(", ") { "${it.first}" })
+					.build()
+			)
+			.addModifiers(KModifier.OPEN)
+			.addSuperinterface(jnaStructure)
+			.addSuperclassConstructorParameter("pointer")
 			.primaryConstructor(
 				FunSpec.constructorBuilder()
-					.addParameter(valueName, valueType)
+					.addParameter("pointer", jnaPointer.copy(nullable = true))
 					.build()
 			)
 			.addProperty(
 				PropertySpec.builder(valueName, valueType)
 					.initializer(valueName)
-					.build()
-			)
-			.addType(
-				TypeSpec.companionObjectBuilder()
-					.addFunction(
-						FunSpec.builder("of")
-							.addParameter(valueName, valueType)
-							.returns(structureClass.copy(nullable = true))
-							.addStatement("return entries.find { it.$valueName == $valueName }")
-							.build()
-					)
 					.build()
 			)
 			.apply {

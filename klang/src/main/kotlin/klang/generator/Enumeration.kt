@@ -1,8 +1,6 @@
 package klang.generator
 
-import com.squareup.kotlinpoet.*
 import klang.domain.KotlinEnumeration
-import klang.domain.NativeEnumeration
 
 internal fun KotlinEnumeration.generateCode() = """
 enum class $name(val value: $type) {

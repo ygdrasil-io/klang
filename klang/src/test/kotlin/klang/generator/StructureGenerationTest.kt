@@ -42,14 +42,3 @@ public open class MyStructure(
 		""".trimIndent()
 	}
 })
-
-
-/*@Structure.FieldOrder("scancode", "sym", "mod", "unused")
-open class SDL_Keysym(pointer: Pointer? = null) : Structure(pointer) {
-    @JvmField var scancode: Int = 0
-    @JvmField var sym: SDL_Keycode = 0
-    @JvmField var mod: Uint16 = 0
-    @JvmField var unused: Uint32 = 0
-
-    class Ref(pointer: Pointer? = null) : SDL_Keysym(pointer), ByReference
-}*/

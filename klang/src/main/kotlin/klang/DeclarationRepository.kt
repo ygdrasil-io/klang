@@ -25,12 +25,6 @@ interface DeclarationRepository {
 
 	fun findObjectiveCCategoryByName(name: String) = findDeclarationByName<ObjectiveCCategory>(name)
 
-	fun findDeclarationsByName(declarationName: String) = declarations
-		.asSequence()
-		.filterIsInstance<NameableDeclaration>()
-		.filter { it.name == declarationName }
-		.toList()
-
 }
 
 inline fun <reified T : NameableDeclaration> DeclarationRepository.findDeclarationByName(declarationName: String) = declarations

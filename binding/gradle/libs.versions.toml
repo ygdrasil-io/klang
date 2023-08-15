@@ -1,0 +1,9 @@
+[versions]
+kotest = "5.6.1"
+klang = "1.0.0-SNAPSHOT"
+
+[libraries]
+kotest = { module = "io.kotest:kotest-runner-junit5-jvm", version.ref = "kotest" }
+
+[plugins]
+klang = { id = "io.ygdrasil.klang", version.ref = "klang" }

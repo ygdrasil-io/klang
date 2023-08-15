@@ -1,11 +1,11 @@
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("jvm")
     kotlin("plugin.serialization")
     id("org.jetbrains.kotlinx.kover")
+	id("maven-publish")
 }
 
 tasks.test {
@@ -35,4 +35,13 @@ dependencies {
 	implementation(libs.arrow.fx.coroutines)
 	api(libs.kotlinpoet)
 	testImplementation(libs.kotest)
+}
+
+
+publishing {
+	publications {
+		create<MavenPublication>("maven") {
+			from(components["java"])
+		}
+	}
 }

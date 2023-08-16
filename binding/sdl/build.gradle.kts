@@ -5,6 +5,8 @@ import org.gradle.api.tasks.testing.logging.TestLogEvent
 buildscript {
 	repositories {
 		mavenLocal()
+		mavenCentral()
+		gradlePluginPortal()
 	}
 	dependencies {
 		classpath("io.ygdrasil:klang-gradle-plugin:1.0.0-SNAPSHOT") {
@@ -43,8 +45,11 @@ sourceSets.main {
 	//java.srcDirs("src/main/generated")
 }
 
+val headerUrl = "https://github.com/klang-toolkit/SDL-binary/releases/download/2.28.2-Alpha2/headers.zip"
+
 klang {
-	message = "Hello from build.gradle.kts"
-	parse(file("/Library/Frameworks/SDL2.framework/Versions/A/Headers/SDL.h"))
+	/*download(headerUrl)
+		.let { unpack(it) }
+		.let { parse(header = "SDL.h", at = it) }*/
 }
 

@@ -75,23 +75,22 @@ class KlangPlugin : Plugin<Project> {
 			task.dependsOn(unpackFile)
 			task.doFirst {
 
-				assert(dockerIsRunning()) { "Docker is not running" }
-
 				extension.tasks
 					.asSequence()
 					.filterIsInstance<KlangPluginTask.Parse>()
-					.map { File(it.sourceFile) to workingDirectory.resolve(it.sourcePath) }
+					.map { it.sourceFile to workingDirectory.resolve(it.sourcePath) }
 					.forEach { (fileToParse, sourcePath) ->
-						assert(fileToParse.exists()) { "File to parse does not exist" }
-						assert(fileToParse.isFile()) { "${fileToParse.absolutePath} is not a file" }
-						assert(fileToParse.canRead()) { "${fileToParse.absolutePath} is not readable" }
-						assert(fileToParse.length() > 0) { "${fileToParse.absolutePath} is empty" }
+						val localFileToParse = File(fileToParse)
+						assert(localFileToParse.exists()) { "File to parse does not exist" }
+						assert(localFileToParse.isFile()) { "${localFileToParse.absolutePath} is not a file" }
+						assert(localFileToParse.canRead()) { "${localFileToParse.absolutePath} is not readable" }
+						assert(localFileToParse.length() > 0) { "${localFileToParse.absolutePath} is empty" }
 						assert(dockerIsRunning()) { "Docker is not running" }
 
-						val jsonFile = File.createTempFile("export", ".json")
+						val jsonFile = workingDirectory.resolve("${fileToParse.hash}.json")
 						generateAstFromDocker(
 							sourcePath = sourcePath.absolutePath,
-							sourceFile = fileToParse.name,
+							sourceFile = fileToParse,
 							clangJsonAstOutput = jsonFile
 						)
 
@@ -128,9 +127,6 @@ private val String.hash
 	get() = toByteArray()
 		.let(hasher::digest)
 		.joinToString("") { "%02x".format(it) }
-
-private fun generateTempFile() = File.createTempFile("gradle", null)
-	.also { it.deleteOnExit() }
 
 private fun downloadFile(fileUrl: String, targetFile: File): File? = try {
 	URL(fileUrl).openStream().use { inputStream ->

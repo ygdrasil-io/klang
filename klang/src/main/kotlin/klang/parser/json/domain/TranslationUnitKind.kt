@@ -15,6 +15,11 @@ enum class TranslationUnitKind {
 	ShuffleVectorExpr,
 	MayAliasAttr,
 	ConvertVectorExpr,
+	StaticAssertDecl,
+	StringLiteral,
+	RecoveryExpr,
+	DoStmt,
+	AttributedStmt,
 
 	// Found in metal, likely common
 	CompoundStmt, ReturnStmt, CStyleCastExpr, ImplicitCastExpr, CallExpr, BuiltinAttr,

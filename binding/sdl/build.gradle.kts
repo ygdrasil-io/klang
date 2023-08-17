@@ -3,6 +3,9 @@ import org.gradle.api.tasks.testing.logging.TestLogEvent
 
 buildscript {
 	dependencies {
+		classpath("io.ygdrasil:klang:1.0.0-SNAPSHOT") {
+			isChanging = true
+		}
 		classpath("io.ygdrasil:klang-gradle-plugin:1.0.0-SNAPSHOT") {
 			isChanging = true
 		}
@@ -38,12 +41,12 @@ sourceSets.main {
 	//java.srcDirs("src/main/generated")
 }
 
-val headerUrl = "https://github.com/klang-toolkit/SDL-binary/releases/download/2.28.2-Alpha2/headers.zip"
+val headerUrl = "https://github.com/klang-toolkit/SDL-binary/releases/download/2.28.2-Alpha3/headers.zip"
 
 klang {
 	download(headerUrl)
 		.let { unpack(it) }
-		.let { parse(fileToParse = "SDL.h", at = it) }
+		.let { parse(fileToParse = "SDL2/SDL.h", at = it) }
 }
 
 tasks.register<Copy>("unpackFiles") {

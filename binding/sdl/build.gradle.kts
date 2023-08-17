@@ -1,13 +1,7 @@
-import io.ygdrasil.KlangPluginExtension
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 
 buildscript {
-	repositories {
-		mavenLocal()
-		mavenCentral()
-		gradlePluginPortal()
-	}
 	dependencies {
 		classpath("io.ygdrasil:klang-gradle-plugin:1.0.0-SNAPSHOT") {
 			isChanging = true
@@ -16,8 +10,8 @@ buildscript {
 }
 
 plugins {
+	kotlin("jvm")  version "1.9.0"
 	alias(libs.plugins.klang)
-	kotlin("jvm")
 }
 
 dependencies {
@@ -38,7 +32,6 @@ tasks.test {
 		showStandardStreams = true
 	}
 
-	exclude("klang/parser/libclang/**")
 }
 
 sourceSets.main {
@@ -48,8 +41,12 @@ sourceSets.main {
 val headerUrl = "https://github.com/klang-toolkit/SDL-binary/releases/download/2.28.2-Alpha2/headers.zip"
 
 klang {
-	/*download(headerUrl)
+	download(headerUrl)
 		.let { unpack(it) }
-		.let { parse(header = "SDL.h", at = it) }*/
+		.let { parse(fileToParse = "SDL.h", at = it) }
 }
 
+tasks.register<Copy>("unpackFiles") {
+	from(zipTree("src/resources/thirdPartyResources.zip"))
+	into(layout.buildDirectory.dir("resources"))
+}

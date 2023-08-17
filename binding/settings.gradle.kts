@@ -2,18 +2,18 @@ rootProject.name = "klang-binding"
 
 pluginManagement {
 	repositories {
-		mavenLocal()
 		gradlePluginPortal()
 		mavenCentral()
+		mavenLocal()
 	}
 
-	resolutionStrategy {
+	/*resolutionStrategy {
 		eachPlugin {
 			if (requested.id.namespace == "io.ygdrasil.klang") {
 				useModule("io.ygdrasil:klang-gradle-plugin:${requested.version}")
 			}
 		}
-	}
+	}*/
 }
 
 include(":sdl")

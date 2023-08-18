@@ -10,7 +10,7 @@ class FunctionGenerationTest : FreeSpec({
 
 	"generate kotlin functions" {
 		TestData.functions.toInterfaceSpec("", "Interface").toString() shouldBe """
-			|public interface Interface {
+			|public interface Interface : com.sun.jna.Library {
 			|  public fun function(
 			|    a: com.sun.jna.Pointer,
 			|    b: com.sun.jna.Pointer,

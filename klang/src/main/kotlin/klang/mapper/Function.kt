@@ -7,12 +7,13 @@ import klang.domain.TypeRef
 
 internal fun generateInterfaceLibrarySpec(name: String, libraryName: String) = PropertySpec
 	.builder(name, jnaNativeLoad)
-	.initializer("by lazy { darwin.internal.NativeLoad<$name>(\"$libraryName\") }")
+	.initializer("by lazy { klang.internal.NativeLoad<$name>(\"$libraryName\") }")
 	.build()
 
 internal fun List<NativeFunction>.toInterfaceSpec(packageName: String, name: String) = ClassName("", name)
 	.let { interfaceClass ->
 		TypeSpec.interfaceBuilder(interfaceClass)
+			.addSuperinterface(jnaLibrary)
 			.addFunctions(map { it.toSpec(packageName) })
 			.build()
 	}

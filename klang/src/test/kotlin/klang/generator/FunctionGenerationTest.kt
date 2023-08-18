@@ -9,13 +9,13 @@ import klang.parser.TestData
 class FunctionGenerationTest : FreeSpec({
 
 	"generate kotlin functions" {
-		TestData.functions.toInterfaceSpec("Interface", "").toString() shouldBe """
+		TestData.functions.toInterfaceSpec("", "Interface").toString() shouldBe """
 			|public interface Interface {
 			|  public fun function(
 			|    a: com.sun.jna.Pointer,
 			|    b: com.sun.jna.Pointer,
 			|    myEnum: EnumName,
-			|  ): char
+			|  ): kotlin.Byte
 			|
 			|  public fun function2(): com.sun.jna.Pointer
 			|}
@@ -25,7 +25,7 @@ class FunctionGenerationTest : FreeSpec({
 
 	"generate kotlin functions library" {
 		generateInterfaceLibrarySpec("Interface", "Library").toString() shouldBe """
-			|val Interface by lazy { darwin.internal.NativeLoad<Interface>("Library") }
+			|val Interface by lazy { darwin.`internal`.NativeLoad<Interface>("Library") }
 			|
 		""".trimMargin()
 	}

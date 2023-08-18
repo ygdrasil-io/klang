@@ -30,6 +30,7 @@ internal sealed class KlangPluginTask {
 	class DownloadFile(val sourceUrl: String, val targetFile: String) : KlangPluginTask()
 	class Unpack(val sourceFile: String, val targetPath: String) : KlangPluginTask()
 	class Parse(val sourceFile: String, val sourcePath: String) : KlangPluginTask()
+
 	// TODO use a value object instead of a string
 	class GenerateBinding(val basePackage: String) : KlangPluginTask()
 }
@@ -179,12 +180,21 @@ private fun DeclarationRepository.generateKotlinFiles(outputDirectory: File, bas
 
 	declarations.asSequence()
 		.filterIsInstance<NativeFunction>()
-		// Skip specific C functions
-		.filter { it.name.startsWith("__").not() || it.name.startsWith("_").not() }
+		.removeCNativeFunctions()
 		.toList()
 		// TODO: add mylib as plugin parameter
 		.generateKotlinFile(outputDirectory, basePackage, "mylib")
 }
+
+// TODO find a better way to do that
+// Skip specific C functions
+private fun Sequence<NativeFunction>.removeCNativeFunctions(): Sequence<NativeFunction> =
+	filter { function ->
+		function.name.startsWith("__").not() && function.name.startsWith("_")
+			.not() && function.arguments
+			.mapNotNull { it.name }
+			.none { name -> name.startsWith("__") && name.startsWith("_") }
+	}
 
 private val String.hash
 	get() = toByteArray()

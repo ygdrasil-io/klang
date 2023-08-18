@@ -20,6 +20,10 @@ enum class TranslationUnitKind {
 	RecoveryExpr,
 	DoStmt,
 	AttributedStmt,
+	FallThroughAttr,
+	NullStmt,
+	AnalyzerNoReturnAttr,
+	ModeAttr,
 
 	// Found in metal, likely common
 	CompoundStmt, ReturnStmt, CStyleCastExpr, ImplicitCastExpr, CallExpr, BuiltinAttr,

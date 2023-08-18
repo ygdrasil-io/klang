@@ -12,7 +12,7 @@ fun List<NativeFunction>.generateKotlinFile(outputDirectory: File, packageName: 
 
 	FileSpec.builder(packageName, "${libraryName}FunctionLibrary")
 		.addProperty(generateInterfaceLibrarySpec(libraryName, "${libraryName}FunctionLibrary"))
-		.addType(toInterfaceSpec(libraryName))
+		.addType(toInterfaceSpec(packageName, libraryName))
 		.build()
 		.writeTo(outputDirectory)
 }

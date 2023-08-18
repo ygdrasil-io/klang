@@ -2,6 +2,7 @@ package klang.mapper
 
 import com.squareup.kotlinpoet.*
 import klang.domain.NativeFunction
+import klang.domain.ResolvedTypeRef
 import klang.domain.TypeRef
 
 internal fun generateInterfaceLibrarySpec(name: String, libraryName: String) = PropertySpec
@@ -9,26 +10,21 @@ internal fun generateInterfaceLibrarySpec(name: String, libraryName: String) = P
 	.initializer("by lazy { darwin.internal.NativeLoad<$name>(\"$libraryName\") }")
 	.build()
 
-internal fun List<NativeFunction>.toInterfaceSpec(name: String) = ClassName("", name)
+internal fun List<NativeFunction>.toInterfaceSpec(packageName: String, name: String) = ClassName("", name)
 	.let { interfaceClass ->
 		TypeSpec.interfaceBuilder(interfaceClass)
-			.addFunctions(map { it.toSpec() })
+			.addFunctions(map { it.toSpec(packageName) })
 			.build()
 	}
 
-private fun NativeFunction.toSpec() = FunSpec
+private fun NativeFunction.toSpec(packageName: String) = FunSpec
 	.builder(name)
 	.addModifiers(KModifier.PUBLIC, KModifier.ABSTRACT)
-	.returns(returnType.toType())
-	.addParameters(arguments.map { it.toSpec() })
+	.returns(returnType.toType(packageName))
+	.addParameters(arguments.map { it.toSpec(packageName) })
 	.build()
 
 
-private fun NativeFunction.Argument.toSpec() = ParameterSpec
-	.builder(name ?: "", type.toType())
+private fun NativeFunction.Argument.toSpec(packageName: String) = ParameterSpec
+	.builder(name ?: "", type.toType(packageName))
 	.build()
-
-private fun TypeRef.toType(): ClassName = when {
-	isPointer -> jnaPointer
-	else -> ClassName("", typeName)
-}

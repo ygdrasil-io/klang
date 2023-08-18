@@ -177,7 +177,11 @@ private fun DeclarationRepository.generateKotlinFiles(outputDirectory: File, bas
 		.filterIsInstance<NativeEnumeration>()
 		.forEach { it.generateKotlinFile(outputDirectory, basePackage) }
 
-	declarations.filterIsInstance<NativeFunction>()
+	declarations.asSequence()
+		.filterIsInstance<NativeFunction>()
+		// Skip specific C functions
+		.filter { it.name.startsWith("__").not() || it.name.startsWith("_").not() }
+		.toList()
 		// TODO: add mylib as plugin parameter
 		.generateKotlinFile(outputDirectory, basePackage, "mylib")
 }

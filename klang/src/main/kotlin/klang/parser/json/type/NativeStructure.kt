@@ -36,9 +36,9 @@ private fun TranslationUnitNode.extractFields(): List<Pair<String, String>> =
 
 
 private fun TranslationUnitNode.extractField(): Pair<String, String> {
-	val name = json["name"]?.jsonPrimitive?.content
+	val name = json.nullableName()
 		?: "" // Some field can use empty name to get specific alignment (see: __darwin_fp_control as example)
-	val value = json["type"]?.jsonObject?.get("qualType")?.jsonPrimitive?.content
+	val value = json.nullableType()
 		?: error("no type for : $this")
 	return name to value
 }

@@ -1,3 +1,0 @@
-package klang.domain
-
-interface NativeDeclaration

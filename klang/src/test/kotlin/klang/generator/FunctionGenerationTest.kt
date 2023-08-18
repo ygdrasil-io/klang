@@ -9,7 +9,7 @@ import klang.parser.TestData
 class FunctionGenerationTest : FreeSpec({
 
 	"generate kotlin functions" {
-		TestData.functions.toInterfaceSpec("Interface").toString() shouldBe """
+		TestData.functions.toInterfaceSpec("Interface", "").toString() shouldBe """
 			|public interface Interface {
 			|  public fun function(
 			|    a: com.sun.jna.Pointer,

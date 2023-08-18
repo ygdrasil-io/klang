@@ -20,8 +20,8 @@ private fun TranslationUnitNode.arguments() =
 			.map { it.extractArguments() }
 
 private fun TranslationUnitNode.extractArguments(): NativeFunction.Argument {
-	val name = json["name"]?.jsonPrimitive?.content
-	val type = json["type"]?.jsonObject?.get("qualType")?.jsonPrimitive?.content
+	val name = json.nullableName()
+	val type = json.nullableType()
 		?: error("no type for : $this")
 	return NativeFunction.Argument(name, typeOf(type).getOrNull() ?: error("fail to create type $type"))
 }

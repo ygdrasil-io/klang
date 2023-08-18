@@ -22,8 +22,11 @@ internal fun JsonObject.booleanValueOf(key: String)
 
 internal fun JsonObject.nullableBooleanValueOf(key: String)
 	= this[key]?.jsonPrimitive?.booleanOrNull
-internal fun JsonObject.nullableReturnType() = this["returnType"]?.jsonObject?.get("qualType")?.jsonPrimitive?.content
+internal fun JsonObject.nullableReturnType() = this["returnType"]?.jsonObject?.desugaredOrType()?.jsonPrimitive?.content
 	?.let(::typeOf)
 	?.getOrNull()
-internal fun JsonObject.nullableType() = this["type"]?.jsonObject?.get("qualType")?.jsonPrimitive?.content
+internal fun JsonObject.nullableType() = this["type"]?.jsonObject?.desugaredOrType()?.jsonPrimitive?.content
 internal fun JsonObject.nullableName() = this["name"]?.jsonPrimitive?.content
+
+
+internal fun JsonObject.desugaredOrType() = this["desugaredQualType"] ?: this["qualType"]

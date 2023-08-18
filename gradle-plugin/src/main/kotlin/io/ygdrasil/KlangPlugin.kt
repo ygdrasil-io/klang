@@ -23,7 +23,8 @@ internal sealed class KlangPluginTask {
 	class DownloadFile(val sourceUrl: String, val targetFile: String) : KlangPluginTask()
 	class Unpack(val sourceFile: String, val targetPath: String) : KlangPluginTask()
 	class Parse(val sourceFile: String, val sourcePath: String) : KlangPluginTask()
-	class GenerateBinding(val sourceFile: String, val sourcePath: String) : KlangPluginTask()
+	// TODO use a value object instead of a string
+	class GenerateBinding(val basePackage: String) : KlangPluginTask()
 }
 
 open class KlangPluginExtension {
@@ -40,6 +41,10 @@ open class KlangPluginExtension {
 	fun download(urlToDownload: String): String = urlToDownload
 		.hash
 		.also { hash -> tasks.add(KlangPluginTask.DownloadFile(urlToDownload, hash)) }
+
+	fun generateBinding(basePackage: String) {
+		tasks.add(KlangPluginTask.GenerateBinding(basePackage))
+	}
 }
 
 class KlangPlugin : Plugin<Project> {

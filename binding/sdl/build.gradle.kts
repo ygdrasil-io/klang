@@ -18,6 +18,7 @@ plugins {
 }
 
 dependencies {
+	api(libs.jna)
 	testImplementation("org.junit.jupiter:junit-jupiter")
 	testImplementation(libs.kotest)
 }
@@ -38,7 +39,7 @@ tasks.test {
 }
 
 sourceSets.main {
-	//java.srcDirs("src/main/generated")
+	java.srcDirs("$buildDir/generated/klang")
 }
 
 val headerUrl = "https://github.com/klang-toolkit/SDL-binary/releases/download/2.28.2-Alpha3/headers.zip"
@@ -47,9 +48,6 @@ klang {
 	download(headerUrl)
 		.let { unpack(it) }
 		.let { parse(fileToParse = "SDL2/SDL.h", at = it) }
-}
 
-tasks.register<Copy>("unpackFiles") {
-	from(zipTree("src/resources/thirdPartyResources.zip"))
-	into(layout.buildDirectory.dir("resources"))
+	generateBinding("libsdl")
 }

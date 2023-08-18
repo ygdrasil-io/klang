@@ -8,7 +8,7 @@ import klang.mapper.toSpec
 
 class EnumerationGenerationTest : FreeSpec({
 
-	val enumeration = KotlinEnumeration(
+	val enumerationV1 = KotlinEnumeration(
 		name = "MyEnum",
 		type = "Long",
 		values = listOf(
@@ -19,7 +19,7 @@ class EnumerationGenerationTest : FreeSpec({
 	)
 
 	"generate kotlin enumeration v1" {
-		enumeration.generateCode() shouldBe """
+		enumerationV1.generateCode() shouldBe """
 enum class MyEnum(val value: Long) {
 	FIRST(1),
 	SECOND(2),
@@ -32,7 +32,7 @@ enum class MyEnum(val value: Long) {
 		""".trimIndent()
 	}
 
-	val enumeration2 = NativeEnumeration(
+	val enumeration = NativeEnumeration(
 		name = "MyEnum",
 		values = listOf(
 			Pair("FIRST", 1),
@@ -42,7 +42,7 @@ enum class MyEnum(val value: Long) {
 	)
 
 	"generate kotlin enumeration" {
-		enumeration2.toSpec().toString() shouldBe """
+		enumeration.toSpec().toString() shouldBe """
 public enum class MyEnum(
   public val nativeValue: Long,
 ) {

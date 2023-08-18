@@ -6,14 +6,6 @@ pluginManagement {
 		mavenCentral()
 		mavenLocal()
 	}
-
-	/*resolutionStrategy {
-		eachPlugin {
-			if (requested.id.namespace == "io.ygdrasil.klang") {
-				useModule("io.ygdrasil:klang-gradle-plugin:${requested.version}")
-			}
-		}
-	}*/
 }
 
 include(":sdl")

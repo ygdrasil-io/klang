@@ -1,10 +1,16 @@
 package io.ygdrasil
 
+import klang.DeclarationRepository
+import klang.InMemoryDeclarationRepository
+import klang.domain.NativeEnumeration
+import klang.domain.NativeFunction
+import klang.generator.generateKotlinFile
 import klang.parser.json.parseAstJson
 import klang.tools.dockerIsRunning
 import klang.tools.generateAstFromDocker
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.Task
 import org.slf4j.LoggerFactory
 import java.io.File
 import java.io.FileInputStream
@@ -18,6 +24,7 @@ private val logger = LoggerFactory.getLogger("some-logger")
 private val hasher by lazy {
 	MessageDigest.getInstance("MD5")
 }
+private const val taskGroup = "klang"
 
 internal sealed class KlangPluginTask {
 	class DownloadFile(val sourceUrl: String, val targetFile: String) : KlangPluginTask()
@@ -29,6 +36,7 @@ internal sealed class KlangPluginTask {
 
 open class KlangPluginExtension {
 	internal val tasks = mutableListOf<KlangPluginTask>()
+	internal var declarations: DeclarationRepository = InMemoryDeclarationRepository()
 
 	fun unpack(urlToUnpack: String) = urlToUnpack
 		.hash
@@ -48,64 +56,96 @@ open class KlangPluginExtension {
 }
 
 class KlangPlugin : Plugin<Project> {
+
+	private val Project.workingDirectory: File
+		get() = buildDir.resolve("klang").also { it.mkdirs() }
+
 	override fun apply(project: Project) {
 		val extension = project.extensions.create("klang", KlangPluginExtension::class.java)
-		val workingDirectory = project.buildDir.resolve("klang").also { it.mkdirs() }
-		val downloadFile = project.task("download-files") { task ->
+
+		val downloadFile = project.downloadTask(extension)
+		val unpackFile = project.unpackTask(downloadFile, extension)
+		val generateAst = project.generateAstTask(unpackFile, extension)
+		val generateBinding = project.task("generateBinding") { task ->
+			task.dependsOn(generateAst)
 			task.doFirst {
 				extension.tasks
 					.asSequence()
-					.filterIsInstance<KlangPluginTask.DownloadFile>()
-					.map { it.sourceUrl to workingDirectory.resolve(it.targetFile) }
-					.filter { (_, targetFile) -> !targetFile.exists() && targetFile.length() == 0L }
-					.forEach { (sourceUrl, targetFile) -> downloadFile(sourceUrl, targetFile) }
+					.filterIsInstance<KlangPluginTask.GenerateBinding>()
+					.forEach { task ->
+						val basePackage = task.basePackage
+						val outputDirectory = project.buildDir.resolve("generated/klang/")
+						outputDirectory.mkdirs()
+						extension.declarations
+							.generateKotlinFiles(
+								outputDirectory = outputDirectory,
+								basePackage = basePackage
+							)
+					}
 			}
 		}
 
-		val unpackFile = project.task("unpack-files") { task ->
-			task.dependsOn(downloadFile)
-			task.doFirst {
-				extension.tasks
-					.asSequence()
-					.filterIsInstance<KlangPluginTask.Unpack>()
-					.map {
-						workingDirectory.resolve(it.sourceFile) to workingDirectory.resolve(it.targetPath)
-							.also { directory -> directory.mkdirs() }
-					}
-					.forEach { (sourceFile, targetFile) -> unzip(sourceFile, targetFile) }
-			}
+		listOf(downloadFile, unpackFile, generateAst, generateBinding)
+			.forEach { it.group = taskGroup }
+	}
+
+	private fun Project.generateAstTask(
+		unpackFile: Task,
+		extension: KlangPluginExtension,
+	): Task = task("generateAst") { task ->
+		task.dependsOn(unpackFile)
+		task.doFirst {
+			extension.tasks
+				.asSequence()
+				.filterIsInstance<KlangPluginTask.Parse>()
+				.map { it.sourceFile to workingDirectory.resolve(it.sourcePath) }
+				.forEach { (fileToParse, sourcePath) ->
+					val localFileToParse = File(fileToParse)
+					assert(localFileToParse.exists()) { "File to parse does not exist" }
+					assert(localFileToParse.isFile()) { "${localFileToParse.absolutePath} is not a file" }
+					assert(localFileToParse.canRead()) { "${localFileToParse.absolutePath} is not readable" }
+					assert(localFileToParse.length() > 0) { "${localFileToParse.absolutePath} is empty" }
+					assert(dockerIsRunning()) { "Docker is not running" }
+
+					val jsonFile = workingDirectory.resolve("${fileToParse.hash}.json")
+					generateAstFromDocker(
+						sourcePath = sourcePath.absolutePath,
+						sourceFile = fileToParse,
+						clangJsonAstOutput = jsonFile
+					)
+
+					extension.declarations = parseAstJson(jsonFile.absolutePath)
+				}
 		}
+	}
 
-		project.task("generateBinding") { task ->
-			task.dependsOn(unpackFile)
-			task.doFirst {
+	private fun Project.unpackTask(
+		downloadFile: Task,
+		extension: KlangPluginExtension,
+	): Task = task("unpackFiles") { task ->
+		task.dependsOn(downloadFile)
+		task.doFirst {
+			extension.tasks
+				.asSequence()
+				.filterIsInstance<KlangPluginTask.Unpack>()
+				.map {
+					workingDirectory.resolve(it.sourceFile) to workingDirectory.resolve(it.targetPath)
+						.also { directory -> directory.mkdirs() }
+				}
+				.forEach { (sourceFile, targetFile) -> unzip(sourceFile, targetFile) }
+		}
+	}
 
-				extension.tasks
-					.asSequence()
-					.filterIsInstance<KlangPluginTask.Parse>()
-					.map { it.sourceFile to workingDirectory.resolve(it.sourcePath) }
-					.forEach { (fileToParse, sourcePath) ->
-						val localFileToParse = File(fileToParse)
-						assert(localFileToParse.exists()) { "File to parse does not exist" }
-						assert(localFileToParse.isFile()) { "${localFileToParse.absolutePath} is not a file" }
-						assert(localFileToParse.canRead()) { "${localFileToParse.absolutePath} is not readable" }
-						assert(localFileToParse.length() > 0) { "${localFileToParse.absolutePath} is empty" }
-						assert(dockerIsRunning()) { "Docker is not running" }
-
-						val jsonFile = workingDirectory.resolve("${fileToParse.hash}.json")
-						generateAstFromDocker(
-							sourcePath = sourcePath.absolutePath,
-							sourceFile = fileToParse,
-							clangJsonAstOutput = jsonFile
-						)
-
-						with(parseAstJson(jsonFile.absolutePath)) {
-							declarations.forEach { declaration ->
-								println(declaration)
-							}
-						}
-					}
-			}
+	private fun Project.downloadTask(
+		extension: KlangPluginExtension
+	): Task = task("downloadFiles") { task ->
+		task.doFirst {
+			extension.tasks
+				.asSequence()
+				.filterIsInstance<KlangPluginTask.DownloadFile>()
+				.map { it.sourceUrl to workingDirectory.resolve(it.targetFile) }
+				.filter { (_, targetFile) -> !targetFile.exists() && targetFile.length() == 0L }
+				.forEach { (sourceUrl, targetFile) -> downloadFile(sourceUrl, targetFile) }
 		}
 	}
 
@@ -126,6 +166,20 @@ class KlangPlugin : Plugin<Project> {
 			}
 		}
 	}
+}
+
+private fun DeclarationRepository.generateKotlinFiles(outputDirectory: File, basePackage: String) {
+
+	outputDirectory.deleteRecursively()
+	outputDirectory.mkdirs()
+
+	declarations
+		.filterIsInstance<NativeEnumeration>()
+		.forEach { it.generateKotlinFile(outputDirectory, basePackage) }
+
+	declarations.filterIsInstance<NativeFunction>()
+		// TODO: add mylib as plugin parameter
+		.generateKotlinFile(outputDirectory, basePackage, "mylib")
 }
 
 private val String.hash

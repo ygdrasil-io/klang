@@ -9,3 +9,4 @@ internal val jnaJvmField by lazy { ClassName("", "JvmField") }
 internal val jnaByReference by lazy { ClassName("com.sun.jna", "Structure.ByReference") }
 internal val jnaByValue by lazy { ClassName("com.sun.jna", "Structure.ByValue") }
 internal val nsobjectDefinition by lazy { ClassName("darwin", "NSObject") }
+internal val jnaNativeLoad by lazy { ClassName("klang.internal", "NativeLoad") }

@@ -4,9 +4,9 @@ import com.squareup.kotlinpoet.*
 import klang.domain.NativeFunction
 import klang.domain.TypeRef
 
-internal fun generateInterfaceLibrarySpec(name: String, libraryName: String) = CodeBlock
-	.builder()
-	.addStatement("val $name by lazy { darwin.internal.NativeLoad<$name>(\"$libraryName\") }")
+internal fun generateInterfaceLibrarySpec(name: String, libraryName: String) = PropertySpec
+	.builder(name, jnaNativeLoad)
+	.initializer("by lazy { darwin.internal.NativeLoad<$name>(\"$libraryName\") }")
 	.build()
 
 internal fun List<NativeFunction>.toInterfaceSpec(name: String) = ClassName("", name)

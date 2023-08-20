@@ -4,6 +4,7 @@ import klang.DeclarationRepository
 import klang.InMemoryDeclarationRepository
 import klang.domain.NativeEnumeration
 import klang.domain.NativeFunction
+import klang.domain.NativeStructure
 import klang.domain.NativeTypeAlias
 import klang.generator.generateKotlinFile
 import klang.parser.json.parseAstJson
@@ -189,6 +190,13 @@ private fun DeclarationRepository.generateKotlinFiles(outputDirectory: File, bas
 
 	declarations.asSequence()
 		.filterIsInstance<NativeTypeAlias>()
+		.filter { it.name.startsWith("__").not() }
+		.filter { findStructureByName(it.type.typeName) == null }
+		.toList()
+		.generateKotlinFile(outputDirectory, basePackage)
+
+	declarations.asSequence()
+		.filterIsInstance<NativeStructure>()
 		.filter { it.name.startsWith("__").not() }
 		.toList()
 		.generateKotlinFile(outputDirectory, basePackage)

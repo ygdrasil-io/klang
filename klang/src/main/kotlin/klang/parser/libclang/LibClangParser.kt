@@ -71,7 +71,7 @@ private fun ParsingContext.declareTypeAlias(info: DeclarationInfo) {
 
 private fun ParsingContext.updateStructureField(info: DeclarationInfo) {
 	val name = info.cursor.spelling
-	val value = info.cursor.type.spelling
+	val value = typeOf(info.cursor.type.spelling).getOrElse { error("fail to parse type $this") }
 	currentDefinition = getCurrentDefinitionAs<NativeStructure>().let {
 		declarationRepository.update(it) {
 			it.copy(fields = it.fields + (name to value))

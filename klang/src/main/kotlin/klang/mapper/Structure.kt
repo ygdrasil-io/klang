@@ -3,7 +3,7 @@ package klang.mapper
 import com.squareup.kotlinpoet.*
 import klang.domain.NativeStructure
 
-internal fun NativeStructure.toSpec() = ClassName("", name)
+internal fun NativeStructure.toSpec(packageName: String) = ClassName("", name)
 	.let { structureClass ->
 		TypeSpec.classBuilder(structureClass)
 			.addAnnotation(
@@ -25,7 +25,7 @@ internal fun NativeStructure.toSpec() = ClassName("", name)
 			.apply {
 				fields.forEach { (name, type) ->
 					addProperty(
-						PropertySpec.builder(name, ClassName("", type))
+						PropertySpec.builder(name, type.toType(packageName))
 							.addAnnotation(jnaJvmField)
 							.initializer("0")
 							.mutable(true)

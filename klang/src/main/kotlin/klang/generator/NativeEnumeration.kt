@@ -9,7 +9,7 @@ fun List<NativeEnumeration>.generateKotlinFile(outputDirectory: File, packageNam
 
 	assert(outputDirectory.isDirectory) { "Output directory must be a directory" }
 
-	FileSpec.builder(packageName, "Enumeration")
+	FileSpec.builder(packageName, "Enumerations")
 		.also { builder -> forEach { builder.addType(it.toSpec()) } }
 		.build()
 		.writeTo(outputDirectory)

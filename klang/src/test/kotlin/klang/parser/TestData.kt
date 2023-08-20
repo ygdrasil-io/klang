@@ -87,13 +87,13 @@ object TestData {
 	)
 
 	val structures = listOf(
-		"StructName" to listOf("field1" to "enum EnumName *", "field2" to "EnumName2", "field3" to "char"),
-		"StructName2" to listOf("field1" to "struct StructName", "field2" to "struct StructName *", "field3" to "char")
+		"StructName" to listOf("field1" to testType("enum EnumName *"), "field2" to testType("EnumName2"), "field3" to testType("char")),
+		"StructName2" to listOf("field1" to testType("struct StructName"), "field2" to testType("struct StructName *"), "field3" to testType("char"))
 	)
 
 	val typeDefStructures = listOf(
-		"StructName" to listOf("field1" to "enum EnumName *", "field2" to "EnumName2", "field3" to "char"),
-		"StructName2" to listOf("field1" to "StructName", "field2" to "StructName *", "field3" to "char")
+		"StructName" to listOf("field1" to testType("enum EnumName *"), "field2" to testType("EnumName2"), "field3" to testType("char")),
+		"StructName2" to listOf("field1" to "StructName", testType("field2") to testType("StructName *"), "field3" to testType("char"))
 	)
 
 	val typeDef = listOf(

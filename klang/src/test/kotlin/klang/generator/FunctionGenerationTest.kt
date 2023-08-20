@@ -25,7 +25,7 @@ class FunctionGenerationTest : FreeSpec({
 
 	"generate kotlin functions library" {
 		generateInterfaceLibrarySpec("Interface", "Library").toString() shouldBe """
-			|val Interface by lazy { darwin.`internal`.NativeLoad<Interface>("Library") }
+			|val Interface by lazy { klang.`internal`.NativeLoad<Interface>("Library") }
 			|
 		""".trimMargin()
 	}

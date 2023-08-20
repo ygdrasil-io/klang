@@ -5,12 +5,12 @@ import klang.domain.NativeEnumeration
 import klang.mapper.toSpec
 import java.io.File
 
-fun NativeEnumeration.generateKotlinFile(outputDirectory: File, packageName: String) {
+fun List<NativeEnumeration>.generateKotlinFile(outputDirectory: File, packageName: String) {
 
 	assert(outputDirectory.isDirectory) { "Output directory must be a directory" }
 
-	FileSpec.builder(packageName, "${name}NativeEnumeration")
-		.addType(this.toSpec())
+	FileSpec.builder(packageName, "Enumeration")
+		.also { builder -> forEach { builder.addType(it.toSpec()) } }
 		.build()
 		.writeTo(outputDirectory)
 }

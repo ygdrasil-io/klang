@@ -9,7 +9,7 @@ import klang.domain.NativeEnumeration
 // TODO: switch to internal
 public fun NativeEnumeration.toSpec() = ClassName("", name)
 	.let { enumerationClass ->
-		val valueType = ClassName("", "Long")
+		val valueType = ClassName("", "kotlin.Long")
 		val valueName = "nativeValue"
 		TypeSpec.enumBuilder(enumerationClass)
 			.primaryConstructor(

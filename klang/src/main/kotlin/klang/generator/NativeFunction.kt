@@ -10,7 +10,7 @@ fun List<NativeFunction>.generateKotlinFile(outputDirectory: File, packageName: 
 
 	assert(outputDirectory.isDirectory) { "Output directory must be a directory" }
 
-	FileSpec.builder(packageName, "${libraryName}FunctionLibrary")
+	FileSpec.builder(packageName, "Functions")
 		.addProperty(generateInterfaceLibrarySpec(libraryName, "${libraryName}FunctionLibrary"))
 		.addType(toInterfaceSpec(packageName, libraryName))
 		.build()

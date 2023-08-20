@@ -97,7 +97,13 @@ object TestData {
 	)
 
 	val typeDef = listOf(
-		"NewType" to "void *",
-		"NewStructureType" to "struct OldStructureType *"
+		NativeTypeAlias(
+			name = "NewType",
+			type = testType("void *")
+		),
+		NativeTypeAlias(
+			name = "NewStructureType",
+			type = testType("struct OldStructureType *")
+		)
 	)
 }

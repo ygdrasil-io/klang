@@ -4,6 +4,7 @@ import klang.DeclarationRepository
 import klang.InMemoryDeclarationRepository
 import klang.domain.NativeEnumeration
 import klang.domain.NativeFunction
+import klang.domain.NativeTypeAlias
 import klang.generator.generateKotlinFile
 import klang.parser.json.parseAstJson
 import klang.tools.dockerIsRunning
@@ -116,6 +117,7 @@ class KlangPlugin : Plugin<Project> {
 					)
 
 					extension.declarations = parseAstJson(jsonFile.absolutePath)
+						.also { it.resolveTypes() }
 				}
 		}
 	}
@@ -176,7 +178,7 @@ private fun DeclarationRepository.generateKotlinFiles(outputDirectory: File, bas
 
 	declarations
 		.filterIsInstance<NativeEnumeration>()
-		.forEach { it.generateKotlinFile(outputDirectory, basePackage) }
+		.generateKotlinFile(outputDirectory, basePackage)
 
 	declarations.asSequence()
 		.filterIsInstance<NativeFunction>()
@@ -184,6 +186,12 @@ private fun DeclarationRepository.generateKotlinFiles(outputDirectory: File, bas
 		.toList()
 		// TODO: add mylib as plugin parameter
 		.generateKotlinFile(outputDirectory, basePackage, "mylib")
+
+	declarations.asSequence()
+		.filterIsInstance<NativeTypeAlias>()
+		.filter { it.name.startsWith("__").not() }
+		.toList()
+		.generateKotlinFile(outputDirectory, basePackage)
 }
 
 // TODO find a better way to do that

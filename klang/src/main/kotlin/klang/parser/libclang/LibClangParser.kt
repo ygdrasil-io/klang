@@ -1,11 +1,9 @@
 package klang.parser.libclang
 
+import arrow.core.getOrElse
 import klang.DeclarationRepository
 import klang.InMemoryDeclarationRepository
-import klang.domain.NativeDeclaration
-import klang.domain.NativeEnumeration
-import klang.domain.NativeStructure
-import klang.domain.NativeTypeAlias
+import klang.domain.*
 import klang.jvm.AbstractIndexerCallback
 import klang.jvm.CursorKind
 import klang.jvm.DeclarationInfo
@@ -65,8 +63,10 @@ private fun isEnumOrStruct(info: DeclarationInfo) = info.cursor.children().isNot
 private fun ParsingContext.declareTypeAlias(info: DeclarationInfo) {
 	val name = info.cursor.spelling
 	val type = info.cursor.underlyingType.spelling
-	currentDefinition = NativeTypeAlias(name = name, type = type)
-		.also(declarationRepository::save)
+	currentDefinition = NativeTypeAlias(
+		name = name,
+		type = type.let(::typeOf).getOrElse { error("fail to parse type $this") }
+	).also(declarationRepository::save)
 }
 
 private fun ParsingContext.updateStructureField(info: DeclarationInfo) {

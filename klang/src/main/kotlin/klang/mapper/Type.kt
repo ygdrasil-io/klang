@@ -15,7 +15,7 @@ internal fun TypeRef.toType(packageName: String): ClassName = when {
 }
 
 // 8 bits
-private val byteType = listOf("char", "Uint8")
+private val byteType = listOf("char", "Uint8", "unsigned char")
 // 16 bits
 private val shortType = listOf("short", "__uint16_t", "unsigned short")
 // 32 bits

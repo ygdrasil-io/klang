@@ -31,12 +31,22 @@ fun typeOf(reference: String): Either<String, TypeRef> = either{
 		true
 	} ?: false
 
+	val isVolatile = tokens.takeIf { it.first() == "volatile" }?.let {
+		it.removeFirst()
+		true
+	} ?: false
+
+	val isUnion = tokens.takeIf { it.first() == "union" }?.let {
+		it.removeFirst()
+		true
+	} ?: false
+
 	ensure(tokens.isNotEmpty()) { "type name not found $reference" }
 	val typeName = tokens.takeIf { it.first() == "unsigned" }?.let {
 		it.removeFirst()
 		ensure(tokens.isNotEmpty()) { "type name not found $reference" }
 		"unsigned ${tokens.removeFirst()}"
-	} ?: tokens.removeFirst()
+	} ?:tokens.removeFirst()
 
 	val isPointer = tokens.takeIf { it.firstOrNull() == "*" }?.let {
 		it.removeFirst()
@@ -63,7 +73,9 @@ fun typeOf(reference: String): Either<String, TypeRef> = either{
 		isPointer,
 		isStructure,
 		isEnumeration,
-		isNullable
+		isNullable,
+		isVolatile,
+		isUnion
 	)
 }
 
@@ -76,6 +88,8 @@ sealed interface TypeRef{
 	val isStructure: Boolean
 	val isEnumeration: Boolean
 	val isNullable: Boolean?
+	val isVolatile: Boolean
+	val isUnion: Boolean
 
 	fun DeclarationRepository.resolveType(): TypeRef = findDeclarationByName<NameableDeclaration>(typeName)
 		?.let { ResolvedTypeRef(this@TypeRef, it) }
@@ -90,7 +104,9 @@ class UnresolvedTypeRef internal constructor(
 	override val isPointer: Boolean,
 	override val isStructure: Boolean,
 	override val isEnumeration: Boolean,
-	override val isNullable: Boolean?
+	override val isNullable: Boolean?,
+	override val isVolatile: Boolean,
+	override val isUnion: Boolean
 ) : TypeRef {
 
 	override fun toString() = "UnresolvedType($typeName from declaration $referenceAsString)"

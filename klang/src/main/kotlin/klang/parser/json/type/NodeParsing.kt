@@ -28,5 +28,5 @@ internal fun JsonObject.nullableReturnType() = this["returnType"]?.jsonObject?.d
 internal fun JsonObject.nullableType() = this["type"]?.jsonObject?.desugaredOrType()?.jsonPrimitive?.content
 internal fun JsonObject.nullableName() = this["name"]?.jsonPrimitive?.content
 
-
-internal fun JsonObject.desugaredOrType() = this["desugaredQualType"] ?: this["qualType"]
+//TODO delete commented code and inline function if that really not needed
+internal fun JsonObject.desugaredOrType() = /*this["desugaredQualType"] ?: */this["qualType"]

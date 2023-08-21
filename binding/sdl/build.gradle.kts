@@ -49,5 +49,5 @@ klang {
 		.let { unpack(it) }
 		.let { parse(fileToParse = "SDL2/SDL.h", at = it) }
 
-	generateBinding("libsdl")
+	generateBinding("libsdl", "SDL2")
 }

@@ -34,7 +34,7 @@ internal sealed class KlangPluginTask {
 	class Parse(val sourceFile: String, val sourcePath: String) : KlangPluginTask()
 
 	// TODO use a value object instead of a string
-	class GenerateBinding(val basePackage: String) : KlangPluginTask()
+	class GenerateBinding(val basePackage: String, val libraryName: String) : KlangPluginTask()
 }
 
 open class KlangPluginExtension {
@@ -53,8 +53,8 @@ open class KlangPluginExtension {
 		.hash
 		.also { hash -> tasks.add(KlangPluginTask.DownloadFile(urlToDownload, hash)) }
 
-	fun generateBinding(basePackage: String) {
-		tasks.add(KlangPluginTask.GenerateBinding(basePackage))
+	fun generateBinding(basePackage: String, libraryName: String) {
+		tasks.add(KlangPluginTask.GenerateBinding(basePackage, libraryName))
 	}
 }
 
@@ -82,7 +82,8 @@ class KlangPlugin : Plugin<Project> {
 						extension.declarations
 							.generateKotlinFiles(
 								outputDirectory = outputDirectory,
-								basePackage = basePackage
+								basePackage = basePackage,
+								libraryName = task.libraryName
 							)
 					}
 			}
@@ -172,7 +173,7 @@ class KlangPlugin : Plugin<Project> {
 	}
 }
 
-private fun DeclarationRepository.generateKotlinFiles(outputDirectory: File, basePackage: String) {
+private fun DeclarationRepository.generateKotlinFiles(outputDirectory: File, basePackage: String, libraryName: String) {
 
 	outputDirectory.deleteRecursively()
 	outputDirectory.mkdirs()
@@ -186,11 +187,12 @@ private fun DeclarationRepository.generateKotlinFiles(outputDirectory: File, bas
 		.removeCNativeFunctions()
 		.toList()
 		// TODO: add mylib as plugin parameter
-		.generateKotlinFile(outputDirectory, basePackage, "mylib")
+		.generateKotlinFile(outputDirectory, basePackage, libraryName)
 
 	declarations.asSequence()
 		.filterIsInstance<NativeTypeAlias>()
 		.filter { it.name.startsWith("__").not() }
+		.filter { it.type.typeName.startsWith("__").not() }
 		.filter { findStructureByName(it.type.typeName) == null }
 		.toList()
 		.generateKotlinFile(outputDirectory, basePackage)

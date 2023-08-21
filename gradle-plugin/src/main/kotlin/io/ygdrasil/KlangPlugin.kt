@@ -200,6 +200,7 @@ private fun DeclarationRepository.generateKotlinFiles(outputDirectory: File, bas
 	declarations.asSequence()
 		.filterIsInstance<NativeStructure>()
 		.filter { it.name.startsWith("__").not() }
+		.filter { it.fields.none { (name, _) -> name.startsWith("__") } }
 		.toList()
 		.generateKotlinFile(outputDirectory, basePackage)
 }

@@ -10,9 +10,11 @@ fun List<NativeFunction>.generateKotlinFile(outputDirectory: File, packageName: 
 
 	assert(outputDirectory.isDirectory) { "Output directory must be a directory" }
 
+	val libraryInterfaceName = "${libraryName}Library"
+
 	FileSpec.builder(packageName, "Functions")
-		.addProperty(generateInterfaceLibrarySpec(libraryName, "${libraryName}FunctionLibrary"))
-		.addType(toInterfaceSpec(packageName, libraryName))
+		.addProperty(generateInterfaceLibrarySpec(packageName, libraryInterfaceName, libraryName))
+		.addType(toInterfaceSpec(packageName, libraryInterfaceName))
 		.build()
 		.writeTo(outputDirectory)
 }

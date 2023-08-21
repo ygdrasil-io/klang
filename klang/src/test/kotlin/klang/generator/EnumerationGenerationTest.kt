@@ -18,20 +18,22 @@ class EnumerationGenerationTest : FreeSpec({
 
 	"generate kotlin enumeration" {
 		enumeration.toSpec().toString() shouldBe """
-public enum class MyEnum(
-  public val nativeValue: kotlin.Long,
-) {
-  FIRST(1),
-  SECOND(2),
-  THIRD(3),
-  ;
-
-  public companion object {
-    public fun of(nativeValue: kotlin.Long): MyEnum? = entries.find { it.nativeValue == nativeValue }
-  }
-}
-
-		""".trimIndent()
+			|public enum class MyEnum(
+			|  public val nativeValue: kotlin.Long,
+			|) {
+			|  FIRST(1),
+			|  SECOND(2),
+			|  THIRD(3),
+			|  ;
+			|
+			|  public companion object {
+			|    public fun of(nativeValue: kotlin.Long): MyEnum? = entries.find {
+			|      it.nativeValue == nativeValue 
+			|    }
+			|  }
+			|}
+			|
+		""".trimMargin()
 	}
 })
 

@@ -5,9 +5,9 @@ import klang.domain.NativeFunction
 import klang.domain.ResolvedTypeRef
 import klang.domain.TypeRef
 
-internal fun generateInterfaceLibrarySpec(name: String, libraryName: String) = PropertySpec
-	.builder(name, jnaNativeLoad)
-	.initializer("by lazy { klang.internal.NativeLoad<$name>(\"$libraryName\") }")
+internal fun generateInterfaceLibrarySpec(packageName: String, name: String, libraryName: String) = PropertySpec
+	.builder("lib$name", ClassName(packageName, name))
+	.delegate("lazy { klang.internal.NativeLoad<$name>(\"$libraryName\") }")
 	.build()
 
 internal fun List<NativeFunction>.toInterfaceSpec(packageName: String, name: String) = ClassName("", name)

@@ -7,6 +7,7 @@ import io.kotest.core.spec.style.scopes.FreeSpecContainerScope
 import io.kotest.core.spec.style.scopes.FreeSpecTerminalScope
 import io.kotest.matchers.shouldBe
 import klang.DeclarationRepository
+import klang.domain.TypeRef
 import klang.parser.json.ParserRepository
 
 @Ignored
@@ -33,7 +34,7 @@ open class ParserTestCommon(body: FreeSpec.() -> Unit = {}) : FreeSpec({
 	}
 }
 
-suspend fun FreeSpecContainerScope.validateStructures(repository: DeclarationRepository, structures: List<Pair<String, List<Pair<String, String>>>>) {
+suspend fun FreeSpecContainerScope.validateStructures(repository: DeclarationRepository, structures: List<Pair<String, List<Pair<String, TypeRef>>>>) {
 	structures.forEach { (name, fields) ->
 		"test $name" {
 			repository.findStructureByName(name)

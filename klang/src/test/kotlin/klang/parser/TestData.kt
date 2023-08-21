@@ -69,7 +69,7 @@ object TestData {
 			methods = listOf(
 				ObjectiveCClass.Method("testMethod", testType("void"), true),
 				ObjectiveCClass.Method(
-					"testMethod:withParameter:", testType("signed char"), false, listOf(
+					"testMethod:withParameter:", testType("BOOL"), false, listOf(
 						ObjectiveCClass.Method.Argument("parameter", testType("NSString *")),
 						ObjectiveCClass.Method.Argument("testParameter", testType("NSString *")),
 					)

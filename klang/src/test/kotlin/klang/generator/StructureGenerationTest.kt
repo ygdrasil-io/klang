@@ -29,7 +29,7 @@ public open class MyStructure(
    * mapped from long
    */
   @kotlin.jvm.JvmField
-  public var first: com.sun.jna.NativeLong = 0
+  public var first: com.sun.jna.NativeLong = com.sun.jna.NativeLong(0)
 
   /**
    * mapped from int

@@ -9,7 +9,21 @@ enum class TranslationUnitKind {
 	VarDecl, AsmLabelAttr, AvailabilityAttr, EnumType, VerbatimBlockComment,
 	VerbatimBlockLineComment, DeprecatedAttr, BinaryOperator, DeclRefExpr,
 	UnaryOperator, ParenType, FunctionProtoType, BlockPointerType,
-	VerbatimLineComment, ParenExpr,
+	VerbatimLineComment, ParenExpr, ImportDecl, VectorType, NoDebugAttr, TargetAttr,
+	MinVectorWidthAttr,
+	CompoundLiteralExpr,
+	ShuffleVectorExpr,
+	MayAliasAttr,
+	ConvertVectorExpr,
+	StaticAssertDecl,
+	StringLiteral,
+	RecoveryExpr,
+	DoStmt,
+	AttributedStmt,
+	FallThroughAttr,
+	NullStmt,
+	AnalyzerNoReturnAttr,
+	ModeAttr,
 
 	// Found in metal, likely common
 	CompoundStmt, ReturnStmt, CStyleCastExpr, ImplicitCastExpr, CallExpr, BuiltinAttr,
@@ -42,7 +56,9 @@ enum class TranslationUnitKind {
 	ObjCBoxableAttr, ObjCProtocolDecl, ObjCMethodDecl, ObjCPropertyDecl, ObjCRootClassAttr,
 	ObjCIvarDecl, ObjCDesignatedInitializerAttr, ObjCInterfaceType, ObjCIndependentClassAttr,
 	ObjCCategoryDecl, ObjCMessageExpr, ObjCTypeParamDecl, ObjCReturnsInnerPointerAttr,
-	ObjCBoolLiteralExpr, ObjCExceptionAttr,
+	ObjCBoolLiteralExpr, ObjCExceptionAttr, ObjCExplicitProtocolImplAttr, ObjCBridgeRelatedAttr,
+	IBActionAttr, IBOutletAttr, IBOutletCollectionAttr, ObjCSubscriptRefExpr, ObjCPropertyImplDecl,
+	ObjCRequiresSuperAttr, ObjCRequiresPropertyDefsAttr,
 	;
 
     companion object {

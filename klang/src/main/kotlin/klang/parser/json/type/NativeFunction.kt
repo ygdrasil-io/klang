@@ -1,6 +1,7 @@
 package klang.parser.json.type
 
 import klang.domain.NativeFunction
+import klang.domain.typeOf
 import klang.parser.json.domain.TranslationUnitKind
 import klang.parser.json.domain.TranslationUnitNode
 import klang.parser.json.domain.json
@@ -10,7 +11,7 @@ import kotlinx.serialization.json.jsonPrimitive
 
 internal fun TranslationUnitNode.toNativeFunction() = NativeFunction(
 	name = json.functionName(),
-	returnType = json.returnType(),
+	returnType = typeOf(json.type().adapt()).getOrNull() ?: error("fail to create type ${json.type()}"),
 	arguments = arguments()
 )
 
@@ -19,18 +20,14 @@ private fun TranslationUnitNode.arguments() =
 			.map { it.extractArguments() }
 
 private fun TranslationUnitNode.extractArguments(): NativeFunction.Argument {
-	val name = json["name"]?.jsonPrimitive?.content
-	val type = json["type"]?.jsonObject?.get("qualType")?.jsonPrimitive?.content
+	val name = json.nullableName()
+	val type = json.nullableType()
 		?: error("no type for : $this")
-	return NativeFunction.Argument(name,  type)
+	return NativeFunction.Argument(name, typeOf(type).getOrNull() ?: error("fail to create type $type"))
 }
 
-private fun JsonObject.returnType() = this["type"]
-	?.jsonObject?.get("qualType")?.jsonPrimitive?.content
-	?.let { it.substring(0, it.indexOf("(")) }
-	?.trim()
-	?: error("no return type: $this")
-
+private fun String.adapt() = let { it.substring(0, it.indexOf("(")) }
+	.trim()
 
 private fun JsonObject.nullableFunctionName() = this["name"]?.jsonPrimitive?.content
 

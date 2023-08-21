@@ -1,5 +1,6 @@
 package klang.parser.json.domain
 
+import arrow.core.raise.either
 import kotlinx.serialization.json.*
 import mu.KotlinLogging
 
@@ -17,23 +18,24 @@ val TranslationUnitNode.json: JsonObject
 
 private val logger = KotlinLogging.logger {}
 
+
+
 internal fun JsonObject.toNode(): TranslationUnitNode = Node(
 	kind() to this,
 	this["inner"]
 		?.jsonArray
-		?.mapNotNull { (it as? JsonObject) ?: it.knowNode() }
+		?.mapNotNull { (it as? JsonObject) ?: it.unknownNode() }
 		?.map { it.toNode() }
 		?: emptyList()
 )
 
-
-private fun JsonObject.kind() = (this["kind"]
+internal fun JsonObject.kind() = (this["kind"]
 	?.let(JsonElement::jsonPrimitive)
 	?.let(JsonPrimitive::content)
 	?.let { TranslationUnitKind.of(it) }
 	?: error("no kind: $this"))
 
-private fun JsonElement.knowNode(): JsonObject? {
+private fun JsonElement.unknownNode(): JsonObject? {
 	logger.error { "unknown node: $this" }
 	return null
 }

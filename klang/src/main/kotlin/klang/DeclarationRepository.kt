@@ -1,56 +1,33 @@
 package klang
 
 import klang.domain.*
-import mu.KotlinLogging
 
-object DeclarationRepository {
+interface DeclarationRepository {
 
-	private val logger = KotlinLogging.logger {}
-	private val nativeDeclarations = mutableSetOf<NativeDeclaration>()
+	val declarations: Set<NativeDeclaration>
 
-	fun save(nativeEnumeration: NativeDeclaration) {
-		when (nativeEnumeration) {
-			is NativeEnumeration -> logger.debug { "enum added: $nativeEnumeration" }
-			is NativeStructure -> logger.debug { "structure added: $nativeEnumeration" }
-			is NativeFunction -> logger.debug { "function added: $nativeEnumeration" }
-			is NativeTypeAlias -> logger.debug { "type alias added: $nativeEnumeration" }
-			else -> throw IllegalArgumentException("Unknown native declaration type: $nativeEnumeration")
-		}
-		nativeDeclarations.add(nativeEnumeration)
-	}
+	fun save(declaration: NameableDeclaration)
+	fun clear()
+	fun update(nativeEnumeration: NativeDeclaration, provider: () -> NativeDeclaration): NativeDeclaration
+	fun resolveTypes()
 
-	fun clear() {
-		nativeDeclarations.clear()
-	}
+	fun findEnumerationByName(name: String) = findDeclarationByName<NativeEnumeration>(name)
 
-	fun findEnumerationByName(name: String) = nativeDeclarations
-			.filterIsInstance<NativeEnumeration>()
-			.find { it.name == name }
+	fun findStructureByName(name: String) = findDeclarationByName<NativeStructure>(name)
 
-	fun findStructureByName(name: String) = nativeDeclarations
-			.filterIsInstance<NativeStructure>()
-			.find { it.name == name }
+	fun findFunctionByName(name: String) = findDeclarationByName<NativeFunction>(name)
 
-	fun findFunctionByName(name: String) = nativeDeclarations
-			.filterIsInstance<NativeFunction>()
-			.find { it.name == name }
+	fun findTypeAliasByName(name: String) = findDeclarationByName<NativeTypeAlias>(name)
 
-	fun findTypeAliasByName(name: String)= nativeDeclarations
-			.filterIsInstance<NativeTypeAlias>()
-			.find { it.name == name }
+	fun findObjectiveCClassByName(name: String) = findDeclarationByName<ObjectiveCClass>(name)
 
-	fun update(nativeEnumeration: NativeDeclaration, provider: () -> NativeDeclaration): NativeDeclaration {
-		val newValue = provider()
-		when (nativeEnumeration) {
-			is NativeEnumeration -> logger.debug { "enum updated: $nativeEnumeration to $newValue" }
-			is NativeStructure -> logger.debug { "structure updated: $nativeEnumeration to $newValue" }
-			is NativeFunction -> logger.debug { "function updated: $nativeEnumeration to $newValue" }
-			is NativeTypeAlias -> logger.debug { "type alias updated: $nativeEnumeration to $newValue" }
-			else -> throw IllegalArgumentException("Unknown native declaration type: $nativeEnumeration")
-		}
-		nativeDeclarations.remove(nativeEnumeration)
-		nativeDeclarations.add(newValue)
-		return newValue
-	}
+	fun findObjectiveCProtocolByName(name: String) = findDeclarationByName<ObjectiveCProtocol>(name)
+
+	fun findObjectiveCCategoryByName(name: String) = findDeclarationByName<ObjectiveCCategory>(name)
 
 }
+
+inline fun <reified T : NameableDeclaration> DeclarationRepository.findDeclarationByName(declarationName: String) = declarations
+	.asSequence()
+	.filterIsInstance<T>()
+	.firstOrNull { it.name == declarationName }

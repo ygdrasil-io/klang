@@ -1,13 +1,26 @@
 package klang.domain
 
+import klang.DeclarationRepository
+
 data class NativeFunction(
-	val name: String,
-	val returnType: String,
+	override val name: String,
+	var returnType: TypeRef,
 	val arguments: List<Argument>
-): NativeDeclaration {
+): NameableDeclaration, NativeDeclaration, ResolvableDeclaration {
 
 	data class Argument(
 		val name: String?,
-		val type: String
-	)
+		var type: TypeRef
+	) : ResolvableDeclaration {
+
+		override fun DeclarationRepository.resolve() {
+			type = with(type) { resolveType() }
+		}
+	}
+
+	override fun DeclarationRepository.resolve() {
+		returnType = with(returnType) { resolveType() }
+		arguments.forEach { with(it) { resolve() } }
+	}
+
 }

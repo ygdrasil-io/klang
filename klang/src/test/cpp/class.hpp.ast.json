@@ -1,0 +1,879 @@
+{
+  "id": "0x5645bb461078",
+  "kind": "TranslationUnitDecl",
+  "loc": {},
+  "range": {
+    "begin": {},
+    "end": {}
+  },
+  "inner": [
+    {
+      "id": "0x5645bb4618e0",
+      "kind": "TypedefDecl",
+      "loc": {},
+      "range": {
+        "begin": {},
+        "end": {}
+      },
+      "isImplicit": true,
+      "name": "__int128_t",
+      "type": {
+        "qualType": "__int128"
+      },
+      "inner": [
+        {
+          "id": "0x5645bb461640",
+          "kind": "BuiltinType",
+          "type": {
+            "qualType": "__int128"
+          }
+        }
+      ]
+    },
+    {
+      "id": "0x5645bb461950",
+      "kind": "TypedefDecl",
+      "loc": {},
+      "range": {
+        "begin": {},
+        "end": {}
+      },
+      "isImplicit": true,
+      "name": "__uint128_t",
+      "type": {
+        "qualType": "unsigned __int128"
+      },
+      "inner": [
+        {
+          "id": "0x5645bb461660",
+          "kind": "BuiltinType",
+          "type": {
+            "qualType": "unsigned __int128"
+          }
+        }
+      ]
+    },
+    {
+      "id": "0x5645bb461cc8",
+      "kind": "TypedefDecl",
+      "loc": {},
+      "range": {
+        "begin": {},
+        "end": {}
+      },
+      "isImplicit": true,
+      "name": "__NSConstantString",
+      "type": {
+        "qualType": "__NSConstantString_tag"
+      },
+      "inner": [
+        {
+          "id": "0x5645bb461a40",
+          "kind": "RecordType",
+          "type": {
+            "qualType": "__NSConstantString_tag"
+          },
+          "decl": {
+            "id": "0x5645bb4619a8",
+            "kind": "CXXRecordDecl",
+            "name": "__NSConstantString_tag"
+          }
+        }
+      ]
+    },
+    {
+      "id": "0x5645bb461d60",
+      "kind": "TypedefDecl",
+      "loc": {},
+      "range": {
+        "begin": {},
+        "end": {}
+      },
+      "isImplicit": true,
+      "name": "__builtin_ms_va_list",
+      "type": {
+        "qualType": "char *"
+      },
+      "inner": [
+        {
+          "id": "0x5645bb461d20",
+          "kind": "PointerType",
+          "type": {
+            "qualType": "char *"
+          },
+          "inner": [
+            {
+              "id": "0x5645bb461120",
+              "kind": "BuiltinType",
+              "type": {
+                "qualType": "char"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "0x5645bb4a8298",
+      "kind": "TypedefDecl",
+      "loc": {},
+      "range": {
+        "begin": {},
+        "end": {}
+      },
+      "isImplicit": true,
+      "name": "__builtin_va_list",
+      "type": {
+        "qualType": "__va_list_tag[1]"
+      },
+      "inner": [
+        {
+          "id": "0x5645bb4a8240",
+          "kind": "ConstantArrayType",
+          "type": {
+            "qualType": "__va_list_tag[1]"
+          },
+          "size": 1,
+          "inner": [
+            {
+              "id": "0x5645bb461e50",
+              "kind": "RecordType",
+              "type": {
+                "qualType": "__va_list_tag"
+              },
+              "decl": {
+                "id": "0x5645bb461db8",
+                "kind": "CXXRecordDecl",
+                "name": "__va_list_tag"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "0x5645bb4a8440",
+      "kind": "ClassTemplateDecl",
+      "loc": {
+        "offset": 29,
+        "file": "/workspace/class.hpp",
+        "line": 3,
+        "col": 7,
+        "tokLen": 7
+      },
+      "range": {
+        "begin": {
+          "offset": 1,
+          "line": 2,
+          "col": 1,
+          "tokLen": 8
+        },
+        "end": {
+          "offset": 506,
+          "line": 23,
+          "col": 1,
+          "tokLen": 1
+        }
+      },
+      "name": "Complex",
+      "inner": [
+        {
+          "id": "0x5645bb4a82f0",
+          "kind": "TemplateTypeParmDecl",
+          "loc": {
+            "offset": 20,
+            "line": 2,
+            "col": 20,
+            "tokLen": 1
+          },
+          "range": {
+            "begin": {
+              "offset": 11,
+              "col": 11,
+              "tokLen": 8
+            },
+            "end": {
+              "offset": 20,
+              "col": 20,
+              "tokLen": 1
+            }
+          },
+          "isReferenced": true,
+          "name": "T",
+          "tagUsed": "typename",
+          "depth": 0,
+          "index": 0
+        },
+        {
+          "id": "0x5645bb4a83b0",
+          "kind": "CXXRecordDecl",
+          "loc": {
+            "offset": 29,
+            "line": 3,
+            "col": 7,
+            "tokLen": 7
+          },
+          "range": {
+            "begin": {
+              "offset": 23,
+              "col": 1,
+              "tokLen": 5
+            },
+            "end": {
+              "offset": 506,
+              "line": 23,
+              "col": 1,
+              "tokLen": 1
+            }
+          },
+          "name": "Complex",
+          "tagUsed": "class",
+          "completeDefinition": true,
+          "definitionData": {
+            "canConstDefaultInit": true,
+            "copyAssign": {
+              "hasConstParam": true,
+              "implicitHasConstParam": true,
+              "needsImplicit": true,
+              "simple": true,
+              "trivial": true
+            },
+            "copyCtor": {
+              "hasConstParam": true,
+              "implicitHasConstParam": true,
+              "needsImplicit": true,
+              "simple": true,
+              "trivial": true
+            },
+            "defaultCtor": {
+              "exists": true,
+              "nonTrivial": true,
+              "userProvided": true
+            },
+            "dtor": {
+              "irrelevant": true,
+              "needsImplicit": true,
+              "simple": true,
+              "trivial": true
+            },
+            "hasUserDeclaredConstructor": true,
+            "isStandardLayout": true,
+            "isTriviallyCopyable": true,
+            "moveAssign": {
+              "exists": true,
+              "needsImplicit": true,
+              "simple": true,
+              "trivial": true
+            },
+            "moveCtor": {
+              "exists": true,
+              "needsImplicit": true,
+              "simple": true,
+              "trivial": true
+            }
+          },
+          "inner": [
+            {
+              "id": "0x5645bb4a8690",
+              "kind": "CXXRecordDecl",
+              "loc": {
+                "offset": 29,
+                "line": 3,
+                "col": 7,
+                "tokLen": 7
+              },
+              "range": {
+                "begin": {
+                  "offset": 23,
+                  "col": 1,
+                  "tokLen": 5
+                },
+                "end": {
+                  "offset": 29,
+                  "col": 7,
+                  "tokLen": 7
+                }
+              },
+              "isImplicit": true,
+              "isReferenced": true,
+              "name": "Complex",
+              "tagUsed": "class"
+            },
+            {
+              "id": "0x5645bb4a8720",
+              "kind": "AccessSpecDecl",
+              "loc": {
+                "offset": 39,
+                "line": 4,
+                "col": 1,
+                "tokLen": 7
+              },
+              "range": {
+                "begin": {
+                  "offset": 39,
+                  "col": 1,
+                  "tokLen": 7
+                },
+                "end": {
+                  "offset": 46,
+                  "col": 8,
+                  "tokLen": 1
+                }
+              },
+              "access": "private"
+            },
+            {
+              "id": "0x5645bb4a8758",
+              "kind": "FieldDecl",
+              "loc": {
+                "offset": 54,
+                "line": 5,
+                "col": 7,
+                "tokLen": 4
+              },
+              "range": {
+                "begin": {
+                  "offset": 52,
+                  "col": 5,
+                  "tokLen": 1
+                },
+                "end": {
+                  "offset": 54,
+                  "col": 7,
+                  "tokLen": 4
+                }
+              },
+              "name": "real",
+              "type": {
+                "qualType": "T"
+              }
+            },
+            {
+              "id": "0x5645bb4a87b8",
+              "kind": "FieldDecl",
+              "loc": {
+                "offset": 66,
+                "line": 6,
+                "col": 7,
+                "tokLen": 4
+              },
+              "range": {
+                "begin": {
+                  "offset": 64,
+                  "col": 5,
+                  "tokLen": 1
+                },
+                "end": {
+                  "offset": 66,
+                  "col": 7,
+                  "tokLen": 4
+                }
+              },
+              "name": "imag",
+              "type": {
+                "qualType": "T"
+              }
+            },
+            {
+              "id": "0x5645bb4a8808",
+              "kind": "AccessSpecDecl",
+              "loc": {
+                "offset": 73,
+                "line": 8,
+                "col": 1,
+                "tokLen": 6
+              },
+              "range": {
+                "begin": {
+                  "offset": 73,
+                  "col": 1,
+                  "tokLen": 6
+                },
+                "end": {
+                  "offset": 79,
+                  "col": 7,
+                  "tokLen": 1
+                }
+              },
+              "access": "public"
+            },
+            {
+              "id": "0x5645bb4a88b8",
+              "kind": "CXXConstructorDecl",
+              "loc": {
+                "offset": 85,
+                "line": 9,
+                "col": 5,
+                "tokLen": 7
+              },
+              "range": {
+                "begin": {
+                  "offset": 85,
+                  "col": 5,
+                  "tokLen": 7
+                },
+                "end": {
+                  "offset": 93,
+                  "col": 13,
+                  "tokLen": 1
+                }
+              },
+              "name": "Complex<T>",
+              "type": {
+                "qualType": "void ()"
+              }
+            },
+            {
+              "id": "0x5645bb4a8b08",
+              "kind": "CXXConstructorDecl",
+              "loc": {
+                "offset": 100,
+                "line": 10,
+                "col": 5,
+                "tokLen": 7
+              },
+              "range": {
+                "begin": {
+                  "offset": 100,
+                  "col": 5,
+                  "tokLen": 7
+                },
+                "end": {
+                  "offset": 116,
+                  "col": 21,
+                  "tokLen": 1
+                }
+              },
+              "name": "Complex<T>",
+              "type": {
+                "qualType": "void (T, T)"
+              },
+              "inner": [
+                {
+                  "id": "0x5645bb4a8978",
+                  "kind": "ParmVarDecl",
+                  "loc": {
+                    "offset": 110,
+                    "col": 15,
+                    "tokLen": 1
+                  },
+                  "range": {
+                    "begin": {
+                      "offset": 108,
+                      "col": 13,
+                      "tokLen": 1
+                    },
+                    "end": {
+                      "offset": 110,
+                      "col": 15,
+                      "tokLen": 1
+                    }
+                  },
+                  "name": "r",
+                  "type": {
+                    "qualType": "T"
+                  }
+                },
+                {
+                  "id": "0x5645bb4a89f0",
+                  "kind": "ParmVarDecl",
+                  "loc": {
+                    "offset": 115,
+                    "col": 20,
+                    "tokLen": 1
+                  },
+                  "range": {
+                    "begin": {
+                      "offset": 113,
+                      "col": 18,
+                      "tokLen": 1
+                    },
+                    "end": {
+                      "offset": 115,
+                      "col": 20,
+                      "tokLen": 1
+                    }
+                  },
+                  "name": "i",
+                  "type": {
+                    "qualType": "T"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "0x5645bb4a8c88",
+              "kind": "CXXMethodDecl",
+              "loc": {
+                "offset": 126,
+                "line": 12,
+                "col": 7,
+                "tokLen": 7
+              },
+              "range": {
+                "begin": {
+                  "offset": 124,
+                  "col": 5,
+                  "tokLen": 1
+                },
+                "end": {
+                  "offset": 136,
+                  "col": 17,
+                  "tokLen": 5
+                }
+              },
+              "name": "getReal",
+              "type": {
+                "qualType": "T () const"
+              }
+            },
+            {
+              "id": "0x5645bb4a8d50",
+              "kind": "CXXMethodDecl",
+              "loc": {
+                "offset": 149,
+                "line": 13,
+                "col": 7,
+                "tokLen": 12
+              },
+              "range": {
+                "begin": {
+                  "offset": 147,
+                  "col": 5,
+                  "tokLen": 1
+                },
+                "end": {
+                  "offset": 164,
+                  "col": 22,
+                  "tokLen": 5
+                }
+              },
+              "name": "getImaginary",
+              "type": {
+                "qualType": "T () const"
+              }
+            },
+            {
+              "id": "0x5645bb4a90c8",
+              "kind": "CXXMethodDecl",
+              "loc": {
+                "offset": 187,
+                "line": 15,
+                "col": 16,
+                "tokLen": 8
+              },
+              "range": {
+                "begin": {
+                  "offset": 176,
+                  "col": 5,
+                  "tokLen": 7
+                },
+                "end": {
+                  "offset": 222,
+                  "col": 51,
+                  "tokLen": 5
+                }
+              },
+              "name": "operator+",
+              "type": {
+                "qualType": "Complex<T> (const Complex<T> &) const"
+              },
+              "inner": [
+                {
+                  "id": "0x5645bb4a8fc0",
+                  "kind": "ParmVarDecl",
+                  "loc": {
+                    "offset": 215,
+                    "col": 44,
+                    "tokLen": 5
+                  },
+                  "range": {
+                    "begin": {
+                      "offset": 197,
+                      "col": 26,
+                      "tokLen": 5
+                    },
+                    "end": {
+                      "offset": 215,
+                      "col": 44,
+                      "tokLen": 5
+                    }
+                  },
+                  "name": "other",
+                  "type": {
+                    "qualType": "const Complex<T> &"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "0x5645bb4c6f98",
+              "kind": "CXXMethodDecl",
+              "loc": {
+                "offset": 244,
+                "line": 16,
+                "col": 16,
+                "tokLen": 8
+              },
+              "range": {
+                "begin": {
+                  "offset": 233,
+                  "col": 5,
+                  "tokLen": 7
+                },
+                "end": {
+                  "offset": 279,
+                  "col": 51,
+                  "tokLen": 5
+                }
+              },
+              "name": "operator-",
+              "type": {
+                "qualType": "Complex<T> (const Complex<T> &) const"
+              },
+              "inner": [
+                {
+                  "id": "0x5645bb4c6ec0",
+                  "kind": "ParmVarDecl",
+                  "loc": {
+                    "offset": 272,
+                    "col": 44,
+                    "tokLen": 5
+                  },
+                  "range": {
+                    "begin": {
+                      "offset": 254,
+                      "col": 26,
+                      "tokLen": 5
+                    },
+                    "end": {
+                      "offset": 272,
+                      "col": 44,
+                      "tokLen": 5
+                    }
+                  },
+                  "name": "other",
+                  "type": {
+                    "qualType": "const Complex<T> &"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "0x5645bb4c72b8",
+              "kind": "CXXMethodDecl",
+              "loc": {
+                "offset": 301,
+                "line": 17,
+                "col": 16,
+                "tokLen": 8
+              },
+              "range": {
+                "begin": {
+                  "offset": 290,
+                  "col": 5,
+                  "tokLen": 7
+                },
+                "end": {
+                  "offset": 336,
+                  "col": 51,
+                  "tokLen": 5
+                }
+              },
+              "name": "operator*",
+              "type": {
+                "qualType": "Complex<T> (const Complex<T> &) const"
+              },
+              "inner": [
+                {
+                  "id": "0x5645bb4c71e0",
+                  "kind": "ParmVarDecl",
+                  "loc": {
+                    "offset": 329,
+                    "col": 44,
+                    "tokLen": 5
+                  },
+                  "range": {
+                    "begin": {
+                      "offset": 311,
+                      "col": 26,
+                      "tokLen": 5
+                    },
+                    "end": {
+                      "offset": 329,
+                      "col": 44,
+                      "tokLen": 5
+                    }
+                  },
+                  "name": "other",
+                  "type": {
+                    "qualType": "const Complex<T> &"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "0x5645bb4c75d8",
+              "kind": "CXXMethodDecl",
+              "loc": {
+                "offset": 358,
+                "line": 18,
+                "col": 16,
+                "tokLen": 8
+              },
+              "range": {
+                "begin": {
+                  "offset": 347,
+                  "col": 5,
+                  "tokLen": 7
+                },
+                "end": {
+                  "offset": 393,
+                  "col": 51,
+                  "tokLen": 5
+                }
+              },
+              "name": "operator/",
+              "type": {
+                "qualType": "Complex<T> (const Complex<T> &) const"
+              },
+              "inner": [
+                {
+                  "id": "0x5645bb4c7500",
+                  "kind": "ParmVarDecl",
+                  "loc": {
+                    "offset": 386,
+                    "col": 44,
+                    "tokLen": 5
+                  },
+                  "range": {
+                    "begin": {
+                      "offset": 368,
+                      "col": 26,
+                      "tokLen": 5
+                    },
+                    "end": {
+                      "offset": 386,
+                      "col": 44,
+                      "tokLen": 5
+                    }
+                  },
+                  "name": "other",
+                  "type": {
+                    "qualType": "const Complex<T> &"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "0x5645bb4c7878",
+              "kind": "CXXMethodDecl",
+              "loc": {
+                "offset": 410,
+                "line": 20,
+                "col": 10,
+                "tokLen": 8
+              },
+              "range": {
+                "begin": {
+                  "offset": 405,
+                  "col": 5,
+                  "tokLen": 4
+                },
+                "end": {
+                  "offset": 446,
+                  "col": 46,
+                  "tokLen": 5
+                }
+              },
+              "name": "operator==",
+              "type": {
+                "qualType": "bool (const Complex<T> &) const"
+              },
+              "inner": [
+                {
+                  "id": "0x5645bb4c7780",
+                  "kind": "ParmVarDecl",
+                  "loc": {
+                    "offset": 439,
+                    "col": 39,
+                    "tokLen": 5
+                  },
+                  "range": {
+                    "begin": {
+                      "offset": 421,
+                      "col": 21,
+                      "tokLen": 5
+                    },
+                    "end": {
+                      "offset": 439,
+                      "col": 39,
+                      "tokLen": 5
+                    }
+                  },
+                  "name": "other",
+                  "type": {
+                    "qualType": "const Complex<T> &"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "0x5645bb4c7ae8",
+              "kind": "CXXMethodDecl",
+              "loc": {
+                "offset": 462,
+                "line": 21,
+                "col": 10,
+                "tokLen": 8
+              },
+              "range": {
+                "begin": {
+                  "offset": 457,
+                  "col": 5,
+                  "tokLen": 4
+                },
+                "end": {
+                  "offset": 498,
+                  "col": 46,
+                  "tokLen": 5
+                }
+              },
+              "name": "operator!=",
+              "type": {
+                "qualType": "bool (const Complex<T> &) const"
+              },
+              "inner": [
+                {
+                  "id": "0x5645bb4c7a20",
+                  "kind": "ParmVarDecl",
+                  "loc": {
+                    "offset": 491,
+                    "col": 39,
+                    "tokLen": 5
+                  },
+                  "range": {
+                    "begin": {
+                      "offset": 473,
+                      "col": 21,
+                      "tokLen": 5
+                    },
+                    "end": {
+                      "offset": 491,
+                      "col": 39,
+                      "tokLen": 5
+                    }
+                  },
+                  "name": "other",
+                  "type": {
+                    "qualType": "const Complex<T> &"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

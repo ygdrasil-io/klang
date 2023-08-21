@@ -1,0 +1,6 @@
+clang -E -Xclang -fmodules foundation.m > foundation.e.m
+clang -Xclang -ast-dump=json -fsyntax-only -fmodules ./foundation.e.m > ./foundation.m.ast.json
+clang -E -Xclang -fmodules cocoa.m > cocoa.e.m
+clang -Xclang -ast-dump=json -fsyntax-only -fmodules ./cocoa.e.m > ./cocoa.m.ast.json
+clang -E -Xclang -fmodules metal.m > metal.e.m
+clang -Xclang -ast-dump=json -fsyntax-only -fmodules ./metal.e.m > ./metal.m.ast.json

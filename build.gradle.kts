@@ -1,5 +1,5 @@
 plugins {
-    kotlin("jvm") version "1.9.0-Beta"
+    kotlin("jvm") version "1.9.0"
     kotlin("plugin.serialization") version "1.8.21"
     id("org.jetbrains.kotlinx.kover") version "0.6.1"
 }
@@ -10,6 +10,8 @@ allprojects {
         mavenCentral()
     }
 
+	group = "io.ygdrasil"
+	version = "1.0.0-SNAPSHOT"
 }
 
 kotlin {
@@ -23,5 +25,8 @@ kotlin {
             }
             languageVersion = "2.0"
         }
+
+
     }
 }
+

@@ -1,6 +1,8 @@
 package klang.parser.json.type
 
 import klang.domain.NativeStructure
+import klang.domain.TypeRef
+import klang.domain.typeOf
 import klang.parser.json.domain.TranslationUnitKind
 import klang.parser.json.domain.TranslationUnitNode
 import klang.parser.json.domain.json
@@ -10,12 +12,12 @@ import kotlinx.serialization.json.jsonPrimitive
 
 
 internal fun TranslationUnitNode.toNativeTypeDefStructure(sibling: TranslationUnitNode) = NativeStructure(
-	name = sibling.json.typeAliasName(),
+	name = sibling.json.name(),
 	fields = this.extractFields()
 )
 
 internal fun TranslationUnitNode.toNativeStructure() = NativeStructure(
-	name = json.typeAliasName(),
+	name = json.name(),
 	fields = this.extractFields()
 )
 
@@ -28,22 +30,19 @@ private fun TranslationUnitNode.isTypeDefStructure(
 ): Boolean =
 	notLastOf(sibling)
 			&& sibling[index + 1].content.first == TranslationUnitKind.TypedefDecl
-			&& json.nullableTypeAlias() == null
+			&& json.nullableName() == null
 
-private fun TranslationUnitNode.extractFields(): List<Pair<String, String>> =
+private fun TranslationUnitNode.extractFields(): List<Pair<String, TypeRef>> =
 	children.filter { it.content.first == TranslationUnitKind.FieldDecl }
 		.map { it.extractField() }
 
 
-private fun TranslationUnitNode.extractField(): Pair<String, String> {
-	val name = json["name"]?.jsonPrimitive?.content
-		?: error("no name for : $this")
-	val value = json["type"]?.jsonObject?.get("qualType")?.jsonPrimitive?.content
+private fun TranslationUnitNode.extractField(): Pair<String, TypeRef> {
+	val name = json.nullableName()
+		?: "" // Some field can use empty name to get specific alignment (see: __darwin_fp_control as example)
+	val value = json.nullableType()
+		?.let(::typeOf)
+		?.getOrNull()
 		?: error("no type for : $this")
 	return name to value
 }
-
-private fun JsonObject.nullableTypeAlias() = this["name"]?.jsonPrimitive?.content
-
-private fun JsonObject.typeAliasName() = nullableTypeAlias()
-	?: error("no enumeration name: $this")

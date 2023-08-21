@@ -1,0 +1,37 @@
+TranslationUnitDecl 0x7fbc09814608 <<invalid sloc>> <invalid sloc> <undeserialized declarations>
+|-TypedefDecl 0x7fbc09814e48 <<invalid sloc>> <invalid sloc> implicit __int128_t '__int128'
+| `-BuiltinType 0x7fbc09814bd0 '__int128'
+|-TypedefDecl 0x7fbc09814eb8 <<invalid sloc>> <invalid sloc> implicit __uint128_t 'unsigned __int128'
+| `-BuiltinType 0x7fbc09814bf0 'unsigned __int128'
+|-TypedefDecl 0x7fbc09814f58 <<invalid sloc>> <invalid sloc> implicit SEL 'SEL *'
+| `-PointerType 0x7fbc09814f10 'SEL *' imported
+|   `-BuiltinType 0x7fbc09814d70 'SEL'
+|-TypedefDecl 0x7fbc09815038 <<invalid sloc>> <invalid sloc> implicit id 'id'
+| `-ObjCObjectPointerType 0x7fbc09814fe0 'id' imported
+|   `-ObjCObjectType 0x7fbc09814fb0 'id' imported
+|-TypedefDecl 0x7fbc09815118 <<invalid sloc>> <invalid sloc> implicit Class 'Class'
+| `-ObjCObjectPointerType 0x7fbc098150c0 'Class' imported
+|   `-ObjCObjectType 0x7fbc09815090 'Class' imported
+|-ObjCInterfaceDecl 0x7fbc09815170 <<invalid sloc>> <invalid sloc> implicit Protocol
+|-TypedefDecl 0x7fbc09815510 <<invalid sloc>> <invalid sloc> implicit __NSConstantString 'struct __NSConstantString_tag'
+| `-RecordType 0x7fbc098152e0 'struct __NSConstantString_tag'
+|   `-Record 0x7fbc09815240 '__NSConstantString_tag'
+|-TypedefDecl 0x7fbc0985b200 <<invalid sloc>> <invalid sloc> implicit __builtin_ms_va_list 'char *'
+| `-PointerType 0x7fbc09815570 'char *'
+|   `-BuiltinType 0x7fbc098146b0 'char'
+|-TypedefDecl 0x7fbc0985b508 <<invalid sloc>> <invalid sloc> implicit __builtin_va_list 'struct __va_list_tag[1]'
+| `-ConstantArrayType 0x7fbc0985b4b0 'struct __va_list_tag[1]' 1 
+|   `-RecordType 0x7fbc0985b2f0 'struct __va_list_tag'
+|     `-Record 0x7fbc0985b258 '__va_list_tag'
+|-ImportDecl 0x7fbc0a919b98 <./class.m:1:1> col:1 implicit Foundation
+`-ObjCInterfaceDecl 0x7fbc089c32b0 <line:3:1, line:10:2> line:3:12 TestClass
+  |-super ObjCInterface 0x7fbc0a919c98 'NSObject'
+  |-ObjCProtocol 0x7fbc089c3200 'NSCopying'
+  |-ObjCPropertyDecl 0x7fbc0a91dd40 <line:5:1, col:41> col:41 testProperty 'NSString *' assign readwrite nonatomic unsafe_unretained
+  |-ObjCMethodDecl 0x7fbc0a91de80 <line:7:2, col:20> col:2 - testMethod 'void'
+  |-ObjCMethodDecl 0x7fbc0a91e118 <line:8:2, col:82> col:2 + testMethod:withParameter: 'BOOL':'signed char'
+  | |-ParmVarDecl 0x7fbc0a91e1a8 <col:22, col:33> col:33 parameter 'NSString *'
+  | `-ParmVarDecl 0x7fbc0a91e210 <col:58, col:69> col:69 testParameter 'NSString *'
+  |-ObjCMethodDecl 0x7fbc0a91e3b0 <line:5:41> col:41 implicit - testProperty 'NSString *'
+  `-ObjCMethodDecl 0x7fbc0a91e510 <col:41> col:41 implicit - setTestProperty: 'void'
+    `-ParmVarDecl 0x7fbc0a91e5a0 <col:41> col:41 testProperty 'NSString *'

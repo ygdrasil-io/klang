@@ -5,16 +5,7 @@ plugins {
     kotlin("jvm")
     kotlin("plugin.serialization")
     id("org.jetbrains.kotlinx.kover")
-}
-
-dependencies {
-    testImplementation(platform("org.junit:junit-bom:5.9.1"))
-    testImplementation("org.junit.jupiter:junit-jupiter")
-    testImplementation("io.kotest:kotest-runner-junit5-jvm:5.6.1")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0")
-	implementation("io.github.microutils:kotlin-logging:1.7.4")
-	implementation("org.slf4j:slf4j-simple:1.7.26")
-	api(project(":libclang"))
+	id("maven-publish")
 }
 
 tasks.test {
@@ -31,4 +22,26 @@ tasks.test {
 	}
 
 	exclude("klang/parser/libclang/**")
+}
+
+dependencies {
+	testImplementation(platform("org.junit:junit-bom:5.9.1"))
+	testImplementation("org.junit.jupiter:junit-jupiter")
+	implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0")
+	implementation("io.github.microutils:kotlin-logging:1.7.4")
+	implementation("org.slf4j:slf4j-simple:1.7.26")
+	api(project(":libclang"))
+	implementation(libs.arrow.core)
+	implementation(libs.arrow.fx.coroutines)
+	api(libs.kotlinpoet)
+	testImplementation(libs.kotest)
+}
+
+
+publishing {
+	publications {
+		create<MavenPublication>("maven") {
+			from(components["java"])
+		}
+	}
 }

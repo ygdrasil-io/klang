@@ -10,7 +10,7 @@ repositories {
 
 dependencies {
     implementation (project(":libclang"))
-    testImplementation("io.kotest:kotest-runner-junit5-jvm:5.6.1")
+	testImplementation(libs.kotest)
 }
 
 tasks.withType<Test>().configureEach {

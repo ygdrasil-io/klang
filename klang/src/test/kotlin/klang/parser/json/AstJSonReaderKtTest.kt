@@ -7,94 +7,88 @@ import klang.parser.TestData
 import klang.parser.validateEnumerations
 import klang.parser.validateStructures
 
-class AstJSonReaderTest : ParserTestCommon({
+class AstJSonCParserTest : ParserTestCommon({
 
-
-
-	"test enum parsing" {
+	"test enum parsing" - {
 		// Given
-		val filePath = "sample/c/enum.h.ast.json"
+		val filePath = "src/test/c/enum.h.ast.json"
 
 		// When
-		parseAstJson(filePath)
+		val repository = parseAstJson(filePath)
 
 		// Then
-		validateEnumerations(TestData.enumerations)
+		validateEnumerations(repository, TestData.enumerations)
 	}
 
-	"test typedef enum parsing" {
+	"test typedef enum parsing" - {
 		// Given
-		val filePath = "sample/c/typedef-enum.h.ast.json"
+		val filePath = "src/test/c/typedef-enum.h.ast.json"
 
 		// When
-		parseAstJson(filePath)
+		val repository = parseAstJson(filePath)
 
 		// Then
-		validateEnumerations(TestData.enumerations)
+		validateEnumerations(repository, TestData.enumerations)
 
 	}
 
-	"test struct parsing" {
+	"test struct parsing" - {
 		// Given
-		val filePath = "sample/c/struct.h.ast.json"
+		val filePath = "src/test/c/struct.h.ast.json"
 
 		// When
-		parseAstJson(filePath)
+		val repository = parseAstJson(filePath)
 
 		// Then
-		validateStructures(TestData.structures)
+		validateStructures(repository, TestData.structures)
 	}
 
-	"typedef struct parsing" {
+	"typedef struct parsing" - {
 		// Given
-		val filePath = "sample/c/typedef-struct.h.ast.json"
+		val filePath = "src/test/c/typedef-struct.h.ast.json"
 
 		// When
-		parseAstJson(filePath)
+		val repository = parseAstJson(filePath)
 
 		// Then
-		validateStructures(TestData.typeDefStructures)
+		validateStructures(repository, TestData.typeDefStructures)
 	}
 
-	"typedef parsing" {
+	"typedef parsing" - {
 		// Given
-		val filePath = "sample/c/typedef.h.ast.json"
+		val filePath = "src/test/c/typedef.h.ast.json"
 
 		// When
-		parseAstJson(filePath)
+		val repository = parseAstJson(filePath)
 
 		// Then
 		TestData.typeDef.forEach { (name, type) ->
-			DeclarationRepository.findTypeAliasByName(name)
+			"test $name" {
+				repository.findTypeAliasByName(name)
 					.also { it?.name shouldBe name }
 					.also { it?.type shouldBe type }
+			}
 		}
 	}
 
-	"function parsing" {
+	"function parsing" - {
 		// Given
-		val filePath = "sample/c/functions.h.ast.json"
+		val filePath = "src/test/c/functions.h.ast.json"
 
 		// When
-		parseAstJson(filePath)
+		val repository = parseAstJson(filePath)
 
 		// Then
-		DeclarationRepository.findFunctionByName("function")
-			.also { it?.name shouldBe "function" }
-			.also { it?.returnType shouldBe "char" }
-			.also {
-				it?.arguments
-					?.map { (name, type) -> name to type }shouldBe listOf(
-					"a" to "int *",
-					"b" to "void *",
-					"myEnum" to "enum EnumName"
-				)
+		TestData
+			.functions
+			.forEach { function ->
+				"test function with name ${function.name}" {
+					repository.findFunctionByName(function.name)
+						.also { it?.name shouldBe function.name}
+						.also { it?.returnType shouldBe function.returnType }
+						.also { it?.arguments shouldBe function.arguments }
+				}
 			}
-
-		DeclarationRepository.findFunctionByName("function2")
-			.also { it?.name shouldBe "function2" }
-			.also { it?.returnType shouldBe "void *" }
-			.also { it?.arguments shouldBe listOf() }
 	}
 
 })

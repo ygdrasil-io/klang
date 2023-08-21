@@ -1,8 +1,12 @@
-@file:OptIn(ExperimentalSerializationApi::class, ExperimentalSerializationApi::class)
+@file:OptIn(
+	ExperimentalSerializationApi::class
+)
 
 package klang.parser.json
 
 import klang.DeclarationRepository
+import klang.InMemoryDeclarationRepository
+import klang.domain.NativeDeclaration
 import klang.parser.json.domain.*
 import klang.parser.json.type.*
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -12,84 +16,82 @@ import java.io.FileInputStream
 
 private val logger = KotlinLogging.logger {}
 
-fun parseAstJson(filePath: String) = FileInputStream(filePath)
+val unknownKind = mutableSetOf<String>()
+
+fun parseAstJson(filePath: String): DeclarationRepository = FileInputStream(filePath)
 	.let<FileInputStream, JsonObject>(Json.Default::decodeFromStream)
+	.validateKinds()
+	.also { unknownKind.forEach { println("$it,") } }
 	.toNode()
 	.flattenRootNode()
 	.removeImplicitDeclarations()
 	.parse()
 
+private fun JsonObject.validateKinds(): JsonObject = this.apply {
+	try {
+		kind()
+	} catch (e: RuntimeException) {
+		this["kind"]
+			?.let(JsonElement::jsonPrimitive)
+			?.let(JsonPrimitive::content)
+			?.let(unknownKind::add)
+	}
+	this["inner"]
+		?.jsonArray
+		?.mapNotNull { (it as? JsonObject) }
+		?.map { it.validateKinds() }
+}
 
-fun List<TranslationUnitNode>.parse(depth: Int = 0) {
+
+fun List<TranslationUnitNode>.parse(depth: Int = 0) = InMemoryDeclarationRepository().apply {
+	logger.debug { "start processing nodes" }
 	var index = 0
 
 	while (index != size) {
-		val node = this[index]
+		val node = get(index)
 		val (kind, json) = node.content
 
 
-		when (kind) {
-			TranslationUnitKind.TypedefDecl -> {
-				try {
-					node.toNativeTypeAlias()
-						.let(DeclarationRepository::save)
-				} catch (e: RuntimeException) {
-					ParserRepository.errors.add(e)
-				}
-			}
-
-			TranslationUnitKind.VarDecl -> {
-				try {
-					if (node.isExternalDeclaration().not()) {
-						error("not yet supported : $node")
+		try {
+			logger.debug { "will process node of kind $kind" }
+			when (kind) {
+				TranslationUnitKind.EmptyDecl -> null
+				TranslationUnitKind.ObjCCategoryDecl -> node.toObjectiveCCategory()
+				TranslationUnitKind.ObjCInterfaceDecl -> node.toObjectiveCClass()
+				TranslationUnitKind.ObjCProtocolDecl -> node.toObjectiveCProtocol()
+				TranslationUnitKind.TypedefDecl -> node.toNativeTypeAlias()
+				TranslationUnitKind.FunctionDecl -> node.toNativeFunction()
+				TranslationUnitKind.RecordDecl -> when {
+					node.isTypeDefStructure(this@parse) -> {
+						index++
+						node.toNativeTypeDefStructure(get(index))
 					}
-				} catch (e: RuntimeException) {
-					ParserRepository.errors.add(e)
+
+					else -> node.toNativeStructure()
 				}
-			}
 
-			TranslationUnitKind.FunctionDecl -> {
-				try {
-					node.toNativeFunction()
-						.let(DeclarationRepository::save)
-				} catch (e: RuntimeException) {
-					ParserRepository.errors.add(e)
+				TranslationUnitKind.EnumDecl -> when {
+					node.isTypeDefEnumeration(this@parse) -> {
+						index++
+						node.toNativeTypeDefEnumeration(get(index))
+					}
+
+					else -> node.toNativeEnumeration()
 				}
-			}
 
-			TranslationUnitKind.RecordDecl -> {
-				try {
-					when {
-						node.isTypeDefStructure(this) -> {
-							index++
-							node.toNativeTypeDefStructure(this[index])
-						}
-
-						else -> node.toNativeStructure()
-					}.let(DeclarationRepository::save)
-				} catch (e: RuntimeException) {
-					ParserRepository.errors.add(e)
+				TranslationUnitKind.VarDecl -> { //TODO: check if need to cover this, skipping it for now
+					logger.debug { "skip VarDecl" }
+					null
 				}
-			}
 
-			TranslationUnitKind.EnumDecl -> {
-				try {
-					when {
-						node.isTypeDefEnumeration(this) -> {
-							index++
-							node.toNativeTypeDefEnumeration(this[index])
-						}
-
-						else -> node.toNativeEnumeration()
-					}.let(DeclarationRepository::save)
-				} catch (e: RuntimeException) {
-					ParserRepository.errors.add(e)
+				else -> {
+					logger.info { "${(0..depth).map { "+" }}$kind${json["id"]}" }
+					null
 				}
-			}
-
-			else -> {
-				logger.info { "${(0..depth).map { "+" }}$kind${json["id"]}" }
-			}
+			}.takeIf { it is NativeDeclaration }
+				?.let(::save)
+		} catch (error: RuntimeException) {
+			ParserRepository.errors.add(error)
 		}
 
 		index++

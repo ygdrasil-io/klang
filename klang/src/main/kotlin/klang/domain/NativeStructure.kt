@@ -1,6 +1,21 @@
 package klang.domain
 
+import klang.DeclarationRepository
+
 data class NativeStructure(
-        val name: String,
-        val fields: List<Pair<String, String>> = listOf()
-): NativeDeclaration
+	override val name: String,
+	var fields: List<Pair<String, TypeRef>> = listOf()
+): NameableDeclaration, ResolvableDeclaration {
+
+	override fun <T : NativeDeclaration> merge(other: T) {
+		if (other is NativeStructure) {
+			fields += other.fields
+		} else super.merge(other)
+	}
+
+	override fun DeclarationRepository.resolve() {
+		fields = fields.map { (name, type) ->
+			name to with(type) { resolveType() }
+		}
+	}
+}

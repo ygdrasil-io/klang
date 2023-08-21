@@ -2,8 +2,6 @@ package klang.mapper
 
 import com.squareup.kotlinpoet.*
 import klang.domain.NativeFunction
-import klang.domain.ResolvedTypeRef
-import klang.domain.TypeRef
 
 internal fun generateInterfaceLibrarySpec(packageName: String, name: String, libraryName: String) = PropertySpec
 	.builder("lib$name", ClassName(packageName, name))
@@ -22,10 +20,10 @@ private fun NativeFunction.toSpec(packageName: String) = FunSpec
 	.builder(name)
 	.addModifiers(KModifier.PUBLIC, KModifier.ABSTRACT)
 	.returns(returnType.toType(packageName))
-	.addParameters(arguments.map { it.toSpec(packageName) })
+	.addParameters(arguments.mapIndexed { index, argument -> argument.toSpec(packageName, index) })
 	.build()
 
 
-private fun NativeFunction.Argument.toSpec(packageName: String) = ParameterSpec
-	.builder(name ?: "", type.toType(packageName))
+private fun NativeFunction.Argument.toSpec(packageName: String, index: Int) = ParameterSpec
+	.builder(name ?: "parameter$index", type.toType(packageName))
 	.build()

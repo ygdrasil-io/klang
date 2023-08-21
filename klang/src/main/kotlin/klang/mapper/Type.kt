@@ -8,6 +8,7 @@ import klang.domain.TypeRef
 
 // TODO add tests
 internal fun TypeRef.toType(packageName: String, nullable: Boolean = false) = when {
+	isString -> ClassName("kotlin", "String")
 	isPointer -> jnaPointer
 	isSpecialType() -> ClassName("kotlin", "Unit")
 	isPrimitive -> toPrimitiveType()
@@ -68,8 +69,12 @@ internal val TypeRef.isInt64: Boolean
 internal val TypeRef.isLong: Boolean
 	get() = typeName in longType
 
+internal val TypeRef.isString: Boolean
+	get() = isPointer && typeName == "char"
+
 internal val TypeRef.defaultValue: String
 	get() = when {
+		isString -> "\"\""
 		isPointer -> "null"
 		isLong -> "com.sun.jna.NativeLong(0)"
 		isPrimitive -> when {

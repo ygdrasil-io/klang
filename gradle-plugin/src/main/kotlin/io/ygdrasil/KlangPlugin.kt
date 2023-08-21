@@ -41,23 +41,28 @@ open class KlangPluginExtension {
 	internal val tasks = mutableListOf<KlangPluginTask>()
 	internal var declarations: DeclarationRepository = InMemoryDeclarationRepository()
 
+	@Suppress("unused")
 	fun unpack(urlToUnpack: String) = urlToUnpack
 		.hash
 		.also { hash -> tasks.add(KlangPluginTask.Unpack(urlToUnpack, hash)) }
 
+	@Suppress("unused")
 	fun parse(fileToParse: String, at: String) {
 		tasks.add(KlangPluginTask.Parse(fileToParse, at))
 	}
 
+	@Suppress("unused")
 	fun download(urlToDownload: String): String = urlToDownload
 		.hash
 		.also { hash -> tasks.add(KlangPluginTask.DownloadFile(urlToDownload, hash)) }
 
+	@Suppress("unused")
 	fun generateBinding(basePackage: String, libraryName: String) {
 		tasks.add(KlangPluginTask.GenerateBinding(basePackage, libraryName))
 	}
 }
 
+@Suppress("unused")
 class KlangPlugin : Plugin<Project> {
 
 	private val Project.workingDirectory: File
@@ -200,7 +205,7 @@ private fun DeclarationRepository.generateKotlinFiles(outputDirectory: File, bas
 	declarations.asSequence()
 		.filterIsInstance<NativeStructure>()
 		.filter { it.name.startsWith("__").not() }
-		.filter { it.fields.none { (name, _) -> name.startsWith("__") } }
+		.filter { it.fields.none { (name, field) -> name.startsWith("__") || field.typeName.startsWith("__") } }
 		.toList()
 		.generateKotlinFile(outputDirectory, basePackage)
 }

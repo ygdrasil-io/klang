@@ -25,9 +25,11 @@ internal fun NativeStructure.toSpec(packageName: String) = ClassName("", name)
 			.apply {
 				fields.forEach { (name, type) ->
 					addProperty(
-						PropertySpec.builder(name, type.toType(packageName))
+						PropertySpec
+							.builder(name, type.toType(packageName, nullable = type.isPointer || type.isPrimitive.not()))
+							.addKdoc("mapped from ${type.referenceAsString}")
 							.addAnnotation(jnaJvmField)
-							.initializer("0")
+							.initializer(type.defaultValue)
 							.mutable(true)
 							.build()
 					)
@@ -68,3 +70,4 @@ internal fun NativeStructure.toSpec(packageName: String) = ClassName("", name)
 			)
 			.build()
 	}
+

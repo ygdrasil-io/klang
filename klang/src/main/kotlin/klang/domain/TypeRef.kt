@@ -9,9 +9,6 @@ import mu.KotlinLogging
 
 private val logger = KotlinLogging.logger {}
 
-@JvmInline
-value class TypeNotResolved(val name: String)
-
 fun typeOf(reference: String): Either<String, TypeRef> = either{
 	val tokens = tokenizeTypeRef(reference).toMutableList()
 	ensure(tokens.isNotEmpty()) { "fail to tokenize type $reference" }

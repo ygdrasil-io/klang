@@ -11,22 +11,49 @@ class StructureGenerationTest : FreeSpec({
 	val structure = NativeStructure(
 		name = "MyStructure",
 		fields = listOf(
-			"first" to testType("Long"),
-			"second" to testType("Int"),
+			"first" to testType("long"),
+			"second" to testType("int"),
+			"third" to testType("float"),
+			"fourth" to testType("double"),
+			"fifth" to testType("void *"),
 		)
 	)
 
 	"generate kotlin structure" {
 		structure.toSpec("test").toString() shouldBe """
-@com.sun.jna.Structure.FieldOrder("first", "second")
+@com.sun.jna.Structure.FieldOrder("first", "second", "third", "fourth", "fifth")
 public open class MyStructure(
   pointer: com.sun.jna.Pointer? = null,
 ) : com.sun.jna.Structure(pointer) {
-  @JvmField
-  public var first: Long = 0
+  /**
+   * mapped from long
+   */
+  @kotlin.jvm.JvmField
+  public var first: com.sun.jna.NativeLong = 0
 
-  @JvmField
-  public var second: Int = 0
+  /**
+   * mapped from int
+   */
+  @kotlin.jvm.JvmField
+  public var second: kotlin.Int = 0
+
+  /**
+   * mapped from float
+   */
+  @kotlin.jvm.JvmField
+  public var third: kotlin.Float = 0.0f
+
+  /**
+   * mapped from double
+   */
+  @kotlin.jvm.JvmField
+  public var fourth: kotlin.Double = 0.0
+
+  /**
+   * mapped from void *
+   */
+  @kotlin.jvm.JvmField
+  public var fifth: com.sun.jna.Pointer? = null
 
   public class ByReference(
     pointer: com.sun.jna.Pointer? = null,

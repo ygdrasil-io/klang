@@ -1,4 +1,4 @@
-rootProject.name = "klang-binding"
+rootProject.name = "sdl"
 
 pluginManagement {
 	repositories {
@@ -8,6 +8,6 @@ pluginManagement {
 	}
 }
 
-include(":sdl")
-findProject(":sdl")?.name = "sdl4k"
+include(":libsdl")
+findProject(":libsdl")?.name = "sdl4k"
 

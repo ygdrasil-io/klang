@@ -29,10 +29,12 @@ private val hasher by lazy {
 private const val taskGroup = "klang"
 
 internal sealed class KlangPluginTask {
-	class DownloadFile(val sourceUrl: String, val targetFile: String) : KlangPluginTask()
+	// TODO use a value object instead of a string
+	class DownloadFile(val sourceUrl: URL, val targetFile: String) : KlangPluginTask()
+	// TODO use a value object instead of a string
 	class Unpack(val sourceFile: String, val targetPath: String) : KlangPluginTask()
-	class Parse(val sourceFile: String, val sourcePath: String) : KlangPluginTask()
-
+	// TODO use a value object instead of a string
+	class Parse(val sourceFile: String, val sourcePath: String, val onSuccess: DeclarationRepository.() -> Unit) : KlangPluginTask()
 	// TODO use a value object instead of a string
 	class GenerateBinding(val basePackage: String, val libraryName: String) : KlangPluginTask()
 }
@@ -47,12 +49,13 @@ open class KlangPluginExtension {
 		.also { hash -> tasks.add(KlangPluginTask.Unpack(urlToUnpack, hash)) }
 
 	@Suppress("unused")
-	fun parse(fileToParse: String, at: String) {
-		tasks.add(KlangPluginTask.Parse(fileToParse, at))
+	fun parse(fileToParse: String, at: String, onSuccess: DeclarationRepository.() -> Unit = {}) {
+		tasks.add(KlangPluginTask.Parse(fileToParse, at, onSuccess))
 	}
 
 	@Suppress("unused")
-	fun download(urlToDownload: String): String = urlToDownload
+	fun download(urlToDownload: URL): String = urlToDownload
+		.toString()
 		.hash
 		.also { hash -> tasks.add(KlangPluginTask.DownloadFile(urlToDownload, hash)) }
 
@@ -107,8 +110,8 @@ class KlangPlugin : Plugin<Project> {
 			extension.tasks
 				.asSequence()
 				.filterIsInstance<KlangPluginTask.Parse>()
-				.map { it.sourceFile to workingDirectory.resolve(it.sourcePath) }
-				.forEach { (fileToParse, sourcePath) ->
+				.map { Triple(it.sourceFile, workingDirectory.resolve(it.sourcePath), it.onSuccess) }
+				.forEach { (fileToParse, sourcePath, onSuccess) ->
 					val localFileToParse = File(fileToParse)
 					assert(localFileToParse.exists()) { "File to parse does not exist" }
 					assert(localFileToParse.isFile()) { "${localFileToParse.absolutePath} is not a file" }
@@ -125,6 +128,10 @@ class KlangPlugin : Plugin<Project> {
 
 					extension.declarations = parseAstJson(jsonFile.absolutePath)
 						.also { it.resolveTypes() }
+
+					with(extension.declarations) {
+						onSuccess()
+					}
 				}
 		}
 	}
@@ -199,6 +206,7 @@ private fun DeclarationRepository.generateKotlinFiles(outputDirectory: File, bas
 		.filter { it.name.startsWith("__").not() }
 		.filter { it.type.typeName.startsWith("__").not() }
 		.filter { findStructureByName(it.type.typeName) == null }
+		.filter { findEnumerationByName(it.type.typeName) == null }
 		.toList()
 		.generateKotlinFile(outputDirectory, basePackage)
 
@@ -225,8 +233,16 @@ private val String.hash
 		.let(hasher::digest)
 		.joinToString("") { "%02x".format(it) }
 
-private fun downloadFile(fileUrl: String, targetFile: File): File? = try {
-	URL(fileUrl).openStream().use { inputStream ->
+/**
+ * Downloads a file from the specified URL and saves it to the target location.
+ *
+ * @param fileUrl The URL of the file to be downloaded.
+ * @param targetFile The target location where the downloaded file will be saved.
+ * @return The downloaded [File] object if successful, or `null` if an error occurs.
+ */
+fun downloadFile(fileUrl: URL, targetFile: File): File? = try {
+	targetFile.parentFile.mkdirs()
+	fileUrl.openStream().use { inputStream ->
 		Files.copy(inputStream, targetFile.toPath(), StandardCopyOption.REPLACE_EXISTING)
 	}
 

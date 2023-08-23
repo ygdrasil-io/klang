@@ -1,6 +1,7 @@
 package klang.mapper
 
 import com.squareup.kotlinpoet.ClassName
+import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import klang.domain.ResolvedTypeRef
 import klang.domain.TypeRef
 
@@ -8,7 +9,10 @@ import klang.domain.TypeRef
 
 // TODO add tests
 internal fun TypeRef.toType(packageName: String, nullable: Boolean = false) = when {
-	isString -> ClassName("kotlin", "String")
+	isString -> when {
+		isArray -> ClassName("kotlin.collections", "List").parameterizedBy(ClassName("kotlin", "String"))
+		else -> ClassName("kotlin", "String")
+	}
 	isPointer -> jnaPointer
 	isSpecialType() -> ClassName("kotlin", "Unit")
 	isPrimitive -> toPrimitiveType()

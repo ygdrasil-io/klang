@@ -1,5 +1,6 @@
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
+import java.net.URL
 
 buildscript {
 	dependencies {
@@ -42,7 +43,7 @@ sourceSets.main {
 	java.srcDirs("$buildDir/generated/klang")
 }
 
-val headerUrl = "https://github.com/klang-toolkit/SDL-binary/releases/download/2.28.2-Alpha3/headers.zip"
+val headerUrl = URL("https://github.com/klang-toolkit/SDL-binary/releases/download/2.28.2-Alpha3/headers.zip")
 
 klang {
 	download(headerUrl)

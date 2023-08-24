@@ -10,7 +10,7 @@ import klang.domain.TypeRef
 // TODO add tests
 internal fun TypeRef.toType(packageName: String, nullable: Boolean = false) = when {
 	isString -> when {
-		isArray -> ClassName("kotlin.collections", "List").parameterizedBy(ClassName("kotlin", "String"))
+		isArray -> ClassName("kotlin", "Array").parameterizedBy(ClassName("kotlin", "String"))
 		else -> ClassName("kotlin", "String")
 	}
 	isPointer -> jnaPointer

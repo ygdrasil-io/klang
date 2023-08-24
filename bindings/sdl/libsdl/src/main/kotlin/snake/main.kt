@@ -144,17 +144,17 @@ class SdlUI(width: Int, height: Int) {
 //        renderString(Cell(0, 0), "abcdefghijklmnopqrstuvwxyz")
 //        renderString(Cell(0, 1), "abcdefghijklmnopqrstuvwxyz".reversed())
 
-		SDL_RenderPresent(renderer)
+		libSDL2Library.SDL_RenderPresent(renderer)
 	}
 
 	fun delay(timeMs: UInt) {
-		SDL_Delay(timeMs)
+		libSDL2Library.SDL_Delay(timeMs)
 	}
 
-	fun readCommands(): List<UserCommand> = memScoped {
+	fun readCommands(): List<UserCommand>  {
 		val result = ArrayList<UserCommand>()
-		val event = alloc<SDL_Event>()
-		while (SDL_PollEvent(event.ptr) != 0) {
+		val event = SDL_Event()
+		while (libSDL2Library.SDL_PollEvent(event.ptr) != 0) {
 			when (event.type) {
 				SDL_QUIT    -> result.add(UserCommand.quit)
 				SDL_KEYDOWN -> {
@@ -176,7 +176,7 @@ class SdlUI(width: Int, height: Int) {
 	}
 
 	fun destroy() {
-		arena.clear()
+		// TODO: unaloc resources with sdl commands
 	}
 
 	private fun direction(from: Cell, to: Cell): Direction = when {

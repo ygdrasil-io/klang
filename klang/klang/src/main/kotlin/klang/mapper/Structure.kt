@@ -7,7 +7,7 @@ internal fun NativeStructure.toSpec(packageName: String) = ClassName("", name)
 	.let { structureClass ->
 		when {
 			fields.isNotEmpty() -> toSpecWithAttributes(packageName, structureClass)
-			else -> toSpecWithNoAttributes(packageName, structureClass)
+			else -> toSpecWithNoAttributes(structureClass)
 		}
 	}
 
@@ -78,7 +78,7 @@ private fun NativeStructure.toSpecWithAttributes(packageName: String, structureC
 			.build()
 
 
-private fun NativeStructure.toSpecWithNoAttributes(packageName: String, structureClass: ClassName) =
+private fun toSpecWithNoAttributes(structureClass: ClassName) =
 	TypeSpec.classBuilder(structureClass)
 		.superclass(jnaPointerType)
 		.addFunction(FunSpec.constructorBuilder().callSuperConstructor().build())

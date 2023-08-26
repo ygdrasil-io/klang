@@ -1,8 +1,5 @@
 package klang.generator
 
-import com.sun.jna.Pointer
-import com.sun.jna.PointerType
-import com.sun.jna.ptr.PointerByReference
 import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.shouldBe
 import klang.domain.NativeStructure

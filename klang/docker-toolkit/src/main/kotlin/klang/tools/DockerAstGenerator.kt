@@ -4,7 +4,7 @@ import mu.KotlinLogging
 import java.io.File
 import java.nio.file.Files
 
-private const val dockerImage = "ubuntu-clang-16"
+private const val dockerImage = "chaosnyu/ubuntu-clang-16"
 private const val baseContainerDirectory = "/workspace"
 private val logger = KotlinLogging.logger {}
 

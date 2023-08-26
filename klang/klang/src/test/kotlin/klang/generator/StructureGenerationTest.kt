@@ -1,5 +1,8 @@
 package klang.generator
 
+import com.sun.jna.Pointer
+import com.sun.jna.PointerType
+import com.sun.jna.ptr.PointerByReference
 import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.shouldBe
 import klang.domain.NativeStructure
@@ -66,4 +69,28 @@ public open class MyStructure(
 
 		""".trimIndent()
 	}
+
+
+	val structureWithNoFields = NativeStructure(
+		name = "MyStructure",
+		fields = listOf()
+	)
+
+	"generate kotlin structure with no fields" {
+		structureWithNoFields.toSpec("test").toString() shouldBe """
+			|public class MyStructure : com.sun.jna.PointerType {
+			|  public constructor() : super()
+			|
+			|  public constructor(pointer: com.sun.jna.Pointer?) : super(pointer)
+			|
+			|  public class ByReference : com.sun.jna.ptr.PointerByReference {
+			|    public constructor() : super()
+			|
+			|    public constructor(pointer: com.sun.jna.Pointer?) : super(pointer)
+			|  }
+			|}
+			|
+		""".trimMargin()
+	}
 })
+

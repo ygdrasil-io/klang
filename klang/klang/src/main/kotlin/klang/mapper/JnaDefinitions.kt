@@ -11,4 +11,7 @@ internal val jnaByValue by lazy { ClassName("com.sun.jna", "Structure.ByValue") 
 internal val nsobjectDefinition by lazy { ClassName("darwin", "NSObject") }
 internal val jnaNativeLoad by lazy { ClassName("klang.internal", "NativeLoad") }
 internal val jnaLibrary by lazy { ClassName("com.sun.jna", "Library") }
+internal val jnaPointerType by lazy { ClassName("com.sun.jna", "PointerType") }
+internal val jnaPointerByReference by lazy { ClassName("com.sun.jna.ptr", "PointerByReference") }
+
 

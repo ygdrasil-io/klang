@@ -3,6 +3,7 @@ package snake
 
 import SDL_WINDOWPOS_CENTERED
 import libsdl.*
+import java.io.File
 import kotlin.math.max
 import kotlin.random.Random
 
@@ -12,44 +13,44 @@ fun main() {
 		height = 10,
 		snake = Snake(
 			cells = listOf(Cell(4, 4), Cell(3, 4), Cell(2, 4), Cell(1, 4), Cell(0, 4)),
-			direction = right
+			direction = Direction.right
 		)
 	)
 	var game = initialGame
 
-	val sdlUI = SdlUI(game.width, game.height)
-	sdlUI.destroy()
+	SdlUI(game.width, game.height).use { sdlUI ->
 
-	var ticks = 0
-	val speed = 10
-	while (true) {
+		var ticks = 0
+		val speed = 10
+		while (true) {
 
-		sdlUI.draw(game)
-
-		sdlUI.delay(1000u / 60u)
-		ticks++
-		if (ticks >= speed) {
-			game = game.update()
-			ticks -= speed
-		}
-
-		sdlUI.readCommands().forEach { command ->
-			var direction: Direction? = null
-			when (command) {
-				SdlUI.UserCommand.up      -> direction = up
-				SdlUI.UserCommand.down    -> direction = down
-				SdlUI.UserCommand.left    -> direction = left
-				SdlUI.UserCommand.right   -> direction = right
-				SdlUI.UserCommand.restart -> game = initialGame
-				SdlUI.UserCommand.quit    -> return
-			}
-			game = game.update(direction)
 			sdlUI.draw(game)
+
+			sdlUI.delay(1000 / 60)
+			ticks++
+			if (ticks >= speed) {
+				game = game.update()
+				ticks -= speed
+			}
+
+			sdlUI.readCommands().forEach { command ->
+				var direction: Direction? = null
+				when (command) {
+					SdlUI.UserCommand.up -> direction = Direction.up
+					SdlUI.UserCommand.down -> direction = Direction.down
+					SdlUI.UserCommand.left -> direction = Direction.left
+					SdlUI.UserCommand.right -> direction = Direction.right
+					SdlUI.UserCommand.restart -> game = initialGame
+					SdlUI.UserCommand.quit -> return
+				}
+				game = game.update(direction)
+				sdlUI.draw(game)
+			}
 		}
 	}
 }
 
-class SdlUI(width: Int, height: Int) {
+class SdlUI(width: Int, height: Int): AutoCloseable {
 	private val window: SDL_Window
 	private val renderer: SDL_Renderer
 	private val font: Font
@@ -60,19 +61,18 @@ class SdlUI(width: Int, height: Int) {
 
 	init {
 		if (libSDL2Library.SDL_Init(SDL_INIT_EVERYTHING) != 0) {
-			println("SDL_Init Error: ${sdlError()}")
+			println("SDL_Init Error: ${libSDL2Library.SDL_GetError()}")
 			throw Error()
 		}
-		//arena.defer { SDL_Quit() }
 
 		window = libSDL2Library.SDL_CreateWindow("Snake", SDL_WINDOWPOS_CENTERED,
 			SDL_WINDOWPOS_CENTERED, pixelWidth, pixelHeight,
-			SDL_WindowFlags.SDL_WINDOW_SHOWN
-		).failOnError()
-		//arena.defer { SDL_DestroyWindow(window) }
+			SDL_WindowFlags.SDL_WINDOW_SHOWN.value
+		)
 
-		renderer = libSDL2Library.SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED or SDL_RENDERER_PRESENTVSYNC)
-		//arena.defer { SDL_DestroyRenderer(renderer) }
+		renderer = libSDL2Library.SDL_CreateRenderer(
+			window, -1, SDL_RendererFlags.SDL_RENDERER_ACCELERATED or SDL_RendererFlags.SDL_RENDERER_PRESENTVSYNC
+		)
 
 		font = Font(renderer)
 		sprites = Sprites(renderer)
@@ -80,7 +80,7 @@ class SdlUI(width: Int, height: Int) {
 
 	fun draw(game: Game) {
 		libSDL2Library.SDL_RenderClear(renderer)
-		libSDL2Library.SDL_SetRenderDrawColor(renderer, (200 / 2).toUByte(), (230 / 2).toUByte(), (151 / 2).toUByte(), SDL_ALPHA_OPAQUE.toUByte())
+		libSDL2Library.SDL_SetRenderDrawColor(renderer, (200 / 2).toByte(), (230 / 2).toByte(), (151 / 2).toByte(), SDL_ALPHA_OPAQUE)
 
 		val grassW = 256
 		val grassScaledW = 400 // scale grass up to reduce its resolution so that it's similar to snake sprites
@@ -101,16 +101,16 @@ class SdlUI(width: Int, height: Int) {
 
 			val srcRect = if (direction == nextDirection) {
 				when (direction) {
-					right, left -> sprites.bodyHorRect
-					up, down    -> sprites.bodyVertRect
+					Direction.right, Direction.left -> sprites.bodyHorRect
+					Direction.up, Direction.down    -> sprites.bodyVertRect
 				}
-			} else if ((direction == left && nextDirection == down) || (direction == up && nextDirection == right)) {
+			} else if ((direction == Direction.left && nextDirection == Direction.down) || (direction == Direction.up && nextDirection == Direction.right)) {
 				sprites.bodyLeftDownRect
-			} else if ((direction == left && nextDirection == up) || (direction == down && nextDirection == right)) {
+			} else if ((direction == Direction.left && nextDirection == Direction.up) || (direction == Direction.down && nextDirection == Direction.right)) {
 				sprites.bodyLeftUpRect
-			} else if ((direction == right && nextDirection == down) || (direction == up && nextDirection == left)) {
+			} else if ((direction == Direction.right && nextDirection == Direction.down) || (direction == Direction.up && nextDirection == Direction.left)) {
 				sprites.bodyRightDownRect
-			} else if ((direction == right && nextDirection == up) || (direction == down && nextDirection == left)) {
+			} else if ((direction == Direction.right && nextDirection == Direction.up) || (direction == Direction.down && nextDirection == Direction.left)) {
 				sprites.bodyRightUpRect
 			} else {
 				sprites.emptyRect
@@ -119,18 +119,18 @@ class SdlUI(width: Int, height: Int) {
 		}
 
 		val tipRect = when (game.snake.cells.let { direction(from = it.last(), to = it[it.size - 2]) }) {
-			up    -> sprites.tipUpRect
-			down  -> sprites.tipDownRect
-			left  -> sprites.tipLeftRect
-			right -> sprites.tipRightRect
+			Direction.up    -> sprites.tipUpRect
+			Direction.down  -> sprites.tipDownRect
+			Direction.left  -> sprites.tipLeftRect
+			Direction.right -> sprites.tipRightRect
 		}
 		sprites.render(tipRect, cellRect(game.snake.tail.last()))
 
 		val headRect = when (game.snake.direction) {
-			up    -> sprites.headUpRect
-			down  -> sprites.headDownRect
-			left  -> sprites.headLeftRect
-			right -> sprites.headRightRect
+			Direction.up    -> sprites.headUpRect
+			Direction.down  -> sprites.headDownRect
+			Direction.left  -> sprites.headLeftRect
+			Direction.right -> sprites.headRightRect
 		}
 		sprites.render(headRect, cellRect(game.snake.head))
 
@@ -147,47 +147,44 @@ class SdlUI(width: Int, height: Int) {
 		libSDL2Library.SDL_RenderPresent(renderer)
 	}
 
-	fun delay(timeMs: UInt) {
+	fun delay(timeMs: Int) {
 		libSDL2Library.SDL_Delay(timeMs)
 	}
 
 	fun readCommands(): List<UserCommand>  {
 		val result = ArrayList<UserCommand>()
 		val event = SDL_Event()
-		while (libSDL2Library.SDL_PollEvent(event.ptr) != 0) {
-			when (event.type) {
-				SDL_QUIT    -> result.add(UserCommand.quit)
-				SDL_KEYDOWN -> {
-					val keyboardEvent = event.ptr.reinterpret<SDL_KeyboardEvent>().pointed
-					val command = when (keyboardEvent.keysym.scancode) {
-						SDL_SCANCODE_I -> UserCommand.up
-						SDL_SCANCODE_J -> UserCommand.left
-						SDL_SCANCODE_K -> UserCommand.down
-						SDL_SCANCODE_L -> UserCommand.right
-						SDL_SCANCODE_R -> UserCommand.restart
-						SDL_SCANCODE_Q -> UserCommand.quit
+		while (libSDL2Library.SDL_PollEvent(event) != 0) {
+			when (SDL_EventType.of(event.type)) {
+				SDL_EventType.SDL_QUIT -> result.add(UserCommand.quit)
+				SDL_EventType.SDL_KEYDOWN -> {
+					val keyboardEvent = SDL_KeyboardEvent(event.pointer)
+					val command = when (keyboardEvent.keysym!!.scancode) {
+						SDL_Scancode.SDL_SCANCODE_I -> UserCommand.up
+						SDL_Scancode.SDL_SCANCODE_J -> UserCommand.left
+						SDL_Scancode.SDL_SCANCODE_K -> UserCommand.down
+						SDL_Scancode.SDL_SCANCODE_L -> UserCommand.right
+						SDL_Scancode.SDL_SCANCODE_R -> UserCommand.restart
+						SDL_Scancode.SDL_SCANCODE_Q -> UserCommand.quit
 						else           -> null
 					}
 					if (command != null) result.add(command)
 				}
+				else -> Unit
 			}
 		}
 		return result
 	}
 
-	fun destroy() {
-		// TODO: unaloc resources with sdl commands
-	}
-
 	private fun direction(from: Cell, to: Cell): Direction = when {
-		from.x == to.x && from.y > to.y -> up
-		from.x == to.x && from.y < to.y -> down
-		from.x > to.x && from.y == to.y -> left
-		from.x < to.x && from.y == to.y -> right
+		from.x == to.x && from.y > to.y -> Direction.up
+		from.x == to.x && from.y < to.y -> Direction.down
+		from.x > to.x && from.y == to.y -> Direction.left
+		from.x < to.x && from.y == to.y -> Direction.right
 		else                            -> error("")
 	}
 
-	private fun NativePlacement.cellRect(cell: Cell): SDL_Rect {
+	private fun cellRect(cell: Cell): SDL_Rect {
 		val x = cell.x * Sprites.w
 		val y = cell.y * Sprites.h
 		return allocRect(x, y, Sprites.w, Sprites.h)
@@ -199,13 +196,11 @@ class SdlUI(width: Int, height: Int) {
 		renderString(Cell(x, y), s)
 	}
 
-	private fun renderString(atCell: Cell, s: String) = memScoped {
+	private fun renderString(atCell: Cell, s: String) {
 		s.toCharArray().forEachIndexed { i, c ->
 			font.render(c, cellRect(atCell.copy(x = atCell.x + i)))
 		}
 	}
-
-	private fun <T> T?.failOnError(): T = failOnError(arena)
 
 	enum class UserCommand {
 		up, down, left, right, restart, quit
@@ -218,7 +213,7 @@ class SdlUI(width: Int, height: Int) {
 			const val h = 46
 		}
 
-		private val texture = renderer.loadTexture("Font16_42_Normal4_sheet.bmp")
+		internal val texture = renderer.loadTexture("Font16_42_Normal4_sheet.bmp")
 		private val letters: Map<Char, SDL_Rect>
 
 		init {
@@ -259,30 +254,30 @@ class SdlUI(width: Int, height: Int) {
 				'7' to textureRect(9, 5),
 				'8' to textureRect(0, 6),
 				'9' to textureRect(1, 6),
-				' ' to arena.allocRect(0, 0, 0, 0)
+				' ' to allocRect(0, 0, 0, 0)
 			)
 		}
 
 		fun render(char: Char, cellRect: SDL_Rect) {
 			val charRect = letters[char.toUpperCase()] ?: (letters[' '] ?: error(""))
-			SDL_RenderCopy(renderer, texture, charRect.ptr, cellRect.ptr)
+			libSDL2Library.SDL_RenderCopy(renderer, texture, charRect, cellRect)
 		}
 
 		private fun textureRect(x: Int, y: Int, wAdjust: Int = 0): SDL_Rect {
 			val xShift = x * w
 			val yShift = y * h
-			return arena.allocRect(xShift, yShift, w + wAdjust, h)
+			return allocRect(xShift, yShift, w + wAdjust, h)
 		}
 	}
 
-	class Sprites(private val renderer: CPointer<SDL_Renderer>, private val arena: Arena) {
+	class Sprites(private val renderer: SDL_Renderer) {
 		companion object {
 			const val w = 64
 			const val h = 64
 		}
 
-		private val texture = renderer.loadTexture("snake-graphics.bmp", arena)
-		private val grassTexture = renderer.loadTexture("grass.bmp", arena)
+		internal val texture = renderer.loadTexture("snake-graphics.bmp")
+		internal val grassTexture = renderer.loadTexture("grass.bmp")
 
 		val headUpRect = textureRect(3, 0)
 		val headRightRect = textureRect(4, 0)
@@ -304,9 +299,9 @@ class SdlUI(width: Int, height: Int) {
 		val appleRect = textureRect(0, 3)
 		val emptyRect = textureRect(0, 2)
 
-		val grassRect = arena.allocRect(0, 0, 256, 256)
+		val grassRect = allocRect(0, 0, 256, 256)
 
-		private fun textureRect(x: Int, y: Int) = arena.allocRect(x * w, y * h, w, h)
+		private fun textureRect(x: Int, y: Int) = allocRect(x * w, y * h, w, h)
 
 		fun render(srcRect: SDL_Rect, dstRect: SDL_Rect) {
 			if (srcRect == grassRect) libSDL2Library.SDL_RenderCopy(renderer, grassTexture, srcRect, dstRect)
@@ -317,15 +312,12 @@ class SdlUI(width: Int, height: Int) {
 	companion object {
 		fun SDL_Renderer.loadTexture(fileName: String): SDL_Texture {
 			val paths = listOf(fileName, "resources/$fileName", "../resources/$fileName")
-			val filePath = paths.find { access(it, R_OK) == 0 } ?: error("Can't find image file.")
+			val filePath = paths.find { File(it).canRead() } ?: error("Can't find image file.")
 
 			val bmp = libSDL2Library.SDL_LoadBMP_RW(libSDL2Library.SDL_RWFromFile(filePath, "rb"), 1)
-			//defer { SDL_FreeSurface(bmp) }
 
-			libSDL2Library.SDL_CreateTextureFromSurface(this@loadTexture, bmp)
+			return libSDL2Library.SDL_CreateTextureFromSurface(this@loadTexture, bmp)
 		}
-
-		fun sdlError() = libSDL2Library.SDL_GetError()
 
 		fun allocRect(x: Int, y: Int, w: Int, h: Int): SDL_Rect = SDL_Rect().also {
 			it.x = x
@@ -333,6 +325,15 @@ class SdlUI(width: Int, height: Int) {
 			it.w = w
 			it.h = h
 		}
+	}
+
+	override fun close() {
+		libSDL2Library.SDL_DestroyTexture(sprites.texture)
+		libSDL2Library.SDL_DestroyTexture(sprites.grassTexture)
+		libSDL2Library.SDL_DestroyTexture(font.texture)
+		libSDL2Library.SDL_DestroyRenderer(renderer)
+		libSDL2Library.SDL_DestroyWindow(window)
+		libSDL2Library.SDL_Quit()
 	}
 }
 

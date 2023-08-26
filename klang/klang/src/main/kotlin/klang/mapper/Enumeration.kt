@@ -1,16 +1,12 @@
 package klang.mapper
 
-import com.squareup.kotlinpoet.ClassName
-import com.squareup.kotlinpoet.FunSpec
-import com.squareup.kotlinpoet.PropertySpec
-import com.squareup.kotlinpoet.TypeSpec
+import com.squareup.kotlinpoet.*
 import klang.domain.NativeEnumeration
 
-// TODO: switch to internal
-public fun NativeEnumeration.toSpec() = ClassName("", name)
+internal fun NativeEnumeration.toSpecAsEnumeration(packageName: String) = ClassName(packageName, name)
 	.let { enumerationClass ->
-		val valueType = ClassName("", "kotlin.Long")
-		val valueName = "nativeValue"
+		val valueType = type.toType(packageName)
+		val valueName = "value"
 		TypeSpec.enumBuilder(enumerationClass)
 			.primaryConstructor(
 				FunSpec.constructorBuilder()
@@ -20,6 +16,22 @@ public fun NativeEnumeration.toSpec() = ClassName("", name)
 			.addProperty(
 				PropertySpec.builder(valueName, valueType)
 					.initializer(valueName)
+					.build()
+			)
+			.addFunction(
+				FunSpec.builder("or")
+					.addModifiers(KModifier.INFIX)
+					.addParameter("other", valueType)
+					.returns(valueType)
+					.addStatement("return value or other")
+					.build()
+			)
+			.addFunction(
+				FunSpec.builder("or")
+					.addModifiers(KModifier.INFIX)
+					.addParameter("other", enumerationClass)
+					.returns(valueType)
+					.addStatement("return value or other.value")
 					.build()
 			)
 			.addType(

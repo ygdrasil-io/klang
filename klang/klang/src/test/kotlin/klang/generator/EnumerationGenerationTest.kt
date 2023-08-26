@@ -3,7 +3,7 @@ package klang.generator
 import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.shouldBe
 import klang.domain.NativeEnumeration
-import klang.mapper.toSpec
+import klang.mapper.toSpecAsEnumeration
 
 class EnumerationGenerationTest : FreeSpec({
 
@@ -17,18 +17,22 @@ class EnumerationGenerationTest : FreeSpec({
 	)
 
 	"generate kotlin enumeration" {
-		enumeration.toSpec().toString() shouldBe """
+		enumeration.toSpecAsEnumeration("mypackage").toString() shouldBe """
 			|public enum class MyEnum(
-			|  public val nativeValue: kotlin.Long,
+			|  public val `value`: kotlin.Int,
 			|) {
 			|  FIRST(1),
 			|  SECOND(2),
 			|  THIRD(3),
 			|  ;
 			|
+			|  public infix fun or(other: kotlin.Int): kotlin.Int = value or other
+			|
+			|  public infix fun or(other: mypackage.MyEnum): kotlin.Int = value or other.value
+			|
 			|  public companion object {
-			|    public fun of(nativeValue: kotlin.Long): MyEnum? = entries.find {
-			|      it.nativeValue == nativeValue 
+			|    public fun of(`value`: kotlin.Int): mypackage.MyEnum? = entries.find {
+			|      it.value == value 
 			|    }
 			|  }
 			|}

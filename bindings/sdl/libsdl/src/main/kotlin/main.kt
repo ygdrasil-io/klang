@@ -36,7 +36,7 @@ fun main() {
 		SDL_WINDOWPOS_CENTERED,
 		SDL_WINDOWPOS_CENTERED,
 		800, 600,
-		SDL_WindowFlags.SDL_WINDOW_SHOWN.nativeValue.toInt() or SDL_WindowFlags.SDL_WINDOW_FULLSCREEN_DESKTOP.nativeValue.toInt()
+		SDL_WindowFlags.SDL_WINDOW_SHOWN or SDL_WindowFlags.SDL_WINDOW_FULLSCREEN_DESKTOP
 	)
 	do {
 

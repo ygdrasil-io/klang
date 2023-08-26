@@ -16,7 +16,7 @@ class EnumerationMapperTest : FreeSpec({
 	)
 
 	"generate kotlin enumeration specifications" {
-		enumeration.toSpec().apply {
+		enumeration.toSpecAsEnumeration("mypackage").apply {
 			name shouldBe enumeration.name
 			enumConstants.size shouldBe enumeration.values.size
 			enumConstants.map { it.key } shouldBe enumeration.values.map { it.first }

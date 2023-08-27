@@ -27,20 +27,33 @@ private fun TranslationUnitNode.isTypeDefStructure(
 	index: Int
 ): Boolean =
 	notLastOf(sibling)
-			&& sibling[index + 1].content.first == TranslationUnitKind.TypedefDecl
-			&& json.nullableTypeAlias() == null
+		&& sibling[index + 1].content.first == TranslationUnitKind.TypedefDecl
+		&& json.nullableTypeAlias() == null
 
 private fun TranslationUnitNode.extractFields(): List<Pair<String, Long>> =
 	children.filter { it.content.first == TranslationUnitKind.EnumConstantDecl }
-		.map { it.extractField(children) }
+		.map { it.extractField() }
+		.let { list ->
+			list
+				.mapIndexed { index, (name, value) ->
+					when (value) {
+						null -> when (index) {
+							0 -> name to 0L
+							else -> name to (list[index - 1].second?.plus(1) ?: error("no previous value"))
+						}
+						else -> {
+							name to value
+						}
+					}
+				}
+		}
 
 
-private fun TranslationUnitNode.extractField(sibling: List<TranslationUnitNode>): Pair<String, Long> {
+private fun TranslationUnitNode.extractField(): Pair<String, Long?> {
 	val name = json["name"]?.jsonPrimitive?.content
 		?: error("no name for : $this")
 	val value = children.firstOrNull { it.content.first == TranslationUnitKind.ConstantExpr }
 		?.content?.second?.get("value")?.jsonPrimitive?.longOrNull
-		?: sibling.filter { it.content.first == content.first }.indexOf(this).toLong()
 	return name to value
 }
 

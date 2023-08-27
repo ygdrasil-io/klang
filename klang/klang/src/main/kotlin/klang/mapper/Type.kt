@@ -13,7 +13,10 @@ internal fun TypeRef.toType(packageName: String, nullable: Boolean = false) = wh
 		isArray -> ClassName("kotlin", "Array").parameterizedBy(ClassName("kotlin", "String"))
 		else -> ClassName("kotlin", "String")
 	}
-	isPointer -> jnaPointer
+	isPointer -> when {
+		this is ResolvedTypeRef -> ClassName(packageName, typeName)
+		else -> jnaPointer
+	}
 	isSpecialType() -> ClassName("kotlin", "Unit")
 	isPrimitive -> toPrimitiveType()
 	this is ResolvedTypeRef -> ClassName(packageName, typeName)

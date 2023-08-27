@@ -2,6 +2,7 @@ package klang.mapper
 
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
+import klang.domain.PrimitiveType
 import klang.domain.ResolvedTypeRef
 import klang.domain.TypeRef
 
@@ -19,8 +20,11 @@ internal fun TypeRef.toType(packageName: String, nullable: Boolean = false) = wh
 	}
 	isSpecialType() -> ClassName("kotlin", "Unit")
 	isPrimitive -> toPrimitiveType()
-	this is ResolvedTypeRef -> ClassName(packageName, typeName)
-	else -> ClassName("", typeName)
+	this is ResolvedTypeRef -> when(this.type) {
+		is PrimitiveType -> toPrimitiveType()
+		else -> ClassName(packageName, typeName)
+	}
+	else -> ClassName(packageName, typeName)
 }.let { if (nullable) it.copy(nullable = true) else it }
 
 // 8 bits

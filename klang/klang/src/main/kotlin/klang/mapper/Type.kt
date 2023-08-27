@@ -61,9 +61,6 @@ private fun TypeRef.toPrimitiveType(): ClassName = when (typeName) {
 
 private fun TypeRef.isSpecialType() = typeName == "void"
 
-internal val TypeRef.isPrimitive: Boolean
-	get() = typeName in intType + floatType + doubleType + longType + int64Type + byteType + shortType + charType
-
 internal val TypeRef.isFloat: Boolean
 	get() = typeName in floatType
 

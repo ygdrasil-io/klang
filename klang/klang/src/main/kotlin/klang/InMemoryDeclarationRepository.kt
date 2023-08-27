@@ -3,7 +3,7 @@ package klang
 import klang.domain.*
 import mu.KotlinLogging
 
-class InMemoryDeclarationRepository : DeclarationRepository{
+class InMemoryDeclarationRepository : DeclarationRepository {
 
 	private val logger = KotlinLogging.logger {}
 	private val nativeDeclarations = mutableSetOf<NativeDeclaration>()
@@ -13,6 +13,7 @@ class InMemoryDeclarationRepository : DeclarationRepository{
 
 	init {
 		insertObjectiveCDefaultDeclaration()
+		insertCDefaultDeclaration()
 	}
 
 	override fun save(declaration: NameableDeclaration) = nativeDeclarations

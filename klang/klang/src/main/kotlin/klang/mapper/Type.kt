@@ -5,6 +5,7 @@ import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import klang.domain.PrimitiveType
 import klang.domain.ResolvedTypeRef
 import klang.domain.TypeRef
+import klang.domain.VoidType
 
 // @see https://github.com/java-native-access/jna/blob/master/www/Mappings.md
 
@@ -18,9 +19,8 @@ internal fun TypeRef.toType(packageName: String, nullable: Boolean = false) = wh
 		this is ResolvedTypeRef -> ClassName(packageName, typeName)
 		else -> jnaPointer
 	}
-	isSpecialType() -> ClassName("kotlin", "Unit")
-	isPrimitive -> toPrimitiveType()
-	this is ResolvedTypeRef -> when(this.type) {
+	this is ResolvedTypeRef -> when(this.type.rootType()) {
+		is VoidType -> ClassName("kotlin", "Unit")
 		is PrimitiveType -> toPrimitiveType()
 		else -> ClassName(packageName, typeName)
 	}
@@ -63,7 +63,6 @@ private fun TypeRef.toPrimitiveType(): ClassName = when (typeName) {
 	else -> ClassName("", typeName)
 }
 
-private fun TypeRef.isSpecialType() = typeName == "void"
 
 internal val TypeRef.isFloat: Boolean
 	get() = typeName in floatType
@@ -85,12 +84,5 @@ internal val TypeRef.defaultValue: String
 		isString -> "\"\""
 		isPointer -> "null"
 		isLong -> "com.sun.jna.NativeLong(0)"
-		isPrimitive -> when {
-			isFloat -> "0.0f"
-			isDouble -> "0.0"
-			isInt64 -> "0L"
-			else -> "0"
-		}
-
 		else -> "null"
 	}

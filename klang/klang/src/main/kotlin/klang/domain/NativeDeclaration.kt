@@ -10,7 +10,7 @@ sealed interface NativeDeclaration {
 		logger.debug { "merging $this with $other is not relevant" }
 	}
 
-	fun rootType(): NativeDeclaration = when (this) {
+	fun rootType(): NativeDeclaration? = when (this) {
 		is PrimitiveType -> this
 		is NativeTypeAlias -> this.type.let {
 			when (it) {
@@ -19,7 +19,7 @@ sealed interface NativeDeclaration {
 			}
 		}
 
-		else -> error("cannot find root type for $this")
+		else -> null
 	}
 }
 

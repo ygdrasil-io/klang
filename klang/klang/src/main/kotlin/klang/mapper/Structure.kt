@@ -1,7 +1,7 @@
 package klang.mapper
 
 import com.squareup.kotlinpoet.*
-import klang.domain.NativeStructure
+import klang.domain.*
 
 internal fun NativeStructure.toSpec(packageName: String) = ClassName("", name)
 	.let { structureClass ->
@@ -30,15 +30,9 @@ private fun NativeStructure.toSpecWithAttributes(packageName: String, structureC
 					.build()
 			)
 			.apply {
-				fields.forEach { (name, type) ->
+				fields.forEach { (name, typeRef) ->
 					addProperty(
-						PropertySpec
-							.builder(name, type.toType(packageName, nullable = type.isPointer || type.isPrimitive.not()))
-							.addKdoc("mapped from ${type.referenceAsString}")
-							.addAnnotation(jnaJvmField)
-							.initializer(type.defaultValue)
-							.mutable(true)
-							.build()
+						propertySpec(name, typeRef, packageName)
 					)
 				}
 				superclassConstructorParameters.add(CodeBlock.of("pointer"))
@@ -76,6 +70,36 @@ private fun NativeStructure.toSpecWithAttributes(packageName: String, structureC
 					.build()
 			)
 			.build()
+
+private fun propertySpec(
+	name: String,
+	typeRef: TypeRef,
+	packageName: String
+): PropertySpec {
+
+	val rootType = when(typeRef) {
+		is ResolvedTypeRef -> typeRef.type.rootType()
+		else -> null
+	}
+
+	val type = when(rootType) {
+		is PrimitiveType -> typeRef.toType(packageName)
+		else -> jnaPointer.copy(nullable = true)
+	}
+
+	val defaultValue = when(rootType) {
+		is FixeSizeType<*> -> rootType.defaultValue.toString()
+		else -> "null"
+	}
+
+	return PropertySpec
+		.builder(name, type)
+		.addKdoc("mapped from ${typeRef.referenceAsString}")
+		.addAnnotation(jnaJvmField)
+		.initializer(defaultValue)
+		.mutable(true)
+		.build()
+}
 
 
 private fun toSpecWithNoAttributes(structureClass: ClassName) =

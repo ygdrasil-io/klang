@@ -88,7 +88,6 @@ sealed interface TypeRef{
 	val isVolatile: Boolean
 	val isUnion: Boolean
 	var isArray: Boolean
-	var isPrimitive: Boolean
 
 	fun DeclarationRepository.resolveType(): TypeRef = findDeclarationByName<NameableDeclaration>(typeName)
 		?.let { ResolvedTypeRef(this@TypeRef, it) }
@@ -109,7 +108,6 @@ class UnresolvedTypeRef internal constructor(
 ) : TypeRef {
 
 	override var isArray: Boolean = false
-	override var isPrimitive: Boolean = typeName in intType + floatType + doubleType + longType + int64Type + byteType + shortType + charType
 
 	override fun toString() = "UnresolvedType($typeName from declaration $referenceAsString)"
 

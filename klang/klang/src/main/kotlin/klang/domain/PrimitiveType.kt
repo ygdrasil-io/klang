@@ -6,7 +6,7 @@ data object VoidType: PrimitiveType() {
 	override val name: String = "void"
 }
 
-class FixeSizeType<T>(val size: Int, override val name: String, val defaultValue: T): PrimitiveType()
+class FixeSizeType(val size: Int, override val name: String, val isFloating: Boolean = false): PrimitiveType()
 class PlatformDependantSizeType(val size: IntRange, override val name: String): PrimitiveType()
 
 

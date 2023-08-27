@@ -16,12 +16,15 @@ internal fun TypeRef.toType(packageName: String, nullable: Boolean = false) = wh
 		else -> ClassName("kotlin", "String")
 	}
 	isPointer -> when {
-		this is ResolvedTypeRef -> ClassName(packageName, typeName)
+		this is ResolvedTypeRef -> when(this.type.rootType()) {
+			is PrimitiveType -> jnaPointer
+			else -> ClassName(packageName, typeName)
+		}
 		else -> jnaPointer
 	}
 	this is ResolvedTypeRef -> when(this.type.rootType()) {
 		is VoidType -> ClassName("kotlin", "Unit")
-		is PrimitiveType -> toPrimitiveType()
+		is PrimitiveType -> toPrimitiveType(packageName)
 		else -> ClassName(packageName, typeName)
 	}
 	else -> ClassName(packageName, typeName)
@@ -51,7 +54,7 @@ private val floatType = listOf("float")
 // 64 bits
 private val doubleType = listOf("double")
 
-private fun TypeRef.toPrimitiveType(): ClassName = when (typeName) {
+private fun TypeRef.toPrimitiveType(packageName: String): ClassName = when (typeName) {
 	in intType -> ClassName("kotlin", "Int")
 	in int64Type -> ClassName("kotlin", "Long")
 	in floatType -> ClassName("kotlin", "Float")
@@ -60,29 +63,9 @@ private fun TypeRef.toPrimitiveType(): ClassName = when (typeName) {
 	in byteType -> ClassName("kotlin", "Byte")
 	in shortType -> ClassName("kotlin", "Short")
 	in charType -> ClassName("kotlin", "Char")
-	else -> ClassName("", typeName)
+	else -> ClassName(packageName, typeName)
 }
 
 
-internal val TypeRef.isFloat: Boolean
-	get() = typeName in floatType
-
-internal val TypeRef.isDouble: Boolean
-	get() = typeName in doubleType
-
-internal val TypeRef.isInt64: Boolean
-	get() = typeName in int64Type
-
-internal val TypeRef.isLong: Boolean
-	get() = typeName in longType
-
 internal val TypeRef.isString: Boolean
 	get() = isPointer && typeName == "char"
-
-internal val TypeRef.defaultValue: String
-	get() = when {
-		isString -> "\"\""
-		isPointer -> "null"
-		isLong -> "com.sun.jna.NativeLong(0)"
-		else -> "null"
-	}

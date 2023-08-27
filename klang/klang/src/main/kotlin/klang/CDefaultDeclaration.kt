@@ -6,12 +6,12 @@ import klang.domain.VoidType
 
 fun DeclarationRepository.insertCDefaultDeclaration() {
 	save(VoidType)
-	byteType.forEach { save(FixeSizeType<Byte>(8, it, 0)) }
-	shortType.forEach { save(FixeSizeType<Short>(16, it, 0)) }
-	intType.forEach { save(FixeSizeType<Int>(32, it, 0)) }
-	int64Type.forEach { save(FixeSizeType<Long>(64, it, 0)) }
-	floatType.forEach { save(FixeSizeType<Float>(32, it, 0f)) }
-	doubleType.forEach { save(FixeSizeType<Double>(64, it, 0.0)) }
+	byteType.forEach { save(FixeSizeType(8, it)) }
+	shortType.forEach { save(FixeSizeType(16, it)) }
+	intType.forEach { save(FixeSizeType(32, it)) }
+	int64Type.forEach { save(FixeSizeType(64, it)) }
+	floatType.forEach { save(FixeSizeType(32, it, true)) }
+	doubleType.forEach { save(FixeSizeType(64, it, true)) }
 	longType.forEach { save(PlatformDependantSizeType(16..32, it)) }
 	charType.forEach { save(PlatformDependantSizeType(32..64, it)) }
 }

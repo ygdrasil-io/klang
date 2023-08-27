@@ -2,6 +2,7 @@ package klang.generator
 
 import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.shouldBe
+import klang.InMemoryDeclarationRepository
 import klang.domain.NativeStructure
 import klang.mapper.toSpec
 import klang.parser.testType
@@ -18,6 +19,11 @@ class StructureGenerationTest : FreeSpec({
 			"fifth" to testType("void *"),
 		)
 	)
+
+	InMemoryDeclarationRepository().also { repository ->
+		repository.save(structure)
+		repository.resolveTypes()
+	}
 
 	"generate kotlin structure" {
 		structure.toSpec("test").toString() shouldBe """

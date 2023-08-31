@@ -47,8 +47,18 @@ val headerUrl = URL("https://github.com/klang-toolkit/SDL-binary/releases/downlo
 
 klang {
 	download(headerUrl)
-		.let { unpack(it) }
-		.let { parse(fileToParse = "SDL2/SDL.h", at = it) }
+		.let(::unpack)
+		.let {
+			parse(fileToParse = "SDL2/SDL.h", at = it) {
+				findStructureByName("SDL_AudioCVT")?.apply {
+					fields.find { (name, _) -> name == "filters" }
+						?.let { (_, field) ->
+							field.isArray = true
+							field.arraySize = 10
+						}
+				}
+			}
+		}
 
 	generateBinding("libsdl", "SDL2")
 }

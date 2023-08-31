@@ -1,5 +1,6 @@
 package libsdl
 
+import com.sun.jna.Callback
 import com.sun.jna.Pointer
 
 typealias SDL_iconv_t = Pointer
@@ -11,3 +12,5 @@ typealias SDL_hid_device = Pointer
 typealias SDL_Haptic = Pointer
 typealias SDL_sem = Pointer
 typealias SDL_AudioStream = Pointer
+typealias SDL_AssertionHandler = Callback
+typealias SDL_HitTest = Callback

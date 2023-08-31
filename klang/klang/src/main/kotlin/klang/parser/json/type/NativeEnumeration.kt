@@ -33,19 +33,17 @@ private fun TranslationUnitNode.isTypeDefStructure(
 private fun TranslationUnitNode.extractFields(): List<Pair<String, Long>> =
 	children.filter { it.content.first == TranslationUnitKind.EnumConstantDecl }
 		.map { it.extractField() }
+		.toMutableList()
 		.let { list ->
-			list
-				.mapIndexed { index, (name, value) ->
+			list.forEachIndexed { index, (name, value) ->
 					when (value) {
 						null -> when (index) {
-							0 -> name to 0L
-							else -> name to (list[index - 1].second?.plus(1) ?: error("no previous value"))
-						}
-						else -> {
-							name to value
+							0 -> list[0] = name to 0L
+							else -> list[index] = name to (list[index - 1].second?.plus(1) ?: error("no previous value"))
 						}
 					}
 				}
+			list.map { it.first to it.second!! }
 		}
 
 

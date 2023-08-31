@@ -160,8 +160,9 @@ class SdlUI(width: Int, height: Int): AutoCloseable {
 				SDL_EventType.SDL_QUIT -> result.add(UserCommand.quit)
 				SDL_EventType.SDL_KEYDOWN -> {
 					val keyboardEvent = SDL_KeyboardEvent(event.pointer)
-					println("keyboardEvent(${keyboardEvent.keysym!!.scancode}): ${SDL_Scancode.of(keyboardEvent.keysym!!.scancode)}")
-					val command = when (SDL_Scancode.of(keyboardEvent.keysym!!.scancode)) {
+					val keysym = SDL_Keysym(keyboardEvent.keysym)
+					println("keyboardEvent(${keysym.scancode}): ${SDL_Scancode.of(keysym.scancode)}")
+					val command = when (SDL_Scancode.of(keysym.scancode)) {
 						SDL_Scancode.SDL_SCANCODE_I -> UserCommand.up
 						SDL_Scancode.SDL_SCANCODE_J -> UserCommand.left
 						SDL_Scancode.SDL_SCANCODE_K -> UserCommand.down

@@ -2,6 +2,7 @@ package klang.generator
 
 import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.shouldBe
+import klang.InMemoryDeclarationRepository
 import klang.domain.NativeEnumeration
 import klang.mapper.toSpecAsEnumeration
 
@@ -15,6 +16,11 @@ class EnumerationGenerationTest : FreeSpec({
 			Pair("THIRD", 3)
 		)
 	)
+
+	InMemoryDeclarationRepository().apply {
+		save(enumeration)
+		resolveTypes()
+	}
 
 	"generate kotlin enumeration" {
 		enumeration.toSpecAsEnumeration("mypackage").toString() shouldBe """

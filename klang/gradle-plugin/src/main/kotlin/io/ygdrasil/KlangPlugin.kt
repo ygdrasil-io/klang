@@ -198,7 +198,6 @@ private fun DeclarationRepository.generateKotlinFiles(outputDirectory: File, bas
 		.filterIsInstance<NativeFunction>()
 		.removeCNativeFunctions()
 		.toList()
-		// TODO: add mylib as plugin parameter
 		.generateKotlinFile(outputDirectory, basePackage, libraryName)
 
 	declarations.asSequence()

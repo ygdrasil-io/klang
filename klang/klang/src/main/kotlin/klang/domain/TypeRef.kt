@@ -58,6 +58,8 @@ fun typeOf(reference: String): Either<String, TypeRef> = either{
 		false
 	}
 
+	val isCallback = tokens.any { it.contains("(") }
+
 	if (isEnumeration) {
 		ensure(!isStructure) {
 			"type cannot be an enumeration and a structure $reference"
@@ -72,7 +74,8 @@ fun typeOf(reference: String): Either<String, TypeRef> = either{
 		isEnumeration,
 		isNullable,
 		isVolatile,
-		isUnion
+		isUnion,
+		isCallback
 	)
 }
 
@@ -89,6 +92,7 @@ sealed interface TypeRef{
 	val isUnion: Boolean
 	var isArray: Boolean
 	var arraySize: Int?
+	val isCallback: Boolean
 
 	fun DeclarationRepository.resolveType(): TypeRef = findDeclarationByName<NameableDeclaration>(typeName)
 		?.let { ResolvedTypeRef(this@TypeRef, it) }
@@ -105,7 +109,8 @@ class UnresolvedTypeRef internal constructor(
 	override val isEnumeration: Boolean,
 	override val isNullable: Boolean?,
 	override val isVolatile: Boolean,
-	override val isUnion: Boolean
+	override val isUnion: Boolean,
+	override val isCallback: Boolean
 ) : TypeRef {
 
 	override var isArray: Boolean = false
@@ -133,27 +138,3 @@ private fun tokenizeTypeRef(type: String): List<String> {
 	val regexPattern = Regex("""\w+\s*<[^>]+>|\*|\w+""")
 	return regexPattern.findAll(type).map { it.value.trim() }.toList()
 }
-
-// 8 bits
-private val byteType = listOf("char", "unsigned char", "uint16_t", "int16_t")
-
-// 16 bits
-private val shortType = listOf("short", "unsigned short", "uint8_t", "int8_t")
-
-// 32 bits
-private val intType = listOf("int", "unsigned int", "uint32_t", "int32_t")
-
-// 32 to 64 bits
-private val longType = listOf("long", "unsigned long")
-
-// 32 to 64 bits
-private val charType = listOf("wchar_t")
-
-// 64 bits
-private val int64Type = listOf("uint64_t", "int64_t")
-
-// 32 bits
-private val floatType = listOf("float")
-
-// 64 bits
-private val doubleType = listOf("double")

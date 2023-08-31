@@ -26,4 +26,5 @@ private fun NativeFunction.toSpec(packageName: String) = FunSpec
 
 private fun NativeFunction.Argument.toSpec(packageName: String, index: Int) = ParameterSpec
 	.builder(name ?: "parameter$index", type.toType(packageName))
+	.addKdoc("mapped from ${type.referenceAsString}")
 	.build()

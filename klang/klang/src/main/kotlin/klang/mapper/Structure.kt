@@ -99,7 +99,7 @@ private fun propertySpec(
 			else -> "0"
 		}
 		rootType is PlatformDependantSizeType -> when {
-			rootType.size == 16..32 -> "com.sun.jna.NativeLong(0)"
+			rootType.size == 32..64 -> "com.sun.jna.NativeLong(0)"
 			else -> "null"
 		}
 		else -> "null"

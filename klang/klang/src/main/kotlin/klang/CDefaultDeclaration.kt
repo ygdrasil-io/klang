@@ -12,8 +12,8 @@ fun DeclarationRepository.insertCDefaultDeclaration() {
 	int64Type.forEach { save(FixeSizeType(64, it)) }
 	floatType.forEach { save(FixeSizeType(32, it, true)) }
 	doubleType.forEach { save(FixeSizeType(64, it, true)) }
-	longType.forEach { save(PlatformDependantSizeType(16..32, it)) }
-	charType.forEach { save(PlatformDependantSizeType(32..64, it)) }
+	longType.forEach { save(PlatformDependantSizeType(32..64, it)) }
+	charType.forEach { save(PlatformDependantSizeType(16..32, it)) }
 }
 
 

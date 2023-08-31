@@ -131,6 +131,7 @@ class KlangPlugin : Plugin<Project> {
 
 					with(extension.declarations) {
 						onSuccess()
+						resolveTypes()
 					}
 				}
 		}

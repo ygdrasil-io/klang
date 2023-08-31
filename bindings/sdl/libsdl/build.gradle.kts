@@ -1,3 +1,5 @@
+import arrow.core.right
+import klang.domain.typeOf
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 import java.net.URL
@@ -50,6 +52,14 @@ klang {
 		.let(::unpack)
 		.let {
 			parse(fileToParse = "SDL2/SDL.h", at = it) {
+				findTypeAliasByName("Uint8")?.apply {
+					// Type is dumped as Int instead of char
+					typeOf("char").onRight {
+						this.type = it
+					}
+				}
+
+				// Array must be set manually as there is no way to know it without reading the documentation
 				findStructureByName("SDL_AudioCVT")?.apply {
 					fields.find { (name, _) -> name == "filters" }
 						?.let { (_, field) ->

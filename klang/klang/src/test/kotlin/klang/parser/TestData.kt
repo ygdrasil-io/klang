@@ -2,7 +2,9 @@ package klang.parser
 
 import klang.domain.*
 
-fun testType(name: String) = typeOf(name).getOrNull() ?: error("fail to create type $name")
+fun testType(name: String) = typeOf(name).let {
+	it.getOrNull() ?: error("fail to create type $name, cause: ${it.leftOrNull()}")
+}
 
 object TestData {
 

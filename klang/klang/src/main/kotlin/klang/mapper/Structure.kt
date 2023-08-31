@@ -96,7 +96,10 @@ private fun propertySpec(
 			true -> jnaCallback.copy(nullable = true)
 			else -> null
 		}
-		else -> null
+		else -> when {
+			typeRef.isCallback -> jnaCallback.copy(nullable = true)
+			else -> null
+		}
 	} ?: jnaPointer.copy(nullable = true)
 
 	val defaultValue = when (rootType) {

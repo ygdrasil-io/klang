@@ -58,7 +58,8 @@ fun typeOf(reference: String): Either<String, TypeRef> = either{
 		false
 	}
 
-	val isCallback = tokens.any { it.contains("(") }
+	//TODO find a better way to handle this
+	val isCallback = reference.contains("(")
 
 	if (isEnumeration) {
 		ensure(!isStructure) {

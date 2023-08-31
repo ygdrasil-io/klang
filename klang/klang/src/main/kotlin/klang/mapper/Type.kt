@@ -27,21 +27,30 @@ internal fun TypeRef.toType(packageName: String, nullable: Boolean = false) = wh
 
 // @see https://github.com/java-native-access/jna/blob/master/www/Mappings.md
 private fun ResolvedTypeRef.toPrimitiveType(packageName: String): ClassName = this.type.rootType().let { rootType ->
-	when {
-		// Floating
-		rootType is FixeSizeType && rootType.size == 32 && rootType.isFloating -> ClassName("kotlin", "Float")
-		rootType is FixeSizeType && rootType.size == 64 && rootType.isFloating -> ClassName("kotlin", "Double")
-		// Integer
-		rootType is FixeSizeType && rootType.size == 8 -> ClassName("kotlin", "Byte")
-		rootType is FixeSizeType && rootType.size == 16 -> ClassName("kotlin", "Short")
-		rootType is FixeSizeType && rootType.size == 32 -> ClassName("kotlin", "Int")
-		rootType is FixeSizeType && rootType.size == 64 -> ClassName("kotlin", "Long")
+	when (rootType) {
+		is FixeSizeType -> when {
+			// Floating
+			rootType.size == 32 && rootType.isFloating -> ClassName("kotlin", "Float")
+			rootType.size == 64 && rootType.isFloating -> ClassName("kotlin", "Double")
+			// Integer
+			rootType.size == 8 -> ClassName("kotlin", "Byte")
+			rootType.size == 16 -> ClassName("kotlin", "Short")
+			rootType.size == 32 -> ClassName("kotlin", "Int")
+			rootType.size == 64 -> ClassName("kotlin", "Long")
+			// Default
+			else -> null
+		}
+
 		// Specials
-		rootType is PlatformDependantSizeType && rootType.size == 16..32 -> ClassName("kotlin", "Char")
-		rootType is PlatformDependantSizeType && rootType.size == 32..64 -> ClassName("com.sun.jna", "NativeLong")
+		is PlatformDependantSizeType -> when (rootType.size) {
+			16..32 -> ClassName("kotlin", "Char")
+			32..64 -> ClassName("com.sun.jna", "NativeLong")
+			// Default
+			else -> null
+		}
 		// Default
-		else -> ClassName(packageName, typeName)
-	}
+		else -> null
+	} ?: ClassName(packageName, typeName)
 }
 
 

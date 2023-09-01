@@ -24,7 +24,7 @@ sealed interface NativeDeclaration {
 				else -> this
 			}
 		}
-
+		is FunctionPointerType -> this
 		else -> null
 	}
 }

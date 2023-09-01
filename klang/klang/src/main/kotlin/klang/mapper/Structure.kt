@@ -78,28 +78,19 @@ private fun propertySpec(
 ): PropertySpec {
 
 	val rootType = when {
-		typeRef.isPointer -> null
 		typeRef is ResolvedTypeRef -> typeRef.type.rootType()
 		else -> null
 	}
 
-	val type = when(rootType) {
-		is PrimitiveType -> when {
-			typeRef.isCallback -> jnaCallback.copy(nullable = true)
-			else -> typeRef.toType(packageName)
-		}
-		is NativeEnumeration -> when (rootType.type) {
+	val type = when {
+		rootType is FunctionPointerType -> jnaCallback.copy(nullable = true)
+		rootType is PrimitiveType && typeRef.isPointer.not() -> typeRef.toType(packageName)
+
+		rootType is NativeEnumeration && typeRef.isPointer.not() -> when (rootType.type) {
 			is ResolvedTypeRef -> rootType.type.toType(packageName)
 			else -> null
 		}
-		is TypeRef -> when(rootType.isCallback) {
-			true -> jnaCallback.copy(nullable = true)
-			else -> null
-		}
-		else -> when {
-			typeRef.isCallback -> jnaCallback.copy(nullable = true)
-			else -> null
-		}
+		else ->  null
 	} ?: jnaPointer.copy(nullable = true)
 
 	val defaultValue = when (rootType) {

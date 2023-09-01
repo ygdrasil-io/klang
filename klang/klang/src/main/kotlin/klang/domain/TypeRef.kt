@@ -9,7 +9,7 @@ import mu.KotlinLogging
 
 private val logger = KotlinLogging.logger {}
 
-fun typeOf(reference: String): Either<String, TypeRef> = either{
+fun typeOf(reference: String): Either<String, TypeRef> = either {
 	val tokens = tokenizeTypeRef(reference).toMutableList()
 	ensure(tokens.isNotEmpty()) { "fail to tokenize type $reference" }
 
@@ -43,7 +43,7 @@ fun typeOf(reference: String): Either<String, TypeRef> = either{
 		it.removeFirst()
 		ensure(tokens.isNotEmpty()) { "type name not found $reference" }
 		"unsigned ${tokens.removeFirst()}"
-	} ?:tokens.removeFirst()
+	} ?: tokens.removeFirst()
 
 	val isPointer = tokens.takeIf { it.firstOrNull() == "*" }?.let {
 		it.removeFirst()
@@ -80,7 +80,7 @@ fun typeOf(reference: String): Either<String, TypeRef> = either{
 	)
 }
 
-sealed interface TypeRef{
+sealed interface TypeRef {
 
 	val referenceAsString: String
 	val typeName: String
@@ -95,9 +95,12 @@ sealed interface TypeRef{
 	var arraySize: Int?
 	val isCallback: Boolean
 
-	fun DeclarationRepository.resolveType(): TypeRef = findDeclarationByName<NameableDeclaration>(typeName)
-		?.let { ResolvedTypeRef(this@TypeRef, it) }
-		?: (this@TypeRef.also { logger.warn { "fail to resolve type : $it" } })
+	fun DeclarationRepository.resolveType(): TypeRef = when {
+		isCallback -> ResolvedTypeRef(this@TypeRef, FunctionPointerType)
+		else -> findDeclarationByName<NameableDeclaration>(typeName)
+				?.let { ResolvedTypeRef(this@TypeRef, it) }
+				?: (this@TypeRef.also { logger.warn { "fail to resolve type : $it" } })
+	}
 
 }
 
@@ -128,7 +131,8 @@ class UnresolvedTypeRef internal constructor(
 	}
 }
 
-class ResolvedTypeRef internal constructor(private val typeRef: TypeRef, val type: NativeDeclaration) : TypeRef by typeRef {
+class ResolvedTypeRef internal constructor(private val typeRef: TypeRef, val type: NativeDeclaration) :
+	TypeRef by typeRef {
 	override fun toString() = "ResolvedType($typeName from declaration $referenceAsString)"
 
 	override fun equals(other: Any?) = typeRef == other

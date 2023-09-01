@@ -9,6 +9,8 @@ import mu.KotlinLogging
 
 private val logger = KotlinLogging.logger {}
 
+fun <A, B> Either<A, B>.unchecked(message: String = "unchecked Either lead to error") = getOrNull() ?: error(message)
+
 fun typeOf(reference: String): Either<String, TypeRef> = either {
 	val tokens = tokenizeTypeRef(reference).toMutableList()
 	ensure(tokens.isNotEmpty()) { "fail to tokenize type $reference" }

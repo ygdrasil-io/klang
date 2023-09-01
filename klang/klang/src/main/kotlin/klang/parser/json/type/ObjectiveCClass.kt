@@ -2,10 +2,7 @@ package klang.parser.json.type
 
 import arrow.core.Either
 import arrow.core.getOrElse
-import klang.domain.ObjectiveCClass
-import klang.domain.TypeRef
-import klang.domain.UnresolvedTypeRef
-import klang.domain.typeOf
+import klang.domain.*
 import klang.parser.json.domain.TranslationUnitKind
 import klang.parser.json.domain.TranslationUnitNode
 import klang.parser.json.domain.json
@@ -60,7 +57,7 @@ private fun JsonObject.arguments(): List<ObjectiveCClass.Method.Argument> = inne
 
 private fun JsonObject.toArgument() = ObjectiveCClass.Method.Argument(
 	name = name(),
-	type = type().let(::typeOf).getOrElse { error("fail to parse type $this") }
+	type = type().let(::typeOf).unchecked("fail to parse type $this")
 )
 
 private fun JsonObject.properties(): List<ObjectiveCClass.Property> = inner()

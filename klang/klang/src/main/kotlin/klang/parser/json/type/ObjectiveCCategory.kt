@@ -1,8 +1,6 @@
 package klang.parser.json.type
 
-import arrow.core.getOrElse
 import klang.domain.*
-import klang.domain.AnonymousCategoryName
 import klang.parser.json.domain.TranslationUnitKind
 import klang.parser.json.domain.TranslationUnitNode
 import klang.parser.json.domain.json
@@ -10,7 +8,6 @@ import klang.parser.json.domain.kind
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
-
 
 internal fun TranslationUnitNode.toObjectiveCCategory(): ObjectiveCCategory {
 	return ObjectiveCCategory(
@@ -47,5 +44,5 @@ private fun JsonObject.arguments(): List<ObjectiveCClass.Method.Argument> = inne
 
 private fun JsonObject.toArgument() = ObjectiveCClass.Method.Argument(
 	name = name(),
-	type = type().let(::typeOf).getOrElse { error("fail to parse type $this") }
+	type = type().let(::typeOf).unchecked("fail to parse type $this")
 )

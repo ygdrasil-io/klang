@@ -9,4 +9,8 @@ data object VoidType: PrimitiveType() {
 class FixeSizeType(val size: Int, override val name: String, val isFloating: Boolean = false): PrimitiveType()
 class PlatformDependantSizeType(val size: IntRange, override val name: String): PrimitiveType()
 
+data object StringType: PrimitiveType() {
+	override val name: String = "char *"
+}
+
 

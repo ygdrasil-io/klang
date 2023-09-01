@@ -2,6 +2,7 @@ package klang.mapper
 
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
+import com.sun.jna.PointerType
 import klang.domain.*
 
 // TODO add tests
@@ -12,12 +13,14 @@ internal fun TypeRef.toType(packageName: String, nullable: Boolean = false) = wh
 	}
 	isPointer -> when {
 		this is ResolvedTypeRef -> when(this.type.rootType()) {
+			is FunctionPointerType -> jnaCallback
 			is PrimitiveType -> jnaPointer
 			else -> ClassName(packageName, typeName)
 		}
 		else -> jnaPointer
 	}
 	this is ResolvedTypeRef -> when(this.type.rootType()) {
+		is FunctionPointerType -> jnaCallback
 		is VoidType -> ClassName("kotlin", "Unit")
 		is PrimitiveType -> toPrimitiveType(packageName)
 		else -> ClassName(packageName, typeName)

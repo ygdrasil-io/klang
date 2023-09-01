@@ -7,6 +7,7 @@ import klang.domain.NativeEnumeration
 import klang.domain.NativeStructure
 import klang.domain.NativeTypeAlias
 import klang.mapper.toSpec
+import klang.parser.TestData.basicFunctionPointer
 import klang.parser.testType
 
 class StructureGenerationWithCallbackTest : FreeSpec({
@@ -14,14 +15,14 @@ class StructureGenerationWithCallbackTest : FreeSpec({
 	val structure = NativeStructure(
 		name = "MyStructure",
 		fields = listOf(
-			"callback" to testType("void (*)(void *, Uint8 *, int)"),
+			"callback" to testType(basicFunctionPointer),
 			"callback2" to testType("MyAlias"),
 		)
 	)
 
 	val typeAlias = NativeTypeAlias(
 		name = "MyAlias",
-		type = testType("void (*)(void *, Uint8 *, int)")
+		type = testType(basicFunctionPointer)
 	)
 
 	InMemoryDeclarationRepository().apply {

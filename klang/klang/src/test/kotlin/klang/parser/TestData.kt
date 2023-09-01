@@ -108,4 +108,6 @@ object TestData {
 			type = testType("struct OldStructureType *")
 		)
 	)
+
+	const val basicFunctionPointer = "void (*)(void *, Uint8 *, int)"
 }

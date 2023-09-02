@@ -13,12 +13,14 @@ import kotlinx.serialization.json.jsonPrimitive
 
 internal fun TranslationUnitNode.toNativeTypeDefStructure(sibling: TranslationUnitNode) = NativeStructure(
 	name = sibling.json.name(),
-	fields = this.extractFields()
+	fields = this.extractFields(),
+	isUnion = json.isUnion()
 )
 
 internal fun TranslationUnitNode.toNativeStructure() = NativeStructure(
 	name = json.name(),
-	fields = this.extractFields()
+	fields = this.extractFields(),
+	isUnion = json.isUnion()
 )
 
 internal fun TranslationUnitNode.isTypeDefStructure(sibling: List<TranslationUnitNode>) =
@@ -46,3 +48,8 @@ private fun TranslationUnitNode.extractField(): Pair<String, TypeRef> {
 		?: error("no type for : $this")
 	return name to value
 }
+
+private fun JsonObject.isUnion(): Boolean {
+	return this["tagUsed"]?.jsonPrimitive?.content == "union"
+}
+

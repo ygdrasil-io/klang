@@ -4,7 +4,8 @@ import klang.DeclarationRepository
 
 data class NativeStructure(
 	override val name: String,
-	var fields: List<Pair<String, TypeRef>> = listOf()
+	var fields: List<Pair<String, TypeRef>> = listOf(),
+	var isUnion: Boolean = false,
 ): NameableDeclaration, ResolvableDeclaration {
 
 	override fun <T : NativeDeclaration> merge(other: T) {

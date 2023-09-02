@@ -1,0 +1,23 @@
+TranslationUnitDecl 0x5582ed145e18 <<invalid sloc>> <invalid sloc>
+|-TypedefDecl 0x5582ed146640 <<invalid sloc>> <invalid sloc> implicit __int128_t '__int128'
+| `-BuiltinType 0x5582ed1463e0 '__int128'
+|-TypedefDecl 0x5582ed1466b0 <<invalid sloc>> <invalid sloc> implicit __uint128_t 'unsigned __int128'
+| `-BuiltinType 0x5582ed146400 'unsigned __int128'
+|-TypedefDecl 0x5582ed1469b8 <<invalid sloc>> <invalid sloc> implicit __NSConstantString 'struct __NSConstantString_tag'
+| `-RecordType 0x5582ed146790 'struct __NSConstantString_tag'
+|   `-Record 0x5582ed146708 '__NSConstantString_tag'
+|-TypedefDecl 0x5582ed146a50 <<invalid sloc>> <invalid sloc> implicit __builtin_ms_va_list 'char *'
+| `-PointerType 0x5582ed146a10 'char *'
+|   `-BuiltinType 0x5582ed145ec0 'char'
+|-TypedefDecl 0x5582ed146d48 <<invalid sloc>> <invalid sloc> implicit __builtin_va_list 'struct __va_list_tag[1]'
+| `-ConstantArrayType 0x5582ed146cf0 'struct __va_list_tag[1]' 1 
+|   `-RecordType 0x5582ed146b30 'struct __va_list_tag'
+|     `-Record 0x5582ed146aa8 '__va_list_tag'
+|-RecordDecl 0x5582ed1a1f40 </workspace/union.h:3:9, line:8:1> line:3:15 union MyUnion definition
+| |-FieldDecl 0x5582ed1a1ff8 <line:5:5, col:9> col:9 i 'int'
+| |-FieldDecl 0x5582ed1a2060 <line:6:5, col:11> col:11 f 'float'
+| `-FieldDecl 0x5582ed1a20c0 <line:7:5, col:10> col:10 c 'char'
+`-TypedefDecl 0x5582ed1a2168 <line:3:1, line:8:3> col:3 MyUnion 'union MyUnion':'union MyUnion'
+  `-ElaboratedType 0x5582ed1a2110 'union MyUnion' sugar
+    `-RecordType 0x5582ed1a1fc0 'union MyUnion'
+      `-Record 0x5582ed1a1f40 'MyUnion'

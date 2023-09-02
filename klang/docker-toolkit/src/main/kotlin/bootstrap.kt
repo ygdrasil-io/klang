@@ -43,9 +43,11 @@ private fun generateCSampleAst() {
 		"functions.h " to "functions.h.ast",
 		"typedef.h " to "typedef.h.ast",
 		"exhaustive-typedef.h " to "exhaustive-typedef.h.ast",
+		"union.h " to "union.h.ast",
 	)
 
 	val sampleSourcePath = File(".")
+		.resolve("klang")
 		.resolve("klang")
 		.resolve("src")
 		.resolve("test")

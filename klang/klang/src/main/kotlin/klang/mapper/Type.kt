@@ -7,12 +7,12 @@ import klang.domain.*
 
 // TODO add tests
 internal fun TypeRef.toType(packageName: String, nullable: Boolean = false) = when {
-	isString -> when {
-		isArray -> ClassName("kotlin", "Array").parameterizedBy(ClassName("kotlin", "String"))
-		else -> ClassName("kotlin", "String")
-	}
 	isPointer -> when {
 		this is ResolvedTypeRef -> when(this.type.rootType()) {
+			is StringType -> when {
+				isArray -> ClassName("kotlin", "Array").parameterizedBy(ClassName("kotlin", "String"))
+				else -> ClassName("kotlin", "String")
+			}
 			is FunctionPointerType -> jnaCallback
 			is PrimitiveType -> jnaPointer
 			else -> ClassName(packageName, typeName)
@@ -56,6 +56,3 @@ private fun ResolvedTypeRef.toPrimitiveType(packageName: String): ClassName = th
 	} ?: ClassName(packageName, typeName)
 }
 
-
-internal val TypeRef.isString: Boolean
-	get() = isPointer && typeName == "char"

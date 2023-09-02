@@ -99,6 +99,7 @@ sealed interface TypeRef {
 
 	fun DeclarationRepository.resolveType(): TypeRef = when {
 		isCallback -> ResolvedTypeRef(this@TypeRef, FunctionPointerType)
+		isPointer && typeName == "char" -> ResolvedTypeRef(this@TypeRef, StringType)
 		else -> findDeclarationByName<NameableDeclaration>(typeName)
 				?.let { ResolvedTypeRef(this@TypeRef, it) }
 				?: (this@TypeRef.also { logger.warn { "fail to resolve type : $it" } })

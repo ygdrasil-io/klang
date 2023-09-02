@@ -17,6 +17,7 @@ class StructureGenerationTest : FreeSpec({
 			"third" to testType("float"),
 			"fourth" to testType("double"),
 			"fifth" to testType("void *"),
+			"string" to testType("char *"),
 		)
 	)
 
@@ -27,7 +28,7 @@ class StructureGenerationTest : FreeSpec({
 
 	"generate kotlin structure" {
 		structure.toSpec("test").toString() shouldBe """
-@com.sun.jna.Structure.FieldOrder("first", "second", "third", "fourth", "fifth")
+@com.sun.jna.Structure.FieldOrder("first", "second", "third", "fourth", "fifth", "string")
 public open class MyStructure(
   pointer: com.sun.jna.Pointer? = null,
 ) : com.sun.jna.Structure(pointer) {
@@ -60,6 +61,12 @@ public open class MyStructure(
    */
   @kotlin.jvm.JvmField
   public var fifth: com.sun.jna.Pointer? = null
+
+  /**
+   * mapped from char *
+   */
+  @kotlin.jvm.JvmField
+  public var string: kotlin.String = ""
 
   public class ByReference(
     pointer: com.sun.jna.Pointer? = null,

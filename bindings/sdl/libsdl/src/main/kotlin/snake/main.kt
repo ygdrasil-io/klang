@@ -139,11 +139,6 @@ class SdlUI(width: Int, height: Int): AutoCloseable {
 			renderStringCentered(5, game.width, "your score is ${game.score}")
 		}
 
-		// Print all letter to check spacing between letters
-		// because the font is not monospace and some letters look too wide (e.g. i,v,u)
-//        renderString(Cell(0, 0), "abcdefghijklmnopqrstuvwxyz")
-//        renderString(Cell(0, 1), "abcdefghijklmnopqrstuvwxyz".reversed())
-
 		libSDL2Library.SDL_RenderPresent(renderer)
 	}
 
@@ -160,7 +155,7 @@ class SdlUI(width: Int, height: Int): AutoCloseable {
 				SDL_EventType.SDL_QUIT -> result.add(UserCommand.quit)
 				SDL_EventType.SDL_KEYDOWN -> {
 					val keyboardEvent = SDL_KeyboardEvent(event.pointer)
-					val keysym = SDL_Keysym(keyboardEvent.keysym)
+					val keysym = keyboardEvent.keysym!!
 					println("keyboardEvent(${keysym.scancode}): ${SDL_Scancode.of(keysym.scancode)}")
 					val command = when (SDL_Scancode.of(keysym.scancode)) {
 						SDL_Scancode.SDL_SCANCODE_I -> UserCommand.up
@@ -262,7 +257,7 @@ class SdlUI(width: Int, height: Int): AutoCloseable {
 		}
 
 		fun render(char: Char, cellRect: SDL_Rect) {
-			val charRect = letters[char.toUpperCase()] ?: (letters[' '] ?: error(""))
+			val charRect = letters[char.uppercaseChar()] ?: (letters[' '] ?: error(""))
 			libSDL2Library.SDL_RenderCopy(renderer, texture, charRect, cellRect)
 		}
 

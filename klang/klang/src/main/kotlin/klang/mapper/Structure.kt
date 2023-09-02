@@ -84,8 +84,8 @@ private fun propertySpec(
 
 	val type = when {
 		rootType is FunctionPointerType -> jnaCallback.copy(nullable = true)
+		rootType is StringType -> typeRef.toType(packageName)
 		rootType is PrimitiveType && typeRef.isPointer.not() -> typeRef.toType(packageName)
-
 		rootType is NativeEnumeration && typeRef.isPointer.not() -> when (rootType.type) {
 			is ResolvedTypeRef -> rootType.type.toType(packageName)
 			else -> null
@@ -93,14 +93,16 @@ private fun propertySpec(
 		else ->  null
 	} ?: jnaPointer.copy(nullable = true)
 
-	val defaultValue = when (rootType) {
-		is FixeSizeType -> when {
+	val defaultValue = when {
+		rootType is StringType -> "\"\""
+		typeRef.isPointer -> "null"
+		rootType is FixeSizeType -> when {
 			rootType.isFloating && rootType.size == 32 -> "0.0f"
 			rootType.isFloating && rootType.size == 64 -> "0.0"
 			else -> "0"
 		}
 
-		is PlatformDependantSizeType -> when {
+		rootType is PlatformDependantSizeType -> when {
 			rootType.size == 32..64 -> "com.sun.jna.NativeLong(0)"
 			else -> "null"
 		}

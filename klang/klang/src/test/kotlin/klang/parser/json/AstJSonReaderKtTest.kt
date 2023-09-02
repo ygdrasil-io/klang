@@ -9,6 +9,17 @@ import klang.parser.validateStructures
 
 class AstJSonCParserTest : ParserTestCommon({
 
+	"test union parsing" - {
+		// Given
+		val filePath = "src/test/c/union.h.ast.json"
+
+		// When
+		val repository = parseAstJson(filePath)
+
+		// Then
+		validateStructures(repository, TestData.union)
+	}
+
 	"test enum parsing" - {
 		// Given
 		val filePath = "src/test/c/enum.h.ast.json"

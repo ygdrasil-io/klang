@@ -66,7 +66,14 @@ object TestData {
 			superType = testType("NSObject"),
 			protocols = setOf(testType("NSCopying")),
 			properties = listOf(
-				ObjectiveCClass.Property("testProperty", "NSString *", nonatomic = true, assign = true, unsafe_unretained = true, readwrite = true)
+				ObjectiveCClass.Property(
+					"testProperty",
+					"NSString *",
+					nonatomic = true,
+					assign = true,
+					unsafe_unretained = true,
+					readwrite = true
+				)
 			),
 			methods = listOf(
 				ObjectiveCClass.Method("testMethod", testType("void"), true),
@@ -88,14 +95,57 @@ object TestData {
 		)
 	)
 
+	val union = listOf(
+		NativeStructure(
+			name = "MyUnion",
+			fields = listOf(
+				"i" to testType("int"),
+				"f" to testType("float"),
+				"c" to testType("char"),
+
+				),
+			isUnion = true
+		)
+	)
+
+
 	val structures = listOf(
-		"StructName" to listOf("field1" to testType("enum EnumName *"), "field2" to testType("EnumName2"), "field3" to testType("char")),
-		"StructName2" to listOf("field1" to testType("struct StructName"), "field2" to testType("struct StructName *"), "field3" to testType("char"))
+		NativeStructure(
+			name = "StructName",
+			fields = listOf(
+				"field1" to testType("enum EnumName *"),
+				"field2" to testType("EnumName2"),
+				"field3" to testType("char")
+			)
+		),
+		NativeStructure(
+			name = "StructName2",
+			fields = listOf(
+				"field1" to testType("struct StructName"),
+				"field2" to testType("struct StructName *"),
+				"field3" to testType("char")
+			)
+		)
 	)
 
 	val typeDefStructures = listOf(
-		"StructName" to listOf("field1" to testType("enum EnumName *"), "field2" to testType("EnumName2"), "field3" to testType("char")),
-		"StructName2" to listOf("field1" to testType("StructName"), "field2" to testType("StructName *"), "field3" to testType("char"))
+
+		NativeStructure(
+			name = "StructName",
+			fields = listOf(
+				"field1" to testType("enum EnumName *"),
+				"field2" to testType("EnumName2"),
+				"field3" to testType("char")
+			)
+		),
+		NativeStructure(
+			name = "StructName2",
+			fields = listOf(
+				"field1" to testType("StructName"),
+				"field2" to testType("StructName *"),
+				"field3" to testType("char")
+			)
+		)
 	)
 
 	val typeDef = listOf(

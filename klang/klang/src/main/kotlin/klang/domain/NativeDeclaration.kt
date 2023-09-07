@@ -12,6 +12,7 @@ sealed interface NativeDeclaration {
 
 	fun rootType(): NativeDeclaration? = when (this) {
 		is PrimitiveType -> this
+		is NativeStructure -> this
 		is NativeEnumeration -> this.type.let {
 			when (it) {
 				is ResolvedTypeRef -> it.type.rootType()

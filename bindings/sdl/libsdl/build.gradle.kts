@@ -1,5 +1,5 @@
-import arrow.core.right
 import klang.domain.typeOf
+import klang.domain.unchecked
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 import java.net.URL
@@ -16,7 +16,7 @@ buildscript {
 }
 
 plugins {
-	kotlin("jvm")  version "1.9.10"
+	kotlin("jvm") version "1.9.10"
 	alias(libs.plugins.klang)
 }
 
@@ -54,8 +54,16 @@ klang {
 			parse(fileToParse = "SDL2/SDL.h", at = it) {
 				findTypeAliasByName("Uint8")?.apply {
 					// Type is dumped as Int instead of char
-					typeOf("char").onRight {
-						this.type = it
+					type = typeOf("char").unchecked()
+				}
+
+				// Replace SDL_PixelFormat by void * to avoid circular dependency when calculating size of structure
+				findStructureByName("SDL_PixelFormat")?.apply {
+					fields = fields.map { (name, fields) ->
+						when (name) {
+							"next" -> name to typeOf("void *").unchecked()
+							else -> name to fields
+						}
 					}
 				}
 
@@ -65,6 +73,13 @@ klang {
 						?.let { (_, field) ->
 							field.isArray = true
 							field.arraySize = 10
+						}
+				}
+				findStructureByName("SDL_Event")?.apply {
+					fields.find { (name, _) -> name == "padding" }
+						?.let { (_, field) ->
+							field.isArray = true
+							field.arraySize = 56
 						}
 				}
 			}

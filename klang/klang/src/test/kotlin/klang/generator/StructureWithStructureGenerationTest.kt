@@ -7,71 +7,39 @@ import klang.domain.NativeStructure
 import klang.mapper.toSpec
 import klang.parser.testType
 
-class UnionGenerationTest : FreeSpec({
+class StructureWithStructureGenerationTest : FreeSpec({
 
 	val structure = NativeStructure(
 		name = "MyStructure",
 		fields = listOf(
-			"first" to testType("long"),
-			"second" to testType("int"),
-			"third" to testType("float"),
-			"fourth" to testType("double"),
-			"fifth" to testType("void *"),
-			"string" to testType("char *"),
-		),
-		isUnion = true,
+			"structure" to testType("struct MyOtherStructure"),
+		)
+	)
+
+	val otherStructure = NativeStructure(
+		name = "MyOtherStructure",
+		fields = listOf(
+			"structure" to testType("long"),
+		)
 	)
 
 	InMemoryDeclarationRepository().apply {
+		save(otherStructure)
 		save(structure)
 		resolveTypes()
 	}
 
-	"generate kotlin union" {
+	"generate kotlin structure" {
 		structure.toSpec("test").toString() shouldBe """
+@com.sun.jna.Structure.FieldOrder("structure")
 public open class MyStructure(
   pointer: com.sun.jna.Pointer? = null,
-) : com.sun.jna.Union(pointer) {
+) : com.sun.jna.Structure(pointer) {
   /**
-   * mapped from long
+   * mapped from struct MyOtherStructure
    */
   @kotlin.jvm.JvmField
-  public var first: com.sun.jna.NativeLong = com.sun.jna.NativeLong(0)
-
-  /**
-   * mapped from int
-   */
-  @kotlin.jvm.JvmField
-  public var second: kotlin.Int = 0
-
-  /**
-   * mapped from float
-   */
-  @kotlin.jvm.JvmField
-  public var third: kotlin.Float = 0.0f
-
-  /**
-   * mapped from double
-   */
-  @kotlin.jvm.JvmField
-  public var fourth: kotlin.Double = 0.0
-
-  /**
-   * mapped from void *
-   */
-  @kotlin.jvm.JvmField
-  public var fifth: com.sun.jna.Pointer? = null
-
-  /**
-   * mapped from char *
-   */
-  @kotlin.jvm.JvmField
-  public var string: kotlin.String = ""
-
-  override fun read() {
-    test.MyStructureDelegate.read(this)
-    super.read()
-  }
+  public var structure: test.MyOtherStructure = MyOtherStructure()
 
   public class ByReference(
     pointer: com.sun.jna.Pointer? = null,

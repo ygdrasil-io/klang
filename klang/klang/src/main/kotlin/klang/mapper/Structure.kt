@@ -37,8 +37,10 @@ private fun NativeStructure.toUnionSpec(packageName: String, structureClass: Cla
 			FunSpec.builder("read")
 				.addModifiers(KModifier.OVERRIDE)
 				.addStatement("$packageName.${structureClass}Delegate.read(this)")
+				.addStatement("super.read()")
 				.build()
 		)
+		.addRefAndValueClass(structureClass)
 		.build()
 
 private fun NativeStructure.toSpecWithAttributes(packageName: String, structureClass: ClassName) =
@@ -67,39 +69,42 @@ private fun NativeStructure.toSpecWithAttributes(packageName: String, structureC
 				}
 				superclassConstructorParameters.add(CodeBlock.of("pointer"))
 			}
-			.addType(
-				TypeSpec.classBuilder("ByReference")
-					.superclass(structureClass)
-					.primaryConstructor(
-						FunSpec.constructorBuilder()
-							.addParameter(
-								ParameterSpec.builder("pointer", jnaPointer.copy(nullable = true))
-									.defaultValue("null")
-									.build()
-							)
-							.build()
-					)
-					.addSuperclassConstructorParameter("pointer")
-					.addSuperinterface(jnaByReference)
-					.build()
-			)
-			.addType(
-				TypeSpec.classBuilder("ByValue")
-					.superclass(structureClass)
-					.primaryConstructor(
-						FunSpec.constructorBuilder()
-							.addParameter(
-								ParameterSpec.builder("pointer", jnaPointer.copy(nullable = true))
-									.defaultValue("null")
-									.build()
-							)
-							.build()
-					)
-					.addSuperclassConstructorParameter("pointer")
-					.addSuperinterface(jnaByValue)
-					.build()
-			)
+			.addRefAndValueClass(structureClass)
 			.build()
+
+private fun TypeSpec.Builder.addRefAndValueClass(structureClass: ClassName): TypeSpec.Builder = this
+	.addType(
+		TypeSpec.classBuilder("ByReference")
+			.superclass(structureClass)
+			.primaryConstructor(
+				FunSpec.constructorBuilder()
+					.addParameter(
+						ParameterSpec.builder("pointer", jnaPointer.copy(nullable = true))
+							.defaultValue("null")
+							.build()
+					)
+					.build()
+			)
+			.addSuperclassConstructorParameter("pointer")
+			.addSuperinterface(jnaByReference)
+			.build()
+	)
+	.addType(
+		TypeSpec.classBuilder("ByValue")
+			.superclass(structureClass)
+			.primaryConstructor(
+				FunSpec.constructorBuilder()
+					.addParameter(
+						ParameterSpec.builder("pointer", jnaPointer.copy(nullable = true))
+							.defaultValue("null")
+							.build()
+					)
+					.build()
+			)
+			.addSuperclassConstructorParameter("pointer")
+			.addSuperinterface(jnaByValue)
+			.build()
+	)
 
 private fun propertySpec(
 	name: String,
@@ -113,6 +118,7 @@ private fun propertySpec(
 	}
 
 	val type = when {
+		rootType is NativeStructure -> typeRef.toType(packageName)
 		rootType is FunctionPointerType -> jnaCallback.copy(nullable = true)
 		rootType is StringType -> typeRef.toType(packageName)
 		rootType is PrimitiveType && typeRef.isPointer.not() -> typeRef.toType(packageName)
@@ -124,6 +130,7 @@ private fun propertySpec(
 	} ?: jnaPointer.copy(nullable = true)
 
 	val defaultValue = when {
+		rootType is NativeStructure -> "${rootType.name}()"
 		rootType is StringType -> "\"\""
 		typeRef.isPointer -> "null"
 		rootType is FixeSizeType -> when {

@@ -5,6 +5,7 @@ import com.squareup.kotlinpoet.ClassName
 internal val jnaPointer by lazy { ClassName("com.sun.jna", "Pointer") }
 internal val jnaCallback by lazy { ClassName("com.sun.jna", "Callback") }
 internal val jnaStructure by lazy { ClassName("com.sun.jna", "Structure") }
+internal val jnaUnion by lazy { ClassName("com.sun.jna", "Union") }
 internal val jnaFieldOrder by lazy { ClassName("com.sun.jna", "Structure.FieldOrder") }
 internal val jnaJvmField by lazy { ClassName("kotlin.jvm", "JvmField") }
 internal val jnaByReference by lazy { ClassName("com.sun.jna", "Structure.ByReference") }

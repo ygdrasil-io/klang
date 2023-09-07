@@ -6,10 +6,40 @@ import klang.domain.*
 internal fun NativeStructure.toSpec(packageName: String) = ClassName("", name)
 	.let { structureClass ->
 		when {
-			fields.isNotEmpty() -> toSpecWithAttributes(packageName, structureClass)
-			else -> toSpecWithNoAttributes(structureClass)
+			fields.isEmpty() -> toSpecWithNoAttributes(structureClass)
+			isUnion -> toUnionSpec(packageName, structureClass)
+			else -> toSpecWithAttributes(packageName, structureClass)
 		}
 	}
+
+private fun NativeStructure.toUnionSpec(packageName: String, structureClass: ClassName) =
+	TypeSpec.classBuilder(structureClass)
+		.addModifiers(KModifier.OPEN)
+		.superclass(jnaUnion)
+		.primaryConstructor(
+			FunSpec.constructorBuilder()
+				.addParameter(
+					ParameterSpec.builder("pointer", jnaPointer.copy(nullable = true))
+						.defaultValue("null")
+						.build()
+				)
+				.build()
+		)
+		.apply {
+			fields.forEach { (name, typeRef) ->
+				addProperty(
+					propertySpec(name, typeRef, packageName)
+				)
+			}
+			superclassConstructorParameters.add(CodeBlock.of("pointer"))
+		}
+		.addFunction(
+			FunSpec.builder("read")
+				.addModifiers(KModifier.OVERRIDE)
+				.addStatement("$packageName.${structureClass}Delegate.read(this)")
+				.build()
+		)
+		.build()
 
 private fun NativeStructure.toSpecWithAttributes(packageName: String, structureClass: ClassName) =
 		TypeSpec.classBuilder(structureClass)

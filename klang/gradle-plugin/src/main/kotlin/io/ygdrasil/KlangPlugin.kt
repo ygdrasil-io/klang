@@ -8,7 +8,6 @@ import klang.domain.NativeStructure
 import klang.domain.NativeTypeAlias
 import klang.generator.generateKotlinFile
 import klang.parser.json.parseAstJson
-import klang.tools.dockerIsRunning
 import klang.tools.generateAstFromDocker
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -117,7 +116,6 @@ class KlangPlugin : Plugin<Project> {
 					assert(localFileToParse.isFile()) { "${localFileToParse.absolutePath} is not a file" }
 					assert(localFileToParse.canRead()) { "${localFileToParse.absolutePath} is not readable" }
 					assert(localFileToParse.length() > 0) { "${localFileToParse.absolutePath} is empty" }
-					assert(dockerIsRunning()) { "Docker is not running" }
 
 					val jsonFile = workingDirectory.resolve("${fileToParse.hash}.json")
 					generateAstFromDocker(

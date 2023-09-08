@@ -1,7 +1,6 @@
 package klang.parser.json
 
 import io.kotest.matchers.shouldBe
-import klang.DeclarationRepository
 import klang.parser.ParserTestCommon
 import klang.parser.TestData
 import klang.parser.validateEnumerations
@@ -77,7 +76,7 @@ class AstJSonCParserTest : ParserTestCommon({
 			"test $name" {
 				repository.findTypeAliasByName(name)
 					.also { it?.name shouldBe name }
-					.also { it?.type shouldBe type }
+					.also { it?.typeRef shouldBe type }
 			}
 		}
 	}

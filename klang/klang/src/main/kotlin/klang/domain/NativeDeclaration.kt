@@ -19,7 +19,7 @@ sealed interface NativeDeclaration {
 				else -> this
 			}
 		}
-		is NativeTypeAlias -> this.type.let {
+		is NativeTypeAlias -> this.typeRef.let {
 			when (it) {
 				is ResolvedTypeRef -> it.type.rootType()
 				else -> this

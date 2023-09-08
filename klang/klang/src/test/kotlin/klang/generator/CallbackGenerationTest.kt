@@ -12,18 +12,22 @@ class CallbackGenerationTest : FreeSpec({
 
 	val callback = NativeTypeAlias(
 		name = "MyCallback",
-		type = testType(TestData.basicFunctionPointer),
+		typeRef = testType(TestData.basicFunctionPointer),
 	)
 
-	val repository = InMemoryDeclarationRepository().apply {
+	InMemoryDeclarationRepository().apply {
 		save(callback)
 		resolveTypes()
 	}
 
 	"generate kotlin callback" {
-		callback.toSpec("test", repository).toString() shouldBe """
+		callback.toSpec("test").toString() shouldBe """
 			|public interface MyCallback : com.sun.jna.Callback {
-			|  public operator fun invoke(param1: jna.Pointer, param2: String, param3: Int): Long
+			|  public operator fun invoke(
+			|    param1: com.sun.jna.Pointer,
+			|    param2: kotlin.String,
+			|    param3: kotlin.Int,
+			|  )
 			|}
 			|
 			""".trimMargin()

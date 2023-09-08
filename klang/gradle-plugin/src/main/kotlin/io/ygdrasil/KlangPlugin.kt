@@ -202,9 +202,9 @@ private fun DeclarationRepository.generateKotlinFiles(outputDirectory: File, bas
 	declarations.asSequence()
 		.filterIsInstance<NativeTypeAlias>()
 		.filter { it.name.startsWith("__").not() }
-		.filter { it.type.typeName.startsWith("__").not() }
-		.filter { findStructureByName(it.type.typeName) == null }
-		.filter { findEnumerationByName(it.type.typeName) == null }
+		.filter { it.typeRef.typeName.startsWith("__").not() }
+		.filter { findStructureByName(it.typeRef.typeName) == null }
+		.filter { findEnumerationByName(it.typeRef.typeName) == null }
 		.toList()
 		.generateKotlinFile(outputDirectory, basePackage)
 

@@ -151,11 +151,11 @@ object TestData {
 	val typeDef = listOf(
 		NativeTypeAlias(
 			name = "NewType",
-			type = testType("void *")
+			typeRef = testType("void *")
 		),
 		NativeTypeAlias(
 			name = "NewStructureType",
-			type = testType("struct OldStructureType *")
+			typeRef = testType("struct OldStructureType *")
 		)
 	)
 

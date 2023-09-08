@@ -1,6 +1,5 @@
 package klang.parser.libclang
 
-import arrow.core.getOrElse
 import klang.DeclarationRepository
 import klang.InMemoryDeclarationRepository
 import klang.domain.*
@@ -65,7 +64,7 @@ private fun ParsingContext.declareTypeAlias(info: DeclarationInfo) {
 	val type = info.cursor.underlyingType.spelling
 	currentDefinition = NativeTypeAlias(
 		name = name,
-		type = type.let(::typeOf).unchecked("fail to parse type $this")
+		typeRef = type.let(::typeOf).unchecked("fail to parse type $this")
 	).also(declarationRepository::save)
 }
 

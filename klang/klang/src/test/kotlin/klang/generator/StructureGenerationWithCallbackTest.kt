@@ -3,7 +3,6 @@ package klang.generator
 import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.shouldBe
 import klang.InMemoryDeclarationRepository
-import klang.domain.NativeEnumeration
 import klang.domain.NativeStructure
 import klang.domain.NativeTypeAlias
 import klang.mapper.toSpec
@@ -22,7 +21,7 @@ class StructureGenerationWithCallbackTest : FreeSpec({
 
 	val typeAlias = NativeTypeAlias(
 		name = "MyAlias",
-		type = testType(basicFunctionPointer)
+		typeRef = testType(basicFunctionPointer)
 	)
 
 	InMemoryDeclarationRepository().apply {
@@ -38,7 +37,7 @@ public open class MyStructure(
   pointer: com.sun.jna.Pointer? = null,
 ) : com.sun.jna.Structure(pointer) {
   /**
-   * mapped from void (*)(void *, Uint8 *, int)
+   * mapped from void (*)(void *, char *, int)
    */
   @kotlin.jvm.JvmField
   public var callback: com.sun.jna.Callback? = null

@@ -9,7 +9,7 @@ class StringTypeResolving : FreeSpec({
 
 	val nativeTypeAlias = NativeTypeAlias(
 		name = "MyString",
-		type = testType("char *")
+		typeRef = testType("char *")
 	)
 
 	InMemoryDeclarationRepository().also { repository ->
@@ -18,7 +18,7 @@ class StringTypeResolving : FreeSpec({
 	}
 
 	"should resolve string type as primitive" {
-		nativeTypeAlias.type.let { typeRef ->
+		nativeTypeAlias.typeRef.let { typeRef ->
 			typeRef::class shouldBe ResolvedTypeRef::class
 			(typeRef as ResolvedTypeRef).type::class shouldBe StringType::class
 		}

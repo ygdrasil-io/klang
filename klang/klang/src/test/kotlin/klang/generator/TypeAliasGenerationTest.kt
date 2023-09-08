@@ -13,7 +13,7 @@ class TypeAliasGenerationTest : FreeSpec({
 
 	"test type alias generation with void *" {
 
-		TestData.typeDef[0].toSpec("klang")
+		TestData.typeDef[0].toSpec("klang", InMemoryDeclarationRepository())
 			.toString() shouldBe """
 				|public typealias NewType = com.sun.jna.Pointer
 				|
@@ -23,7 +23,7 @@ class TypeAliasGenerationTest : FreeSpec({
 
 	"test type alias generation with OldStructureType *" {
 
-		TestData.typeDef[1].toSpec("klang")
+		TestData.typeDef[1].toSpec("klang", InMemoryDeclarationRepository())
 			.toString() shouldBe """
 				|public typealias NewStructureType = com.sun.jna.Pointer
 				|
@@ -36,14 +36,14 @@ class TypeAliasGenerationTest : FreeSpec({
 		type = testType(basicFunctionPointer)
 	)
 
-	InMemoryDeclarationRepository().apply {
+	val repository = InMemoryDeclarationRepository().apply {
 		save(typeAliasWithCallback)
 		resolveTypes()
 	}
 
 	"test type alias generation with callback" {
 
-		typeAliasWithCallback.toSpec("klang")
+		typeAliasWithCallback.toSpec("klang", repository)
 			.toString() shouldBe """
 				|public typealias NewType = com.sun.jna.Callback
 				|

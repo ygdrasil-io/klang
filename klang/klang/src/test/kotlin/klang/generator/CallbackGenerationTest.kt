@@ -15,15 +15,15 @@ class CallbackGenerationTest : FreeSpec({
 		type = testType(TestData.basicFunctionPointer),
 	)
 
-	InMemoryDeclarationRepository().apply {
+	val repository = InMemoryDeclarationRepository().apply {
 		save(callback)
 		resolveTypes()
 	}
 
 	"generate kotlin callback" {
-		callback.toSpec("test").toString() shouldBe """
-			|public interface MyCallback : jna.Callback {
-			|  operator fun invoke(param1: jna.Pointer, param2: String, param3: Int): Long
+		callback.toSpec("test", repository).toString() shouldBe """
+			|public interface MyCallback : com.sun.jna.Callback {
+			|  public operator fun invoke(param1: jna.Pointer, param2: String, param3: Int): Long
 			|}
 			|
 			""".trimMargin()

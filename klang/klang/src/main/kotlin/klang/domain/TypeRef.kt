@@ -41,7 +41,7 @@ fun typeOf(reference: String): Either<String, TypeRef> = either {
 	} ?: false
 
 	ensure(tokens.isNotEmpty()) { "type name not found $reference" }
-	val typeName = tokens.takeIf { it.first() == "unsigned" }?.let {
+	var typeName = tokens.takeIf { it.first() == "unsigned" }?.let {
 		it.removeFirst()
 		ensure(tokens.isNotEmpty()) { "type name not found $reference" }
 		"unsigned ${tokens.removeFirst()}"
@@ -61,7 +61,11 @@ fun typeOf(reference: String): Either<String, TypeRef> = either {
 	}
 
 	//TODO find a better way to handle this
-	val isCallback = reference.contains("(")
+	val isCallback = reference.contains("(") && isPointer
+
+	if (isCallback) {
+		typeName = reference
+	}
 
 	if (isEnumeration) {
 		ensure(!isStructure) {
@@ -98,13 +102,28 @@ sealed interface TypeRef {
 	val isCallback: Boolean
 
 	fun DeclarationRepository.resolveType(): TypeRef = when {
-		isCallback -> ResolvedTypeRef(this@TypeRef, FunctionPointerType)
+		isCallback -> ResolvedTypeRef(this@TypeRef, typeName.toFunctionPointerType())
 		isPointer && typeName == "char" -> ResolvedTypeRef(this@TypeRef, StringType)
 		else -> findDeclarationByName<NameableDeclaration>(typeName)
 				?.let { ResolvedTypeRef(this@TypeRef, it) }
 				?: (this@TypeRef.also { logger.warn { "fail to resolve type : $it" } })
 	}
 
+}
+
+internal fun String.toFunctionPointerType(): FunctionPointerType {
+	val returnType = substringBefore("(").let { typeOf(it).unchecked() }
+
+	val arguments = substringAfter("(*)")
+		.replace("(", "")
+		.replace(")", "")
+		.split(",")
+		.map { typeOf(it.trim()).unchecked() }
+
+	return FunctionPointerType(
+		returnType = returnType,
+		arguments = arguments
+	)
 }
 
 class UnresolvedTypeRef internal constructor(

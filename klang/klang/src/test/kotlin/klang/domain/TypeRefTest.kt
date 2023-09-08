@@ -2,8 +2,31 @@ package klang.domain
 
 import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.shouldBe
+import klang.parser.TestData
 
 class TypeRefTest : FreeSpec({
+
+	"test FunctionPointerType parsing" {
+		TestData.basicFunctionPointer.toFunctionPointerType().apply {
+			returnType.apply {
+				typeName shouldBe "void"
+				isPointer shouldBe false
+			}
+			arguments.size shouldBe 3
+			arguments[0].apply {
+				typeName shouldBe "void"
+				isPointer shouldBe true
+			}
+			arguments[1].apply {
+				typeName shouldBe "char"
+				isPointer shouldBe true
+			}
+			arguments[2].apply {
+				typeName shouldBe "int"
+				isPointer shouldBe false
+			}
+		}
+	}
 
 	"test void type characteristic" {
 		typeOf("void").apply {

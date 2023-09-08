@@ -159,5 +159,5 @@ object TestData {
 		)
 	)
 
-	const val basicFunctionPointer = "void (*)(void *, Uint8 *, int)"
+	const val basicFunctionPointer = "void (*)(void *, char *, int)"
 }

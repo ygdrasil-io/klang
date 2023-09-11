@@ -110,19 +110,24 @@ private fun propertySpec(
 	name: String,
 	typeRef: TypeRef,
 	packageName: String
+): PropertySpec = when (typeRef) {
+	is ResolvedTypeRef -> typeRef.toPropertySpec(name, packageName)
+	else -> typeRef.defaultPropertySpec(name)
+}
+
+private fun ResolvedTypeRef.toPropertySpec(
+	name: String,
+	packageName: String
 ): PropertySpec {
 
-	val rootType = when {
-		typeRef is ResolvedTypeRef -> typeRef.type.rootType()
-		else -> null
-	}
+	val rootType = type.rootType()
 
 	val type = when {
-		rootType is NativeStructure -> typeRef.toType(packageName)
+		rootType is NativeStructure -> toType(packageName)
 		rootType is FunctionPointerType -> jnaCallback.copy(nullable = true)
-		rootType is StringType -> typeRef.toType(packageName)
-		rootType is PrimitiveType && typeRef.isPointer.not() -> typeRef.toType(packageName)
-		rootType is NativeEnumeration && typeRef.isPointer.not() -> when (rootType.type) {
+		rootType is StringType -> toType(packageName)
+		rootType is PrimitiveType && isPointer.not() -> toType(packageName)
+		rootType is NativeEnumeration && isPointer.not() -> when (rootType.type) {
 			is ResolvedTypeRef -> rootType.type.toType(packageName)
 			else -> null
 		}
@@ -132,7 +137,7 @@ private fun propertySpec(
 	val defaultValue = when {
 		rootType is NativeStructure -> "${rootType.name}()"
 		rootType is StringType -> "\"\""
-		typeRef.isPointer -> "null"
+		isPointer -> "null"
 		rootType is FixeSizeType -> when {
 			rootType.isFloating && rootType.size == 32 -> "0.0f"
 			rootType.isFloating && rootType.size == 64 -> "0.0"
@@ -149,13 +154,24 @@ private fun propertySpec(
 
 	return PropertySpec
 		.builder(name, type)
-		.addKdoc("mapped from ${typeRef.referenceAsString}")
+		.addKdoc("mapped from ${referenceAsString}")
 		.addAnnotation(jnaJvmField)
 		.initializer(defaultValue)
 		.mutable(true)
 		.build()
 }
 
+private fun TypeRef.defaultPropertySpec(
+	name: String
+): PropertySpec {
+	return PropertySpec
+		.builder(name, jnaPointer.copy(nullable = true))
+		.addKdoc("mapped from $referenceAsString")
+		.addAnnotation(jnaJvmField)
+		.initializer("null")
+		.mutable(true)
+		.build()
+}
 
 private fun toSpecWithNoAttributes(structureClass: ClassName) =
 	TypeSpec.classBuilder(structureClass)

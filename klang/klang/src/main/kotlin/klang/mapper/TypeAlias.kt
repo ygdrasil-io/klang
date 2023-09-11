@@ -27,23 +27,5 @@ private fun NativeTypeAlias.toTypeAliasSpec(packageName: String) = TypeAliasSpec
 	.builder(name, typeRef.toType(packageName))
 	.build()
 
-private fun FunctionPointerType.toCallbackSpec(name: String, packageName: String) = TypeSpec.interfaceBuilder(name)
-	.addSuperinterface(jnaCallback)
-	.addFunction(
-		FunSpec.builder("invoke")
-			.addModifiers(KModifier.OPERATOR)
-			.addModifiers(KModifier.ABSTRACT)
-			.addParameters(
-				arguments
-					.map { it.toType(packageName) }
-					.mapIndexed { index, type ->
-						ParameterSpec
-							.builder("param${index + 1}", type)
-							.build()
-					}
-			)
-			.returns(returnType.toType(packageName))
-			.build()
-	)
-	.build()
+
 

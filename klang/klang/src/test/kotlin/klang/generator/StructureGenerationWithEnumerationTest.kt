@@ -29,7 +29,9 @@ class StructureGenerationWithEnumerationTest : FreeSpec({
 	}
 
 	"generate kotlin structure with enumeration" {
-		structure.toSpec("test").toString() shouldBe """
+		structure.toSpec("test").apply {
+			size shouldBe 1
+			first().toString() shouldBe """
 @com.sun.jna.Structure.FieldOrder("enumeration")
 public open class MyStructure(
   pointer: com.sun.jna.Pointer? = null,
@@ -50,6 +52,7 @@ public open class MyStructure(
 }
 
 		""".trimIndent()
+		}
 	}
 
 
@@ -59,7 +62,9 @@ public open class MyStructure(
 	)
 
 	"generate kotlin structure with no fields" {
-		structureWithNoFields.toSpec("test").toString() shouldBe """
+		structureWithNoFields.toSpec("test").apply {
+			size shouldBe 1
+			first().toString() shouldBe """
 			|public class MyStructure : com.sun.jna.PointerType {
 			|  public constructor() : super()
 			|
@@ -73,6 +78,7 @@ public open class MyStructure(
 			|}
 			|
 		""".trimMargin()
+		}
 	}
 })
 

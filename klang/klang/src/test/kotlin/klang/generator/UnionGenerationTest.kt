@@ -28,7 +28,9 @@ class UnionGenerationTest : FreeSpec({
 	}
 
 	"generate kotlin union" {
-		structure.toSpec("test").toString() shouldBe """
+		structure.toSpec("test").apply {
+			size shouldBe 1
+			first().toString() shouldBe """
 public open class MyStructure(
   pointer: com.sun.jna.Pointer? = null,
 ) : com.sun.jna.Union(pointer) {
@@ -83,6 +85,7 @@ public open class MyStructure(
 }
 
 		""".trimIndent()
+		}
 	}
 
 
@@ -92,7 +95,9 @@ public open class MyStructure(
 	)
 
 	"generate kotlin structure with no fields" {
-		structureWithNoFields.toSpec("test").toString() shouldBe """
+		structureWithNoFields.toSpec("test").apply {
+			size shouldBe 1
+			first().toString() shouldBe """
 			|public class MyStructure : com.sun.jna.PointerType {
 			|  public constructor() : super()
 			|
@@ -106,6 +111,7 @@ public open class MyStructure(
 			|}
 			|
 		""".trimMargin()
+		}
 	}
 })
 

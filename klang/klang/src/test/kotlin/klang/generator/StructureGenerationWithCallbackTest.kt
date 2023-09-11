@@ -31,7 +31,20 @@ class StructureGenerationWithCallbackTest : FreeSpec({
 	}
 
 	"generate kotlin structure with callback" {
-		structure.toSpec("test").toString() shouldBe """
+		structure.toSpec("test").apply {
+			size shouldBe 2
+			let { (callback, structure) ->
+				callback.toString() shouldBe """
+					|public interface MyStructureCallbackFunction : com.sun.jna.Callback {
+					|  public operator fun invoke(
+					|    param1: com.sun.jna.Pointer,
+					|    param2: com.sun.jna.Pointer,
+					|    param3: kotlin.Int,
+					|  ): kotlin.Unit
+					|}
+					|
+		""".trimMargin()
+				structure.toString() shouldBe """
 @com.sun.jna.Structure.FieldOrder("callback", "callback2")
 public open class MyStructure(
   pointer: com.sun.jna.Pointer? = null,
@@ -40,13 +53,13 @@ public open class MyStructure(
    * mapped from void (*)(void *, char *, int)
    */
   @kotlin.jvm.JvmField
-  public var callback: com.sun.jna.Callback? = null
+  public var callback: test.MyStructureCallbackFunction? = null
 
   /**
    * mapped from MyAlias
    */
   @kotlin.jvm.JvmField
-  public var callback2: com.sun.jna.Callback? = null
+  public var callback2: test.MyAlias? = null
 
   public class ByReference(
     pointer: com.sun.jna.Pointer? = null,
@@ -58,6 +71,8 @@ public open class MyStructure(
 }
 
 		""".trimIndent()
+			}
+		}
 	}
 
 
@@ -67,7 +82,9 @@ public open class MyStructure(
 	)
 
 	"generate kotlin structure with no fields" {
-		structureWithNoFields.toSpec("test").toString() shouldBe """
+		structureWithNoFields.toSpec("test").apply {
+			size shouldBe 1
+			first().toString() shouldBe """
 			|public class MyStructure : com.sun.jna.PointerType {
 			|  public constructor() : super()
 			|
@@ -81,6 +98,7 @@ public open class MyStructure(
 			|}
 			|
 		""".trimMargin()
+		}
 	}
 })
 

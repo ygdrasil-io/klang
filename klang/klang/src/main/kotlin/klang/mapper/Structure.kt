@@ -5,10 +5,33 @@ import klang.domain.*
 
 internal fun NativeStructure.toSpec(packageName: String) = ClassName("", name)
 	.let { structureClass ->
-		when {
+		generateFunctionPointerTypeInterface(packageName) + when {
 			fields.isEmpty() -> toSpecWithNoAttributes(structureClass)
 			isUnion -> toUnionSpec(packageName, structureClass)
 			else -> toSpecWithAttributes(packageName, structureClass)
+		}
+	}
+
+private fun NativeStructure.generateFunctionPointerTypeInterface(packageName: String) = fields
+	.mapNotNull { it.toFunctionPointerTypeInterface(packageName, name) }
+
+private fun Pair<String, TypeRef>.toFunctionPointerTypeInterface(packageName: String, structureName: String) =
+	let { (fieldName, typeRef) ->
+		when (typeRef) {
+			is ResolvedTypeRef -> {
+				val rootType = typeRef.type.rootType()
+				when {
+					rootType is FunctionPointerType
+						&& typeRef.type !is NativeTypeAlias -> rootType.toCallbackSpec(
+						generateNativePointerName(structureName, fieldName),
+						packageName
+					)
+
+					else -> null
+				}
+			}
+
+			else -> null
 		}
 	}
 
@@ -44,33 +67,33 @@ private fun NativeStructure.toUnionSpec(packageName: String, structureClass: Cla
 		.build()
 
 private fun NativeStructure.toSpecWithAttributes(packageName: String, structureClass: ClassName) =
-		TypeSpec.classBuilder(structureClass)
-			.addAnnotation(
-				AnnotationSpec.builder(jnaFieldOrder)
-					.addMember(fields.joinToString(", ") { "\"${it.first}\"" })
-					.build()
-			)
-			.addModifiers(KModifier.OPEN)
-			.superclass(jnaStructure)
-			.primaryConstructor(
-				FunSpec.constructorBuilder()
-					.addParameter(
-						ParameterSpec.builder("pointer", jnaPointer.copy(nullable = true))
-							.defaultValue("null")
-							.build()
-					)
-					.build()
-			)
-			.apply {
-				fields.forEach { (name, typeRef) ->
-					addProperty(
-						propertySpec(name, typeRef, packageName)
-					)
-				}
-				superclassConstructorParameters.add(CodeBlock.of("pointer"))
+	TypeSpec.classBuilder(structureClass)
+		.addAnnotation(
+			AnnotationSpec.builder(jnaFieldOrder)
+				.addMember(fields.joinToString(", ") { "\"${it.first}\"" })
+				.build()
+		)
+		.addModifiers(KModifier.OPEN)
+		.superclass(jnaStructure)
+		.primaryConstructor(
+			FunSpec.constructorBuilder()
+				.addParameter(
+					ParameterSpec.builder("pointer", jnaPointer.copy(nullable = true))
+						.defaultValue("null")
+						.build()
+				)
+				.build()
+		)
+		.apply {
+			fields.forEach { (name, typeRef) ->
+				addProperty(
+					propertySpec(name, typeRef, packageName)
+				)
 			}
-			.addRefAndValueClass(structureClass)
-			.build()
+			superclassConstructorParameters.add(CodeBlock.of("pointer"))
+		}
+		.addRefAndValueClass(structureClass)
+		.build()
 
 private fun TypeSpec.Builder.addRefAndValueClass(structureClass: ClassName): TypeSpec.Builder = this
 	.addType(
@@ -106,33 +129,40 @@ private fun TypeSpec.Builder.addRefAndValueClass(structureClass: ClassName): Typ
 			.build()
 	)
 
-private fun propertySpec(
+private fun NativeStructure.propertySpec(
 	name: String,
 	typeRef: TypeRef,
 	packageName: String
 ): PropertySpec = when (typeRef) {
-	is ResolvedTypeRef -> typeRef.toPropertySpec(name, packageName)
+	is ResolvedTypeRef -> typeRef.toPropertySpec(name, packageName, this)
 	else -> typeRef.defaultPropertySpec(name)
 }
 
 private fun ResolvedTypeRef.toPropertySpec(
 	name: String,
-	packageName: String
+	packageName: String,
+	nativeStructure: NativeStructure
 ): PropertySpec {
 
 	val rootType = type.rootType()
 
 	val type = when {
 		rootType is NativeStructure -> toType(packageName)
-		rootType is FunctionPointerType -> jnaCallback.copy(nullable = true)
+		// If FunctionPointerType generate an interface or use the one defined by the typealias
+		rootType is FunctionPointerType -> when (type) {
+			is NativeTypeAlias -> ClassName(packageName, type.name)
+			else -> ClassName(packageName, generateNativePointerName(nativeStructure, name))
+		}.copy(nullable = true)
+
 		rootType is StringType -> toType(packageName)
 		rootType is PrimitiveType && isPointer.not() -> toType(packageName)
 		rootType is NativeEnumeration && isPointer.not() -> when (rootType.type) {
 			is ResolvedTypeRef -> rootType.type.toType(packageName)
 			else -> null
 		}
-		else ->  null
-	} ?: jnaPointer.copy(nullable = true)
+
+		else -> null
+	} ?: return defaultPropertySpec(name)
 
 	val defaultValue = when {
 		rootType is NativeStructure -> "${rootType.name}()"
@@ -154,12 +184,18 @@ private fun ResolvedTypeRef.toPropertySpec(
 
 	return PropertySpec
 		.builder(name, type)
-		.addKdoc("mapped from ${referenceAsString}")
+		.addKdoc("mapped from $referenceAsString")
 		.addAnnotation(jnaJvmField)
 		.initializer(defaultValue)
 		.mutable(true)
 		.build()
 }
+
+private fun generateNativePointerName(structureName: String, fieldName: String) =
+	"${structureName}${fieldName.replaceFirstChar { it.uppercaseChar() }}Function"
+
+private fun generateNativePointerName(nativeStructure: NativeStructure, fieldName: String) =
+	generateNativePointerName(nativeStructure.name, fieldName)
 
 private fun TypeRef.defaultPropertySpec(
 	name: String

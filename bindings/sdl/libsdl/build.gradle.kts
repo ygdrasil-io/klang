@@ -42,7 +42,12 @@ tasks.test {
 }
 
 sourceSets.main {
-	java.srcDirs("$buildDir/generated/klang")
+	val buildDir = layout.buildDirectory.locationOnly.get().asFile
+		.resolve("generated")
+		.resolve("klang")
+		.absolutePath
+	println("will add \"$buildDir\" to source set")
+	java.srcDirs(buildDir)
 }
 
 val headerUrl = URL("https://github.com/klang-toolkit/SDL-binary/releases/download/2.28.2-Alpha3/headers.zip")

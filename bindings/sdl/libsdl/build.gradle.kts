@@ -59,7 +59,7 @@ klang {
 			parse(fileToParse = "SDL2/SDL.h", at = it) {
 				findTypeAliasByName("Uint8")?.apply {
 					// Type is dumped as Int instead of char
-					type = typeOf("char").unchecked()
+					typeRef = typeOf("char").unchecked()
 				}
 
 				// Replace SDL_PixelFormat by void * to avoid circular dependency when calculating size of structure

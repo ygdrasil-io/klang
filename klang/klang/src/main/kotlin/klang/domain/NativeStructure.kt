@@ -22,8 +22,10 @@ data class NativeStructure(
 	}
 }
 
-private fun DeclarationRepository.resolve(typeRef: TypeRef) = (typeRef as? ResolvedTypeRef)
-	?.let(ResolvedTypeRef::type)
-	?.let { it as? ResolvableDeclaration }
-	?.run { resolve() }
+private fun DeclarationRepository.resolve(typeRef: TypeRef) {
+	(typeRef as? ResolvedTypeRef)
+		?.let(ResolvedTypeRef::type)
+		?.let { it as? NativeFunction }
+		?.let { with(it) { resolve() } }
+}
 

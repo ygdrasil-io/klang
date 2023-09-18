@@ -25,7 +25,7 @@ data class NativeStructure(
 private fun DeclarationRepository.resolve(typeRef: TypeRef) {
 	(typeRef as? ResolvedTypeRef)
 		?.let(ResolvedTypeRef::type)
-		?.let { it as? NativeFunction }
+		?.let { it as? FunctionPointerType }
 		?.let { with(it) { resolve() } }
 }
 

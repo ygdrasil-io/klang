@@ -38,9 +38,9 @@ class StructureGenerationWithCallbackTest : FreeSpec({
 					|public interface MyStructureCallbackFunction : com.sun.jna.Callback {
 					|  public operator fun invoke(
 					|    param1: com.sun.jna.Pointer,
-					|    param2: com.sun.jna.Pointer,
+					|    param2: kotlin.String,
 					|    param3: kotlin.Int,
-					|  ): kotlin.Unit
+					|  )
 					|}
 					|
 		""".trimMargin()

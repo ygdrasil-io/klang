@@ -16,7 +16,14 @@ data class NativeStructure(
 
 	override fun DeclarationRepository.resolve() {
 		fields = fields.map { (name, type) ->
-			name to with(type) { resolveType() }
+			(name to with(type) { resolveType() })
+				.also { (_, typeRef) -> resolve(typeRef) }
 		}
 	}
 }
+
+private fun DeclarationRepository.resolve(typeRef: TypeRef) = (typeRef as? ResolvedTypeRef)
+	?.let(ResolvedTypeRef::type)
+	?.let { it as? ResolvableDeclaration }
+	?.run { resolve() }
+

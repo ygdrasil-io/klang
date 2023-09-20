@@ -165,7 +165,10 @@ private fun ResolvedTypeRef.toPropertySpec(
 	} ?: return defaultPropertySpec(name)
 
 	val defaultValue = when {
-		rootType is NativeStructure -> "${rootType.name}()"
+		rootType is NativeStructure -> when {
+			isPointer -> "${rootType.name}.ByReference()"
+			else -> "${rootType.name}()"
+		}
 		rootType is StringType -> "\"\""
 		isPointer -> "null"
 		rootType is FixeSizeType -> when {

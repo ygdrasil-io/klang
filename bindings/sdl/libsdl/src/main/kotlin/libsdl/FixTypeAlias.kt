@@ -6,7 +6,6 @@ import com.sun.jna.ptr.PointerByReference
 
 typealias SDL_iconv_t = Pointer
 typealias SDL_JoystickGUID = Pointer
-typealias SDL_Haptic = Pointer
 
 public class SDL_Haptic : PointerType {
 	public constructor() : super()

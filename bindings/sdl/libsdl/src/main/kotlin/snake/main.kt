@@ -24,7 +24,7 @@ fun main() {
 		val speed = 10
 		while (true) {
 
-			sdlUI.draw(game)
+			//sdlUI.draw(game)
 
 			sdlUI.delay(1000 / 60)
 			ticks++
@@ -183,7 +183,7 @@ class SdlUI(width: Int, height: Int): AutoCloseable {
 		else                            -> error("")
 	}
 
-	private fun cellRect(cell: Cell): SDL_Rect {
+	private fun cellRect(cell: Cell): SDL_Rect.ByReference {
 		val x = cell.x * Sprites.w
 		val y = cell.y * Sprites.h
 		return allocRect(x, y, Sprites.w, Sprites.h)
@@ -302,7 +302,7 @@ class SdlUI(width: Int, height: Int): AutoCloseable {
 
 		private fun textureRect(x: Int, y: Int) = allocRect(x * w, y * h, w, h)
 
-		fun render(srcRect: SDL_Rect, dstRect: SDL_Rect) {
+		fun render(srcRect: SDL_Rect.ByReference, dstRect: SDL_Rect.ByReference) {
 			if (srcRect == grassRect) libSDL2Library.SDL_RenderCopy(renderer, grassTexture, srcRect, dstRect)
 			else libSDL2Library.SDL_RenderCopy(renderer, texture, srcRect, dstRect)
 		}
@@ -318,7 +318,7 @@ class SdlUI(width: Int, height: Int): AutoCloseable {
 			return libSDL2Library.SDL_CreateTextureFromSurface(this@loadTexture, bmp)
 		}
 
-		fun allocRect(x: Int, y: Int, w: Int, h: Int): SDL_Rect = SDL_Rect.ByReference().also {
+		fun allocRect(x: Int, y: Int, w: Int, h: Int) = SDL_Rect.ByReference().also {
 			it.x = x
 			it.y = y
 			it.w = w

@@ -51,8 +51,8 @@ fun main() {
 }
 
 class SdlUI(width: Int, height: Int): AutoCloseable {
-	private val window: SDL_Window
-	private val renderer: SDL_Renderer
+	private val window: SDL_Window.ByReference
+	private val renderer: SDL_Renderer.ByReference
 	private val font: Font
 	private val sprites: Sprites
 
@@ -148,7 +148,7 @@ class SdlUI(width: Int, height: Int): AutoCloseable {
 
 	fun readCommands(): List<UserCommand>  {
 		val result = ArrayList<UserCommand>()
-		val event = SDL_Event()
+		val event = SDL_Event.ByReference()
 		while (libSDL2Library.SDL_PollEvent(event) != 0) {
 			event.read()
 			println("event(${event.type}): ${SDL_EventType.of(event.type)}")
@@ -206,14 +206,14 @@ class SdlUI(width: Int, height: Int): AutoCloseable {
 	}
 
 
-	class Font(private val renderer: SDL_Renderer) {
+	class Font(private val renderer: SDL_Renderer.ByReference) {
 		companion object {
 			const val w = 48
 			const val h = 46
 		}
 
 		internal val texture = renderer.loadTexture("Font16_42_Normal4_sheet.bmp")
-		private val letters: Map<Char, SDL_Rect>
+		private val letters: Map<Char, SDL_Rect.ByReference>
 
 		init {
 			letters = mapOf(
@@ -257,19 +257,19 @@ class SdlUI(width: Int, height: Int): AutoCloseable {
 			)
 		}
 
-		fun render(char: Char, cellRect: SDL_Rect) {
+		fun render(char: Char, cellRect: SDL_Rect.ByReference) {
 			val charRect = letters[char.uppercaseChar()] ?: (letters[' '] ?: error(""))
 			libSDL2Library.SDL_RenderCopy(renderer, texture, charRect, cellRect)
 		}
 
-		private fun textureRect(x: Int, y: Int, wAdjust: Int = 0): SDL_Rect {
+		private fun textureRect(x: Int, y: Int, wAdjust: Int = 0): SDL_Rect.ByReference {
 			val xShift = x * w
 			val yShift = y * h
 			return allocRect(xShift, yShift, w + wAdjust, h)
 		}
 	}
 
-	class Sprites(private val renderer: SDL_Renderer) {
+	class Sprites(private val renderer: SDL_Renderer.ByReference) {
 		companion object {
 			const val w = 64
 			const val h = 64
@@ -309,7 +309,7 @@ class SdlUI(width: Int, height: Int): AutoCloseable {
 	}
 
 	companion object {
-		fun SDL_Renderer.loadTexture(fileName: String): SDL_Texture {
+		fun SDL_Renderer.ByReference.loadTexture(fileName: String): SDL_Texture.ByReference {
 			val paths = listOf(fileName, "resources/$fileName", "../resources/$fileName")
 			val filePath = paths.find { File(it).canRead() } ?: error("Can't find image file.")
 
@@ -318,7 +318,7 @@ class SdlUI(width: Int, height: Int): AutoCloseable {
 			return libSDL2Library.SDL_CreateTextureFromSurface(this@loadTexture, bmp)
 		}
 
-		fun allocRect(x: Int, y: Int, w: Int, h: Int): SDL_Rect = SDL_Rect().also {
+		fun allocRect(x: Int, y: Int, w: Int, h: Int): SDL_Rect = SDL_Rect.ByReference().also {
 			it.x = x
 			it.y = y
 			it.w = w

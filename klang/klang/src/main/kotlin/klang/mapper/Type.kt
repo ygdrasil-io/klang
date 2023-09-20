@@ -13,6 +13,7 @@ internal fun TypeRef.toType(packageName: String, nullable: Boolean = false) = wh
 				isArray -> ClassName("kotlin", "Array").parameterizedBy(ClassName("kotlin", "String"))
 				else -> ClassName("kotlin", "String")
 			}
+			is NativeStructure -> ClassName(packageName, "$typeName.ByReference")
 			is FunctionPointerType -> jnaCallback
 			is PrimitiveType -> jnaPointer
 			else -> ClassName(packageName, typeName)

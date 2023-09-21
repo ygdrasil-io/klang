@@ -32,7 +32,7 @@ class SDL_Event : Union {
 
     /** Display event data  */
 	@JvmField
-    var display: SDL_DisplayEvent? = null
+    var display: libsdl.SDL_DisplayEvent? = null
 
     /** Window event data  */
 	@JvmField
@@ -44,15 +44,16 @@ class SDL_Event : Union {
 
     /** Text editing event data  */
 	@JvmField
+	//TODO: fix crash
     var edit: SDL_TextEditingEvent? = null
 
     /** Text input event data  */
 	@JvmField
-    var text: SDL_TextInputEvent? = null
+    var text: libsdl.SDL_TextInputEvent? = null
 
     /** Extended text editing event data  */
 	@JvmField
-    var editExt: SDL_TextEditingExtEvent? = null
+    var editExt: libsdl.SDL_TextEditingExtEvent? = null
 
     /** Mouse motion event data  */
 	@JvmField
@@ -168,9 +169,9 @@ class SDL_Event : Union {
             )
 
             SDL_EventType.SDL_TEXTEDITING -> setType(SDL_TextEditingEvent::class.java)
-            SDL_EventType.SDL_TEXTINPUT -> setType(SDL_TextInputEvent::class.java)
+            SDL_EventType.SDL_TEXTINPUT -> setType(libsdl.SDL_TextInputEvent::class.java)
             SDL_EventType.SDL_KEYMAPCHANGED -> setType(libsdl.SDL_CommonEvent::class.java)
-            SDL_EventType.SDL_TEXTEDITING_EXT -> setType(SDL_TextEditingExtEvent::class.java)
+            SDL_EventType.SDL_TEXTEDITING_EXT -> setType(libsdl.SDL_TextEditingExtEvent::class.java)
             SDL_EventType.SDL_MOUSEMOTION -> setType(libsdl.SDL_MouseMotionEvent::class.java)
             SDL_EventType.SDL_MOUSEBUTTONDOWN, SDL_EventType.SDL_MOUSEBUTTONUP -> setType(
                 SDL_MouseButtonEvent::class.java

@@ -77,13 +77,16 @@ private fun NativeStructure.toSpecWithAttributes(packageName: String, structureC
 		)
 		.addModifiers(KModifier.OPEN)
 		.superclass(jnaStructure)
-		.primaryConstructor(
+		.addFunction(
 			FunSpec.constructorBuilder()
 				.addParameter(
 					ParameterSpec.builder("pointer", jnaPointer.copy(nullable = true))
-						.defaultValue("null")
 						.build()
-				)
+				).callSuperConstructor("pointer")
+				.build()
+		)
+		.addFunction(
+			FunSpec.constructorBuilder()
 				.build()
 		)
 		.apply {
@@ -92,7 +95,6 @@ private fun NativeStructure.toSpecWithAttributes(packageName: String, structureC
 					propertySpec(name, typeRef, packageName)
 				)
 			}
-			superclassConstructorParameters.add(CodeBlock.of("pointer"))
 		}
 		.addRefAndValueClass(structureClass)
 		.build()

@@ -31,9 +31,7 @@ class StructureGenerationTest : FreeSpec({
 			size shouldBe 1
 			first().toString() shouldBe """
 @com.sun.jna.Structure.FieldOrder("first", "second", "third", "fourth", "fifth", "string")
-public open class MyStructure(
-  pointer: com.sun.jna.Pointer? = null,
-) : com.sun.jna.Structure(pointer) {
+public open class MyStructure : com.sun.jna.Structure {
   /**
    * mapped from long
    */
@@ -69,6 +67,10 @@ public open class MyStructure(
    */
   @kotlin.jvm.JvmField
   public var string: kotlin.String = ""
+
+  public constructor(pointer: com.sun.jna.Pointer?) : super(pointer)
+
+  public constructor()
 
   public class ByReference(
     pointer: com.sun.jna.Pointer? = null,

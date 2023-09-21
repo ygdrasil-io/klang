@@ -46,9 +46,7 @@ class StructureGenerationWithCallbackTest : FreeSpec({
 		""".trimMargin()
 				structure.toString() shouldBe """
 @com.sun.jna.Structure.FieldOrder("callback", "callback2")
-public open class MyStructure(
-  pointer: com.sun.jna.Pointer? = null,
-) : com.sun.jna.Structure(pointer) {
+public open class MyStructure : com.sun.jna.Structure {
   /**
    * mapped from void (*)(void *, char *, int)
    */
@@ -60,6 +58,10 @@ public open class MyStructure(
    */
   @kotlin.jvm.JvmField
   public var callback2: test.MyAlias? = null
+
+  public constructor(pointer: com.sun.jna.Pointer?) : super(pointer)
+
+  public constructor()
 
   public class ByReference(
     pointer: com.sun.jna.Pointer? = null,

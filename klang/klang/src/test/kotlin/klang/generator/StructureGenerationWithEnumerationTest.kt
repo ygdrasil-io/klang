@@ -33,14 +33,16 @@ class StructureGenerationWithEnumerationTest : FreeSpec({
 			size shouldBe 1
 			first().toString() shouldBe """
 @com.sun.jna.Structure.FieldOrder("enumeration")
-public open class MyStructure(
-  pointer: com.sun.jna.Pointer? = null,
-) : com.sun.jna.Structure(pointer) {
+public open class MyStructure : com.sun.jna.Structure {
   /**
    * mapped from MyEnumeration
    */
   @kotlin.jvm.JvmField
   public var enumeration: kotlin.Int = 0
+
+  public constructor(pointer: com.sun.jna.Pointer?) : super(pointer)
+
+  public constructor()
 
   public class ByReference(
     pointer: com.sun.jna.Pointer? = null,

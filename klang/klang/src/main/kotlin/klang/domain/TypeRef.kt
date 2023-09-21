@@ -12,6 +12,8 @@ private val logger = KotlinLogging.logger {}
 fun <A, B> Either<A, B>.unchecked(message: String = "unchecked Either lead to error") = getOrNull() ?: error(message)
 
 fun typeOf(reference: String): Either<String, TypeRef> = either {
+	var isArray = false
+	var arraySize: Int? = null
 	val tokens = tokenizeTypeRef(reference).toMutableList()
 	ensure(tokens.isNotEmpty()) { "fail to tokenize type $reference" }
 
@@ -65,6 +67,11 @@ fun typeOf(reference: String): Either<String, TypeRef> = either {
 
 	if (isCallback) {
 		typeName = reference
+	} else {
+		if (reference.contains("[") && reference.contains("]")) {
+			isArray = true
+			arraySize = reference.substringAfter("[").substringBefore("]").toIntOrNull()
+		}
 	}
 
 	if (isEnumeration) {
@@ -82,7 +89,9 @@ fun typeOf(reference: String): Either<String, TypeRef> = either {
 		isNullable,
 		isVolatile,
 		isUnion,
-		isCallback
+		isCallback,
+		isArray,
+		arraySize
 	)
 }
 
@@ -136,11 +145,10 @@ class UnresolvedTypeRef internal constructor(
 	override val isNullable: Boolean?,
 	override val isVolatile: Boolean,
 	override val isUnion: Boolean,
-	override val isCallback: Boolean
+	override val isCallback: Boolean,
+	override var isArray: Boolean,
+	override var arraySize: Int?,
 ) : TypeRef {
-
-	override var isArray: Boolean = false
-	override var arraySize: Int? = null
 
 	override fun toString() = "UnresolvedType($typeName from declaration $referenceAsString)"
 

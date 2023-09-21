@@ -28,7 +28,7 @@ class SDL_Event : Union {
 
     /** Common event data  */
 	@JvmField
-    var common: SDL_CommonEvent? = null
+    var common: libsdl.SDL_CommonEvent? = null
 
     /** Display event data  */
 	@JvmField
@@ -36,11 +36,11 @@ class SDL_Event : Union {
 
     /** Window event data  */
 	@JvmField
-    var window: SDL_WindowEvent? = null
+    var window: libsdl.SDL_WindowEvent = libsdl.SDL_WindowEvent()
 
     /** Keyboard event data  */
 	@JvmField
-    var key: SDL_KeyboardEvent? = null
+    var key: libsdl.SDL_KeyboardEvent = libsdl.SDL_KeyboardEvent()
 
     /** Text editing event data  */
 	@JvmField
@@ -56,7 +56,7 @@ class SDL_Event : Union {
 
     /** Mouse motion event data  */
 	@JvmField
-    var motion: SDL_MouseMotionEvent? = null
+    var motion: libsdl.SDL_MouseMotionEvent = libsdl.SDL_MouseMotionEvent()
 
     /** Mouse button event data  */
 	@JvmField
@@ -112,7 +112,7 @@ class SDL_Event : Union {
 
     /** Audio device event data  */
 	@JvmField
-    var adevice: SDL_AudioDeviceEvent? = null
+    var adevice: libsdl.SDL_AudioDeviceEvent = libsdl.SDL_AudioDeviceEvent()
 
     /** Touch finger event data  */
 	@JvmField
@@ -159,19 +159,19 @@ class SDL_Event : Union {
                 SDL_OSEvent::class.java
             )
 
-            SDL_EventType.SDL_LOCALECHANGED -> setType(SDL_CommonEvent::class.java)
+            SDL_EventType.SDL_LOCALECHANGED -> setType(libsdl.SDL_CommonEvent::class.java)
             SDL_EventType.SDL_DISPLAYEVENT -> setType(SDL_DisplayEvent::class.java)
-            SDL_EventType.SDL_WINDOWEVENT -> setType(SDL_WindowEvent::class.java)
+            SDL_EventType.SDL_WINDOWEVENT -> setType(libsdl.SDL_WindowEvent::class.java)
             SDL_EventType.SDL_SYSWMEVENT -> setType(SDL_SysWMEvent::class.java)
             SDL_EventType.SDL_KEYDOWN, SDL_EventType.SDL_KEYUP -> setType(
-                SDL_KeyboardEvent::class.java
+				libsdl.SDL_KeyboardEvent::class.java
             )
 
             SDL_EventType.SDL_TEXTEDITING -> setType(SDL_TextEditingEvent::class.java)
             SDL_EventType.SDL_TEXTINPUT -> setType(SDL_TextInputEvent::class.java)
-            SDL_EventType.SDL_KEYMAPCHANGED -> setType(SDL_CommonEvent::class.java)
+            SDL_EventType.SDL_KEYMAPCHANGED -> setType(libsdl.SDL_CommonEvent::class.java)
             SDL_EventType.SDL_TEXTEDITING_EXT -> setType(SDL_TextEditingExtEvent::class.java)
-            SDL_EventType.SDL_MOUSEMOTION -> setType(SDL_MouseMotionEvent::class.java)
+            SDL_EventType.SDL_MOUSEMOTION -> setType(libsdl.SDL_MouseMotionEvent::class.java)
             SDL_EventType.SDL_MOUSEBUTTONDOWN, SDL_EventType.SDL_MOUSEBUTTONUP -> setType(
                 SDL_MouseButtonEvent::class.java
             )
@@ -212,24 +212,24 @@ class SDL_Event : Union {
             )
 
             SDL_EventType.SDL_MULTIGESTURE -> setType(SDL_MultiGestureEvent::class.java)
-            SDL_EventType.SDL_CLIPBOARDUPDATE -> setType(SDL_CommonEvent::class.java)
+            SDL_EventType.SDL_CLIPBOARDUPDATE -> setType(libsdl.SDL_CommonEvent::class.java)
             SDL_EventType.SDL_DROPFILE, SDL_EventType.SDL_DROPTEXT, SDL_EventType.SDL_DROPBEGIN, SDL_EventType.SDL_DROPCOMPLETE -> setType(
                 SDL_DropEvent::class.java
             )
 
             SDL_EventType.SDL_AUDIODEVICEADDED, SDL_EventType.SDL_AUDIODEVICEREMOVED -> setType(
-                SDL_AudioDeviceEvent::class.java
+                libsdl.SDL_AudioDeviceEvent::class.java
             )
 
             SDL_EventType.SDL_SENSORUPDATE -> setType(SDL_SensorEvent::class.java)
             SDL_EventType.SDL_RENDER_TARGETS_RESET, SDL_EventType.SDL_RENDER_DEVICE_RESET -> setType(
-                SDL_CommonEvent::class.java
+				libsdl.SDL_CommonEvent::class.java
             )
 
             else -> if (type >= SDL_EventType.SDL_USEREVENT && type < SDL_EventType.SDL_LASTEVENT) {
                 setType(SDL_UserEvent::class.java)
             } else {
-                setType(SDL_CommonEvent::class.java)
+                setType(libsdl.SDL_CommonEvent::class.java)
             }
         }
         super.read()

@@ -34,7 +34,7 @@ fun main() {
 				ticks -= speed
 			}
 
-			sdlUI.readCommands2().forEach { command ->
+			sdlUI.readCommands().forEach { command ->
 				var direction: Direction? = null
 				when (command) {
 					SdlUI.UserCommand.up -> direction = Direction.up
@@ -147,36 +147,7 @@ class SdlUI(width: Int, height: Int): AutoCloseable {
 		libSDL2Library.SDL_Delay(timeMs)
 	}
 
-
 	fun readCommands(): List<UserCommand>  {
-		val result = ArrayList<UserCommand>()
-		val event = io.github.libsdl4j.api.event.SDL_Event()
-		while (SdlEvents.SDL_PollEvent(event) != 0) {
-			event.read()
-			when (event.type) {
-				io.github.libsdl4j.api.event.SDL_EventType.SDL_QUIT -> result.add(UserCommand.quit)
-				io.github.libsdl4j.api.event.SDL_EventType.SDL_KEYDOWN -> {
-					val keyboardEvent = event.key
-					val keysym = keyboardEvent.keysym
-					println("keyboardEvent(${keysym.scancode}): ${keysym.scancode}")
-					val command = when (keysym.scancode) {
-						io.github.libsdl4j.api.scancode.SDL_Scancode.SDL_SCANCODE_I -> UserCommand.up
-						io.github.libsdl4j.api.scancode.SDL_Scancode.SDL_SCANCODE_J -> UserCommand.up
-						io.github.libsdl4j.api.scancode.SDL_Scancode.SDL_SCANCODE_K -> UserCommand.up
-						io.github.libsdl4j.api.scancode.SDL_Scancode.SDL_SCANCODE_L -> UserCommand.up
-						io.github.libsdl4j.api.scancode.SDL_Scancode.SDL_SCANCODE_R -> UserCommand.up
-						io.github.libsdl4j.api.scancode.SDL_Scancode.SDL_SCANCODE_Q -> UserCommand.up
-						else           -> null
-					}
-					if (command != null) result.add(command)
-				}
-				else -> Unit
-			}
-		}
-		return result
-	}
-
-	fun readCommands2(): List<UserCommand>  {
 		val result = ArrayList<UserCommand>()
 		val event = SDL_Event()
 		while (libSDL2Library.SDL_PollEvent(event) != 0) {
@@ -186,7 +157,7 @@ class SdlUI(width: Int, height: Int): AutoCloseable {
 				SDL_EventType.SDL_QUIT -> result.add(UserCommand.quit)
 				SDL_EventType.SDL_KEYDOWN -> {
 					val keyboardEvent = event.key
-					val keysym = keyboardEvent!!.keysym
+					val keysym = keyboardEvent.keysym
 					println("keyboardEvent(${keysym.scancode}): ${SDL_Scancode.of(keysym.scancode)}")
 					val command = when (SDL_Scancode.of(keysym.scancode)) {
 						SDL_Scancode.SDL_SCANCODE_I -> UserCommand.up

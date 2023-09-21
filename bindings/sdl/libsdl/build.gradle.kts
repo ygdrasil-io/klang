@@ -73,7 +73,16 @@ klang {
 					}
 				}
 
-				// Array must be set manually as there is no way to know it without reading the documentation
+				// Array must be set manually for now
+				findStructureByName("SDL_TextEditingEvent")?.apply {
+					fields.find { (name, _) -> name == "text" }
+						?.let { (_, field) ->
+							field.isArray = true
+							field.arraySize = 32
+						}
+				}
+
+				// Array must be set manually for now
 				findStructureByName("SDL_AudioCVT")?.apply {
 					fields.find { (name, _) -> name == "filters" }
 						?.let { (_, field) ->

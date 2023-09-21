@@ -176,6 +176,15 @@ private fun ResolvedTypeRef.toPropertySpec(
 		rootType is StringType -> "\"\""
 		isPointer -> "null"
 		rootType is FixeSizeType -> when {
+			isArray ->  when {
+				rootType.isFloating && rootType.size == 32 -> "FloatArray(${arraySize ?: 0})"
+				rootType.isFloating && rootType.size == 64 -> "DoubleArray(${arraySize ?: 0})"
+				rootType.size == 8 -> "ByteArray(${arraySize ?: 0})"
+				rootType.size == 16 -> "ShortArray(${arraySize ?: 0})"
+				rootType.size == 32 -> "IntArray(${arraySize ?: 0})"
+				rootType.size == 64 -> "LongArray(${arraySize ?: 0})"
+				else -> "null"
+			}
 			rootType.isFloating && rootType.size == 32 -> "0.0f"
 			rootType.isFloating && rootType.size == 64 -> "0.0"
 			else -> "0"

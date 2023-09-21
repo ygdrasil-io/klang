@@ -45,7 +45,8 @@ class SDL_Event : Union {
     /** Text editing event data  */
 	@JvmField
 	//TODO: fix crash
-    var edit: SDL_TextEditingEvent? = null
+    var edit: libsdl.SDL_TextEditingEvent? = null
+	var edit2: libsdl.SDL_TextEditingEvent? = null
 
     /** Text input event data  */
 	@JvmField

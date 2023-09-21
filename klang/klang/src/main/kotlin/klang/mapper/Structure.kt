@@ -39,13 +39,16 @@ private fun NativeStructure.toUnionSpec(packageName: String, structureClass: Cla
 	TypeSpec.classBuilder(structureClass)
 		.addModifiers(KModifier.OPEN)
 		.superclass(jnaUnion)
-		.primaryConstructor(
+		.addFunction(
 			FunSpec.constructorBuilder()
 				.addParameter(
 					ParameterSpec.builder("pointer", jnaPointer.copy(nullable = true))
-						.defaultValue("null")
 						.build()
-				)
+				).callSuperConstructor("pointer")
+				.build()
+		)
+		.addFunction(
+			FunSpec.constructorBuilder()
 				.build()
 		)
 		.apply {
@@ -54,7 +57,6 @@ private fun NativeStructure.toUnionSpec(packageName: String, structureClass: Cla
 					propertySpec(name, typeRef, packageName)
 				)
 			}
-			superclassConstructorParameters.add(CodeBlock.of("pointer"))
 		}
 		.addFunction(
 			FunSpec.builder("read")

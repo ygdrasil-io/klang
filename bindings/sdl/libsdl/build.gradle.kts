@@ -23,6 +23,7 @@ plugins {
 dependencies {
 	api(libs.jna)
 	testImplementation("org.junit.jupiter:junit-jupiter")
+	implementation("io.github.libsdl4j:libsdl4j:2.28.1-1.3")
 	testImplementation(libs.kotest)
 }
 

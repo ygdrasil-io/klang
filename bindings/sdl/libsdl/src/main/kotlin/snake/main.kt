@@ -149,7 +149,7 @@ class SdlUI(width: Int, height: Int): AutoCloseable {
 
 	fun readCommands(): List<UserCommand>  {
 		val result = ArrayList<UserCommand>()
-		val event = SDL_Event()
+		val event = libsdl.SDL_Event.ByReference()
 		while (libSDL2Library.SDL_PollEvent(event) != 0) {
 			event.read()
 			println("event(${event.type}): ${SDL_EventType.of(event.type)}")

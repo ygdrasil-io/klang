@@ -72,7 +72,7 @@ klang {
 						}
 					}
 				}
-
+				/*
 				// Array must be set manually for now
 				findStructureByName("SDL_TextEditingEvent")?.apply {
 					fields.find { (name, _) -> name == "text" }
@@ -96,7 +96,7 @@ klang {
 							field.isArray = true
 							field.arraySize = 56
 						}
-				}
+				}*/
 			}
 		}
 

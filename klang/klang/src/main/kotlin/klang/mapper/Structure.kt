@@ -170,7 +170,7 @@ private fun ResolvedTypeRef.toPropertySpec(
 
 	val defaultValue = when {
 		rootType is NativeStructure -> when {
-			isPointer -> "${rootType.name}.ByReference()"
+			isPointer -> "${rootType.name}()"
 			else -> "${rootType.name}()"
 		}
 		rootType is StringType -> "\"\""

@@ -2,7 +2,6 @@ package snake
 
 
 import SDL_WINDOWPOS_CENTERED
-import io.github.libsdl4j.api.event.SdlEvents
 import libsdl.*
 import java.io.File
 import kotlin.math.max
@@ -52,8 +51,8 @@ fun main() {
 }
 
 class SdlUI(width: Int, height: Int): AutoCloseable {
-	private val window: SDL_Window.ByReference
-	private val renderer: SDL_Renderer.ByReference
+	private val window: SDL_Window
+	private val renderer: SDL_Renderer
 	private val font: Font
 	private val sprites: Sprites
 
@@ -149,7 +148,7 @@ class SdlUI(width: Int, height: Int): AutoCloseable {
 
 	fun readCommands(): List<UserCommand>  {
 		val result = ArrayList<UserCommand>()
-		val event = libsdl.SDL_Event.ByReference()
+		val event = libsdl.SDL_Event()
 		while (libSDL2Library.SDL_PollEvent(event) != 0) {
 			event.read()
 			println("event(${event.type}): ${SDL_EventType.of(event.type)}")
@@ -184,7 +183,7 @@ class SdlUI(width: Int, height: Int): AutoCloseable {
 		else                            -> error("")
 	}
 
-	private fun cellRect(cell: Cell): SDL_Rect.ByReference {
+	private fun cellRect(cell: Cell): SDL_Rect {
 		val x = cell.x * Sprites.w
 		val y = cell.y * Sprites.h
 		return allocRect(x, y, Sprites.w, Sprites.h)
@@ -207,14 +206,14 @@ class SdlUI(width: Int, height: Int): AutoCloseable {
 	}
 
 
-	class Font(private val renderer: SDL_Renderer.ByReference) {
+	class Font(private val renderer: SDL_Renderer) {
 		companion object {
 			const val w = 48
 			const val h = 46
 		}
 
 		internal val texture = renderer.loadTexture("Font16_42_Normal4_sheet.bmp")
-		private val letters: Map<Char, SDL_Rect.ByReference>
+		private val letters: Map<Char, SDL_Rect>
 
 		init {
 			letters = mapOf(
@@ -258,19 +257,19 @@ class SdlUI(width: Int, height: Int): AutoCloseable {
 			)
 		}
 
-		fun render(char: Char, cellRect: SDL_Rect.ByReference) {
+		fun render(char: Char, cellRect: SDL_Rect) {
 			val charRect = letters[char.uppercaseChar()] ?: (letters[' '] ?: error(""))
 			libSDL2Library.SDL_RenderCopy(renderer, texture, charRect, cellRect)
 		}
 
-		private fun textureRect(x: Int, y: Int, wAdjust: Int = 0): SDL_Rect.ByReference {
+		private fun textureRect(x: Int, y: Int, wAdjust: Int = 0): SDL_Rect {
 			val xShift = x * w
 			val yShift = y * h
 			return allocRect(xShift, yShift, w + wAdjust, h)
 		}
 	}
 
-	class Sprites(private val renderer: SDL_Renderer.ByReference) {
+	class Sprites(private val renderer: SDL_Renderer) {
 		companion object {
 			const val w = 64
 			const val h = 64
@@ -303,14 +302,14 @@ class SdlUI(width: Int, height: Int): AutoCloseable {
 
 		private fun textureRect(x: Int, y: Int) = allocRect(x * w, y * h, w, h)
 
-		fun render(srcRect: SDL_Rect.ByReference, dstRect: SDL_Rect.ByReference) {
+		fun render(srcRect: SDL_Rect, dstRect: SDL_Rect) {
 			if (srcRect == grassRect) libSDL2Library.SDL_RenderCopy(renderer, grassTexture, srcRect, dstRect)
 			else libSDL2Library.SDL_RenderCopy(renderer, texture, srcRect, dstRect)
 		}
 	}
 
 	companion object {
-		fun SDL_Renderer.ByReference.loadTexture(fileName: String): SDL_Texture.ByReference {
+		fun SDL_Renderer.loadTexture(fileName: String): SDL_Texture {
 			val paths = listOf(fileName, "resources/$fileName", "../resources/$fileName")
 			val filePath = paths.find { File(it).canRead() } ?: error("Can't find image file.")
 
@@ -319,7 +318,7 @@ class SdlUI(width: Int, height: Int): AutoCloseable {
 			return libSDL2Library.SDL_CreateTextureFromSurface(this@loadTexture, bmp)
 		}
 
-		fun allocRect(x: Int, y: Int, w: Int, h: Int) = SDL_Rect.ByReference().also {
+		fun allocRect(x: Int, y: Int, w: Int, h: Int) = SDL_Rect().also {
 			it.x = x
 			it.y = y
 			it.w = w

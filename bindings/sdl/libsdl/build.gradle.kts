@@ -23,7 +23,6 @@ plugins {
 dependencies {
 	api(libs.jna)
 	testImplementation("org.junit.jupiter:junit-jupiter")
-	implementation("io.github.libsdl4j:libsdl4j:2.28.1-1.3")
 	testImplementation(libs.kotest)
 }
 
@@ -72,31 +71,6 @@ klang {
 						}
 					}
 				}
-				/*
-				// Array must be set manually for now
-				findStructureByName("SDL_TextEditingEvent")?.apply {
-					fields.find { (name, _) -> name == "text" }
-						?.let { (_, field) ->
-							field.isArray = true
-							field.arraySize = 32
-						}
-				}
-
-				// Array must be set manually for now
-				findStructureByName("SDL_AudioCVT")?.apply {
-					fields.find { (name, _) -> name == "filters" }
-						?.let { (_, field) ->
-							field.isArray = true
-							field.arraySize = 10
-						}
-				}
-				findStructureByName("SDL_Event")?.apply {
-					fields.find { (name, _) -> name == "padding" }
-						?.let { (_, field) ->
-							field.isArray = true
-							field.arraySize = 56
-						}
-				}*/
 			}
 		}
 

@@ -2,10 +2,16 @@ package snake
 
 
 import SDL_WINDOWPOS_CENTERED
+import com.sun.jna.Native
+import com.sun.jna.Pointer
+import com.sun.jna.ptr.IntByReference
+import com.sun.jna.ptr.PointerByReference
 import libsdl.*
 import java.io.File
+import java.nio.ByteBuffer
 import kotlin.math.max
 import kotlin.random.Random
+
 
 fun main() {
 	val initialGame = Game(
@@ -53,6 +59,7 @@ fun main() {
 class SdlUI(width: Int, height: Int): AutoCloseable {
 	private val window: SDL_Window
 	private val renderer: SDL_Renderer
+	private val controller: SDL_GameController?
 	private val font: Font
 	private val sprites: Sprites
 
@@ -74,8 +81,15 @@ class SdlUI(width: Int, height: Int): AutoCloseable {
 			window, -1, SDL_RendererFlags.SDL_RENDERER_ACCELERATED or SDL_RendererFlags.SDL_RENDERER_PRESENTVSYNC
 		)
 
+		controller = when (libSDL2Library.SDL_NumJoysticks() != 0) {
+			true -> libSDL2Library.SDL_GameControllerOpen(0)
+			false -> null
+		}
+
 		font = Font(renderer)
 		sprites = Sprites(renderer)
+
+		playMusic()
 	}
 
 	fun draw(game: Game) {
@@ -140,6 +154,7 @@ class SdlUI(width: Int, height: Int): AutoCloseable {
 		}
 
 		libSDL2Library.SDL_RenderPresent(renderer)
+
 	}
 
 	fun delay(timeMs: Int) {
@@ -148,12 +163,35 @@ class SdlUI(width: Int, height: Int): AutoCloseable {
 
 	fun readCommands(): List<UserCommand>  {
 		val result = ArrayList<UserCommand>()
-		val event = libsdl.SDL_Event()
+		val event = SDL_Event()
 		while (libSDL2Library.SDL_PollEvent(event) != 0) {
 			event.read()
 			println("event(${event.type}): ${SDL_EventType.of(event.type)}")
 			when (SDL_EventType.of(event.type)) {
+				SDL_EventType.SDL_WINDOWEVENT -> {
+					val windowEvent = SDL_WindowEventID.of(event.window.event.toInt())
+					println("controllerButtonEvent(${windowEvent})")
+
+					if (windowEvent == SDL_WindowEventID.SDL_WINDOWEVENT_SHOWN) {
+						//playMusic()
+					}
+				}
 				SDL_EventType.SDL_QUIT -> result.add(UserCommand.quit)
+				SDL_EventType.SDL_CONTROLLERBUTTONDOWN -> {
+					val controllerButtonEvent = event.cbutton
+					val button = controllerButtonEvent.button.toInt()
+					println("controllerButtonEvent($button): ${SDL_GameControllerButton.of(button)}")
+					val command = when (SDL_GameControllerButton.of(button)) {
+						SDL_GameControllerButton.SDL_CONTROLLER_BUTTON_DPAD_UP -> UserCommand.up
+						SDL_GameControllerButton.SDL_CONTROLLER_BUTTON_DPAD_DOWN -> UserCommand.down
+						SDL_GameControllerButton.SDL_CONTROLLER_BUTTON_DPAD_LEFT -> UserCommand.left
+						SDL_GameControllerButton.SDL_CONTROLLER_BUTTON_DPAD_RIGHT -> UserCommand.right
+						SDL_GameControllerButton.SDL_CONTROLLER_BUTTON_START -> UserCommand.restart
+						SDL_GameControllerButton.SDL_CONTROLLER_BUTTON_BACK -> UserCommand.quit
+						else -> null
+					}
+					if (command != null) result.add(command)
+				}
 				SDL_EventType.SDL_KEYDOWN -> {
 					val keyboardEvent = event.key
 					val keysym = keyboardEvent.keysym
@@ -173,6 +211,28 @@ class SdlUI(width: Int, height: Int): AutoCloseable {
 			}
 		}
 		return result
+	}
+
+	private fun playMusic() {
+		val fileName = "Crowander-Stop-on-a-Bench.wav"
+		val paths = listOf(fileName, "resources/$fileName", "../resources/$fileName")
+		val filePath = paths.find { File(it).canRead() } ?: error("Can't find sound file.")
+		val audioFile = libSDL2Library.SDL_RWFromFile(filePath, "rb")
+		val audio_spec =  SDL_AudioSpec()
+		val audio_buf = PointerByReference()
+		val audio_len = IntByReference()
+		libSDL2Library.SDL_LoadWAV_RW(
+			src = audioFile,
+			freesrc = 1,
+			spec = audio_spec,
+			audio_buf.pointer,
+			audio_len.pointer
+		)
+
+		val deviceName = libSDL2Library.SDL_GetAudioDeviceName(0, 0)
+		val device_id = libSDL2Library.SDL_OpenAudioDevice(deviceName, 0, audio_spec, SDL_AudioSpec(), 0)
+		libSDL2Library.SDL_QueueAudio(device_id, audio_buf.value, audio_len.value)
+		libSDL2Library.SDL_PauseAudioDevice(device_id, 0)
 	}
 
 	private fun direction(from: Cell, to: Cell): Direction = when {
@@ -327,6 +387,8 @@ class SdlUI(width: Int, height: Int): AutoCloseable {
 	}
 
 	override fun close() {
+		controller.takeIf { it != null }
+			?.let { libSDL2Library.SDL_GameControllerClose(it) }
 		libSDL2Library.SDL_DestroyTexture(sprites.texture)
 		libSDL2Library.SDL_DestroyTexture(sprites.grassTexture)
 		libSDL2Library.SDL_DestroyTexture(font.texture)

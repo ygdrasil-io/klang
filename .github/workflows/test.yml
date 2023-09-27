@@ -24,17 +24,14 @@ jobs:
           distribution: 'temurin'
           java-version: 17
           cache: 'gradle'
-#      - name: Cache Gradle packages
-#        uses: actions/cache@v3
-#        with:
-#          path: ~/.gradle/caches
-#          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
-#          restore-keys: ${{ runner.os }}-gradle
-      - name: logs
-        run:  |
-          pwd
-          ls -al
-          ls -al ..
+      - name: Cache Gradle packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+          restore-keys: ${{ runner.os }}-gradle
+      - name: switch to klang directory
+        run:  cd ./klang
       - name: Build
         run: ./gradlew test
       - name: Bundle the build report

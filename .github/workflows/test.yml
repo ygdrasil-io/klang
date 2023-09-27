@@ -31,9 +31,10 @@ jobs:
 #          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
 #          restore-keys: ${{ runner.os }}-gradle
       - name: logs
-        run: pwd
-        run: ls -al
-        run: ls -al ..
+        run:  |
+          pwd
+          ls -al
+          ls -al ..
       - name: Build
         run: ./gradlew test
       - name: Bundle the build report

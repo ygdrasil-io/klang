@@ -1,0 +1,45 @@
+TranslationUnitDecl 0x55cffc17be18 <<invalid sloc>> <invalid sloc>
+|-TypedefDecl 0x55cffc17c640 <<invalid sloc>> <invalid sloc> implicit __int128_t '__int128'
+| `-BuiltinType 0x55cffc17c3e0 '__int128'
+|-TypedefDecl 0x55cffc17c6b0 <<invalid sloc>> <invalid sloc> implicit __uint128_t 'unsigned __int128'
+| `-BuiltinType 0x55cffc17c400 'unsigned __int128'
+|-TypedefDecl 0x55cffc17c9b8 <<invalid sloc>> <invalid sloc> implicit __NSConstantString 'struct __NSConstantString_tag'
+| `-RecordType 0x55cffc17c790 'struct __NSConstantString_tag'
+|   `-Record 0x55cffc17c708 '__NSConstantString_tag'
+|-TypedefDecl 0x55cffc17ca50 <<invalid sloc>> <invalid sloc> implicit __builtin_ms_va_list 'char *'
+| `-PointerType 0x55cffc17ca10 'char *'
+|   `-BuiltinType 0x55cffc17bec0 'char'
+|-TypedefDecl 0x55cffc17cd48 <<invalid sloc>> <invalid sloc> implicit __builtin_va_list 'struct __va_list_tag[1]'
+| `-ConstantArrayType 0x55cffc17ccf0 'struct __va_list_tag[1]' 1 
+|   `-RecordType 0x55cffc17cb30 'struct __va_list_tag'
+|     `-Record 0x55cffc17caa8 '__va_list_tag'
+|-EnumDecl 0x55cffc1d7f40 </workspace/struct.h:2:1, line:5:1> line:2:6 EnumName
+| |-EnumConstantDecl 0x55cffc1d8040 <line:3:3, col:12> col:3 Value1 'int'
+| | `-ConstantExpr 0x55cffc1d8020 <col:12> 'int'
+| |   |-value: Int 2
+| |   `-IntegerLiteral 0x55cffc1d8000 <col:12> 'int' 2
+| `-EnumConstantDecl 0x55cffc1d80d0 <line:4:3, col:12> col:3 Value2 'int'
+|   `-ConstantExpr 0x55cffc1d80b0 <col:12> 'int'
+|     |-value: Int 1
+|     `-IntegerLiteral 0x55cffc1d8090 <col:12> 'int' 1
+|-EnumDecl 0x55cffc1d8120 <line:7:9, line:10:1> line:7:9
+| |-EnumConstantDecl 0x55cffc1d8220 <line:8:3, col:12> col:3 Value3 'int'
+| | `-ConstantExpr 0x55cffc1d8200 <col:12> 'int'
+| |   |-value: Int 2
+| |   `-IntegerLiteral 0x55cffc1d81e0 <col:12> 'int' 2
+| `-EnumConstantDecl 0x55cffc1d82b0 <line:9:3, col:12> col:3 Value4 'int'
+|   `-ConstantExpr 0x55cffc1d8290 <col:12> 'int'
+|     |-value: Int 1
+|     `-IntegerLiteral 0x55cffc1d8270 <col:12> 'int' 1
+|-TypedefDecl 0x55cffc1d8358 <line:7:1, line:10:3> col:3 referenced EnumName2 'enum EnumName2':'EnumName2'
+| `-ElaboratedType 0x55cffc1d8300 'enum EnumName2' sugar
+|   `-EnumType 0x55cffc1d81c0 'EnumName2'
+|     `-Enum 0x55cffc1d8120 ''
+|-RecordDecl 0x55cffc1d83c8 <line:13:1, line:17:1> line:13:8 struct StructName definition
+| |-FieldDecl 0x55cffc1d8520 <line:14:5, col:20> col:20 field1 'enum EnumName *'
+| |-FieldDecl 0x55cffc1d85e0 <line:15:5, col:15> col:15 field2 'EnumName2':'EnumName2'
+| `-FieldDecl 0x55cffc1d8640 <line:16:5, col:10> col:10 field3 'char'
+`-RecordDecl 0x55cffc1d8690 <line:19:1, line:23:1> line:19:8 struct StructName2 definition
+  |-FieldDecl 0x55cffc1d8780 <line:20:5, col:23> col:23 field1 'struct StructName':'struct StructName'
+  |-FieldDecl 0x55cffc1d8850 <line:21:5, col:24> col:24 field2 'struct StructName *'
+  `-FieldDecl 0x55cffc1d88b0 <line:22:5, col:10> col:10 field3 'char'

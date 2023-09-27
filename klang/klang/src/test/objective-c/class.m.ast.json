@@ -1,0 +1,564 @@
+{
+  "id": "0x7fd845046408",
+  "kind": "TranslationUnitDecl",
+  "loc": {},
+  "range": {
+    "begin": {},
+    "end": {}
+  },
+  "inner": [
+    {
+      "id": "0x7fd845046c48",
+      "kind": "TypedefDecl",
+      "loc": {},
+      "range": {
+        "begin": {},
+        "end": {}
+      },
+      "isImplicit": true,
+      "name": "__int128_t",
+      "type": {
+        "qualType": "__int128"
+      },
+      "inner": [
+        {
+          "id": "0x7fd8450469d0",
+          "kind": "BuiltinType",
+          "type": {
+            "qualType": "__int128"
+          }
+        }
+      ]
+    },
+    {
+      "id": "0x7fd845046cb8",
+      "kind": "TypedefDecl",
+      "loc": {},
+      "range": {
+        "begin": {},
+        "end": {}
+      },
+      "isImplicit": true,
+      "name": "__uint128_t",
+      "type": {
+        "qualType": "unsigned __int128"
+      },
+      "inner": [
+        {
+          "id": "0x7fd8450469f0",
+          "kind": "BuiltinType",
+          "type": {
+            "qualType": "unsigned __int128"
+          }
+        }
+      ]
+    },
+    {
+      "id": "0x7fd845046d58",
+      "kind": "TypedefDecl",
+      "loc": {},
+      "range": {
+        "begin": {},
+        "end": {}
+      },
+      "isImplicit": true,
+      "name": "SEL",
+      "type": {
+        "qualType": "SEL *"
+      },
+      "inner": [
+        {
+          "id": "0x7fd845046d10",
+          "kind": "PointerType",
+          "type": {
+            "qualType": "SEL *"
+          },
+          "isImported": true,
+          "inner": [
+            {
+              "id": "0x7fd845046b70",
+              "kind": "BuiltinType",
+              "type": {
+                "qualType": "SEL"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "0x7fd845046e38",
+      "kind": "TypedefDecl",
+      "loc": {},
+      "range": {
+        "begin": {},
+        "end": {}
+      },
+      "isImplicit": true,
+      "name": "id",
+      "type": {
+        "qualType": "id"
+      },
+      "inner": [
+        {
+          "id": "0x7fd845046de0",
+          "kind": "ObjCObjectPointerType",
+          "type": {
+            "qualType": "id"
+          },
+          "isImported": true,
+          "inner": [
+            {
+              "id": "0x7fd845046db0",
+              "kind": "ObjCObjectType",
+              "type": {
+                "qualType": "id"
+              },
+              "isImported": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "0x7fd845046f18",
+      "kind": "TypedefDecl",
+      "loc": {},
+      "range": {
+        "begin": {},
+        "end": {}
+      },
+      "isImplicit": true,
+      "name": "Class",
+      "type": {
+        "qualType": "Class"
+      },
+      "inner": [
+        {
+          "id": "0x7fd845046ec0",
+          "kind": "ObjCObjectPointerType",
+          "type": {
+            "qualType": "Class"
+          },
+          "isImported": true,
+          "inner": [
+            {
+              "id": "0x7fd845046e90",
+              "kind": "ObjCObjectType",
+              "type": {
+                "qualType": "Class"
+              },
+              "isImported": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "0x7fd845046f70",
+      "kind": "ObjCInterfaceDecl",
+      "loc": {},
+      "range": {
+        "begin": {},
+        "end": {}
+      },
+      "isImplicit": true,
+      "name": "Protocol",
+      "mangledName": "_OBJC_CLASS_$_Protocol",
+      "super": {
+        "id": "0x0"
+      },
+      "implementation": {
+        "id": "0x0"
+      }
+    },
+    {
+      "id": "0x7fd845047310",
+      "kind": "TypedefDecl",
+      "loc": {},
+      "range": {
+        "begin": {},
+        "end": {}
+      },
+      "isImplicit": true,
+      "name": "__NSConstantString",
+      "type": {
+        "qualType": "struct __NSConstantString_tag"
+      },
+      "inner": [
+        {
+          "id": "0x7fd8450470e0",
+          "kind": "RecordType",
+          "type": {
+            "qualType": "struct __NSConstantString_tag"
+          },
+          "decl": {
+            "id": "0x7fd845047040",
+            "kind": "RecordDecl",
+            "name": "__NSConstantString_tag"
+          }
+        }
+      ]
+    },
+    {
+      "id": "0x7fd84508d000",
+      "kind": "TypedefDecl",
+      "loc": {},
+      "range": {
+        "begin": {},
+        "end": {}
+      },
+      "isImplicit": true,
+      "name": "__builtin_ms_va_list",
+      "type": {
+        "qualType": "char *"
+      },
+      "inner": [
+        {
+          "id": "0x7fd845047370",
+          "kind": "PointerType",
+          "type": {
+            "qualType": "char *"
+          },
+          "inner": [
+            {
+              "id": "0x7fd8450464b0",
+              "kind": "BuiltinType",
+              "type": {
+                "qualType": "char"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "0x7fd84508d308",
+      "kind": "TypedefDecl",
+      "loc": {},
+      "range": {
+        "begin": {},
+        "end": {}
+      },
+      "isImplicit": true,
+      "name": "__builtin_va_list",
+      "type": {
+        "qualType": "struct __va_list_tag[1]"
+      },
+      "inner": [
+        {
+          "id": "0x7fd84508d2b0",
+          "kind": "ConstantArrayType",
+          "type": {
+            "qualType": "struct __va_list_tag[1]"
+          },
+          "size": 1,
+          "inner": [
+            {
+              "id": "0x7fd84508d0f0",
+              "kind": "RecordType",
+              "type": {
+                "qualType": "struct __va_list_tag"
+              },
+              "decl": {
+                "id": "0x7fd84508d058",
+                "kind": "RecordDecl",
+                "name": "__va_list_tag"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "0x7fd84703f198",
+      "kind": "ImportDecl",
+      "loc": {
+        "offset": 0,
+        "file": "./class.m",
+        "line": 1,
+        "col": 1,
+        "tokLen": 1
+      },
+      "range": {
+        "begin": {
+          "offset": 0,
+          "col": 1,
+          "tokLen": 1
+        },
+        "end": {
+          "offset": 0,
+          "col": 1,
+          "tokLen": 1
+        }
+      },
+      "isImplicit": true
+    },
+    {
+      "id": "0x7fd84704d6b0",
+      "kind": "ObjCInterfaceDecl",
+      "loc": {
+        "offset": 46,
+        "line": 3,
+        "col": 12,
+        "tokLen": 9
+      },
+      "range": {
+        "begin": {
+          "offset": 35,
+          "col": 1,
+          "tokLen": 1
+        },
+        "end": {
+          "offset": 241,
+          "line": 10,
+          "col": 2,
+          "tokLen": 3
+        }
+      },
+      "name": "TestClass",
+      "mangledName": "_OBJC_CLASS_$_TestClass",
+      "super": {
+        "id": "0x7fd84703f298",
+        "kind": "ObjCInterfaceDecl",
+        "name": "NSObject"
+      },
+      "implementation": {
+        "id": "0x0"
+      },
+      "protocols": [
+        {
+          "id": "0x7fd84704d600",
+          "kind": "ObjCProtocolDecl",
+          "name": "NSCopying"
+        }
+      ],
+      "inner": [
+        {
+          "id": "0x7fd847056340",
+          "kind": "ObjCPropertyDecl",
+          "loc": {
+            "offset": 120,
+            "line": 5,
+            "col": 41,
+            "tokLen": 12
+          },
+          "range": {
+            "begin": {
+              "offset": 80,
+              "col": 1,
+              "tokLen": 1
+            },
+            "end": {
+              "offset": 120,
+              "col": 41,
+              "tokLen": 12
+            }
+          },
+          "name": "testProperty",
+          "type": {
+            "qualType": "NSString *"
+          },
+          "assign": true,
+          "readwrite": true,
+          "nonatomic": true,
+          "unsafe_unretained": true
+        },
+        {
+          "id": "0x7fd847056480",
+          "kind": "ObjCMethodDecl",
+          "loc": {
+            "offset": 136,
+            "line": 7,
+            "col": 2,
+            "tokLen": 1
+          },
+          "range": {
+            "begin": {
+              "offset": 136,
+              "col": 2,
+              "tokLen": 1
+            },
+            "end": {
+              "offset": 154,
+              "col": 20,
+              "tokLen": 1
+            }
+          },
+          "name": "testMethod",
+          "mangledName": "-[TestClass testMethod]",
+          "returnType": {
+            "qualType": "void"
+          },
+          "instance": true
+        },
+        {
+          "id": "0x7fd847056718",
+          "kind": "ObjCMethodDecl",
+          "loc": {
+            "offset": 157,
+            "line": 8,
+            "col": 2,
+            "tokLen": 1
+          },
+          "range": {
+            "begin": {
+              "offset": 157,
+              "col": 2,
+              "tokLen": 1
+            },
+            "end": {
+              "offset": 237,
+              "col": 82,
+              "tokLen": 1
+            }
+          },
+          "name": "testMethod:withParameter:",
+          "mangledName": "+[TestClass testMethod:withParameter:]",
+          "returnType": {
+            "desugaredQualType": "signed char",
+            "qualType": "BOOL",
+            "typeAliasDeclId": "0x7fd847056630"
+          },
+          "instance": false,
+          "inner": [
+            {
+              "id": "0x7fd8470567a8",
+              "kind": "ParmVarDecl",
+              "loc": {
+                "offset": 188,
+                "col": 33,
+                "tokLen": 9
+              },
+              "range": {
+                "begin": {
+                  "offset": 177,
+                  "col": 22,
+                  "tokLen": 8
+                },
+                "end": {
+                  "offset": 188,
+                  "col": 33,
+                  "tokLen": 9
+                }
+              },
+              "name": "parameter",
+              "type": {
+                "qualType": "NSString *"
+              }
+            },
+            {
+              "id": "0x7fd847056810",
+              "kind": "ParmVarDecl",
+              "loc": {
+                "offset": 224,
+                "col": 69,
+                "tokLen": 13
+              },
+              "range": {
+                "begin": {
+                  "offset": 213,
+                  "col": 58,
+                  "tokLen": 8
+                },
+                "end": {
+                  "offset": 224,
+                  "col": 69,
+                  "tokLen": 13
+                }
+              },
+              "name": "testParameter",
+              "type": {
+                "qualType": "NSString *"
+              }
+            }
+          ]
+        },
+        {
+          "id": "0x7fd8470569b0",
+          "kind": "ObjCMethodDecl",
+          "loc": {
+            "offset": 120,
+            "line": 5,
+            "col": 41,
+            "tokLen": 12
+          },
+          "range": {
+            "begin": {
+              "offset": 120,
+              "col": 41,
+              "tokLen": 12
+            },
+            "end": {
+              "offset": 120,
+              "col": 41,
+              "tokLen": 12
+            }
+          },
+          "isImplicit": true,
+          "name": "testProperty",
+          "mangledName": "-[TestClass testProperty]",
+          "returnType": {
+            "qualType": "NSString *"
+          },
+          "instance": true
+        },
+        {
+          "id": "0x7fd847056b10",
+          "kind": "ObjCMethodDecl",
+          "loc": {
+            "offset": 120,
+            "col": 41,
+            "tokLen": 12
+          },
+          "range": {
+            "begin": {
+              "offset": 120,
+              "col": 41,
+              "tokLen": 12
+            },
+            "end": {
+              "offset": 120,
+              "col": 41,
+              "tokLen": 12
+            }
+          },
+          "isImplicit": true,
+          "name": "setTestProperty:",
+          "mangledName": "-[TestClass setTestProperty:]",
+          "returnType": {
+            "qualType": "void"
+          },
+          "instance": true,
+          "inner": [
+            {
+              "id": "0x7fd847056ba0",
+              "kind": "ParmVarDecl",
+              "loc": {
+                "offset": 120,
+                "col": 41,
+                "tokLen": 12
+              },
+              "range": {
+                "begin": {
+                  "offset": 120,
+                  "col": 41,
+                  "tokLen": 12
+                },
+                "end": {
+                  "offset": 120,
+                  "col": 41,
+                  "tokLen": 12
+                }
+              },
+              "name": "testProperty",
+              "type": {
+                "qualType": "NSString *"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

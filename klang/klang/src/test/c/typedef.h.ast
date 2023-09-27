@@ -1,0 +1,34 @@
+TranslationUnitDecl 0x563e52d1fe48 <<invalid sloc>> <invalid sloc>
+|-TypedefDecl 0x563e52d20670 <<invalid sloc>> <invalid sloc> implicit __int128_t '__int128'
+| `-BuiltinType 0x563e52d20410 '__int128'
+|-TypedefDecl 0x563e52d206e0 <<invalid sloc>> <invalid sloc> implicit __uint128_t 'unsigned __int128'
+| `-BuiltinType 0x563e52d20430 'unsigned __int128'
+|-TypedefDecl 0x563e52d209e8 <<invalid sloc>> <invalid sloc> implicit __NSConstantString 'struct __NSConstantString_tag'
+| `-RecordType 0x563e52d207c0 'struct __NSConstantString_tag'
+|   `-Record 0x563e52d20738 '__NSConstantString_tag'
+|-TypedefDecl 0x563e52d20a80 <<invalid sloc>> <invalid sloc> implicit __builtin_ms_va_list 'char *'
+| `-PointerType 0x563e52d20a40 'char *'
+|   `-BuiltinType 0x563e52d1fef0 'char'
+|-TypedefDecl 0x563e52d20d78 <<invalid sloc>> <invalid sloc> implicit __builtin_va_list 'struct __va_list_tag[1]'
+| `-ConstantArrayType 0x563e52d20d20 'struct __va_list_tag[1]' 1 
+|   `-RecordType 0x563e52d20b60 'struct __va_list_tag'
+|     `-Record 0x563e52d20ad8 '__va_list_tag'
+|-TypedefDecl 0x563e52d7bf70 </workspace/typedef.h:7:1, col:15> col:15 NewType 'void *'
+| |-PointerType 0x563e52d205d0 'void *'
+| | `-BuiltinType 0x563e52d1feb0 'void'
+| `-FullComment 0x563e52d7c2c0 <line:3:3, line:5:10>
+|   `-ParagraphComment 0x563e52d7c290 <line:3:3, line:5:10>
+|     |-TextComment 0x563e52d7c210 <line:3:3, col:10> Text=" comment"
+|     |-TextComment 0x563e52d7c230 <line:4:3, col:10> Text=" comment"
+|     `-TextComment 0x563e52d7c250 <line:5:3, col:10> Text=" comment"
+|-RecordDecl 0x563e52d7bff8 <line:14:9, col:16> col:16 struct OldStructureType
+`-TypedefDecl 0x563e52d7c160 <col:1, col:34> col:34 NewStructureType 'struct OldStructureType *'
+  |-PointerType 0x563e52d7c110 'struct OldStructureType *'
+  | `-ElaboratedType 0x563e52d7c0a0 'struct OldStructureType' sugar
+  |   `-RecordType 0x563e52d7c080 'struct OldStructureType'
+  |     `-Record 0x563e52d7bff8 'OldStructureType'
+  `-FullComment 0x563e52d7c3e0 <line:10:3, line:12:10>
+    `-ParagraphComment 0x563e52d7c3b0 <line:10:3, line:12:10>
+      |-TextComment 0x563e52d7c330 <line:10:3, col:10> Text=" comment"
+      |-TextComment 0x563e52d7c350 <line:11:3, col:10> Text=" comment"
+      `-TextComment 0x563e52d7c370 <line:12:3, col:10> Text=" comment"

@@ -1,0 +1,826 @@
+{
+  "id": "0x7fc203846408",
+  "kind": "TranslationUnitDecl",
+  "loc": {},
+  "range": {
+    "begin": {},
+    "end": {}
+  },
+  "inner": [
+    {
+      "id": "0x7fc203846c48",
+      "kind": "TypedefDecl",
+      "loc": {},
+      "range": {
+        "begin": {},
+        "end": {}
+      },
+      "isImplicit": true,
+      "name": "__int128_t",
+      "type": {
+        "qualType": "__int128"
+      },
+      "inner": [
+        {
+          "id": "0x7fc2038469d0",
+          "kind": "BuiltinType",
+          "type": {
+            "qualType": "__int128"
+          }
+        }
+      ]
+    },
+    {
+      "id": "0x7fc203846cb8",
+      "kind": "TypedefDecl",
+      "loc": {},
+      "range": {
+        "begin": {},
+        "end": {}
+      },
+      "isImplicit": true,
+      "name": "__uint128_t",
+      "type": {
+        "qualType": "unsigned __int128"
+      },
+      "inner": [
+        {
+          "id": "0x7fc2038469f0",
+          "kind": "BuiltinType",
+          "type": {
+            "qualType": "unsigned __int128"
+          }
+        }
+      ]
+    },
+    {
+      "id": "0x7fc203846d58",
+      "kind": "TypedefDecl",
+      "loc": {},
+      "range": {
+        "begin": {},
+        "end": {}
+      },
+      "isImplicit": true,
+      "name": "SEL",
+      "type": {
+        "qualType": "SEL *"
+      },
+      "inner": [
+        {
+          "id": "0x7fc203846d10",
+          "kind": "PointerType",
+          "type": {
+            "qualType": "SEL *"
+          },
+          "isImported": true,
+          "inner": [
+            {
+              "id": "0x7fc203846b70",
+              "kind": "BuiltinType",
+              "type": {
+                "qualType": "SEL"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "0x7fc203846e38",
+      "kind": "TypedefDecl",
+      "loc": {},
+      "range": {
+        "begin": {},
+        "end": {}
+      },
+      "isImplicit": true,
+      "name": "id",
+      "type": {
+        "qualType": "id"
+      },
+      "inner": [
+        {
+          "id": "0x7fc203846de0",
+          "kind": "ObjCObjectPointerType",
+          "type": {
+            "qualType": "id"
+          },
+          "isImported": true,
+          "inner": [
+            {
+              "id": "0x7fc203846db0",
+              "kind": "ObjCObjectType",
+              "type": {
+                "qualType": "id"
+              },
+              "isImported": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "0x7fc203846f18",
+      "kind": "TypedefDecl",
+      "loc": {},
+      "range": {
+        "begin": {},
+        "end": {}
+      },
+      "isImplicit": true,
+      "name": "Class",
+      "type": {
+        "qualType": "Class"
+      },
+      "inner": [
+        {
+          "id": "0x7fc203846ec0",
+          "kind": "ObjCObjectPointerType",
+          "type": {
+            "qualType": "Class"
+          },
+          "isImported": true,
+          "inner": [
+            {
+              "id": "0x7fc203846e90",
+              "kind": "ObjCObjectType",
+              "type": {
+                "qualType": "Class"
+              },
+              "isImported": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "0x7fc203846f70",
+      "kind": "ObjCInterfaceDecl",
+      "loc": {},
+      "range": {
+        "begin": {},
+        "end": {}
+      },
+      "isImplicit": true,
+      "name": "Protocol",
+      "mangledName": "_OBJC_CLASS_$_Protocol",
+      "super": {
+        "id": "0x0"
+      },
+      "implementation": {
+        "id": "0x0"
+      }
+    },
+    {
+      "id": "0x7fc203847310",
+      "kind": "TypedefDecl",
+      "loc": {},
+      "range": {
+        "begin": {},
+        "end": {}
+      },
+      "isImplicit": true,
+      "name": "__NSConstantString",
+      "type": {
+        "qualType": "struct __NSConstantString_tag"
+      },
+      "inner": [
+        {
+          "id": "0x7fc2038470e0",
+          "kind": "RecordType",
+          "type": {
+            "qualType": "struct __NSConstantString_tag"
+          },
+          "decl": {
+            "id": "0x7fc203847040",
+            "kind": "RecordDecl",
+            "name": "__NSConstantString_tag"
+          }
+        }
+      ]
+    },
+    {
+      "id": "0x7fc20388d000",
+      "kind": "TypedefDecl",
+      "loc": {},
+      "range": {
+        "begin": {},
+        "end": {}
+      },
+      "isImplicit": true,
+      "name": "__builtin_ms_va_list",
+      "type": {
+        "qualType": "char *"
+      },
+      "inner": [
+        {
+          "id": "0x7fc203847370",
+          "kind": "PointerType",
+          "type": {
+            "qualType": "char *"
+          },
+          "inner": [
+            {
+              "id": "0x7fc2038464b0",
+              "kind": "BuiltinType",
+              "type": {
+                "qualType": "char"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "0x7fc20388d308",
+      "kind": "TypedefDecl",
+      "loc": {},
+      "range": {
+        "begin": {},
+        "end": {}
+      },
+      "isImplicit": true,
+      "name": "__builtin_va_list",
+      "type": {
+        "qualType": "struct __va_list_tag[1]"
+      },
+      "inner": [
+        {
+          "id": "0x7fc20388d2b0",
+          "kind": "ConstantArrayType",
+          "type": {
+            "qualType": "struct __va_list_tag[1]"
+          },
+          "size": 1,
+          "inner": [
+            {
+              "id": "0x7fc20388d0f0",
+              "kind": "RecordType",
+              "type": {
+                "qualType": "struct __va_list_tag"
+              },
+              "decl": {
+                "id": "0x7fc20388d058",
+                "kind": "RecordDecl",
+                "name": "__va_list_tag"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "0x7fc205493d98",
+      "kind": "ImportDecl",
+      "loc": {
+        "offset": 0,
+        "file": "./nsenum.m",
+        "line": 1,
+        "col": 1,
+        "tokLen": 1
+      },
+      "range": {
+        "begin": {
+          "offset": 0,
+          "col": 1,
+          "tokLen": 1
+        },
+        "end": {
+          "offset": 0,
+          "col": 1,
+          "tokLen": 1
+        }
+      },
+      "isImplicit": true
+    },
+    {
+      "id": "0x7fc2054941a8",
+      "kind": "EnumDecl",
+      "loc": {
+        "spellingLoc": {
+          "offset": 63,
+          "line": 3,
+          "col": 29,
+          "tokLen": 6
+        },
+        "expansionLoc": {
+          "offset": 43,
+          "col": 9,
+          "tokLen": 7,
+          "isMacroArgExpansion": true
+        }
+      },
+      "range": {
+        "begin": {
+          "spellingLoc": {
+            "offset": 7456,
+            "file": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/CoreFoundation.framework/Headers/CFAvailability.h",
+            "line": 142,
+            "col": 43,
+            "tokLen": 4,
+            "includedFrom": {
+              "file": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/CoreFoundation.framework/Headers/CFBase.h"
+            }
+          },
+          "expansionLoc": {
+            "offset": 43,
+            "file": "./nsenum.m",
+            "line": 3,
+            "col": 9,
+            "tokLen": 7
+          }
+        },
+        "end": {
+          "spellingLoc": {
+            "offset": 51,
+            "col": 17,
+            "tokLen": 10
+          },
+          "expansionLoc": {
+            "offset": 43,
+            "col": 9,
+            "tokLen": 7,
+            "isMacroArgExpansion": true
+          }
+        }
+      },
+      "name": "MyEnum",
+      "fixedUnderlyingType": {
+        "desugaredQualType": "unsigned long",
+        "qualType": "NSUInteger",
+        "typeAliasDeclId": "0x7fc2054940d8"
+      },
+      "inner": [
+        {
+          "id": "0x7fc205494280",
+          "kind": "EnumExtensibilityAttr",
+          "range": {
+            "begin": {
+              "spellingLoc": {
+                "offset": 6549,
+                "file": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/CoreFoundation.framework/Headers/CFAvailability.h",
+                "line": 125,
+                "col": 45,
+                "tokLen": 18,
+                "includedFrom": {
+                  "file": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/CoreFoundation.framework/Headers/CFBase.h"
+                }
+              },
+              "expansionLoc": {
+                "offset": 43,
+                "file": "./nsenum.m",
+                "line": 3,
+                "col": 9,
+                "tokLen": 7
+              }
+            },
+            "end": {
+              "spellingLoc": {
+                "offset": 6572,
+                "file": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/CoreFoundation.framework/Headers/CFAvailability.h",
+                "line": 125,
+                "col": 68,
+                "tokLen": 1,
+                "includedFrom": {
+                  "file": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/CoreFoundation.framework/Headers/CFBase.h"
+                }
+              },
+              "expansionLoc": {
+                "offset": 43,
+                "file": "./nsenum.m",
+                "line": 3,
+                "col": 9,
+                "tokLen": 7
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "0x7fc205494338",
+      "kind": "TypedefDecl",
+      "loc": {
+        "spellingLoc": {
+          "offset": 63,
+          "col": 29,
+          "tokLen": 6
+        },
+        "expansionLoc": {
+          "offset": 43,
+          "col": 9,
+          "tokLen": 7,
+          "isMacroArgExpansion": true
+        }
+      },
+      "range": {
+        "begin": {
+          "offset": 35,
+          "col": 1,
+          "tokLen": 7
+        },
+        "end": {
+          "spellingLoc": {
+            "offset": 63,
+            "col": 29,
+            "tokLen": 6
+          },
+          "expansionLoc": {
+            "offset": 43,
+            "col": 9,
+            "tokLen": 7,
+            "isMacroArgExpansion": true
+          }
+        }
+      },
+      "name": "MyEnum",
+      "type": {
+        "desugaredQualType": "enum MyEnum",
+        "qualType": "enum MyEnum"
+      },
+      "inner": [
+        {
+          "id": "0x7fc2054942e0",
+          "kind": "ElaboratedType",
+          "type": {
+            "qualType": "enum MyEnum"
+          },
+          "ownedTagDecl": {
+            "id": "0x7fc2054941a8",
+            "kind": "EnumDecl",
+            "name": "MyEnum"
+          },
+          "inner": [
+            {
+              "id": "0x7fc205494260",
+              "kind": "EnumType",
+              "type": {
+                "qualType": "enum MyEnum"
+              },
+              "decl": {
+                "id": "0x7fc2054943b8",
+                "kind": "EnumDecl",
+                "name": "MyEnum"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "0x7fc2054943b8",
+      "kind": "EnumDecl",
+      "loc": {
+        "spellingLoc": {
+          "offset": 63,
+          "col": 29,
+          "tokLen": 6
+        },
+        "expansionLoc": {
+          "offset": 43,
+          "col": 9,
+          "tokLen": 7,
+          "isMacroArgExpansion": true
+        }
+      },
+      "range": {
+        "begin": {
+          "spellingLoc": {
+            "offset": 7503,
+            "file": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/CoreFoundation.framework/Headers/CFAvailability.h",
+            "line": 142,
+            "col": 90,
+            "tokLen": 4,
+            "includedFrom": {
+              "file": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/CoreFoundation.framework/Headers/CFBase.h"
+            }
+          },
+          "expansionLoc": {
+            "offset": 43,
+            "file": "./nsenum.m",
+            "line": 3,
+            "col": 9,
+            "tokLen": 7
+          }
+        },
+        "end": {
+          "offset": 111,
+          "line": 7,
+          "col": 1,
+          "tokLen": 1
+        }
+      },
+      "previousDecl": "0x7fc2054941a8",
+      "name": "MyEnum",
+      "fixedUnderlyingType": {
+        "desugaredQualType": "unsigned long",
+        "qualType": "NSUInteger",
+        "typeAliasDeclId": "0x7fc2054940d8"
+      },
+      "inner": [
+        {
+          "id": "0x7fc205494488",
+          "kind": "EnumExtensibilityAttr",
+          "range": {
+            "begin": {
+              "spellingLoc": {
+                "offset": 6549,
+                "file": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/CoreFoundation.framework/Headers/CFAvailability.h",
+                "line": 125,
+                "col": 45,
+                "tokLen": 18,
+                "includedFrom": {
+                  "file": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/CoreFoundation.framework/Headers/CFBase.h"
+                }
+              },
+              "expansionLoc": {
+                "offset": 43,
+                "file": "./nsenum.m",
+                "line": 3,
+                "col": 9,
+                "tokLen": 7
+              }
+            },
+            "end": {
+              "spellingLoc": {
+                "offset": 6572,
+                "file": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/CoreFoundation.framework/Headers/CFAvailability.h",
+                "line": 125,
+                "col": 68,
+                "tokLen": 1,
+                "includedFrom": {
+                  "file": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/CoreFoundation.framework/Headers/CFBase.h"
+                }
+              },
+              "expansionLoc": {
+                "offset": 43,
+                "file": "./nsenum.m",
+                "line": 3,
+                "col": 9,
+                "tokLen": 7
+              }
+            }
+          },
+          "inherited": true
+        },
+        {
+          "id": "0x7fc2054944b0",
+          "kind": "EnumConstantDecl",
+          "loc": {
+            "offset": 77,
+            "line": 4,
+            "col": 5,
+            "tokLen": 7
+          },
+          "range": {
+            "begin": {
+              "offset": 77,
+              "col": 5,
+              "tokLen": 7
+            },
+            "end": {
+              "offset": 77,
+              "col": 5,
+              "tokLen": 7
+            }
+          },
+          "name": "kValue1",
+          "type": {
+            "desugaredQualType": "unsigned long",
+            "qualType": "NSUInteger",
+            "typeAliasDeclId": "0x7fc2054940d8"
+          }
+        },
+        {
+          "id": "0x7fc205494500",
+          "kind": "EnumConstantDecl",
+          "loc": {
+            "offset": 90,
+            "line": 5,
+            "col": 5,
+            "tokLen": 7
+          },
+          "range": {
+            "begin": {
+              "offset": 90,
+              "col": 5,
+              "tokLen": 7
+            },
+            "end": {
+              "offset": 90,
+              "col": 5,
+              "tokLen": 7
+            }
+          },
+          "name": "kValue2",
+          "type": {
+            "desugaredQualType": "unsigned long",
+            "qualType": "NSUInteger",
+            "typeAliasDeclId": "0x7fc2054940d8"
+          }
+        },
+        {
+          "id": "0x7fc205494550",
+          "kind": "EnumConstantDecl",
+          "loc": {
+            "offset": 103,
+            "line": 6,
+            "col": 5,
+            "tokLen": 7
+          },
+          "range": {
+            "begin": {
+              "offset": 103,
+              "col": 5,
+              "tokLen": 7
+            },
+            "end": {
+              "offset": 103,
+              "col": 5,
+              "tokLen": 7
+            }
+          },
+          "name": "kValue3",
+          "type": {
+            "desugaredQualType": "unsigned long",
+            "qualType": "NSUInteger",
+            "typeAliasDeclId": "0x7fc2054940d8"
+          }
+        }
+      ]
+    },
+    {
+      "id": "0x7fc2054945b0",
+      "kind": "EnumDecl",
+      "loc": {
+        "offset": 128,
+        "line": 9,
+        "col": 14,
+        "tokLen": 7
+      },
+      "range": {
+        "begin": {
+          "offset": 123,
+          "col": 9,
+          "tokLen": 4
+        },
+        "end": {
+          "offset": 189,
+          "line": 13,
+          "col": 1,
+          "tokLen": 1
+        }
+      },
+      "name": "MyEnum2",
+      "fixedUnderlyingType": {
+        "desugaredQualType": "unsigned long",
+        "qualType": "NSUInteger",
+        "typeAliasDeclId": "0x7fc2054940d8"
+      },
+      "inner": [
+        {
+          "id": "0x7fc205494690",
+          "kind": "EnumConstantDecl",
+          "loc": {
+            "offset": 155,
+            "line": 10,
+            "col": 5,
+            "tokLen": 7
+          },
+          "range": {
+            "begin": {
+              "offset": 155,
+              "col": 5,
+              "tokLen": 7
+            },
+            "end": {
+              "offset": 155,
+              "col": 5,
+              "tokLen": 7
+            }
+          },
+          "name": "kValue4",
+          "type": {
+            "desugaredQualType": "unsigned long",
+            "qualType": "NSUInteger",
+            "typeAliasDeclId": "0x7fc2054940d8"
+          }
+        },
+        {
+          "id": "0x7fc2054946e0",
+          "kind": "EnumConstantDecl",
+          "loc": {
+            "offset": 168,
+            "line": 11,
+            "col": 5,
+            "tokLen": 7
+          },
+          "range": {
+            "begin": {
+              "offset": 168,
+              "col": 5,
+              "tokLen": 7
+            },
+            "end": {
+              "offset": 168,
+              "col": 5,
+              "tokLen": 7
+            }
+          },
+          "name": "kValue5",
+          "type": {
+            "desugaredQualType": "unsigned long",
+            "qualType": "NSUInteger",
+            "typeAliasDeclId": "0x7fc2054940d8"
+          }
+        },
+        {
+          "id": "0x7fc205494730",
+          "kind": "EnumConstantDecl",
+          "loc": {
+            "offset": 181,
+            "line": 12,
+            "col": 5,
+            "tokLen": 7
+          },
+          "range": {
+            "begin": {
+              "offset": 181,
+              "col": 5,
+              "tokLen": 7
+            },
+            "end": {
+              "offset": 181,
+              "col": 5,
+              "tokLen": 7
+            }
+          },
+          "name": "kValue6",
+          "type": {
+            "desugaredQualType": "unsigned long",
+            "qualType": "NSUInteger",
+            "typeAliasDeclId": "0x7fc2054940d8"
+          }
+        }
+      ]
+    },
+    {
+      "id": "0x7fc2054947d8",
+      "kind": "TypedefDecl",
+      "loc": {
+        "offset": 191,
+        "line": 13,
+        "col": 3,
+        "tokLen": 7
+      },
+      "range": {
+        "begin": {
+          "offset": 115,
+          "line": 9,
+          "col": 1,
+          "tokLen": 7
+        },
+        "end": {
+          "offset": 191,
+          "line": 13,
+          "col": 3,
+          "tokLen": 7
+        }
+      },
+      "name": "MyEnum2",
+      "type": {
+        "desugaredQualType": "enum MyEnum2",
+        "qualType": "enum MyEnum2"
+      },
+      "inner": [
+        {
+          "id": "0x7fc205494780",
+          "kind": "ElaboratedType",
+          "type": {
+            "qualType": "enum MyEnum2"
+          },
+          "ownedTagDecl": {
+            "id": "0x7fc2054945b0",
+            "kind": "EnumDecl",
+            "name": "MyEnum2"
+          },
+          "inner": [
+            {
+              "id": "0x7fc205494670",
+              "kind": "EnumType",
+              "type": {
+                "qualType": "enum MyEnum2"
+              },
+              "decl": {
+                "id": "0x7fc2054945b0",
+                "kind": "EnumDecl",
+                "name": "MyEnum2"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,768 @@
+{
+  "id": "0x7f897a045c08",
+  "kind": "TranslationUnitDecl",
+  "loc": {},
+  "range": {
+    "begin": {},
+    "end": {}
+  },
+  "inner": [
+    {
+      "id": "0x7f897a046430",
+      "kind": "TypedefDecl",
+      "loc": {},
+      "range": {
+        "begin": {},
+        "end": {}
+      },
+      "isImplicit": true,
+      "name": "__int128_t",
+      "type": {
+        "qualType": "__int128"
+      },
+      "inner": [
+        {
+          "id": "0x7f897a0461d0",
+          "kind": "BuiltinType",
+          "type": {
+            "qualType": "__int128"
+          }
+        }
+      ]
+    },
+    {
+      "id": "0x7f897a0464a0",
+      "kind": "TypedefDecl",
+      "loc": {},
+      "range": {
+        "begin": {},
+        "end": {}
+      },
+      "isImplicit": true,
+      "name": "__uint128_t",
+      "type": {
+        "qualType": "unsigned __int128"
+      },
+      "inner": [
+        {
+          "id": "0x7f897a0461f0",
+          "kind": "BuiltinType",
+          "type": {
+            "qualType": "unsigned __int128"
+          }
+        }
+      ]
+    },
+    {
+      "id": "0x7f897a0467b0",
+      "kind": "TypedefDecl",
+      "loc": {},
+      "range": {
+        "begin": {},
+        "end": {}
+      },
+      "isImplicit": true,
+      "name": "__NSConstantString",
+      "type": {
+        "qualType": "struct __NSConstantString_tag"
+      },
+      "inner": [
+        {
+          "id": "0x7f897a046580",
+          "kind": "RecordType",
+          "type": {
+            "qualType": "struct __NSConstantString_tag"
+          },
+          "decl": {
+            "id": "0x7f897a0464f8",
+            "kind": "RecordDecl",
+            "name": "__NSConstantString_tag"
+          }
+        }
+      ]
+    },
+    {
+      "id": "0x7f897a046858",
+      "kind": "TypedefDecl",
+      "loc": {},
+      "range": {
+        "begin": {},
+        "end": {}
+      },
+      "isImplicit": true,
+      "name": "__builtin_ms_va_list",
+      "type": {
+        "qualType": "char *"
+      },
+      "inner": [
+        {
+          "id": "0x7f897a046810",
+          "kind": "PointerType",
+          "type": {
+            "qualType": "char *"
+          },
+          "inner": [
+            {
+              "id": "0x7f897a045cb0",
+              "kind": "BuiltinType",
+              "type": {
+                "qualType": "char"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "0x7f897a046b48",
+      "kind": "TypedefDecl",
+      "loc": {},
+      "range": {
+        "begin": {},
+        "end": {}
+      },
+      "isImplicit": true,
+      "name": "__builtin_va_list",
+      "type": {
+        "qualType": "struct __va_list_tag[1]"
+      },
+      "inner": [
+        {
+          "id": "0x7f897a046af0",
+          "kind": "ConstantArrayType",
+          "type": {
+            "qualType": "struct __va_list_tag[1]"
+          },
+          "size": 1,
+          "inner": [
+            {
+              "id": "0x7f897a046930",
+              "kind": "RecordType",
+              "type": {
+                "qualType": "struct __va_list_tag"
+              },
+              "decl": {
+                "id": "0x7f897a0468b0",
+                "kind": "RecordDecl",
+                "name": "__va_list_tag"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "0x7f897a08dc00",
+      "kind": "EnumDecl",
+      "loc": {
+        "offset": 6,
+        "file": "./struct.h",
+        "line": 2,
+        "col": 6,
+        "tokLen": 8
+      },
+      "range": {
+        "begin": {
+          "offset": 1,
+          "col": 1,
+          "tokLen": 4
+        },
+        "end": {
+          "offset": 48,
+          "line": 5,
+          "col": 1,
+          "tokLen": 1
+        }
+      },
+      "name": "EnumName",
+      "inner": [
+        {
+          "id": "0x7f897a08dd00",
+          "kind": "EnumConstantDecl",
+          "loc": {
+            "offset": 19,
+            "line": 3,
+            "col": 3,
+            "tokLen": 6
+          },
+          "range": {
+            "begin": {
+              "offset": 19,
+              "col": 3,
+              "tokLen": 6
+            },
+            "end": {
+              "offset": 28,
+              "col": 12,
+              "tokLen": 3
+            }
+          },
+          "name": "Value1",
+          "type": {
+            "qualType": "int"
+          },
+          "inner": [
+            {
+              "id": "0x7f897a08dce0",
+              "kind": "ConstantExpr",
+              "range": {
+                "begin": {
+                  "offset": 28,
+                  "col": 12,
+                  "tokLen": 3
+                },
+                "end": {
+                  "offset": 28,
+                  "col": 12,
+                  "tokLen": 3
+                }
+              },
+              "type": {
+                "qualType": "int"
+              },
+              "valueCategory": "prvalue",
+              "value": "2",
+              "inner": [
+                {
+                  "id": "0x7f897a08dcc0",
+                  "kind": "IntegerLiteral",
+                  "range": {
+                    "begin": {
+                      "offset": 28,
+                      "col": 12,
+                      "tokLen": 3
+                    },
+                    "end": {
+                      "offset": 28,
+                      "col": 12,
+                      "tokLen": 3
+                    }
+                  },
+                  "type": {
+                    "qualType": "int"
+                  },
+                  "valueCategory": "prvalue",
+                  "value": "2"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "0x7f897a08dd90",
+          "kind": "EnumConstantDecl",
+          "loc": {
+            "offset": 35,
+            "line": 4,
+            "col": 3,
+            "tokLen": 6
+          },
+          "range": {
+            "begin": {
+              "offset": 35,
+              "col": 3,
+              "tokLen": 6
+            },
+            "end": {
+              "offset": 44,
+              "col": 12,
+              "tokLen": 3
+            }
+          },
+          "name": "Value2",
+          "type": {
+            "qualType": "int"
+          },
+          "inner": [
+            {
+              "id": "0x7f897a08dd70",
+              "kind": "ConstantExpr",
+              "range": {
+                "begin": {
+                  "offset": 44,
+                  "col": 12,
+                  "tokLen": 3
+                },
+                "end": {
+                  "offset": 44,
+                  "col": 12,
+                  "tokLen": 3
+                }
+              },
+              "type": {
+                "qualType": "int"
+              },
+              "valueCategory": "prvalue",
+              "value": "1",
+              "inner": [
+                {
+                  "id": "0x7f897a08dd50",
+                  "kind": "IntegerLiteral",
+                  "range": {
+                    "begin": {
+                      "offset": 44,
+                      "col": 12,
+                      "tokLen": 3
+                    },
+                    "end": {
+                      "offset": 44,
+                      "col": 12,
+                      "tokLen": 3
+                    }
+                  },
+                  "type": {
+                    "qualType": "int"
+                  },
+                  "valueCategory": "prvalue",
+                  "value": "1"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "0x7f897a08dde0",
+      "kind": "EnumDecl",
+      "loc": {
+        "offset": 60,
+        "line": 7,
+        "col": 9,
+        "tokLen": 4
+      },
+      "range": {
+        "begin": {
+          "offset": 60,
+          "col": 9,
+          "tokLen": 4
+        },
+        "end": {
+          "offset": 99,
+          "line": 10,
+          "col": 1,
+          "tokLen": 1
+        }
+      },
+      "inner": [
+        {
+          "id": "0x7f897a08dee0",
+          "kind": "EnumConstantDecl",
+          "loc": {
+            "offset": 70,
+            "line": 8,
+            "col": 3,
+            "tokLen": 6
+          },
+          "range": {
+            "begin": {
+              "offset": 70,
+              "col": 3,
+              "tokLen": 6
+            },
+            "end": {
+              "offset": 79,
+              "col": 12,
+              "tokLen": 3
+            }
+          },
+          "name": "Value3",
+          "type": {
+            "qualType": "int"
+          },
+          "inner": [
+            {
+              "id": "0x7f897a08dec0",
+              "kind": "ConstantExpr",
+              "range": {
+                "begin": {
+                  "offset": 79,
+                  "col": 12,
+                  "tokLen": 3
+                },
+                "end": {
+                  "offset": 79,
+                  "col": 12,
+                  "tokLen": 3
+                }
+              },
+              "type": {
+                "qualType": "int"
+              },
+              "valueCategory": "prvalue",
+              "value": "2",
+              "inner": [
+                {
+                  "id": "0x7f897a08dea0",
+                  "kind": "IntegerLiteral",
+                  "range": {
+                    "begin": {
+                      "offset": 79,
+                      "col": 12,
+                      "tokLen": 3
+                    },
+                    "end": {
+                      "offset": 79,
+                      "col": 12,
+                      "tokLen": 3
+                    }
+                  },
+                  "type": {
+                    "qualType": "int"
+                  },
+                  "valueCategory": "prvalue",
+                  "value": "2"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "0x7f897a08df70",
+          "kind": "EnumConstantDecl",
+          "loc": {
+            "offset": 86,
+            "line": 9,
+            "col": 3,
+            "tokLen": 6
+          },
+          "range": {
+            "begin": {
+              "offset": 86,
+              "col": 3,
+              "tokLen": 6
+            },
+            "end": {
+              "offset": 95,
+              "col": 12,
+              "tokLen": 3
+            }
+          },
+          "name": "Value4",
+          "type": {
+            "qualType": "int"
+          },
+          "inner": [
+            {
+              "id": "0x7f897a08df50",
+              "kind": "ConstantExpr",
+              "range": {
+                "begin": {
+                  "offset": 95,
+                  "col": 12,
+                  "tokLen": 3
+                },
+                "end": {
+                  "offset": 95,
+                  "col": 12,
+                  "tokLen": 3
+                }
+              },
+              "type": {
+                "qualType": "int"
+              },
+              "valueCategory": "prvalue",
+              "value": "1",
+              "inner": [
+                {
+                  "id": "0x7f897a08df30",
+                  "kind": "IntegerLiteral",
+                  "range": {
+                    "begin": {
+                      "offset": 95,
+                      "col": 12,
+                      "tokLen": 3
+                    },
+                    "end": {
+                      "offset": 95,
+                      "col": 12,
+                      "tokLen": 3
+                    }
+                  },
+                  "type": {
+                    "qualType": "int"
+                  },
+                  "valueCategory": "prvalue",
+                  "value": "1"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "0x7f897a08e018",
+      "kind": "TypedefDecl",
+      "loc": {
+        "offset": 101,
+        "line": 10,
+        "col": 3,
+        "tokLen": 9
+      },
+      "range": {
+        "begin": {
+          "offset": 52,
+          "line": 7,
+          "col": 1,
+          "tokLen": 7
+        },
+        "end": {
+          "offset": 101,
+          "line": 10,
+          "col": 3,
+          "tokLen": 9
+        }
+      },
+      "isReferenced": true,
+      "name": "EnumName2",
+      "type": {
+        "desugaredQualType": "EnumName2",
+        "qualType": "enum EnumName2"
+      },
+      "inner": [
+        {
+          "id": "0x7f897a08dfc0",
+          "kind": "ElaboratedType",
+          "type": {
+            "qualType": "enum EnumName2"
+          },
+          "ownedTagDecl": {
+            "id": "0x7f897a08dde0",
+            "kind": "EnumDecl",
+            "name": ""
+          },
+          "inner": [
+            {
+              "id": "0x7f897a08de80",
+              "kind": "EnumType",
+              "type": {
+                "qualType": "EnumName2"
+              },
+              "decl": {
+                "id": "0x7f897a08dde0",
+                "kind": "EnumDecl",
+                "name": ""
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "0x7f897a08e088",
+      "kind": "RecordDecl",
+      "loc": {
+        "offset": 121,
+        "line": 13,
+        "col": 8,
+        "tokLen": 10
+      },
+      "range": {
+        "begin": {
+          "offset": 114,
+          "col": 1,
+          "tokLen": 6
+        },
+        "end": {
+          "offset": 200,
+          "line": 17,
+          "col": 1,
+          "tokLen": 1
+        }
+      },
+      "name": "StructName",
+      "tagUsed": "struct",
+      "completeDefinition": true,
+      "inner": [
+        {
+          "id": "0x7f897a08e1e8",
+          "kind": "FieldDecl",
+          "loc": {
+            "offset": 153,
+            "line": 14,
+            "col": 20,
+            "tokLen": 6
+          },
+          "range": {
+            "begin": {
+              "offset": 138,
+              "col": 5,
+              "tokLen": 4
+            },
+            "end": {
+              "offset": 153,
+              "col": 20,
+              "tokLen": 6
+            }
+          },
+          "name": "field1",
+          "type": {
+            "qualType": "enum EnumName *"
+          }
+        },
+        {
+          "id": "0x7f897a08e270",
+          "kind": "FieldDecl",
+          "loc": {
+            "offset": 175,
+            "line": 15,
+            "col": 15,
+            "tokLen": 6
+          },
+          "range": {
+            "begin": {
+              "offset": 165,
+              "col": 5,
+              "tokLen": 9
+            },
+            "end": {
+              "offset": 175,
+              "col": 15,
+              "tokLen": 6
+            }
+          },
+          "name": "field2",
+          "type": {
+            "desugaredQualType": "EnumName2",
+            "qualType": "EnumName2",
+            "typeAliasDeclId": "0x7f897a08e018"
+          }
+        },
+        {
+          "id": "0x7f897a08e2d0",
+          "kind": "FieldDecl",
+          "loc": {
+            "offset": 192,
+            "line": 16,
+            "col": 10,
+            "tokLen": 6
+          },
+          "range": {
+            "begin": {
+              "offset": 187,
+              "col": 5,
+              "tokLen": 4
+            },
+            "end": {
+              "offset": 192,
+              "col": 10,
+              "tokLen": 6
+            }
+          },
+          "name": "field3",
+          "type": {
+            "qualType": "char"
+          }
+        }
+      ]
+    },
+    {
+      "id": "0x7f897a08e320",
+      "kind": "RecordDecl",
+      "loc": {
+        "offset": 211,
+        "line": 19,
+        "col": 8,
+        "tokLen": 11
+      },
+      "range": {
+        "begin": {
+          "offset": 204,
+          "col": 1,
+          "tokLen": 6
+        },
+        "end": {
+          "offset": 303,
+          "line": 23,
+          "col": 1,
+          "tokLen": 1
+        }
+      },
+      "name": "StructName2",
+      "tagUsed": "struct",
+      "completeDefinition": true,
+      "inner": [
+        {
+          "id": "0x7f897a08e410",
+          "kind": "FieldDecl",
+          "loc": {
+            "offset": 247,
+            "line": 20,
+            "col": 23,
+            "tokLen": 6
+          },
+          "range": {
+            "begin": {
+              "offset": 229,
+              "col": 5,
+              "tokLen": 6
+            },
+            "end": {
+              "offset": 247,
+              "col": 23,
+              "tokLen": 6
+            }
+          },
+          "name": "field1",
+          "type": {
+            "desugaredQualType": "struct StructName",
+            "qualType": "struct StructName"
+          }
+        },
+        {
+          "id": "0x7f897a08e4e8",
+          "kind": "FieldDecl",
+          "loc": {
+            "offset": 278,
+            "line": 21,
+            "col": 24,
+            "tokLen": 6
+          },
+          "range": {
+            "begin": {
+              "offset": 259,
+              "col": 5,
+              "tokLen": 6
+            },
+            "end": {
+              "offset": 278,
+              "col": 24,
+              "tokLen": 6
+            }
+          },
+          "name": "field2",
+          "type": {
+            "qualType": "struct StructName *"
+          }
+        },
+        {
+          "id": "0x7f897a08e548",
+          "kind": "FieldDecl",
+          "loc": {
+            "offset": 295,
+            "line": 22,
+            "col": 10,
+            "tokLen": 6
+          },
+          "range": {
+            "begin": {
+              "offset": 290,
+              "col": 5,
+              "tokLen": 4
+            },
+            "end": {
+              "offset": 295,
+              "col": 10,
+              "tokLen": 6
+            }
+          },
+          "name": "field3",
+          "type": {
+            "qualType": "char"
+          }
+        }
+      ]
+    }
+  ]
+}

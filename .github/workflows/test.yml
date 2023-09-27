@@ -30,10 +30,10 @@ jobs:
           path: ~/.gradle/caches
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
           restore-keys: ${{ runner.os }}-gradle
-      - name: switch to klang directory
-        run:  cd ./klang
-      - name: Build
-        run: ./gradlew test
+      - name: Build & test klang
+        run: |
+          cd ./klang
+          ./gradlew test
       - name: Bundle the build report
         if: failure()
         run: find . -type d -name 'reports' | zip -@ -r build-reports.zip

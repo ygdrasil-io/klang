@@ -1,7 +1,7 @@
 plugins {
-    kotlin("jvm") version "1.9.0"
-    kotlin("plugin.serialization") version "1.8.21"
-    id("org.jetbrains.kotlinx.kover") version "0.6.1"
+    kotlin("jvm") version "1.9.10"
+    kotlin("plugin.serialization") version "1.9.10"
+    id("org.jetbrains.kotlinx.kover") version "0.7.3"
 }
 
 allprojects {
@@ -20,8 +20,8 @@ kotlin {
     sourceSets.all {
         languageSettings {
             java {
-                sourceCompatibility = JavaVersion.VERSION_20
-                targetCompatibility = JavaVersion.VERSION_20
+                sourceCompatibility = JavaVersion.VERSION_21
+                targetCompatibility = JavaVersion.VERSION_21
             }
             languageVersion = "2.0"
         }

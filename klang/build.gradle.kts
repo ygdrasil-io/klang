@@ -4,6 +4,10 @@ plugins {
     id("org.jetbrains.kotlinx.kover") version "0.6.1"
 }
 
+val projectVersion = System.getenv("VERSION")
+	?.takeIf { it.isNotBlank() }
+	?: "0.0.0"
+
 allprojects {
 
     repositories {
@@ -11,7 +15,8 @@ allprojects {
     }
 
 	group = "io.ygdrasil"
-	version = "1.0.0-SNAPSHOT"
+	version = projectVersion
+
 }
 
 kotlin {

@@ -1,5 +1,6 @@
 plugins {
 	id("com.gradle.plugin-publish") version "1.0.0"
+	id("maven-publish")
 	kotlin("jvm") version "1.9.0"
 }
 
@@ -25,4 +26,23 @@ dependencies {
 
 tasks.test {
     useJUnitPlatform()
+}
+
+kotlin {
+
+	publishing {
+		repositories {
+			maven {
+				name = "GitLab"
+				url = uri(System.getenv("URL") ?: "")
+				credentials(HttpHeaderCredentials::class) {
+					name = "Deploy-Token"
+					value = System.getenv("TOKEN")
+				}
+				authentication {
+					create<HttpHeaderAuthentication>("header")
+				}
+			}
+		}
+	}
 }

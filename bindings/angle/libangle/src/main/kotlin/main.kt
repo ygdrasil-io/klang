@@ -1,3 +1,4 @@
+import com.sun.jna.Native
 import com.sun.jna.ptr.IntByReference
 import libangle.EGLDisplay
 import libangle.EGLSurface
@@ -6,6 +7,8 @@ import javax.swing.JFrame
 
 fun main() {
 	val frame = JFrame("test")
+	val windowId = Native.getComponentID(frame)
+	println("windowId: $windowId")
 	//val context = Context(frame)
 
 }

@@ -1,21 +1,20 @@
-
 plugins {
-    kotlin("jvm")
+	kotlin("jvm")
 	id("org.jetbrains.kotlinx.kover")
 }
 
 repositories {
-    mavenCentral()
+	mavenCentral()
 }
 
 dependencies {
-    implementation (project(":libclang"))
+	implementation(project(":libclang"))
 	testImplementation(libs.kotest)
 }
 
 tasks.withType<Test>().configureEach {
-    useJUnitPlatform()
-    forkEvery = 1
+	useJUnitPlatform()
+	forkEvery = 1
 	exclude("klang/**")
 }
 

@@ -1,7 +1,4 @@
-# This workflow will build a package using Gradle and then publish it to GitHub packages when a release is created
-# For more information see: https://github.com/actions/setup-java#publishing-using-gradle
-
-name: Publish delaunator library
+name: Publish klang
 
 on:
   release:
@@ -19,7 +16,9 @@ jobs:
           java-version: 17
           cache: 'gradle'
       - name: Build and publish with Gradle
-        run: gradle delaunator:build delaunator:publish
+        run: |
+          cd ./klang
+          ./gradlew build publish
         env:
           VERSION: ${{ github.event.release.tag_name }}
           URL: ${{ env.GITLAB_URL }}

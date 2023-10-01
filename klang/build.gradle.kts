@@ -1,7 +1,7 @@
 plugins {
-    kotlin("jvm") version "1.9.0"
-    kotlin("plugin.serialization") version "1.8.21"
-    id("org.jetbrains.kotlinx.kover") version "0.6.1"
+	kotlin("jvm") version "1.9.0"
+	kotlin("plugin.serialization") version "1.8.21"
+	id("org.jetbrains.kotlinx.kover") version "0.6.1"
 	id("maven-publish")
 }
 
@@ -15,9 +15,9 @@ allprojects {
 	apply(plugin = "org.jetbrains.kotlin.plugin.serialization")
 	apply(plugin = "org.jetbrains.kotlinx.kover")
 
-    repositories {
-        mavenCentral()
-    }
+	repositories {
+		mavenCentral()
+	}
 
 	group = "io.ygdrasil"
 	version = projectVersion

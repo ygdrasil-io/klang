@@ -1,8 +1,3 @@
-plugins {
-    kotlin("jvm")
-    id("org.jetbrains.kotlinx.kover")
-	id("maven-publish")
-}
 
 dependencies {
 	implementation("io.github.microutils:kotlin-logging:1.7.4")
@@ -13,12 +8,4 @@ dependencies {
 
 tasks.test {
 	useJUnitPlatform()
-}
-
-publishing {
-	publications {
-		create<MavenPublication>("maven") {
-			from(components["java"])
-		}
-	}
 }

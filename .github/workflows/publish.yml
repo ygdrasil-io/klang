@@ -21,7 +21,6 @@ jobs:
           ./gradlew build publish --info
         env:
           VERSION: ${{ github.event.release.tag_name }}
-          URL: ${{ env.GITLAB_URL }}
-          USERNAME: ${{ secrets.GITLAB_USERNAME }}
+          URL: ${{ vars.GITLAB_URL }}
           TOKEN: ${{ secrets.GITLAB_TOKEN }}
 

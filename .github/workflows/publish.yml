@@ -1,0 +1,28 @@
+# This workflow will build a package using Gradle and then publish it to GitHub packages when a release is created
+# For more information see: https://github.com/actions/setup-java#publishing-using-gradle
+
+name: Publish delaunator library
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: 17
+          cache: 'gradle'
+      - name: Build and publish with Gradle
+        run: gradle delaunator:build delaunator:publish
+        env:
+          VERSION: ${{ github.event.release.tag_name }}
+          URL: ${{ env.GITLAB_URL }}
+          USERNAME: ${{ secrets.GITLAB_USERNAME }}
+          TOKEN: ${{ secrets.GITLAB_TOKEN }}
+

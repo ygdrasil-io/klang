@@ -10,4 +10,4 @@ pluginManagement {
 
 include(":libangle")
 findProject(":libangle")?.name = "angle4k"
-
+include("example")

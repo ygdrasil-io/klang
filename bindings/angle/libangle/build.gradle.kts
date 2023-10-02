@@ -55,12 +55,7 @@ val headerUrl = URL("https://github.com/klang-toolkit/ANGLE-binary/releases/down
 klang {
 	download(headerUrl)
 		.let(::unpack)
-		.let {
-			parse(fileToParse = "EGL/egl.h", at = it) {
-
-
-			}
-		}
+		.let { parse(fileToParse = "EGL/egl.h", at = it) {} }
 
 	generateBinding("libangle", "EGL")
 }

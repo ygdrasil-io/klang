@@ -4,5 +4,6 @@ plugins {
 }
 
 dependencies {
+	implementation(project(":angle4k"))
 }
 

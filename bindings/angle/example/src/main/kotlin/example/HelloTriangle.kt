@@ -28,7 +28,7 @@ class HelloTriangle : SampleApplication("HelloTriangle") {
 			return false;
 		}
 
-		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+		libEGLLibrary.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
 		return true;
 	}
@@ -36,9 +36,9 @@ class HelloTriangle : SampleApplication("HelloTriangle") {
 	override fun destroy()  { glDeleteProgram(mProgram); }
 
 	override draw() {
-		GLfloat vertices[] = {
+		val vertices = listOf(
 			0.0f, 0.5f, 0.0f, -0.5f, -0.5f, 0.0f, 0.5f, -0.5f, 0.0f,
-		};
+		)
 
 		// Set the viewport
 		glViewport(0, 0, getWindow()->getWidth(), getWindow()->getHeight());

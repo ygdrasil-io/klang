@@ -1,133 +1,151 @@
 package example.toolkit
 
-import libsdl.GLuint
+import com.sun.jna.ptr.IntByReference
+import libgles.*
+import libangle.GLuint
 
-fun CompileProgram(val vsSource: String,val fsSource: String): GLuint {
-	return CompileProgramInternal(vsSource, "", "", "", fsSource, nullptr);
+fun CompileProgram(vsSource: String, fsSource: String): GLuint {
+	return CompileProgramInternal(vsSource, "", "", "", fsSource)
 }
 
-fun CompileProgramInternal(const char *vsSource,
-const char *tcsSource,
-const char *tesSource,
-const char *gsSource,
-const char *fsSource,
-const std::function<void(GLuint)> &preLinkCallback
+fun CompileProgramInternal(
+	vsSource: String,
+	tcsSource: String,
+	tesSource: String,
+	gsSource: String,
+	fsSource: String
 ) : GLuint {
-	val program = glCreateProgram();
+	val program = libGLESv2Library.glCreateProgram()
 
-	val vs = CompileShader(GL_VERTEX_SHADER, vsSource);
-	val fs = CompileShader(GL_FRAGMENT_SHADER, fsSource);
+	val vs = CompileShader(GL_VERTEX_SHADER, vsSource)
+	val fs = CompileShader(GL_FRAGMENT_SHADER, fsSource)
 
-	if (vs == 0 || fs == 0)
-	{
-		glDeleteShader(fs);
-		glDeleteShader(vs);
-		glDeleteProgram(program);
-		return 0;
+	if (vs == 0 || fs == 0) {
+		libGLESv2Library.glDeleteShader(fs)
+		libGLESv2Library.glDeleteShader(vs)
+		libGLESv2Library.glDeleteProgram(program)
+		return 0
 	}
 
-	glAttachShader(program, vs);
-	glDeleteShader(vs);
+	libGLESv2Library.glAttachShader(program, vs)
+	libGLESv2Library.glDeleteShader(vs)
 
-	glAttachShader(program, fs);
-	glDeleteShader(fs);
+	libGLESv2Library.glAttachShader(program, fs)
+	libGLESv2Library.glDeleteShader(fs)
 
-	GLuint tcs = 0;
-	GLuint tes = 0;
-	GLuint gs  = 0;
+	var tcs = 0
+	var tes = 0
+	var gs = 0
 
-	if (strlen(tcsSource) > 0)
-	{
-		tcs = CompileShader(GL_TESS_CONTROL_SHADER_EXT, tcsSource);
-		if (tcs == 0)
-		{
-			glDeleteShader(vs);
-			glDeleteShader(fs);
-			glDeleteProgram(program);
-			return 0;
+	if (tcsSource.isNotEmpty()) {
+		tcs = CompileShader(GL_TESS_CONTROL_SHADER_EXT, tcsSource)
+		if (tcs == 0) {
+			libGLESv2Library.glDeleteShader(vs)
+			libGLESv2Library.glDeleteShader(fs)
+			libGLESv2Library.glDeleteProgram(program)
+			return 0
 		}
 
-		glAttachShader(program, tcs);
-		glDeleteShader(tcs);
+		libGLESv2Library.glAttachShader(program, tcs)
+		libGLESv2Library.glDeleteShader(tcs)
 	}
 
-	if (strlen(tesSource) > 0)
-	{
-		tes = CompileShader(GL_TESS_EVALUATION_SHADER_EXT, tesSource);
-		if (tes == 0)
-		{
-			glDeleteShader(vs);
-			glDeleteShader(fs);
-			glDeleteShader(tcs);
-			glDeleteProgram(program);
-			return 0;
+	if (tesSource.isNotEmpty()) {
+		tes = CompileShader(GL_TESS_EVALUATION_SHADER_EXT, tesSource)
+		if (tes == 0) {
+			libGLESv2Library.glDeleteShader(vs)
+			libGLESv2Library.glDeleteShader(fs)
+			libGLESv2Library.glDeleteShader(tcs)
+			libGLESv2Library.glDeleteProgram(program)
+			return 0
 		}
 
-		glAttachShader(program, tes);
-		glDeleteShader(tes);
+		libGLESv2Library.glAttachShader(program, tes)
+		libGLESv2Library.glDeleteShader(tes)
 	}
 
-	if (strlen(gsSource) > 0)
-	{
-		gs = CompileShader(GL_GEOMETRY_SHADER_EXT, gsSource);
-		if (gs == 0)
-		{
-			glDeleteShader(vs);
-			glDeleteShader(fs);
-			glDeleteShader(tcs);
-			glDeleteShader(tes);
-			glDeleteProgram(program);
-			return 0;
+	if (gsSource.isNotEmpty()) {
+		gs = CompileShader(GL_GEOMETRY_SHADER_EXT, gsSource)
+		if (gs == 0) {
+			libGLESv2Library.glDeleteShader(vs)
+			libGLESv2Library.glDeleteShader(fs)
+			libGLESv2Library.glDeleteShader(tcs)
+			libGLESv2Library.glDeleteShader(tes)
+			libGLESv2Library.glDeleteProgram(program)
+			return 0
 		}
 
-		glAttachShader(program, gs);
-		glDeleteShader(gs);
+		libGLESv2Library.glAttachShader(program, gs)
+		libGLESv2Library.glDeleteShader(gs)
 	}
 
-	if (preLinkCallback)
-	{
-		preLinkCallback(program);
-	}
+	libGLESv2Library.glLinkProgram(program)
 
-	glLinkProgram(program);
-
-	return CheckLinkStatusAndReturnProgram(program, true);
+	return CheckLinkStatusAndReturnProgram(program, true)
 }
 
-fun CompileShader(type: GLenum, source: String): GLuint
-{
-	GLuint shader = glCreateShader(type);
+fun CompileShader(type: GLenum, source: String): GLuint {
+	val shader = libGLESv2Library.glCreateShader(type)
 
-	const char *sourceArray[1] = {source};
-	glShaderSource(shader, 1, sourceArray, nullptr);
-	glCompileShader(shader);
 
-	GLint compileResult;
-	glGetShaderiv(shader, GL_COMPILE_STATUS, &compileResult);
+	val sourceArray: GLchar = { source }
+	libGLESv2Library.glShaderSource(shader, 1, sourceArray, null)
+	libGLESv2Library.glCompileShader(shader)
 
-	if (compileResult == 0)
-	{
-		GLint infoLogLength;
-		glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &infoLogLength);
+	val compileResult = IntByReference()
+	libGLESv2Library.glGetShaderiv(shader, GL_COMPILE_STATUS, compileResult.pointer)
+
+	if (compileResult.value == 0) {
+		val infoLogLength = IntByReference()
+		libGLESv2Library.glGetShaderiv(shader, GL_INFO_LOG_LENGTH, infoLogLength.pointer)
 
 		// Info log length includes the null terminator, so 1 means that the info log is an empty
 		// string.
-		if (infoLogLength > 1)
-		{
-			std::vector<GLchar> infoLog(infoLogLength);
-			glGetShaderInfoLog(shader, static_cast<GLsizei>(infoLog.size()), nullptr, &infoLog[0]);
-			std::cerr << "shader compilation failed: " << &infoLog[0];
-		}
-		else
-		{
-			std::cerr << "shader compilation failed. <Empty log message>";
+		if (infoLogLength.value > 1) {
+			std::vector<GLchar> infoLog (infoLogLength)
+			libGLESv2Library.glGetShaderInfoLog(shader, static_cast<GLsizei>(infoLog.size()), nullptr, & infoLog [0])
+			std::cerr < < "shader compilation failed: " << &infoLog[0]
+		} else {
+			std::cerr < < "shader compilation failed. <Empty log message>"
 		}
 
-		std::cerr << std::endl;
+		std::cerr < < std ::endl
 
-		glDeleteShader(shader);
-		shader = 0;
+		libGLESv2Library.glDeleteShader(shader)
+		return 0
 	}
 
-	return shader;
+	return shader
+}
+
+fun CheckLinkStatusAndReturnProgram(program: GLuint, outputErrorMessages: Boolean): GLuint {
+	if (libGLESv2Library.glGetError() != GL_NO_ERROR)
+		return 0
+
+	val linkStatus = IntByReference()
+	libGLESv2Library.glGetProgramiv(program, GL_LINK_STATUS, linkStatus.pointer)
+	if (linkStatus.value == 0) {
+		if (outputErrorMessages) {
+			val infoLogLength = IntByReference()
+			libGLESv2Library.glGetProgramiv(program, GL_INFO_LOG_LENGTH, infoLogLength.pointer)
+
+			// Info log length includes the null terminator, so 1 means that the info log is an
+			// empty string.
+			if (infoLogLength.value > 1) {
+				std::vector<GLchar> infoLog (infoLogLength)
+				libGLESv2Library.glGetProgramInfoLog(
+					program, static_cast<GLsizei>(infoLog.size()), nullptr,
+					& infoLog [0])
+
+				std::cerr < < "program link failed: " << &infoLog[0]
+			} else {
+				std::cerr < < "program link failed. <Empty log message>"
+			}
+		}
+
+		libGLESv2Library.glDeleteProgram(program)
+		return 0
+	}
+
+	return program
 }

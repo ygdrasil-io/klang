@@ -3,9 +3,10 @@ package example
 import example.toolkit.CompileProgram
 import example.toolkit.SampleApplication
 import libangle.libEGLLibrary
+import libgles.*
 
 class HelloTriangle : SampleApplication("HelloTriangle") {
-	private var mProgram: UInt? = null
+	private var mProgram: GLuint = 0
 
 	override fun initialize(): Boolean {
 		val kVS = """
@@ -23,37 +24,37 @@ class HelloTriangle : SampleApplication("HelloTriangle") {
 		})"""
 
 		mProgram = CompileProgram(kVS, kFS);
-		if (!mProgram)
-		{
-			return false;
+		if (mProgram == 0) {
+			return false
 		}
 
-		libEGLLibrary.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+
+		libGLESv2Library.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
 		return true;
 	}
 
-	override fun destroy()  { glDeleteProgram(mProgram); }
+	override fun destroy()  { libGLESv2Library.glDeleteProgram(mProgram); }
 
-	override draw() {
-		val vertices = listOf(
+	override fun draw() {
+		val vertices = floatArrayOf(
 			0.0f, 0.5f, 0.0f, -0.5f, -0.5f, 0.0f, 0.5f, -0.5f, 0.0f,
 		)
 
 		// Set the viewport
-		glViewport(0, 0, getWindow()->getWidth(), getWindow()->getHeight());
+		libGLESv2Library.glViewport(0, 0, window.width, window.height)
 
 		// Clear the color buffer
-		glClear(GL_COLOR_BUFFER_BIT);
+		libGLESv2Library.glClear(GL_COLOR_BUFFER_BIT)
 
 		// Use the program object
-		glUseProgram(mProgram);
+		libGLESv2Library.glUseProgram(mProgram)
 
 		// Load the vertex data
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, vertices);
-		glEnableVertexAttribArray(0);
+		libGLESv2Library.glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE.toByte(), 0, vertices)
+		libGLESv2Library.glEnableVertexAttribArray(0)
 
-		glDrawArrays(GL_TRIANGLES, 0, 3);
+		libGLESv2Library.glDrawArrays(GL_TRIANGLES, 0, 3)
 	}
 
 }

@@ -22,6 +22,7 @@ plugins {
 
 dependencies {
 	api(libs.jna)
+	api(project(":libgles"))
 	testImplementation("org.junit.jupiter:junit-jupiter")
 	testImplementation(libs.kotest)
 }

@@ -1,4 +1,4 @@
-package libsdl
+package libangle
 
 
 typealias GLuint = Int

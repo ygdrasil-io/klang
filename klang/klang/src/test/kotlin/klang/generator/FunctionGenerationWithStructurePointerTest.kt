@@ -41,7 +41,7 @@ class FunctionGenerationWithStructurePointerTest : FreeSpec({
 			|  /**
 			|   * @param structure mapped from MyStructure *
 			|   */
-			|  public fun function(structure: test.MyStructure)
+			|  public fun function(structure: test.MyStructure?)
 			|}
 			|
 		""".trimMargin()

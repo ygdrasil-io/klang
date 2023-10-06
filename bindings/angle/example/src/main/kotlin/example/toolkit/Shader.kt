@@ -1,8 +1,10 @@
 package example.toolkit
 
+import com.sun.jna.Memory
 import com.sun.jna.ptr.IntByReference
-import libgles.*
 import libangle.GLuint
+import libgles.*
+import java.nio.ByteBuffer
 
 fun CompileProgram(vsSource: String, fsSource: String): GLuint {
 	return CompileProgramInternal(vsSource, "", "", "", fsSource)
@@ -87,9 +89,7 @@ fun CompileProgramInternal(
 fun CompileShader(type: GLenum, source: String): GLuint {
 	val shader = libGLESv2Library.glCreateShader(type)
 
-
-	val sourceArray: GLchar = { source }
-	libGLESv2Library.glShaderSource(shader, 1, sourceArray, null)
+	libGLESv2Library.glShaderSource(shader, 1, source, null)
 	libGLESv2Library.glCompileShader(shader)
 
 	val compileResult = IntByReference()
@@ -102,14 +102,12 @@ fun CompileShader(type: GLenum, source: String): GLuint {
 		// Info log length includes the null terminator, so 1 means that the info log is an empty
 		// string.
 		if (infoLogLength.value > 1) {
-			std::vector<GLchar> infoLog (infoLogLength)
-			libGLESv2Library.glGetShaderInfoLog(shader, static_cast<GLsizei>(infoLog.size()), nullptr, & infoLog [0])
-			std::cerr < < "shader compilation failed: " << &infoLog[0]
+			val infoLog = Memory(infoLogLength.value.toLong())
+			libGLESv2Library.glGetShaderInfoLog(shader, infoLogLength.value, null, infoLog)
+			System.err.println("program link failed: " + infoLog.getString(0L))
 		} else {
-			std::cerr < < "shader compilation failed. <Empty log message>"
+			System.err.println("program link failed. <Empty log message>")
 		}
-
-		std::cerr < < std ::endl
 
 		libGLESv2Library.glDeleteShader(shader)
 		return 0
@@ -132,14 +130,11 @@ fun CheckLinkStatusAndReturnProgram(program: GLuint, outputErrorMessages: Boolea
 			// Info log length includes the null terminator, so 1 means that the info log is an
 			// empty string.
 			if (infoLogLength.value > 1) {
-				std::vector<GLchar> infoLog (infoLogLength)
-				libGLESv2Library.glGetProgramInfoLog(
-					program, static_cast<GLsizei>(infoLog.size()), nullptr,
-					& infoLog [0])
-
-				std::cerr < < "program link failed: " << &infoLog[0]
+				val infoLog = Memory(infoLogLength.value.toLong())
+				libGLESv2Library.glGetProgramInfoLog(program, infoLogLength.value, null, infoLog)
+				System.err.println("program link failed: " + infoLog.getString(0L))
 			} else {
-				std::cerr < < "program link failed. <Empty log message>"
+				System.err.println("program link failed. <Empty log message>")
 			}
 		}
 

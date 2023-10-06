@@ -55,7 +55,15 @@ val headerUrl = URL("https://github.com/klang-toolkit/ANGLE-binary/releases/down
 klang {
 	download(headerUrl)
 		.let(::unpack)
-		.let { parse(fileToParse = "GLES3/gl3.h", at = it) {} }
+		.let {
+			parse(fileToParse = "GLES3/gl3.h", at = it) {
+				findFunctionByName("glShaderSource")?.let { function ->
+					function.arguments.first { it.name == "string" }.apply {
+						type = typeOf("char *").unchecked()
+					}
+				}
+			}
+		}
 
 	generateBinding("libgles", "GLESv2")
 }

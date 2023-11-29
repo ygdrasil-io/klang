@@ -12,7 +12,7 @@ class HelloTriangle : SampleApplication("HelloTriangle") {
 	override fun initialize(): Boolean {
 		val kVS = """
 		attribute vec4 vPosition;
-		
+			
 		void main()
 		{
 			gl_Position = vPosition;
@@ -37,6 +37,9 @@ class HelloTriangle : SampleApplication("HelloTriangle") {
 
 	override fun destroy()  { libGLESv2Library.glDeleteProgram(mProgram); }
 
+	/**
+	 *
+	 */
 	override fun draw() {
 		val vertices = floatArrayOf(
 			0.0f, 0.5f, 0.0f, -0.5f, -0.5f, 0.0f, 0.5f, -0.5f, 0.0f,

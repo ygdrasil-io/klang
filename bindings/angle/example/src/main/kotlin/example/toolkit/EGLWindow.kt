@@ -1,8 +1,11 @@
 package example.toolkit
 
 import libangle.*
+import libgles.libGLESv2Library
 
 class EGLWindow(window: OSWindow) {
+
+	private lateinit var mContext: Any
 
 	fun initializeGLWithResult(
 		osWindow: OSWindow,
@@ -186,7 +189,20 @@ class EGLWindow(window: OSWindow) {
 		return true
 	}
 
+	fun initializeContext(): Boolean {
+		mContext = createContext(EGL_NO_CONTEXT, null)
+		if (mContext == EGL_NO_CONTEXT) {
+			destroyGL()
+			return false
+		}
 
+		if (!makeCurrent()) {
+			destroyGL()
+			return false
+		}
+
+		return true
+	}
 }
 
 enum class GLESDriverType {

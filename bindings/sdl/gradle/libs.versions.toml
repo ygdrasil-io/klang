@@ -1,6 +1,6 @@
 [versions]
 kotest = "5.6.1"
-klang = "1.0.0-SNAPSHOT"
+klang = "0.0.0"
 jna = "5.13.0"
 
 [libraries]
@@ -8,4 +8,4 @@ kotest = { module = "io.kotest:kotest-runner-junit5-jvm", version.ref = "kotest"
 jna = { module = "net.java.dev.jna:jna", version.ref = "jna" }
 
 [plugins]
-klang = { id = "io.ygdrasil.klang", version.ref = "klang" }
+klang = { id = "io.ygdrasil.klang-plugin", version.ref = "klang" }

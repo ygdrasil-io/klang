@@ -6,10 +6,10 @@ import java.net.URL
 
 buildscript {
 	dependencies {
-		classpath("io.ygdrasil:klang:1.0.0-SNAPSHOT") {
+		classpath("io.ygdrasil:klang:0.0.0") {
 			isChanging = true
 		}
-		classpath("io.ygdrasil:klang-gradle-plugin:1.0.0-SNAPSHOT") {
+		classpath("io.ygdrasil:klang-gradle-plugin:0.0.0") {
 			isChanging = true
 		}
 	}

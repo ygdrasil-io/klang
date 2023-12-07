@@ -1,15 +1,13 @@
-import klang.domain.typeOf
-import klang.domain.unchecked
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 import java.net.URL
 
 buildscript {
 	dependencies {
-		classpath("io.ygdrasil:klang:1.0.0-SNAPSHOT") {
+		classpath("io.ygdrasil:klang:0.0.0") {
 			isChanging = true
 		}
-		classpath("io.ygdrasil:klang-gradle-plugin:1.0.0-SNAPSHOT") {
+		classpath("io.ygdrasil:klang-gradle-plugin:0.0.0") {
 			isChanging = true
 		}
 	}
@@ -22,6 +20,7 @@ plugins {
 
 dependencies {
 	api(libs.jna)
+	api(project(":libgles"))
 	testImplementation("org.junit.jupiter:junit-jupiter")
 	testImplementation(libs.kotest)
 }
@@ -55,12 +54,7 @@ val headerUrl = URL("https://github.com/klang-toolkit/ANGLE-binary/releases/down
 klang {
 	download(headerUrl)
 		.let(::unpack)
-		.let {
-			parse(fileToParse = "EGL/egl.h", at = it) {
-
-
-			}
-		}
+		.let { parse(fileToParse = "EGL/egl.h", at = it) { } }
 
 	generateBinding("libangle", "EGL")
 }

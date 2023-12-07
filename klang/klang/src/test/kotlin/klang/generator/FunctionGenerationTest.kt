@@ -25,9 +25,9 @@ class FunctionGenerationTest : FreeSpec({
 			|   * @param myEnum mapped from enum EnumName
 			|   */
 			|  public fun function(
-			|    a: com.sun.jna.Pointer,
-			|    b: com.sun.jna.Pointer,
-			|    myEnum: EnumName,
+			|    a: com.sun.jna.Pointer?,
+			|    b: com.sun.jna.Pointer?,
+			|    myEnum: EnumName?,
 			|  ): kotlin.Byte
 			|
 			|  public fun function2(): com.sun.jna.Pointer

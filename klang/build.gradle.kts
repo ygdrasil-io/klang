@@ -1,8 +1,8 @@
 plugins {
-	kotlin("jvm") version "1.9.0"
-	kotlin("plugin.serialization") version "1.8.21"
-	id("org.jetbrains.kotlinx.kover") version "0.6.1"
-	id("maven-publish")
+	kotlin("jvm") version "1.9.20"
+	kotlin("plugin.serialization") version "1.9.20"
+	id("org.jetbrains.kotlinx.kover") version "0.7.3"
+	id("com.gradle.plugin-publish") version "1.0.0"
 }
 
 val projectVersion = System.getenv("VERSION")
@@ -23,13 +23,13 @@ allprojects {
 	version = projectVersion
 
 	kotlin {
-		jvmToolchain(17)
+		jvmToolchain(21)
 
 		sourceSets.all {
 			languageSettings {
 				java {
-					sourceCompatibility = JavaVersion.VERSION_17
-					targetCompatibility = JavaVersion.VERSION_17
+					sourceCompatibility = JavaVersion.VERSION_21
+					targetCompatibility = JavaVersion.VERSION_21
 				}
 				languageVersion = "2.0"
 			}
@@ -59,5 +59,4 @@ allprojects {
 		}
 	}
 }
-
 

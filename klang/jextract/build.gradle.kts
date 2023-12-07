@@ -12,3 +12,13 @@ tasks.test {
 tasks.withType<JavaCompile>().configureEach {
 	options.compilerArgs.add("--enable-preview")
 }
+
+task("runTest", JavaExec::class) {
+	jvmArgs(
+		"--enable-preview",
+		"--enable-native-access=ALL-UNNAMED"
+	)
+	systemProperties("java.library.path" to "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib")
+	classpath = sourceSets["main"].runtimeClasspath
+	mainClass = "klang.TestKt"
+}

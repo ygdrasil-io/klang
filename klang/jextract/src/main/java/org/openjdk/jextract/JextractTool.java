@@ -87,7 +87,7 @@ public final class JextractTool {
         return new MessageFormat(MESSAGES_BUNDLE.getString(msgId)).format(args);
     }
 
-    private JextractTool(PrintWriter out, PrintWriter err) {
+    public JextractTool(PrintWriter out, PrintWriter err) {
         this.out = out;
         this.err = err;
     }
@@ -321,7 +321,7 @@ public final class JextractTool {
         }
     }
 
-    private int run(String[] args) {
+    public int run(String[] args) {
         try {
             args = CommandLine.parse(Arrays.asList(args)).toArray(new String[0]);
         } catch (IOException ioexp) {

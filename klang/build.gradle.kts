@@ -4,18 +4,25 @@ plugins {
     id("org.jetbrains.kotlinx.kover") version "0.7.3"
 }
 
-allprojects {
+val projectVersion = System.getenv("VERSION")
+	?.takeIf { it.isNotBlank() }
+	?: "0.0.0"
 
-    repositories {
-        mavenCentral()
-    }
+allprojects {
+	apply(plugin = "maven-publish")
+	apply(plugin = "org.jetbrains.kotlin.jvm")
+	apply(plugin = "org.jetbrains.kotlin.plugin.serialization")
+	apply(plugin = "org.jetbrains.kotlinx.kover")
+
+	repositories {
+		mavenCentral()
+	}
 
 	group = "io.ygdrasil"
-	version = "1.0.0-SNAPSHOT"
-}
+	version = projectVersion
 
-kotlin {
-    jvmToolchain(17)
+	kotlin {
+		jvmToolchain(17)
 
     sourceSets.all {
         languageSettings {
@@ -26,7 +33,28 @@ kotlin {
             languageVersion = "2.0"
         }
 
+	publishing {
 
-    }
+		publications {
+			create<MavenPublication>("maven") {
+				from(components["java"])
+			}
+		}
+
+		repositories {
+			maven {
+				name = "GitLab"
+				url = uri(System.getenv("URL") ?: "")
+				credentials(HttpHeaderCredentials::class) {
+					name = "Deploy-Token"
+					value = System.getenv("TOKEN")
+				}
+				authentication {
+					create<HttpHeaderAuthentication>("header")
+				}
+			}
+		}
+	}
 }
+
 

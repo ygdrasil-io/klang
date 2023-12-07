@@ -8,7 +8,7 @@ class KlangPluginTest : FreeSpec({
 
 	"klang gradle plugin add generateBinding task" {
 		val project = ProjectBuilder.builder().build();
-		project.pluginManager.apply("io.ygdrasil.klang");
+		project.pluginManager.apply("io.ygdrasil.klang-plugin");
 
 		project.tasks.getByName("generateBinding") shouldNotBe  null
 	}

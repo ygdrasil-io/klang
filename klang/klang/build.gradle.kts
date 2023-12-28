@@ -70,7 +70,7 @@ private fun inferPlatformClangPath(): Path? {
 			logger.error("fail to find libclang path " + ioExp.stackTraceToString())
 		}
 	} else if (os == "Linux") {
-		val pb: ProcessBuilder = ProcessBuilder().command("/usr/bin/locate", "libclang.so")
+		val pb: ProcessBuilder = ProcessBuilder().command("/usr/bin/find", "/usr", "-name", "libclang.so")
 		val proc = pb.start()
 		val str = String(proc.inputStream.readAllBytes())
 		val dir = Paths.get(str.trim { it <= ' ' }.split("\n").first())

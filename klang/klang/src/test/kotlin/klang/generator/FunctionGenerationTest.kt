@@ -31,6 +31,8 @@ class FunctionGenerationTest : FreeSpec({
 			|  ): kotlin.Byte
 			|
 			|  public fun function2(): com.sun.jna.Pointer
+			|
+			|  public fun function3(): com.sun.jna.Pointer
 			|}
 			|
 		""".trimMargin()

@@ -22,6 +22,12 @@ object TestData {
 			name = "function2",
 			returnType = testType("void *"),
 			arguments = listOf()
+		),
+
+		NativeFunction(
+			name = "function3",
+			returnType = testType("struct StructName *"),
+			arguments = listOf()
 		)
 	)
 

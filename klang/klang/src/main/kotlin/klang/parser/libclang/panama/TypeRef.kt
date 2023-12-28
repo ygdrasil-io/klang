@@ -8,6 +8,7 @@ import org.openjdk.jextract.impl.TypeImpl
 
 internal fun Type.toTypeRef(): TypeRef = when (this) {
 	is TypeImpl.PointerImpl -> typeOf( type().toTypeString() + " *" ).unchecked("unsupported yet")
+	is TypeImpl.FunctionImpl -> returnType().toTypeRef()
 	else -> typeOf( toTypeString() + " *" ).unchecked()
 }
 

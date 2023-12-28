@@ -68,7 +68,7 @@ class LibClangParserTest : ParserTestCommon({
 		}
 	}
 
-	"function parsing" {
+	"function parsing" - {
 		// Given
 		val filePath = "src/test/c/functions.h"
 
@@ -76,21 +76,15 @@ class LibClangParserTest : ParserTestCommon({
 		val repository = parseFile(filePath)
 
 		// Then
-		repository.findFunctionByName("function")
-			.also { it?.name shouldBe "function" }
-			.also { it?.returnType shouldBe "char" }
-			.also {
-				it?.arguments
-					?.map { (name, type) -> name to type }shouldBe listOf(
-					"a" to "int *",
-					"b" to "void *",
-					"myEnum" to "enum EnumName"
-				)
+		TestData
+			.functions
+			.forEach { function ->
+				"test function with name ${function.name}" {
+					repository.findFunctionByName(function.name)
+						.also { it?.name shouldBe function.name}
+						.also { it?.returnType shouldBe function.returnType }
+						.also { it?.arguments shouldBe function.arguments }
+				}
 			}
-
-		repository.findFunctionByName("function2")
-			.also { it?.name shouldBe "function2" }
-			.also { it?.returnType shouldBe "void *" }
-			.also { it?.arguments shouldBe listOf() }
 	}
 })

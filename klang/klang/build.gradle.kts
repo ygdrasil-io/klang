@@ -69,6 +69,15 @@ private fun inferPlatformClangPath(): Path? {
 		} catch (ioExp: IOException) {
 			logger.error("fail to find libclang path " + ioExp.stackTraceToString())
 		}
+	} else if (os == "Linux") {
+		val pb: ProcessBuilder = ProcessBuilder().command("/usr/bin/locate", "libclang.so")
+		val proc = pb.start()
+		val str = String(proc.inputStream.readAllBytes())
+		val dir = Paths.get(str.trim { it <= ' ' }.split("\n").first())
+			.parent
+		if (Files.isDirectory(dir)) {
+			return dir
+		}
 	} else {
 		logger.error("operating system $os not yet supported")
 	}

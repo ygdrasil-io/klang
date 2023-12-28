@@ -1,5 +1,5 @@
 {
-  "id": "0x7ff61a81e008",
+  "id": "0x55cf8740be58",
   "kind": "TranslationUnitDecl",
   "loc": {},
   "range": {
@@ -8,7 +8,7 @@
   },
   "inner": [
     {
-      "id": "0x7ff61a81e830",
+      "id": "0x55cf8740c680",
       "kind": "TypedefDecl",
       "loc": {},
       "range": {
@@ -22,7 +22,7 @@
       },
       "inner": [
         {
-          "id": "0x7ff61a81e5d0",
+          "id": "0x55cf8740c420",
           "kind": "BuiltinType",
           "type": {
             "qualType": "__int128"
@@ -31,7 +31,7 @@
       ]
     },
     {
-      "id": "0x7ff61a81e8a0",
+      "id": "0x55cf8740c6f0",
       "kind": "TypedefDecl",
       "loc": {},
       "range": {
@@ -45,7 +45,7 @@
       },
       "inner": [
         {
-          "id": "0x7ff61a81e5f0",
+          "id": "0x55cf8740c440",
           "kind": "BuiltinType",
           "type": {
             "qualType": "unsigned __int128"
@@ -54,7 +54,7 @@
       ]
     },
     {
-      "id": "0x7ff61a81ebb0",
+      "id": "0x55cf8740c9f8",
       "kind": "TypedefDecl",
       "loc": {},
       "range": {
@@ -68,13 +68,13 @@
       },
       "inner": [
         {
-          "id": "0x7ff61a81e980",
+          "id": "0x55cf8740c7d0",
           "kind": "RecordType",
           "type": {
             "qualType": "struct __NSConstantString_tag"
           },
           "decl": {
-            "id": "0x7ff61a81e8f8",
+            "id": "0x55cf8740c748",
             "kind": "RecordDecl",
             "name": "__NSConstantString_tag"
           }
@@ -82,7 +82,7 @@
       ]
     },
     {
-      "id": "0x7ff61a81ec58",
+      "id": "0x55cf8740ca90",
       "kind": "TypedefDecl",
       "loc": {},
       "range": {
@@ -96,14 +96,14 @@
       },
       "inner": [
         {
-          "id": "0x7ff61a81ec10",
+          "id": "0x55cf8740ca50",
           "kind": "PointerType",
           "type": {
             "qualType": "char *"
           },
           "inner": [
             {
-              "id": "0x7ff61a81e0b0",
+              "id": "0x55cf8740bf00",
               "kind": "BuiltinType",
               "type": {
                 "qualType": "char"
@@ -114,7 +114,7 @@
       ]
     },
     {
-      "id": "0x7ff61a81ef48",
+      "id": "0x55cf8740cd88",
       "kind": "TypedefDecl",
       "loc": {},
       "range": {
@@ -128,7 +128,7 @@
       },
       "inner": [
         {
-          "id": "0x7ff61a81eef0",
+          "id": "0x55cf8740cd30",
           "kind": "ConstantArrayType",
           "type": {
             "qualType": "struct __va_list_tag[1]"
@@ -136,13 +136,13 @@
           "size": 1,
           "inner": [
             {
-              "id": "0x7ff61a81ed30",
+              "id": "0x55cf8740cb70",
               "kind": "RecordType",
               "type": {
                 "qualType": "struct __va_list_tag"
               },
               "decl": {
-                "id": "0x7ff61a81ecb0",
+                "id": "0x55cf8740cae8",
                 "kind": "RecordDecl",
                 "name": "__va_list_tag"
               }
@@ -152,11 +152,11 @@
       ]
     },
     {
-      "id": "0x7ff61a866000",
+      "id": "0x55cf874680b0",
       "kind": "EnumDecl",
       "loc": {
         "offset": 6,
-        "file": "./functions.h",
+        "file": "/workspace/functions.h",
         "line": 2,
         "col": 6,
         "tokLen": 8
@@ -177,7 +177,7 @@
       "name": "EnumName",
       "inner": [
         {
-          "id": "0x7ff61a866100",
+          "id": "0x55cf874681b0",
           "kind": "EnumConstantDecl",
           "loc": {
             "offset": 19,
@@ -203,7 +203,7 @@
           },
           "inner": [
             {
-              "id": "0x7ff61a8660e0",
+              "id": "0x55cf87468190",
               "kind": "ConstantExpr",
               "range": {
                 "begin": {
@@ -224,7 +224,7 @@
               "value": "2",
               "inner": [
                 {
-                  "id": "0x7ff61a8660c0",
+                  "id": "0x55cf87468170",
                   "kind": "IntegerLiteral",
                   "range": {
                     "begin": {
@@ -249,7 +249,7 @@
           ]
         },
         {
-          "id": "0x7ff61a866190",
+          "id": "0x55cf87468240",
           "kind": "EnumConstantDecl",
           "loc": {
             "offset": 35,
@@ -275,7 +275,7 @@
           },
           "inner": [
             {
-              "id": "0x7ff61a866170",
+              "id": "0x55cf87468220",
               "kind": "ConstantExpr",
               "range": {
                 "begin": {
@@ -296,7 +296,7 @@
               "value": "1",
               "inner": [
                 {
-                  "id": "0x7ff61a866150",
+                  "id": "0x55cf87468200",
                   "kind": "IntegerLiteral",
                   "range": {
                     "begin": {
@@ -323,48 +323,128 @@
       ]
     },
     {
-      "id": "0x7ff61a866488",
-      "kind": "FunctionDecl",
+      "id": "0x55cf87468290",
+      "kind": "RecordDecl",
       "loc": {
-        "offset": 57,
+        "offset": 59,
         "line": 7,
-        "col": 6,
-        "tokLen": 8
+        "col": 8,
+        "tokLen": 10
       },
       "range": {
         "begin": {
           "offset": 52,
           "col": 1,
+          "tokLen": 6
+        },
+        "end": {
+          "offset": 116,
+          "line": 10,
+          "col": 1,
+          "tokLen": 1
+        }
+      },
+      "name": "StructName",
+      "tagUsed": "struct",
+      "completeDefinition": true,
+      "inner": [
+        {
+          "id": "0x55cf874683e0",
+          "kind": "FieldDecl",
+          "loc": {
+            "offset": 91,
+            "line": 8,
+            "col": 20,
+            "tokLen": 6
+          },
+          "range": {
+            "begin": {
+              "offset": 76,
+              "col": 5,
+              "tokLen": 4
+            },
+            "end": {
+              "offset": 91,
+              "col": 20,
+              "tokLen": 6
+            }
+          },
+          "name": "field1",
+          "type": {
+            "qualType": "enum EnumName *"
+          }
+        },
+        {
+          "id": "0x55cf87468440",
+          "kind": "FieldDecl",
+          "loc": {
+            "offset": 108,
+            "line": 9,
+            "col": 10,
+            "tokLen": 6
+          },
+          "range": {
+            "begin": {
+              "offset": 103,
+              "col": 5,
+              "tokLen": 4
+            },
+            "end": {
+              "offset": 108,
+              "col": 10,
+              "tokLen": 6
+            }
+          },
+          "name": "field3",
+          "type": {
+            "qualType": "char"
+          }
+        }
+      ]
+    },
+    {
+      "id": "0x55cf874686f8",
+      "kind": "FunctionDecl",
+      "loc": {
+        "offset": 125,
+        "line": 12,
+        "col": 6,
+        "tokLen": 8
+      },
+      "range": {
+        "begin": {
+          "offset": 120,
+          "col": 1,
           "tokLen": 4
         },
         "end": {
-          "offset": 103,
+          "offset": 171,
           "col": 52,
           "tokLen": 1
         }
       },
       "name": "function",
-      "mangledName": "_function",
+      "mangledName": "function",
       "type": {
         "qualType": "char (int *, void *, enum EnumName)"
       },
       "inner": [
         {
-          "id": "0x7ff61a866228",
+          "id": "0x55cf874684d0",
           "kind": "ParmVarDecl",
           "loc": {
-            "offset": 71,
+            "offset": 139,
             "col": 20,
             "tokLen": 1
           },
           "range": {
             "begin": {
-              "offset": 66,
+              "offset": 134,
               "col": 15,
               "tokLen": 3
             },
             "end": {
-              "offset": 71,
+              "offset": 139,
               "col": 20,
               "tokLen": 1
             }
@@ -375,21 +455,21 @@
           }
         },
         {
-          "id": "0x7ff61a8662a8",
+          "id": "0x55cf87468550",
           "kind": "ParmVarDecl",
           "loc": {
-            "offset": 80,
+            "offset": 148,
             "col": 29,
             "tokLen": 1
           },
           "range": {
             "begin": {
-              "offset": 74,
+              "offset": 142,
               "col": 23,
               "tokLen": 4
             },
             "end": {
-              "offset": 80,
+              "offset": 148,
               "col": 29,
               "tokLen": 1
             }
@@ -400,21 +480,21 @@
           }
         },
         {
-          "id": "0x7ff61a866360",
+          "id": "0x55cf874685d8",
           "kind": "ParmVarDecl",
           "loc": {
-            "offset": 97,
+            "offset": 165,
             "col": 46,
             "tokLen": 6
           },
           "range": {
             "begin": {
-              "offset": 83,
+              "offset": 151,
               "col": 32,
               "tokLen": 4
             },
             "end": {
-              "offset": 97,
+              "offset": 165,
               "col": 46,
               "tokLen": 6
             }
@@ -428,30 +508,57 @@
       ]
     },
     {
-      "id": "0x7ff61a8665e0",
+      "id": "0x55cf87468850",
       "kind": "FunctionDecl",
       "loc": {
-        "offset": 112,
-        "line": 8,
+        "offset": 180,
+        "line": 13,
         "col": 7,
         "tokLen": 9
       },
       "range": {
         "begin": {
-          "offset": 106,
+          "offset": 174,
           "col": 1,
           "tokLen": 4
         },
         "end": {
-          "offset": 122,
+          "offset": 190,
           "col": 17,
           "tokLen": 1
         }
       },
       "name": "function2",
-      "mangledName": "_function2",
+      "mangledName": "function2",
       "type": {
         "qualType": "void *()"
+      }
+    },
+    {
+      "id": "0x55cf87468a20",
+      "kind": "FunctionDecl",
+      "loc": {
+        "offset": 212,
+        "line": 14,
+        "col": 20,
+        "tokLen": 9
+      },
+      "range": {
+        "begin": {
+          "offset": 193,
+          "col": 1,
+          "tokLen": 6
+        },
+        "end": {
+          "offset": 222,
+          "col": 30,
+          "tokLen": 1
+        }
+      },
+      "name": "function3",
+      "mangledName": "function3",
+      "type": {
+        "qualType": "struct StructName *()"
       }
     }
   ]

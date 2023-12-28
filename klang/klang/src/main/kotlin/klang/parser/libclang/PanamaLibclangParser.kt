@@ -3,12 +3,10 @@ package klang.parser.libclang
 import klang.DeclarationRepository
 import klang.InMemoryDeclarationRepository
 import klang.domain.NameableDeclaration
-import klang.domain.NativeFunction
 import klang.parse
 import klang.parser.libclang.panama.toLocalDeclaration
 import klang.parser.libclang.panama.toNativeEnumeration
 import klang.parser.libclang.panama.toNativeStructure
-import klang.parser.libclang.panama.toTypeRef
 import mu.KotlinLogging
 import org.openjdk.jextract.Declaration
 import org.openjdk.jextract.Declaration.Scoped
@@ -59,6 +57,7 @@ private fun Scoped.toLocalDeclaration(): NameableDeclaration? {
 	return when (kind()) {
 		Declaration.Scoped.Kind.ENUM -> toNativeEnumeration()
 		Declaration.Scoped.Kind.STRUCT -> toNativeStructure()
+		Declaration.Scoped.Kind.UNION -> toNativeStructure(isUnion = true)
 
 		else -> {
 			logger.error { "not found ${kind()}" }

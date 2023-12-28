@@ -8,6 +8,17 @@ import klang.parser.validateStructures
 
 class LibClangParserTest : ParserTestCommon({
 
+	"test union parsing" - {
+		// Given
+		val filePath = "src/test/c/union.h"
+
+		// When
+		val repository = parseFile(filePath)
+
+		// Then
+		validateStructures(repository, TestData.union)
+	}
+
 	"test enum parsing" - {
 		// Given
 		val filePath = "src/test/c/enum.h"
@@ -53,7 +64,7 @@ class LibClangParserTest : ParserTestCommon({
 		validateStructures(repository, TestData.typeDefStructures)
 	}
 
-	"typedef parsing" {
+	"typedef parsing" - {
 		// Given
 		val filePath = "src/test/c/typedef.h"
 
@@ -62,9 +73,11 @@ class LibClangParserTest : ParserTestCommon({
 
 		// Then
 		TestData.typeDef.forEach { (name, type) ->
-			repository.findTypeAliasByName(name)
-				.also { it?.name shouldBe name }
-				.also { it?.typeRef shouldBe type }
+			"test $name" {
+				repository.findTypeAliasByName(name)
+					.also { it?.name shouldBe name }
+					.also { it?.typeRef shouldBe type }
+			}
 		}
 	}
 
@@ -87,4 +100,5 @@ class LibClangParserTest : ParserTestCommon({
 				}
 			}
 	}
+
 })

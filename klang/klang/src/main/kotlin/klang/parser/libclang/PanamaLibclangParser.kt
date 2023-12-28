@@ -2,11 +2,12 @@ package klang.parser.libclang
 
 import klang.DeclarationRepository
 import klang.InMemoryDeclarationRepository
-import klang.domain.NativeEnumeration
+import klang.domain.NameableDeclaration
 import klang.parse
+import klang.parser.libclang.panama.toNativeEnumeration
+import klang.parser.libclang.panama.toNativeStructure
 import mu.KotlinLogging
 import org.openjdk.jextract.Declaration
-import org.openjdk.jextract.Declaration.Constant
 import org.openjdk.jextract.Declaration.Scoped
 import org.openjdk.jextract.JextractTool
 import java.io.IOException
@@ -40,22 +41,18 @@ fun parseFileWithPanama(file: String): DeclarationRepository  = InMemoryDeclarat
 
 }
 
-private fun Scoped.toLocalDeclaration() = when (kind()) {
-	Declaration.Scoped.Kind.ENUM -> NativeEnumeration(
-		name(),
-		members().toEnumValues()
-	)
+private fun Scoped.toLocalDeclaration(): NameableDeclaration? {
+	return when (kind()) {
+		Declaration.Scoped.Kind.ENUM -> toNativeEnumeration()
+		Declaration.Scoped.Kind.STRUCT -> toNativeStructure()
 
-	else -> {
-		logger.error { "not found ${kind()}" }
-		null
+		else -> {
+			logger.error { "not found ${kind()}" }
+			null
+		}
 	}
 }
 
-private fun List<Declaration>.toEnumValues(): List<Pair<String, Long>> = filterIsInstance<Constant>()
-	.map {
-	it.name() to it.value().toString().toLong()
-}
 
 private fun inferPlatformIncludePath(): Path? {
 	val os = System.getProperty("os.name")

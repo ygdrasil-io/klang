@@ -1,8 +1,12 @@
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
+import java.io.IOException
+import java.nio.file.Files
+import java.nio.file.Path
+import java.nio.file.Paths
 
 tasks.test {
-    useJUnitPlatform()
+	useJUnitPlatform()
 	maxHeapSize = "4g"
 	minHeapSize = "512m"
 
@@ -40,5 +44,34 @@ tasks.withType<Test>().configureEach {
 		"--enable-preview",
 		"--enable-native-access=ALL-UNNAMED"
 	)
-	systemProperties("java.library.path" to "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib")
+	systemProperties(
+		"java.library.path" to inferPlatformClangPath()?.toFile()?.absolutePath
+	)
+}
+
+private fun inferPlatformClangPath(): Path? {
+	val os = System.getProperty("os.name")
+	if (os == "Mac OS X") {
+		try {
+			val pb: ProcessBuilder = ProcessBuilder().command("/usr/bin/xcode-select", "-p")
+			val proc = pb.start()
+			val str = String(proc.inputStream.readAllBytes())
+			val dir = Paths.get(
+				str.trim { it <= ' ' },
+				"Toolchains",
+				"XcodeDefault.xctoolchain",
+				"usr",
+				"lib"
+			)
+			if (Files.isDirectory(dir)) {
+				return dir
+			}
+		} catch (ioExp: IOException) {
+			logger.error("fail to find libclang path " + ioExp.stackTraceToString())
+		}
+	} else {
+		logger.error("operating system $os not yet supported")
+	}
+	logger.error("fail to find libclang path")
+	return null
 }

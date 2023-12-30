@@ -1,3 +1,9 @@
+import org.jetbrains.kotlin.de.undercouch.gradle.tasks.download.Download
+
+plugins {
+	id("de.undercouch.download") version "4.1.2"
+}
+
 dependencies {
 	implementation("io.github.microutils:kotlin-logging:1.7.4")
 	implementation("org.slf4j:slf4j-simple:1.7.26")
@@ -21,4 +27,22 @@ task("runTest", JavaExec::class) {
 	systemProperties("java.library.path" to "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib")
 	classpath = sourceSets["main"].runtimeClasspath
 	mainClass = "klang.TestKt"
+}
+
+val baseUrl = "https://github.com/klang-toolkit/libclang-binary/releases/download/15/"
+val fileToDownload = listOf(
+	"libclang-arm64.dylib",
+	"libclang-x86_64.dylib",
+	"libclang-x86_64.so",
+).forEach { fileName ->
+	val url = "$baseUrl$fileName"
+	val taskName = "downloadFile-$fileName"
+	tasks.register<Download>(taskName) {
+		src(url)
+		dest(project.file("src/main/resources"))
+	}
+
+	tasks.named("processResources") {
+		dependsOn(taskName)
+	}
 }

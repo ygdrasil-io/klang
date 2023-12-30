@@ -43,6 +43,7 @@ tasks.withType<Test>().configureEach {
 	jvmArgs(
 		"--enable-preview",
 		"--enable-native-access=ALL-UNNAMED"
+		//, "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
 	)
 	systemProperties(
 		"java.library.path" to inferPlatformClangPath()?.toFile()?.absolutePath
@@ -51,6 +52,7 @@ tasks.withType<Test>().configureEach {
 
 private fun inferPlatformClangPath(): Path? {
 	val os = System.getProperty("os.name")
+	logger.info("will try to find libclang on os $os")
 	if (os == "Mac OS X") {
 		try {
 			val pb: ProcessBuilder = ProcessBuilder().command("/usr/bin/xcode-select", "-p")
@@ -73,6 +75,7 @@ private fun inferPlatformClangPath(): Path? {
 		val pb: ProcessBuilder = ProcessBuilder().command("/usr/bin/find", "/usr", "-name", "libclang.so")
 		val proc = pb.start()
 		val str = String(proc.inputStream.readAllBytes())
+		logger.info("possible paths to libclang $str")
 		val dir = Paths.get(str.trim { it <= ' ' }.split("\n").first())
 			.parent
 		if (Files.isDirectory(dir)) {

@@ -4,10 +4,20 @@ import klang.domain.TypeRef
 import klang.domain.typeOf
 import klang.domain.unchecked
 import org.openjdk.jextract.Type
+import org.openjdk.jextract.Type.Delegated
 import org.openjdk.jextract.impl.TypeImpl
 
 internal fun Type.toTypeRef(): TypeRef = when (this) {
-	is TypeImpl.PointerImpl -> typeOf( type().toTypeString() + " *" ).unchecked("unsupported yet")
+	is Delegated ->  when (kind()) {
+		Delegated.Kind.TYPEDEF -> typeOf( name().get() ).unchecked()
+		Delegated.Kind.POINTER -> typeOf( type().toTypeString() + " *" ).unchecked()
+		Delegated.Kind.SIGNED -> TODO("unsupported yet")
+		Delegated.Kind.UNSIGNED -> TODO("unsupported yet")
+		Delegated.Kind.ATOMIC -> TODO("unsupported yet")
+		Delegated.Kind.VOLATILE ->TODO("unsupported yet")
+		Delegated.Kind.COMPLEX -> TODO("unsupported yet")
+		null -> TODO("unsupported yet")
+	}
 	is TypeImpl.FunctionImpl -> returnType().toTypeRef()
 	else -> typeOf( toTypeString() + " *" ).unchecked()
 }

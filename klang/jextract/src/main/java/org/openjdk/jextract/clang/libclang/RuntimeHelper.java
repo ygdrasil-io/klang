@@ -321,6 +321,11 @@ final class RuntimeHelper {
     }
 
     private static String getTemporaryDirectory() {
-        return System.getProperty("java.io.tmpdir");
+        String tempDir = System.getProperty("java.io.tmpdir");
+        if (!tempDir.endsWith(File.separator)) {
+            // append file separator if it does not exist
+            tempDir += File.separator;
+        }
+        return tempDir;
     }
 }

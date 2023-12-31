@@ -4,9 +4,9 @@ import klang.DeclarationRepository
 import klang.InMemoryDeclarationRepository
 import klang.domain.NameableDeclaration
 import klang.parse
-import klang.parser.libclang.panama.toLocalDeclaration
 import klang.parser.libclang.panama.toNativeEnumeration
 import klang.parser.libclang.panama.toNativeStructure
+import klang.parser.libclang.panama.toNativeTypeAlias
 import mu.KotlinLogging
 import org.openjdk.jextract.Declaration
 import org.openjdk.jextract.Declaration.Scoped
@@ -40,7 +40,7 @@ fun parseFileWithPanama(file: String): DeclarationRepository = InMemoryDeclarati
 			when (it) {
 				is Scoped -> it.toLocalDeclaration()
 				is Typedef -> it.toLocalDeclaration()
-				is Declaration.Function -> it.toLocalDeclaration()
+				is Declaration.Function -> it.toNativeTypeAlias()
 				else -> {
 					logger.error { "not found $it" }
 					null
@@ -52,6 +52,9 @@ fun parseFileWithPanama(file: String): DeclarationRepository = InMemoryDeclarati
 
 }
 
+private fun Typedef.toLocalDeclaration(): NameableDeclaration? {
+	return toNativeTypeAlias()
+}
 
 private fun Scoped.toLocalDeclaration(): NameableDeclaration? {
 	return when (kind()) {

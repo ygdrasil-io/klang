@@ -55,7 +55,7 @@ final class RuntimeHelper {
     static {
         var libraryFile = new File(getTemporaryDirectory() + inferLibraryFileName());
         if (!libraryFile.exists()) {
-            var embeddedLibraryFile = findFileInClasspath(inferEmbededLibraryFileName());
+            var embeddedLibraryFile = findFileInClasspath(inferEmbeddedLibraryFileName());
             try {
                 copyInputStreamToFile(embeddedLibraryFile, libraryFile.getAbsolutePath());
             } catch (IOException e) {
@@ -266,7 +266,7 @@ final class RuntimeHelper {
         }
     }
 
-    private static String inferEmbededLibraryFileName() {
+    private static String inferEmbeddedLibraryFileName() {
         return STR."libclang-\{inferArchitecture()}.\{inferLibraryExtension()}";
     }
 

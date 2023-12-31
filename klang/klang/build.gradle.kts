@@ -45,9 +45,9 @@ tasks.withType<Test>().configureEach {
 		"--enable-native-access=ALL-UNNAMED"
 		//, "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
 	)
-	systemProperties(
+	/*systemProperties(
 		"java.library.path" to inferPlatformClangPath()?.toFile()?.absolutePath
-	)
+	)*/
 }
 
 private fun inferPlatformClangPath(): Path? {

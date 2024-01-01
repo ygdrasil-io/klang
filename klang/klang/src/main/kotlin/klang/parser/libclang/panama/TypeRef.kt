@@ -25,8 +25,10 @@ internal fun Type.toTypeRef(): TypeRef = when (this) {
 }
 
 private fun Type.toTypeString(): String = when (this) {
-	is TypeImpl.DeclaredImpl -> tree().name()
+	is TypeImpl.DeclaredImpl -> toTypeString()
 	is TypeImpl.PrimitiveImpl -> kind().typeName()
-	is TypeImpl.QualifiedImpl -> type().toTypeString()
+	is TypeImpl.QualifiedImpl -> name().orElse(type().toTypeString())
 	else -> TODO("unsupported yet")
 }
+
+private fun TypeImpl.DeclaredImpl.toTypeString(): String = tree().name()

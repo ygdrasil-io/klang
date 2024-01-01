@@ -3,8 +3,8 @@ package klang.parser.libclang.panama
 import klang.domain.NativeEnumeration
 import org.openjdk.jextract.Declaration
 
-internal fun Declaration.Scoped.toNativeEnumeration() = NativeEnumeration(
-	name(),
+internal fun Declaration.Scoped.toNativeEnumeration(name: String?) = NativeEnumeration(
+	name ?: name(),
 	members().toEnumValues()
 )
 

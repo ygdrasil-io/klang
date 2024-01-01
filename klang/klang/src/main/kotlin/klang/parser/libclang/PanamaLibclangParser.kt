@@ -12,6 +12,7 @@ import org.openjdk.jextract.Declaration
 import org.openjdk.jextract.Declaration.Scoped
 import org.openjdk.jextract.Declaration.Typedef
 import org.openjdk.jextract.JextractTool
+import org.openjdk.jextract.impl.TypeImpl
 import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.Path
@@ -38,8 +39,8 @@ fun parseFileWithPanama(file: String): DeclarationRepository = InMemoryDeclarati
 		.asSequence()
 		.map {
 			when (it) {
-				is Scoped -> it.toLocalDeclaration()
-				is Typedef -> it.toLocalDeclaration()
+				is Scoped -> it.scopedToLocalDeclaration()
+				is Typedef -> it.typeDefToLocalDeclaration()
 				is Declaration.Function -> it.toNativeTypeAlias()
 				else -> {
 					logger.error { "not found $it" }
@@ -52,15 +53,18 @@ fun parseFileWithPanama(file: String): DeclarationRepository = InMemoryDeclarati
 
 }
 
-private fun Typedef.toLocalDeclaration(): NameableDeclaration? {
-	return toNativeTypeAlias()
+private fun Typedef.typeDefToLocalDeclaration(): NameableDeclaration? = type().let { type ->
+	when (type) {
+		is TypeImpl.DeclaredImpl -> type.tree().scopedToLocalDeclaration(name())
+		else -> toNativeTypeAlias()
+	}
 }
 
-private fun Scoped.toLocalDeclaration(): NameableDeclaration? {
+private fun Scoped.scopedToLocalDeclaration(name: String? = null): NameableDeclaration? {
 	return when (kind()) {
-		Declaration.Scoped.Kind.ENUM -> toNativeEnumeration()
-		Declaration.Scoped.Kind.STRUCT -> toNativeStructure()
-		Declaration.Scoped.Kind.UNION -> toNativeStructure(isUnion = true)
+		Declaration.Scoped.Kind.ENUM -> toNativeEnumeration(name)
+		Declaration.Scoped.Kind.STRUCT -> toNativeStructure(name)
+		Declaration.Scoped.Kind.UNION -> toNativeStructure(name, isUnion = true)
 
 		else -> {
 			logger.error { "not found ${kind()}" }

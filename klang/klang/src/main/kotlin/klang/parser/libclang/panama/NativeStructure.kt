@@ -4,8 +4,8 @@ import klang.domain.NativeStructure
 import klang.domain.TypeRef
 import org.openjdk.jextract.Declaration
 
-internal fun Declaration.Scoped.toNativeStructure(isUnion: Boolean = false) = NativeStructure(
-	name(),
+internal fun Declaration.Scoped.toNativeStructure(name: String?, isUnion: Boolean = false) = NativeStructure(
+	name ?: name(),
 	members().toStructureField(),
 	isUnion
 )

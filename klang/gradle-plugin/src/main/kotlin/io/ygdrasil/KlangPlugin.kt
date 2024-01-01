@@ -21,11 +21,16 @@ import java.nio.file.StandardCopyOption
 import java.security.MessageDigest
 import java.util.zip.ZipInputStream
 
-private val logger = LoggerFactory.getLogger("some-logger")
+private val logger = LoggerFactory.getLogger("klang-logger")
 private val hasher by lazy {
 	MessageDigest.getInstance("MD5")
 }
 private const val taskGroup = "klang"
+
+enum class ParsingMethod {
+	Docker,
+	Libclang
+}
 
 internal sealed class KlangPluginTask {
 	// TODO use a value object instead of a string
@@ -41,6 +46,7 @@ internal sealed class KlangPluginTask {
 open class KlangPluginExtension {
 	internal val tasks = mutableListOf<KlangPluginTask>()
 	internal var declarations: DeclarationRepository = InMemoryDeclarationRepository()
+	var parsingMethod = ParsingMethod.Docker
 
 	@Suppress("unused")
 	fun unpack(urlToUnpack: String) = urlToUnpack
@@ -117,15 +123,20 @@ class KlangPlugin : Plugin<Project> {
 					assert(localFileToParse.canRead()) { "${localFileToParse.absolutePath} is not readable" }
 					assert(localFileToParse.length() > 0) { "${localFileToParse.absolutePath} is empty" }
 
-					val jsonFile = workingDirectory.resolve("${fileToParse.hash}.json")
-					generateAstFromDocker(
-						sourcePath = sourcePath.absolutePath,
-						sourceFile = fileToParse,
-						clangJsonAstOutput = jsonFile
-					)
-
-					extension.declarations = parseAstJson(jsonFile.absolutePath)
-						.also { it.resolveTypes() }
+					extension.declarations = when(extension.parsingMethod) {
+						ParsingMethod.Docker -> {
+							val jsonFile = workingDirectory.resolve("${fileToParse.hash}.json")
+							generateAstFromDocker(
+								sourcePath = sourcePath.absolutePath,
+								sourceFile = fileToParse,
+								clangJsonAstOutput = jsonFile
+							)
+							parseAstJson(jsonFile.absolutePath)
+						}
+						ParsingMethod.Libclang -> {
+							TODO()
+						}
+					}.also { it.resolveTypes() }
 
 					with(extension.declarations) {
 						onSuccess()

@@ -8,18 +8,20 @@ import org.openjdk.jextract.Type.Delegated
 import org.openjdk.jextract.impl.TypeImpl
 
 internal fun Type.toTypeRef(): TypeRef = when (this) {
-	is Delegated ->  when (kind()) {
-		Delegated.Kind.TYPEDEF -> typeOf( name().get() ).unchecked()
-		Delegated.Kind.POINTER -> typeOf( type().toTypeString() + " *" ).unchecked()
+	is Delegated -> when (kind()) {
+		Delegated.Kind.TYPEDEF -> typeOf(name().get()).unchecked()
+		Delegated.Kind.POINTER -> typeOf(type().toTypeString() + " *").unchecked()
 		Delegated.Kind.SIGNED -> TODO("unsupported yet")
 		Delegated.Kind.UNSIGNED -> TODO("unsupported yet")
 		Delegated.Kind.ATOMIC -> TODO("unsupported yet")
-		Delegated.Kind.VOLATILE ->TODO("unsupported yet")
+		Delegated.Kind.VOLATILE -> TODO("unsupported yet")
 		Delegated.Kind.COMPLEX -> TODO("unsupported yet")
 		null -> TODO("unsupported yet")
 	}
+
 	is TypeImpl.FunctionImpl -> returnType().toTypeRef()
-	else -> typeOf( toTypeString() + " *" ).unchecked()
+	is TypeImpl.PrimitiveImpl -> typeOf(toTypeString()).unchecked()
+	else -> typeOf(toTypeString() + " *").unchecked()
 }
 
 private fun Type.toTypeString(): String = when (this) {

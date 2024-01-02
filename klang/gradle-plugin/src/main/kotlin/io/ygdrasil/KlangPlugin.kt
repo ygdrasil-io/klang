@@ -8,6 +8,7 @@ import klang.domain.NativeStructure
 import klang.domain.NativeTypeAlias
 import klang.generator.generateKotlinFile
 import klang.parser.json.parseAstJson
+import klang.parser.libclang.parseFile
 import klang.tools.generateAstFromDocker
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -134,7 +135,9 @@ class KlangPlugin : Plugin<Project> {
 							parseAstJson(jsonFile.absolutePath)
 						}
 						ParsingMethod.Libclang -> {
-							TODO()
+							parseFile(
+								fileToParse
+							)
 						}
 					}.also { it.resolveTypes() }
 

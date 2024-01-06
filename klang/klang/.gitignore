@@ -41,3 +41,7 @@ bin/
 ### Mac OS ###
 .DS_Store
 /*.log
+
+
+## use to integration ##
+/src/test/c/SDL2/

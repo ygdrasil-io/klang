@@ -20,13 +20,17 @@ import java.nio.file.Paths
 
 private val logger = KotlinLogging.logger {}
 
-fun parseFileWithPanama(file: String): DeclarationRepository = InMemoryDeclarationRepository().apply {
+fun parseFileWithPanama(file: String, filePath: Path?, headerPaths: Array<Path>): DeclarationRepository = InMemoryDeclarationRepository().apply {
 	val header = Path.of(file)
 
-	val clangArguments = inferPlatformIncludePath()
+	var clangArguments = inferPlatformIncludePath()
 		?.let { "-I$it" }
 		?.let { arrayOf(it) }
 		?: arrayOf()
+	clangArguments += filePath?.let { "-I${it.toFile().absolutePath}" }
+		?.let { arrayOf(it) }
+		?: arrayOf()
+	clangArguments += headerPaths.map { "-I${it.toFile().absolutePath}" }
 
 	val topLevel = parse(
 		listOf(header),

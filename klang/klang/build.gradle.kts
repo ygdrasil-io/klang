@@ -35,16 +35,24 @@ dependencies {
 	testImplementation(libs.kotest)
 }
 
-task<Copy>("unzipSDL2") {
+val unzipSDL2 = task<Copy>("unzipSDL2") {
 	val cSourceDir = "$projectDir/src/test/c/"
 	val zipTree = zipTree(file("${cSourceDir}SDL2-headers.zip"))
 	from(zipTree)
 	into(cSourceDir)
 }
 
+val unzipCHeaders = task<Copy>("unzipCHeaders") {
+	val cSourceDir = "$projectDir/src/test/c/"
+	val zipTree = zipTree(file("${cSourceDir}c-headers.zip"))
+	from(zipTree)
+	into(cSourceDir)
+}
+
 tasks.withType<JavaCompile>().configureEach {
 	options.compilerArgs.add("--enable-preview")
-	dependsOn("unzipSDL2")
+	//dependsOn(unzipSDL2)
+	dependsOn(unzipCHeaders)
 }
 
 tasks.withType<Test>().configureEach {

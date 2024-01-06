@@ -45,3 +45,4 @@ bin/
 
 ## use to integration ##
 /src/test/c/SDL2/
+/src/test/c/c/

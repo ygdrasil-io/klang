@@ -166,4 +166,68 @@ object TestData {
 	)
 
 	const val basicFunctionPointer = "void (*)(void *, char *, int)"
+
+
+	val exaustiveTypeDef = listOf(
+		NativeTypeAlias(
+			name = "signed_char_t",
+			typeRef = testType("char")
+		),
+		NativeTypeAlias(
+			name = "signed_int_t",
+			typeRef = testType("int")
+		),
+		NativeTypeAlias(
+			name = "signed_short_t",
+			typeRef = testType("short")
+		),
+		NativeTypeAlias(
+			name = "signed_long_t",
+			typeRef = testType("long")
+		),
+		NativeTypeAlias(
+			name = "signed_long_long_t",
+			typeRef = testType("long long")
+		),
+		NativeTypeAlias(
+			name = "unsigned_char_t",
+			typeRef = testType("unsigned char")
+		),
+		NativeTypeAlias(
+			name = "unsigned_int_t",
+			typeRef = testType("unsigned int")
+		),
+		NativeTypeAlias(
+			name = "unsigned_short_t",
+			typeRef = testType("unsigned short")
+		),
+		NativeTypeAlias(
+			name = "unsigned_long_t",
+			typeRef = testType("unsigned long")
+		),
+		NativeTypeAlias(
+			name = "unsigned_long_long_t",
+			typeRef = testType("unsigned long long")
+		),
+		NativeTypeAlias(
+			name = "arr_of_int_t",
+			typeRef = testType("int[10]")
+		),
+		NativeTypeAlias(
+			name = "arr_of_float_t",
+			typeRef = testType("float[10]")
+		),
+		NativeTypeAlias(
+			name = "arr_of_char_t",
+			typeRef = testType("char[10]")
+		),
+		NativeTypeAlias(
+			name = "arr_of_double_t",
+			typeRef = testType("double[10]")
+		),
+		NativeTypeAlias(
+			name = "arr_of_unsigned_char_t",
+			typeRef = testType("unsigned_char_t[10]")
+		)
+	)
 }

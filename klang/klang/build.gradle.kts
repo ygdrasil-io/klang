@@ -51,7 +51,7 @@ val unzipCHeaders = task<Copy>("unzipCHeaders") {
 
 tasks.withType<JavaCompile>().configureEach {
 	options.compilerArgs.add("--enable-preview")
-	//dependsOn(unzipSDL2)
+	dependsOn(unzipSDL2)
 	dependsOn(unzipCHeaders)
 }
 

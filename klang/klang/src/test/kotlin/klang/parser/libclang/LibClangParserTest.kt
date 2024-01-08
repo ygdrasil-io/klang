@@ -8,6 +8,23 @@ import klang.parser.validateStructures
 
 class LibClangParserTest : ParserTestCommon({
 
+	"test types parsing" - {
+		// Given
+		val filePath = "src/test/c/types.h"
+
+		// When
+		val repository = parseFile(filePath)
+
+		// Then
+		TestData.exaustiveTypeDef.forEach { (name, type) ->
+			"test $name" {
+				repository.findTypeAliasByName(name)
+					.also { it?.name shouldBe name }
+					.also { it?.typeRef shouldBe type }
+			}
+		}
+	}
+
 	"test union parsing" - {
 		// Given
 		val filePath = "src/test/c/union.h"

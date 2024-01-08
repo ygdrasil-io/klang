@@ -11,8 +11,8 @@ internal fun Type.toTypeRef(): TypeRef = when (this) {
 	is Delegated -> when (kind()) {
 		Delegated.Kind.TYPEDEF -> typeOf(name().get()).unchecked()
 		Delegated.Kind.POINTER -> typeOf(type().toTypeString() + " *").unchecked()
-		Delegated.Kind.SIGNED -> TODO("unsupported yet")
-		Delegated.Kind.UNSIGNED -> TODO("unsupported yet")
+		Delegated.Kind.SIGNED -> typeOf(type().toTypeString()).unchecked()
+		Delegated.Kind.UNSIGNED -> typeOf("unsigned " + type().toTypeString()).unchecked()
 		Delegated.Kind.ATOMIC -> TODO("unsupported yet")
 		Delegated.Kind.VOLATILE -> TODO("unsupported yet")
 		Delegated.Kind.COMPLEX -> TODO("unsupported yet")
@@ -21,6 +21,7 @@ internal fun Type.toTypeRef(): TypeRef = when (this) {
 
 	is TypeImpl.FunctionImpl -> returnType().toTypeRef()
 	is TypeImpl.PrimitiveImpl -> typeOf(toTypeString()).unchecked()
+	is TypeImpl.ArrayImpl -> typeOf(toTypeString()).unchecked()
 	else -> typeOf(toTypeString() + " *").unchecked()
 }
 
@@ -28,6 +29,7 @@ private fun Type.toTypeString(): String = when (this) {
 	is TypeImpl.DeclaredImpl -> toTypeString()
 	is TypeImpl.PrimitiveImpl -> kind().typeName()
 	is TypeImpl.QualifiedImpl -> name().orElse(type().toTypeString())
+	is TypeImpl.ArrayImpl -> elementType().toTypeString().let { typeAsString -> elementCount().asLong?.let { "$typeAsString[$it]" } ?: typeAsString }
 	else -> TODO("unsupported yet")
 }
 

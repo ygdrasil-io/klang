@@ -30,7 +30,16 @@ private fun Type.toTypeString(): String = when (this) {
 	is TypeImpl.PrimitiveImpl -> kind().typeName()
 	is TypeImpl.QualifiedImpl -> name().orElse(type().toTypeString())
 	is TypeImpl.ArrayImpl -> elementType().toTypeString().let { typeAsString -> elementCount().asLong?.let { "$typeAsString[$it]" } ?: typeAsString }
-	else -> TODO("unsupported yet")
+	is TypeImpl.FunctionImpl -> functionToTypeString()
+	else -> TODO("unsupported yet with $this")
 }
+
+private fun TypeImpl.FunctionImpl.functionToTypeString(): String {
+	return returnType().toTypeString() + "( ${argumentTypes().toTypeString()} )"
+}
+
+private fun List<Type>.toTypeString(): String  = map {
+	it.toTypeString()
+}.joinToString { "," }
 
 private fun TypeImpl.DeclaredImpl.toTypeString(): String = tree().name()

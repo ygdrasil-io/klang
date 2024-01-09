@@ -38,6 +38,7 @@ dependencies {
 val unzipSDL2 = task<Copy>("unzipSDL2") {
 	val cSourceDir = "$projectDir/src/test/c/"
 	val zipTree = zipTree(file("${cSourceDir}SDL2-headers.zip"))
+	onlyIf { !File("$cSourceDir/SDL2").exists() }
 	from(zipTree)
 	into(cSourceDir)
 }
@@ -45,6 +46,7 @@ val unzipSDL2 = task<Copy>("unzipSDL2") {
 val unzipCHeaders = task<Copy>("unzipCHeaders") {
 	val cSourceDir = "$projectDir/src/test/c/"
 	val zipTree = zipTree(file("${cSourceDir}c-headers.zip"))
+	onlyIf { !File("$cSourceDir/c").exists() }
 	from(zipTree)
 	into(cSourceDir)
 }

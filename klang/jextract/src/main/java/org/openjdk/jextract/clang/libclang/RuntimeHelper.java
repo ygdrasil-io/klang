@@ -296,8 +296,9 @@ final class RuntimeHelper {
                 || architecture.contains("x86")
                 || architecture.contains("i386")) {
             return "x86_64";
-        } else if (architecture.contains("arm")) {
-            return "arm86";
+        } else if (architecture.contains("arm")
+                || architecture.contains("aarch")) {
+            return "arm64";
         }
 
         throw new UnsupportedOperationException(STR."Unsupported architecture: \{architecture}");

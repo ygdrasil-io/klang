@@ -17,3 +17,4 @@ typedef float arr_of_float_t[10];
 typedef char arr_of_char_t[10];
 typedef double arr_of_double_t[10];
 typedef unsigned_char_t arr_of_unsigned_char_t[10];
+typedef int arr_of_int_t2[];

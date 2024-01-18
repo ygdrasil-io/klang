@@ -1,12 +1,13 @@
 package klang.parser.libclang
 
 import klang.parser.INTEGRATION_ENABLED
+import klang.parser.IS_OS_DARWIN
 import klang.parser.ParserTestCommon
 
 
 class SDL2ItTest : ParserTestCommon({
 
-	"test SDL2 parsing".config(enabled = INTEGRATION_ENABLED || true) {
+	"test SDL2 parsing".config(enabled = (INTEGRATION_ENABLED || true) && IS_OS_DARWIN) {
 
 		// Given
 		val filePath = "src/test/c/"

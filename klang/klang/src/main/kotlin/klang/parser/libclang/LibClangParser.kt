@@ -16,16 +16,24 @@ fun parseFile(
 	headerPathsAsString: Array<String> = arrayOf(),
 	parserTechnology: ParserTechnology = ParserTechnology.Panama
 ): DeclarationRepository {
-	val file = when (filePathAsString != null) {
-		true -> filePathAsString.let { "$it/$fileAsString" }
-			.let(::File)
-		false -> File(fileAsString)
-	}.also { assert(it.exists()) }
-	val path = filePathAsString?.let { Path.of(it) }
-		?.also { assert(it.exists())  }
-	val headerPaths = headerPathsAsString.map { Path.of(it).also { assert(it.exists()) } }.toTypedArray()
+	val file = computeFile(filePathAsString, fileAsString)
+	val path = computePath(filePathAsString)
+	val headerPaths = computeHeadersPaths(headerPathsAsString)
 	return parseFile(file, path, headerPaths, parserTechnology)
 }
+
+private fun computeHeadersPaths(headerPathsAsString: Array<String>) =
+	headerPathsAsString.map { Path.of(it).also { assert(it.exists()) } }.toTypedArray()
+
+private fun computePath(filePathAsString: String?) = filePathAsString?.let { Path.of(it) }
+	?.also { assert(it.exists()) }
+
+private fun computeFile(filePathAsString: String?, fileAsString: String) = when (filePathAsString != null) {
+	true -> filePathAsString.let { "$it/$fileAsString" }
+		.let(::File)
+
+	false -> File(fileAsString)
+}.also { assert(it.exists()) }
 
 private fun parseFile(
 	file: File,
@@ -38,5 +46,6 @@ private fun parseFile(
 		assert(headerPaths.isEmpty()) { "header paths is not supported on JNA" }
 		parseFileWithJna(file.absolutePath)
 	}
+
 	ParserTechnology.Panama -> parseFileWithPanama(file.absolutePath, filePath, headerPaths)
 }

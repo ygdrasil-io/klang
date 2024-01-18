@@ -227,7 +227,7 @@ object TestData {
 		),
 		NativeTypeAlias(
 			name = "arr_of_unsigned_char_t",
-			typeRef = testType("unsigned_char_t[10]")
+			typeRef = testType("char[10]")
 		)
 	)
 }

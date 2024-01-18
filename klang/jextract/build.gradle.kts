@@ -38,8 +38,10 @@ val fileToDownload = listOf(
 	val url = "$baseUrl$fileName"
 	val taskName = "downloadFile-$fileName"
 	tasks.register<Download>(taskName) {
+		val directory = project.file("src/main/resources")
+		onlyIf { !directory.resolve(fileName).exists() }
 		src(url)
-		dest(project.file("src/main/resources"))
+		dest(directory)
 	}
 
 	tasks.named("processResources") {

@@ -1,9 +1,5 @@
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
-import java.io.IOException
-import java.nio.file.Files
-import java.nio.file.Path
-import java.nio.file.Paths
 
 tasks.test {
 	useJUnitPlatform()
@@ -17,8 +13,6 @@ tasks.test {
 		showStackTraces = true
 		showStandardStreams = true
 	}
-
-	//exclude("klang/parser/libclang/**")
 }
 
 dependencies {
@@ -61,47 +55,5 @@ tasks.withType<Test>().configureEach {
 	jvmArgs(
 		"--enable-preview",
 		"--enable-native-access=ALL-UNNAMED"
-		//, "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
 	)
-	/*systemProperties(
-		"java.library.path" to inferPlatformClangPath()?.toFile()?.absolutePath
-	)*/
-}
-
-private fun inferPlatformClangPath(): Path? {
-	val os = System.getProperty("os.name")
-	logger.info("will try to find libclang on os $os")
-	if (os == "Mac OS X") {
-		try {
-			val pb: ProcessBuilder = ProcessBuilder().command("/usr/bin/xcode-select", "-p")
-			val proc = pb.start()
-			val str = String(proc.inputStream.readAllBytes())
-			val dir = Paths.get(
-				str.trim { it <= ' ' },
-				"Toolchains",
-				"XcodeDefault.xctoolchain",
-				"usr",
-				"lib"
-			)
-			if (Files.isDirectory(dir)) {
-				return dir
-			}
-		} catch (ioExp: IOException) {
-			logger.error("fail to find libclang path " + ioExp.stackTraceToString())
-		}
-	} else if (os == "Linux") {
-		val pb: ProcessBuilder = ProcessBuilder().command("/usr/bin/find", "/usr", "-name", "libclang.so")
-		val proc = pb.start()
-		val str = String(proc.inputStream.readAllBytes())
-		logger.info("possible paths to libclang $str")
-		val dir = Paths.get(str.trim { it <= ' ' }.split("\n").first())
-			.parent
-		if (Files.isDirectory(dir)) {
-			return dir
-		}
-	} else {
-		logger.error("operating system $os not yet supported")
-	}
-	logger.error("fail to find libclang path")
-	return null
 }

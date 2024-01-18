@@ -64,10 +64,14 @@ final class RuntimeHelper {
         }
         libraryFile.deleteOnExit();
 
-        System.load(libraryFile.getAbsolutePath());
-        // Manual change to handle platform specific library name difference
-        //String libName = System.getProperty("os.name").startsWith("Windows") ? "libclang" : "clang";
-        //System.loadLibrary(libName);
+        try {
+            System.load(libraryFile.getAbsolutePath());
+        } catch (UnsatisfiedLinkError unsatisfiedLinkError) {
+            if (!unsatisfiedLinkError.getMessage().contains("already loaded in another classloader [")) {
+                throw unsatisfiedLinkError;
+            }
+        }
+
 
         SymbolLookup loaderLookup = SymbolLookup.loaderLookup();
         SYMBOL_LOOKUP = name -> loaderLookup.find(name).or(() -> LINKER.defaultLookup().find(name));

@@ -1,7 +1,9 @@
+import io.ygdrasil.ParsingMethod
 import klang.domain.typeOf
 import klang.domain.unchecked
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
+import java.net.URI
 import java.net.URL
 
 buildscript {
@@ -16,7 +18,7 @@ buildscript {
 }
 
 plugins {
-	kotlin("jvm") version "1.9.10"
+	kotlin("jvm") version libs.versions.kotlin
 	alias(libs.plugins.klang)
 }
 
@@ -50,9 +52,13 @@ sourceSets.main {
 	java.srcDirs(buildDir)
 }
 
-val headerUrl = URL("https://github.com/klang-toolkit/SDL-binary/releases/download/2.28.2-Alpha3/headers.zip")
+val headerUrl = URI("https://github.com/klang-toolkit/SDL-binary/releases/download/2.28.2-Alpha3/headers.zip")
+	.toURL() ?: error("cannot create header url")
 
 klang {
+
+	parsingMethod = ParsingMethod.Libclang
+
 	download(headerUrl)
 		.let(::unpack)
 		.let {

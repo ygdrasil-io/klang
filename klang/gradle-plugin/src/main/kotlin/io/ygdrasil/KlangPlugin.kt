@@ -136,7 +136,8 @@ class KlangPlugin : Plugin<Project> {
 						}
 						ParsingMethod.Libclang -> {
 							parseFile(
-								fileToParse
+								fileToParse,
+								sourcePath.absolutePath
 							)
 						}
 					}.also { it.resolveTypes() }

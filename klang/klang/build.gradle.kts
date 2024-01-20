@@ -1,6 +1,17 @@
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 
+
+val cSourceDir = "$projectDir/src/test/c/"
+
+val sdl2HeadersDir = "$projectDir/src/test/resources/"
+val sdl2HeadersFile = file("${sdl2HeadersDir}SDL2-headers.zip")
+val sdl2HeadersTargetDirectory = "$cSourceDir/SDL2"
+
+val cHeadersDir = "$projectDir/src/main/resources/"
+val cHeadersFile = file("${cHeadersDir}c-headers.zip")
+val cHeadersTargetDirectory = "$cSourceDir/c"
+
 tasks.test {
 	useJUnitPlatform()
 	maxHeapSize = "4g"
@@ -30,17 +41,15 @@ dependencies {
 }
 
 val unzipSDL2 = task<Copy>("unzipSDL2") {
-	val cSourceDir = "$projectDir/src/test/c/"
-	val zipTree = zipTree(file("${cSourceDir}SDL2-headers.zip"))
-	onlyIf { !File("$cSourceDir/SDL2").exists() }
+	val zipTree = zipTree(sdl2HeadersFile)
+	onlyIf { !File(sdl2HeadersTargetDirectory).exists() }
 	from(zipTree)
 	into(cSourceDir)
 }
 
 val unzipCHeaders = task<Copy>("unzipCHeaders") {
-	val cSourceDir = "$projectDir/src/test/c/"
-	val zipTree = zipTree(file("${cSourceDir}c-headers.zip"))
-	onlyIf { !File("$cSourceDir/c").exists() }
+	val zipTree = zipTree(file(cHeadersFile))
+	onlyIf { !File(cHeadersTargetDirectory).exists() }
 	from(zipTree)
 	into(cSourceDir)
 }
@@ -56,4 +65,9 @@ tasks.withType<Test>().configureEach {
 		"--enable-preview",
 		"--enable-native-access=ALL-UNNAMED"
 	)
+}
+
+tasks.clean {
+	delete(sdl2HeadersTargetDirectory)
+	delete(cHeadersTargetDirectory)
 }

@@ -34,6 +34,7 @@ val fileToDownload = listOf(
 	"libclang-arm64.dylib",
 	"libclang-x86_64.dylib",
 	"libclang-x86_64.so",
+	"libclang-arm64.so",
 ).forEach { fileName ->
 	val url = "$baseUrl$fileName"
 	val taskName = "downloadFile-$fileName"

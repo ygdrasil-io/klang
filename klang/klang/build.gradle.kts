@@ -1,11 +1,12 @@
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
+import java.util.*
 
-
+val osName = System.getProperty("os.name").lowercase(Locale.getDefault())
 val cSourceDir = "$projectDir/src/test/c/"
 
 val sdl2HeadersDir = "$projectDir/src/test/resources/"
-val sdl2HeadersFile = file("${sdl2HeadersDir}SDL2-headers.zip")
+val sdl2HeadersFile = file("${sdl2HeadersDir}SDL2-headers-${inferPlatformSuffix()}.zip")
 val sdl2HeadersTargetDirectory = "$cSourceDir/SDL2"
 
 val cHeadersDir = "$projectDir/src/main/resources/"
@@ -70,4 +71,10 @@ tasks.withType<Test>().configureEach {
 tasks.clean {
 	delete(sdl2HeadersTargetDirectory)
 	delete(cHeadersTargetDirectory)
+}
+
+fun inferPlatformSuffix() = when {
+	osName.contains("mac") -> "darwin"
+	osName.contains("linux") -> "linux"
+	else -> error("OS $osName not supported")
 }

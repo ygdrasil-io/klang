@@ -18,6 +18,7 @@ import java.io.File
 import java.io.FileInputStream
 import java.net.URL
 import java.nio.file.Files
+import java.nio.file.Paths
 import java.nio.file.StandardCopyOption
 import java.security.MessageDigest
 import java.util.zip.ZipInputStream
@@ -36,10 +37,14 @@ enum class ParsingMethod {
 internal sealed class KlangPluginTask {
 	// TODO use a value object instead of a string
 	class DownloadFile(val sourceUrl: URL, val targetFile: String) : KlangPluginTask()
+
 	// TODO use a value object instead of a string
 	class Unpack(val sourceFile: String, val targetPath: String) : KlangPluginTask()
+
 	// TODO use a value object instead of a string
-	class Parse(val sourceFile: String, val sourcePath: String, val onSuccess: DeclarationRepository.() -> Unit) : KlangPluginTask()
+	class Parse(val sourceFile: String, val sourcePath: String, val onSuccess: DeclarationRepository.() -> Unit) :
+		KlangPluginTask()
+
 	// TODO use a value object instead of a string
 	class GenerateBinding(val basePackage: String, val libraryName: String) : KlangPluginTask()
 }
@@ -80,11 +85,13 @@ class KlangPlugin : Plugin<Project> {
 	override fun apply(project: Project) {
 		val extension = project.extensions.create("klang", KlangPluginExtension::class.java)
 
+		val unpackCHeader = project.unpackCHeaderTask()
 		val downloadFile = project.downloadTask(extension)
 		val unpackFile = project.unpackTask(downloadFile, extension)
 		val generateAst = project.generateAstTask(unpackFile, extension)
 		val generateBinding = project.task("generateBinding") { task ->
 			task.dependsOn(generateAst)
+			task.dependsOn(unpackCHeader)
 			task.doFirst {
 				extension.tasks
 					.asSequence()
@@ -124,7 +131,7 @@ class KlangPlugin : Plugin<Project> {
 					assert(localFileToParse.canRead()) { "${localFileToParse.absolutePath} is not readable" }
 					assert(localFileToParse.length() > 0) { "${localFileToParse.absolutePath} is empty" }
 
-					extension.declarations = when(extension.parsingMethod) {
+					extension.declarations = when (extension.parsingMethod) {
 						ParsingMethod.Docker -> {
 							val jsonFile = workingDirectory.resolve("${fileToParse.hash}.json")
 							generateAstFromDocker(
@@ -134,6 +141,7 @@ class KlangPlugin : Plugin<Project> {
 							)
 							parseAstJson(jsonFile.absolutePath)
 						}
+
 						ParsingMethod.Libclang -> {
 							parseFile(
 								fileToParse,
@@ -196,6 +204,36 @@ class KlangPlugin : Plugin<Project> {
 				entry = it.nextEntry
 			}
 		}
+	}
+
+	private fun Project.unpackCHeaderTask(): Task = task("unpackCHeader") { task ->
+		val targetPath = workingDirectory.resolve("c-headers")
+		task.onlyIf { !targetPath.exists() }
+		task.doFirst {
+			unzipFromClasspath("c-header.zip", targetPath.absolutePath)
+		}
+	}
+
+
+	fun unzipFromClasspath(sourceFile: String, targetPath: String) {
+		File(targetPath).mkdirs()
+		// Load the zip file from the classpath
+		val inputStream = KlangPlugin::class.java.getResourceAsStream(sourceFile)
+
+		ZipInputStream(inputStream).use { zipInputStream ->
+			generateSequence { zipInputStream.nextEntry }
+				.forEach { entry ->
+					// Be sure to adjust the file path as needed
+					if (!entry.isDirectory) {
+						Files.copy(
+							zipInputStream,
+							Paths.get(targetPath, entry.name)
+						)
+					}
+				}
+
+		}
+
 	}
 }
 

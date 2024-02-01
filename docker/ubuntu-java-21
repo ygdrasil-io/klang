@@ -3,4 +3,4 @@ FROM ubuntu:24.04
 RUN apt-get update -yq \
     && apt-get install openjdk-21-jdk -yq \
     && apt-get install gradle -yq \
-    && apt-get install clean -yq
+    && apt-get clean -yq

@@ -23,11 +23,7 @@ private val logger = KotlinLogging.logger {}
 fun parseFileWithPanama(file: String, filePath: Path?, headerPaths: Array<Path>): DeclarationRepository = InMemoryDeclarationRepository().apply {
 	val header = Path.of(file)
 
-	var clangArguments = inferPlatformIncludePath()
-		?.let { "-I$it" }
-		?.let { arrayOf(it) }
-		?: arrayOf()
-	clangArguments += filePath?.let { "-I${it.toFile().absolutePath}" }
+	var clangArguments = filePath?.let { "-I${it.toFile().absolutePath}" }
 		?.let { arrayOf(it) }
 		?: arrayOf()
 	clangArguments += headerPaths.map { "-I${it.toFile().absolutePath}" }
@@ -75,25 +71,4 @@ private fun Scoped.scopedToLocalDeclaration(name: String? = null): NameableDecla
 			null
 		}
 	}
-}
-
-
-private fun inferPlatformIncludePath(): Path? {
-	val os = System.getProperty("os.name")
-	if (os == "Mac OS X") {
-		try {
-			val pb: ProcessBuilder = ProcessBuilder().command("/usr/bin/xcrun", "--show-sdk-path")
-			val proc = pb.start()
-			val str = String(proc.inputStream.readAllBytes())
-			val dir = Paths.get(str.trim { it <= ' ' }, "usr", "include")
-			if (Files.isDirectory(dir)) {
-				return dir
-			}
-		} catch (ioExp: IOException) {
-			if (JextractTool.DEBUG) {
-				ioExp.printStackTrace(System.err)
-			}
-		}
-	}
-	return null
 }

@@ -11,13 +11,44 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  tests:
+  tests-linux:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest]
         architecture: [x64, arm]
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+        with:
+          platforms: ${{ matrix.architecture }}
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: 21
+          cache: 'gradle'
+      - name: Cache Gradle packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+          restore-keys: ${{ runner.os }}-gradle
+      - name: Build & test klang
+        run: |
+          cd ./klang
+          ./gradlew test
+      - name: Bundle the build report
+        if: failure()
+        run: find . -type d -name 'reports' | zip -@ -r build-reports.zip
+      - name: Upload the build report
+        if: failure()
+        uses: actions/upload-artifact@v3
+        with:
+          path: build-reports.zip
+  tests-mac:
+    runs-on: macos-latest]
     steps:
       - uses: actions/checkout@v3
       - name: Set up QEMU

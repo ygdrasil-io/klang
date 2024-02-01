@@ -22,6 +22,11 @@ jobs:
             architecture: x64
     runs-on: ${{ matrix.os }}
     steps:
+      - name: Set up QEMU on ubuntu
+        if: runner.os == 'Linux'
+        uses: docker/setup-qemu-action@v1
+        with:
+          platforms: ${{ matrix.architecture }}
       - name: Verify Architecture
         run: |
           arch=$(uname -m)
@@ -32,13 +37,7 @@ jobs:
             echo "Architecture is $arch but expected aarch64 or arm64"
             exit 1
           fi
-        shell: bash
       - uses: actions/checkout@v3
-      - name: Set up QEMU on ubuntu
-        if: runner.os == 'Linux'
-        uses: docker/setup-qemu-action@v1
-        with:
-          platforms: ${{ matrix.architecture }}
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:

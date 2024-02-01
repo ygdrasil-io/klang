@@ -16,27 +16,8 @@ jobs:
       fail-fast: false
       matrix:
         os: [macos-latest, ubuntu-latest]
-        architecture: [x64, arm64]
-        exclude:
-          - os: macos-latest
-            architecture: x64
     runs-on: ${{ matrix.os }}
     steps:
-      - name: Set up QEMU on ubuntu
-        if: runner.os == 'Linux'
-        uses: docker/setup-qemu-action@v1
-        with:
-          platforms: ${{ matrix.architecture }}
-      - name: Verify Architecture
-        run: |
-          arch=$(uname -m)
-          if [[ "${{ matrix.architecture }}" == "x64" && "$arch" != "x86_64" ]]; then
-            echo "Architecture is $arch but expected x86_64"
-            exit 1
-          elif [[ "${{ matrix.architecture }}" == "arm64" && ("$arch" != "aarch64" || "$arch" != "arm64") ]]; then
-            echo "Architecture is $arch but expected aarch64 or arm64"
-            exit 1
-          fi
       - uses: actions/checkout@v3
       - name: Set up JDK
         uses: actions/setup-java@v3

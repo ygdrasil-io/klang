@@ -2,17 +2,6 @@ import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 import java.util.*
 
-val osName = System.getProperty("os.name").lowercase(Locale.getDefault())
-val cSourceDir = "$projectDir/src/test/c/"
-
-val sdl2HeadersDir = "$projectDir/src/test/resources/"
-val sdl2HeadersFile = file("${sdl2HeadersDir}SDL2-headers-${inferPlatformSuffix()}.zip")
-val sdl2HeadersTargetDirectory = "$cSourceDir/SDL2"
-
-val cHeadersDir = "$projectDir/src/main/resources/"
-val cHeadersFile = file("${cHeadersDir}c-headers.zip")
-val cHeadersTargetDirectory = "$cSourceDir/c"
-
 tasks.test {
 	useJUnitPlatform()
 	maxHeapSize = "4g"
@@ -41,24 +30,8 @@ dependencies {
 	testImplementation(libs.kotest)
 }
 
-val unzipSDL2 = task<Copy>("unzipSDL2") {
-	val zipTree = zipTree(sdl2HeadersFile)
-	onlyIf { !File(sdl2HeadersTargetDirectory).exists() }
-	from(zipTree)
-	into(cSourceDir)
-}
-
-val unzipCHeaders = task<Copy>("unzipCHeaders") {
-	val zipTree = zipTree(file(cHeadersFile))
-	onlyIf { !File(cHeadersTargetDirectory).exists() }
-	from(zipTree)
-	into(cSourceDir)
-}
-
 tasks.withType<JavaCompile>().configureEach {
 	options.compilerArgs.add("--enable-preview")
-	dependsOn(unzipSDL2)
-	dependsOn(unzipCHeaders)
 }
 
 tasks.withType<Test>().configureEach {
@@ -66,15 +39,4 @@ tasks.withType<Test>().configureEach {
 		"--enable-preview",
 		"--enable-native-access=ALL-UNNAMED"
 	)
-}
-
-tasks.clean {
-	delete(sdl2HeadersTargetDirectory)
-	delete(cHeadersTargetDirectory)
-}
-
-fun inferPlatformSuffix() = when {
-	osName.contains("mac") -> "darwin"
-	osName.contains("linux") -> "linux"
-	else -> error("OS $osName not supported")
 }

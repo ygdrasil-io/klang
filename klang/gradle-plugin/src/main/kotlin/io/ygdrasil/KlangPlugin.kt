@@ -7,6 +7,7 @@ import klang.domain.NativeFunction
 import klang.domain.NativeStructure
 import klang.domain.NativeTypeAlias
 import klang.generator.generateKotlinFile
+import klang.helper.*
 import klang.parser.json.parseAstJson
 import klang.parser.libclang.parseFile
 import klang.tools.generateAstFromDocker
@@ -15,13 +16,10 @@ import org.gradle.api.Project
 import org.gradle.api.Task
 import org.slf4j.LoggerFactory
 import java.io.File
-import java.io.FileInputStream
 import java.net.URL
 import java.nio.file.Files
-import java.nio.file.Paths
 import java.nio.file.StandardCopyOption
 import java.security.MessageDigest
-import java.util.zip.ZipInputStream
 
 private val logger = LoggerFactory.getLogger("klang-logger")
 private val hasher by lazy {
@@ -82,16 +80,31 @@ class KlangPlugin : Plugin<Project> {
 	private val Project.workingDirectory: File
 		get() = buildDir.resolve("klang").also { it.mkdirs() }
 
+	private val Project.cHeadersExtractDirectory: File
+		get() = workingDirectory.resolve("c-headers")
+	
+	private val Project.cHeadersDirectory: File
+		get() = cHeadersExtractDirectory.resolve("c").resolve("include")
+
 	override fun apply(project: Project) {
 		val extension = project.extensions.create("klang", KlangPluginExtension::class.java)
 
 		val unpackCHeader = project.unpackCHeaderTask()
 		val downloadFile = project.downloadTask(extension)
 		val unpackFile = project.unpackTask(downloadFile, extension)
-		val generateAst = project.generateAstTask(unpackFile, extension)
-		val generateBinding = project.task("generateBinding") { task ->
-			task.dependsOn(generateAst)
-			task.dependsOn(unpackCHeader)
+		val generateAst = project.generateAstTask(unpackFile, extension).apply {
+			dependsOn(unpackCHeader)
+		}
+		val generateBinding = generateBindingTask(project, extension).apply {
+			dependsOn(generateAst)
+		}
+
+		listOf(downloadFile, unpackFile, generateAst, generateBinding, unpackCHeader)
+			.forEach { it.group = taskGroup }
+	}
+
+	private fun generateBindingTask(project: Project, extension: KlangPluginExtension): Task =
+		project.task("generateBinding") { task ->
 			task.doFirst {
 				extension.tasks
 					.asSequence()
@@ -109,10 +122,6 @@ class KlangPlugin : Plugin<Project> {
 					}
 			}
 		}
-
-		listOf(downloadFile, unpackFile, generateAst, generateBinding)
-			.forEach { it.group = taskGroup }
-	}
 
 	private fun Project.generateAstTask(
 		unpackFile: Task,
@@ -145,7 +154,8 @@ class KlangPlugin : Plugin<Project> {
 						ParsingMethod.Libclang -> {
 							parseFile(
 								fileToParse,
-								sourcePath.absolutePath
+								sourcePath.absolutePath,
+								arrayOf(cHeadersDirectory.absolutePath)
 							)
 						}
 					}.also { it.resolveTypes() }
@@ -188,53 +198,14 @@ class KlangPlugin : Plugin<Project> {
 		}
 	}
 
-	private fun unzip(sourceFile: File, targetPath: File) {
-		ZipInputStream(FileInputStream(sourceFile)).use {
-			var entry = it.nextEntry
-			while (entry != null) {
-				val file = File(targetPath, entry.name)
-				if (entry.isDirectory) {
-					file.mkdirs()
-				} else {
-					file.parentFile.mkdirs()
-					file.outputStream().use { output ->
-						it.copyTo(output)
-					}
-				}
-				entry = it.nextEntry
-			}
-		}
-	}
-
 	private fun Project.unpackCHeaderTask(): Task = task("unpackCHeader") { task ->
-		val targetPath = workingDirectory.resolve("c-headers")
-		task.onlyIf { !targetPath.exists() }
+		task.onlyIf { cHeadersDirectory.doesNotExists() || cHeadersDirectory.isDirectoryEmpty() }
 		task.doFirst {
-			unzipFromClasspath("c-header.zip", targetPath.absolutePath)
+			cHeadersExtractDirectory.deleteRecursively()
+			unzipFromClasspath("/c-headers.zip", cHeadersDirectory)
 		}
 	}
 
-
-	fun unzipFromClasspath(sourceFile: String, targetPath: String) {
-		File(targetPath).mkdirs()
-		// Load the zip file from the classpath
-		val inputStream = KlangPlugin::class.java.getResourceAsStream(sourceFile)
-
-		ZipInputStream(inputStream).use { zipInputStream ->
-			generateSequence { zipInputStream.nextEntry }
-				.forEach { entry ->
-					// Be sure to adjust the file path as needed
-					if (!entry.isDirectory) {
-						Files.copy(
-							zipInputStream,
-							Paths.get(targetPath, entry.name)
-						)
-					}
-				}
-
-		}
-
-	}
 }
 
 private fun DeclarationRepository.generateKotlinFiles(outputDirectory: File, basePackage: String, libraryName: String) {

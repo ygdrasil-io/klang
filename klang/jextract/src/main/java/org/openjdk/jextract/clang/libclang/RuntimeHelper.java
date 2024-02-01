@@ -64,14 +64,7 @@ final class RuntimeHelper {
         }
         libraryFile.deleteOnExit();
 
-        try {
-            System.load(libraryFile.getAbsolutePath());
-        } catch (UnsatisfiedLinkError unsatisfiedLinkError) {
-            if (!unsatisfiedLinkError.getMessage().contains("already loaded in another classloader [")) {
-                throw unsatisfiedLinkError;
-            }
-        }
-
+        System.load(libraryFile.getAbsolutePath());
 
         SymbolLookup loaderLookup = SymbolLookup.loaderLookup();
         SYMBOL_LOOKUP = name -> loaderLookup.find(name).or(() -> LINKER.defaultLookup().find(name));

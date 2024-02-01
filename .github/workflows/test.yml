@@ -51,10 +51,6 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v1
-        with:
-          platforms: ${{ matrix.architecture }}
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:

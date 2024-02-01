@@ -1,9 +1,12 @@
 package klang.parser.libclang
 
 import klang.DeclarationRepository
+import mu.KotlinLogging
 import java.io.File
 import java.nio.file.Path
 import kotlin.io.path.exists
+
+private val logger = KotlinLogging.logger {}
 
 enum class ParserTechnology {
 	JNA,
@@ -16,10 +19,16 @@ fun parseFile(
 	headerPathsAsString: Array<String> = arrayOf(),
 	parserTechnology: ParserTechnology = ParserTechnology.Panama
 ): DeclarationRepository {
-	val file = computeFile(filePathAsString, fileAsString)
+
+	val fileToParse = computeFile(filePathAsString, fileAsString)
 	val path = computePath(filePathAsString)
 	val headerPaths = computeHeadersPaths(headerPathsAsString)
-	return parseFile(file, path, headerPaths, parserTechnology)
+
+	logger.info {
+		"will parse file at ${fileToParse.absolutePath} with $parserTechnology and paths ${headerPaths.map { it.toFile().absolutePath }}"
+	}
+
+	return parseFile(fileToParse, path, headerPaths, parserTechnology)
 }
 
 private fun computeHeadersPaths(headerPathsAsString: Array<String>) =
@@ -41,6 +50,7 @@ private fun parseFile(
 	headerPaths: Array<Path> = arrayOf(),
 	parserTechnology: ParserTechnology = ParserTechnology.Panama
 ) = when (parserTechnology) {
+
 	ParserTechnology.JNA -> {
 		assert(filePath == null) { "file path is not supported on JNA" }
 		assert(headerPaths.isEmpty()) { "header paths is not supported on JNA" }

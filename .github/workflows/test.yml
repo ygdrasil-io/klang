@@ -19,7 +19,7 @@ jobs:
         architecture: [x64, arm]
         exclude:
           - os: macos-latest
-          - architecture: x64
+            architecture: x64
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3

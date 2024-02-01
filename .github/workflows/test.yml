@@ -11,12 +11,15 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  tests-linux:
+  tests:
     strategy:
       fail-fast: false
       matrix:
+        os: [macos-latest, ubuntu-latest]
         architecture: [x64, arm]
-    runs-on: ubuntu-latest
+        exclude:
+          - os: macos-latest
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
       - name: Set up QEMU on ubuntu

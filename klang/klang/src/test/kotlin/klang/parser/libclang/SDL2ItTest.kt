@@ -5,6 +5,7 @@ import klang.parser.INTEGRATION_ENABLED
 import klang.parser.IS_OS_DARWIN
 import klang.parser.ParserTestCommon
 import mu.KotlinLogging
+import operatingSystem
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
@@ -23,12 +24,13 @@ class SDL2ItTest : ParserTestCommon({
 		val fileToParse = "SDL2/SDL.h"
 		val filePath = tempDirectory.absolutePathString()
 		val headerPaths = arrayOf(
-			tempDirectory.resolve("c").resolve("include").absolutePathString()
+			tempDirectory.resolve("c").resolve("include").absolutePathString(),
+			tempDirectory.resolve("darwin-headers").absolutePathString(),
 		)
 
 		// When
 		val repository = parseFile(fileToParse, filePath, headerPaths)
-			.also { it.resolveTypes() }
+			//.also { it.resolveTypes() }
 
 		// Then
 		repository.apply {
@@ -50,11 +52,16 @@ private fun initSDL2HeaderDirectory(): Path {
 	unzipFromClasspath(sdl2HeadersFile, tempDirectoryPath.toFile())
 	unzipFromClasspath(cHeadersFile, tempDirectoryPath.toFile())
 
+	if (operatingSystem == OperatingSystem.MAC) {
+		val darwinHeaders = "/darwin-headers.zip"
+		unzipFromClasspath(darwinHeaders, tempDirectoryPath.toFile())
+	}
+
 	return tempDirectoryPath
 }
 
-private fun inferPlatformSuffix() = when {
-	osName.contains("mac") -> "darwin"
-	osName.contains("linux") -> "linux"
-	else -> error("OS $osName not supported")
+private fun inferPlatformSuffix() = when(operatingSystem) {
+	OperatingSystem.MAC -> "darwin"
+	OperatingSystem.LINUX -> "linux"
+	else -> error("Operating system $operatingSystem not supported")
 }

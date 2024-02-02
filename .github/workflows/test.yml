@@ -15,9 +15,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-latest, ubuntu-latest]
+        os: [macos-14, macos-arm64-14, ubuntu-latest]
     runs-on: ${{ matrix.os }}
     steps:
+      - name: print architecture
+        run: uname -m
       - uses: actions/checkout@v3
       - name: Set up JDK
         uses: actions/setup-java@v3

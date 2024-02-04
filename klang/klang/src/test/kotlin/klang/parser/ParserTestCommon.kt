@@ -2,13 +2,10 @@ package klang.parser
 
 import io.kotest.core.annotation.Ignored
 import io.kotest.core.spec.style.FreeSpec
-import io.kotest.core.spec.style.StringSpec
 import io.kotest.core.spec.style.scopes.FreeSpecContainerScope
-import io.kotest.core.spec.style.scopes.FreeSpecTerminalScope
 import io.kotest.matchers.shouldBe
 import klang.DeclarationRepository
 import klang.domain.NativeStructure
-import klang.domain.TypeRef
 import klang.parser.json.ParserRepository
 
 @Ignored

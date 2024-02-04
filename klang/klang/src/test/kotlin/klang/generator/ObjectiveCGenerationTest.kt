@@ -2,7 +2,8 @@ package klang.generator
 
 import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.shouldBe
-import klang.domain.*
+import klang.domain.ObjectiveCClass
+import klang.domain.typeOf
 import klang.mapper.toSpec
 
 class ObjectiveCGenerationTest : FreeSpec({

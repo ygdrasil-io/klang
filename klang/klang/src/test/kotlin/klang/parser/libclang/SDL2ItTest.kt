@@ -1,15 +1,13 @@
 package klang.parser.libclang
 
+import OperatingSystem
 import klang.domain.NameableDeclaration
 import klang.helper.unzipFromClasspath
-import klang.parser.INTEGRATION_ENABLED
-import klang.parser.IS_OS_DARWIN
 import klang.parser.ParserTestCommon
 import mu.KotlinLogging
 import operatingSystem
 import java.nio.file.Files
 import java.nio.file.Path
-import java.nio.file.Paths
 import java.util.*
 import kotlin.io.path.absolutePathString
 

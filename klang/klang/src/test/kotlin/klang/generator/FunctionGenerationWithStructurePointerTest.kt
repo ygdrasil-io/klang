@@ -6,9 +6,7 @@ import klang.InMemoryDeclarationRepository
 import klang.domain.NativeFunction
 import klang.domain.NativeStructure
 import klang.domain.TypeRefField
-import klang.mapper.generateInterfaceLibrarySpec
 import klang.mapper.toInterfaceSpec
-import klang.parser.TestData
 import klang.parser.testType
 
 class FunctionGenerationWithStructurePointerTest : FreeSpec({

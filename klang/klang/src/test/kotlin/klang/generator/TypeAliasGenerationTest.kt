@@ -2,12 +2,8 @@ package klang.generator
 
 import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.shouldBe
-import klang.InMemoryDeclarationRepository
-import klang.domain.NativeTypeAlias
 import klang.mapper.toSpec
 import klang.parser.TestData
-import klang.parser.TestData.basicFunctionPointer
-import klang.parser.testType
 
 class TypeAliasGenerationTest : FreeSpec({
 

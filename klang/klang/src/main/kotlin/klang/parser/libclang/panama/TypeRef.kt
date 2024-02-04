@@ -1,5 +1,6 @@
 package klang.parser.libclang.panama
 
+import jdk.internal.foreign.layout.ValueLayouts
 import klang.domain.TypeRef
 import klang.domain.UnresolvedTypeRef
 import klang.domain.typeOf
@@ -7,6 +8,7 @@ import klang.domain.unchecked
 import org.openjdk.jextract.Type
 import org.openjdk.jextract.Type.Delegated
 import org.openjdk.jextract.impl.TypeImpl
+import java.lang.foreign.ValueLayout
 
 internal fun Type.toTypeRef(): TypeRef = when (this) {
 	is Delegated -> when (kind()) {
@@ -19,9 +21,11 @@ internal fun Type.toTypeRef(): TypeRef = when (this) {
 					isPointer = true,
 					isCallback = true
 				)
+
 				else -> UnresolvedTypeRef(toString(), type.toTypeString(), isPointer = true)
 			}
 		}
+
 		Delegated.Kind.SIGNED -> typeOf(type().toTypeString()).unchecked()
 		Delegated.Kind.UNSIGNED -> typeOf("unsigned " + type().toTypeString()).unchecked()
 		Delegated.Kind.ATOMIC -> TODO("unsupported yet")
@@ -40,8 +44,11 @@ internal fun Type.toTypeRef(): TypeRef = when (this) {
 private fun Type.toTypeString(): String = when (this) {
 	is TypeImpl.DeclaredImpl -> toTypeString()
 	is TypeImpl.PrimitiveImpl -> kind().typeName()
-	is TypeImpl.QualifiedImpl -> name().orElse(type().toTypeString())
-	is TypeImpl.ArrayImpl -> elementType().toTypeString().let { typeAsString -> countElements()?.let { "$typeAsString[$it]" } ?: "$typeAsString[]" }
+	is TypeImpl.QualifiedImpl -> name()
+		.orElseGet { type().toTypeString() }
+	is TypeImpl.ArrayImpl -> elementType().toTypeString()
+		.let { typeAsString -> countElements()?.let { "$typeAsString[$it]" } ?: "$typeAsString[]" }
+
 	is TypeImpl.FunctionImpl -> functionToTypeString()
 	is TypeImpl.PointerImpl -> "${type().toTypeString()} *"
 	else -> TODO("unsupported yet with $this")
@@ -51,15 +58,26 @@ private fun TypeImpl.FunctionImpl.functionToTypeString(): String {
 	return returnType().toTypeString() + "( ${argumentTypes().toTypeString()} )"
 }
 
-private fun List<Type>.toTypeString(): String  = map {
+private fun List<Type>.toTypeString(): String = map {
 	it.toTypeRef().typeName
 }.joinToString { "," }
 
+@Suppress("INACCESSIBLE_TYPE")
 private fun TypeImpl.DeclaredImpl.toTypeString(): String = tree().name()
+	.takeIf { it.isNotEmpty() }
+// if declared name is not accessible, we try to get type name directly
+	?: tree().layout()?.orElse(null)?.let {
+		when {
+			it is ValueLayout.OfInt && it.byteSize() == 4L-> "int"
+			else -> error("fail to get type name from type ${it.javaClass.name}")
+		}
+	}
+	?: error("fail to get type name")
 
-private fun TypeImpl.ArrayImpl.countElements() = elementCount().let {  elementCount -> when (elementCount.isEmpty) {
-	true -> null
-	else -> elementCount.asLong
-}
+private fun TypeImpl.ArrayImpl.countElements() = elementCount().let { elementCount ->
+	when (elementCount.isEmpty) {
+		true -> null
+		else -> elementCount.asLong
+	}
 
 }

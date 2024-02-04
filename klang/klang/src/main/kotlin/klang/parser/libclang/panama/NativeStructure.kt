@@ -4,6 +4,7 @@ import klang.domain.NativeStructure
 import klang.domain.StructureField
 import klang.domain.TypeRefField
 import org.openjdk.jextract.Declaration
+import org.openjdk.jextract.impl.TypeImpl
 
 internal fun Declaration.Scoped.toNativeStructure(name: String?, isUnion: Boolean = false) = Triple(
 	name ?: name(),
@@ -15,13 +16,14 @@ internal fun Declaration.Scoped.toNativeStructure(name: String?, isUnion: Boolea
 		fields,
 		isUnion
 	)
-
 }
 
 private fun List<Declaration>.toStructureFields(): List<StructureField> = filterIsInstance<Declaration.Variable>()
-	.map { it.toStructureField() }
+	.mapNotNull { it.toStructureField() }
 
-private fun Declaration.Variable.toStructureField() = (name() to type().toTypeRef())
-	.let { (name, ref) ->
-		TypeRefField(name, ref)
+private fun Declaration.Variable.toStructureField(): TypeRefField? = (name() to type())
+	.let { (name, type) ->
+		when {type is TypeImpl.DeclaredImpl && type.tree().kind() == Declaration.Scoped.Kind.UNION -> null
+			else -> TypeRefField(name, type.toTypeRef())
+		}
 	}

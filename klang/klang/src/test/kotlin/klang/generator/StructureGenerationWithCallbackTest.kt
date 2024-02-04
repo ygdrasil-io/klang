@@ -5,6 +5,7 @@ import io.kotest.matchers.shouldBe
 import klang.InMemoryDeclarationRepository
 import klang.domain.NativeStructure
 import klang.domain.NativeTypeAlias
+import klang.domain.TypeRefField
 import klang.mapper.toSpec
 import klang.parser.TestData.basicFunctionPointer
 import klang.parser.testType
@@ -14,8 +15,8 @@ class StructureGenerationWithCallbackTest : FreeSpec({
 	val structure = NativeStructure(
 		name = "MyStructure",
 		fields = listOf(
-			"callback" to testType(basicFunctionPointer),
-			"callback2" to testType("MyAlias"),
+			TypeRefField("callback", testType(basicFunctionPointer)),
+			TypeRefField("callback2", testType("MyAlias"))
 		)
 	)
 

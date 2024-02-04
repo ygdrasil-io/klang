@@ -4,6 +4,7 @@ import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.shouldBe
 import klang.InMemoryDeclarationRepository
 import klang.domain.NativeStructure
+import klang.domain.TypeRefField
 import klang.mapper.toSpec
 import klang.parser.testType
 
@@ -12,10 +13,10 @@ class StructureGenerationWithPrimitiveArrayTest : FreeSpec({
 	val structure = NativeStructure(
 		name = "MyStructure",
 		fields = listOf(
-			"first" to testType("int[10]").also {
+			TypeRefField("first", testType("int[10]").also {
 				it.isArray = true
 				it.arraySize = 10
-			},
+			}),
 		)
 	)
 

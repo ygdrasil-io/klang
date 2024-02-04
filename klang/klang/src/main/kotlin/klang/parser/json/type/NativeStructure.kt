@@ -1,8 +1,6 @@
 package klang.parser.json.type
 
-import klang.domain.NativeStructure
-import klang.domain.TypeRef
-import klang.domain.typeOf
+import klang.domain.*
 import klang.parser.json.domain.TranslationUnitKind
 import klang.parser.json.domain.TranslationUnitNode
 import klang.parser.json.domain.json
@@ -34,19 +32,19 @@ private fun TranslationUnitNode.isTypeDefStructure(
 			&& sibling[index + 1].content.first == TranslationUnitKind.TypedefDecl
 			&& json.nullableName() == null
 
-private fun TranslationUnitNode.extractFields(): List<Pair<String, TypeRef>> =
+private fun TranslationUnitNode.extractFields(): List<StructureField> =
 	children.filter { it.content.first == TranslationUnitKind.FieldDecl }
 		.map { it.extractField() }
 
 
-private fun TranslationUnitNode.extractField(): Pair<String, TypeRef> {
+private fun TranslationUnitNode.extractField(): StructureField {
 	val name = json.nullableName()
 		?: "" // Some field can use empty name to get specific alignment (see: __darwin_fp_control as example)
 	val value = json.nullableType()
 		?.let(::typeOf)
 		?.getOrNull()
 		?: error("no type for : $this")
-	return name to value
+	return TypeRefField(name, value)
 }
 
 private fun JsonObject.isUnion(): Boolean {

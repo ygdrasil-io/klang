@@ -5,6 +5,7 @@ import io.kotest.matchers.shouldBe
 import klang.InMemoryDeclarationRepository
 import klang.domain.NativeFunction
 import klang.domain.NativeStructure
+import klang.domain.TypeRefField
 import klang.mapper.generateInterfaceLibrarySpec
 import klang.mapper.toInterfaceSpec
 import klang.parser.TestData
@@ -16,8 +17,8 @@ class FunctionGenerationWithStructurePointerTest : FreeSpec({
 	val structure = NativeStructure(
 		name = "MyStructure",
 		fields = listOf(
-			"field1" to testType("int"),
-			"field2" to testType("char"),
+			TypeRefField("field1", testType("int")),
+			TypeRefField("field2", testType("char")),
 		)
 	)
 

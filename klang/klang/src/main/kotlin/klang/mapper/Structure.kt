@@ -13,6 +13,9 @@ internal fun NativeStructure.toSpec(packageName: String) = ClassName("", name)
 	}
 
 private fun NativeStructure.generateFunctionPointerTypeInterface(packageName: String) = fields
+	//TODO support SubStructureField
+	.filterIsInstance<TypeRefField>()
+	.map { it.name to it.type }
 	.mapNotNull { it.toFunctionPointerTypeInterface(packageName, name) }
 
 private fun Pair<String, TypeRef>.toFunctionPointerTypeInterface(packageName: String, structureName: String) =
@@ -52,7 +55,11 @@ private fun NativeStructure.toUnionSpec(packageName: String, structureClass: Cla
 				.build()
 		)
 		.apply {
-			fields.forEach { (name, typeRef) ->
+			fields
+				//TODO support SubStructureField
+				.filterIsInstance<TypeRefField>()
+				.map { it.name to it.type }
+				.forEach { (name, typeRef) ->
 				addProperty(
 					propertySpec(name, typeRef, packageName)
 				)
@@ -72,7 +79,13 @@ private fun NativeStructure.toSpecWithAttributes(packageName: String, structureC
 	TypeSpec.classBuilder(structureClass)
 		.addAnnotation(
 			AnnotationSpec.builder(jnaFieldOrder)
-				.addMember(fields.joinToString(", ") { "\"${it.first}\"" })
+				.addMember(
+					fields
+						//TODO support SubStructureField
+						.filterIsInstance<TypeRefField>()
+						.map { it.name to it.type }
+						.joinToString(", ") { "\"${it.first}\"" }
+				)
 				.build()
 		)
 		.addModifiers(KModifier.OPEN)
@@ -90,7 +103,11 @@ private fun NativeStructure.toSpecWithAttributes(packageName: String, structureC
 				.build()
 		)
 		.apply {
-			fields.forEach { (name, typeRef) ->
+			fields
+				//TODO support SubStructureField
+				.filterIsInstance<TypeRefField>()
+				.map { it.name to it.type }
+				.forEach { (name, typeRef) ->
 				addProperty(
 					propertySpec(name, typeRef, packageName)
 				)

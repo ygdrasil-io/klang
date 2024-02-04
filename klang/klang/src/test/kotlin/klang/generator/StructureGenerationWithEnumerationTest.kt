@@ -5,6 +5,7 @@ import io.kotest.matchers.shouldBe
 import klang.InMemoryDeclarationRepository
 import klang.domain.NativeEnumeration
 import klang.domain.NativeStructure
+import klang.domain.TypeRefField
 import klang.mapper.toSpec
 import klang.parser.testType
 
@@ -13,7 +14,7 @@ class StructureGenerationWithEnumerationTest : FreeSpec({
 	val structure = NativeStructure(
 		name = "MyStructure",
 		fields = listOf(
-			"enumeration" to testType("MyEnumeration"),
+			TypeRefField("enumeration", testType("MyEnumeration")),
 		)
 	)
 

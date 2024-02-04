@@ -73,7 +73,7 @@ private fun ParsingContext.updateStructureField(info: DeclarationInfo) {
 	val value = typeOf(info.cursor.type.spelling).unchecked("fail to parse type $this")
 	currentDefinition = getCurrentDefinitionAs<NativeStructure>().let {
 		declarationRepository.update(it) {
-			it.copy(fields = it.fields + (name to value))
+			it.copy(fields = it.fields + TypeRefField(name, value))
 		}
 	}
 }

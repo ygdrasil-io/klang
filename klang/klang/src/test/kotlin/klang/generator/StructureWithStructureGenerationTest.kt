@@ -4,6 +4,7 @@ import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.shouldBe
 import klang.InMemoryDeclarationRepository
 import klang.domain.NativeStructure
+import klang.domain.TypeRefField
 import klang.mapper.toSpec
 import klang.parser.testType
 
@@ -12,14 +13,14 @@ class StructureWithStructureGenerationTest : FreeSpec({
 	val structure = NativeStructure(
 		name = "MyStructure",
 		fields = listOf(
-			"structure" to testType("struct MyOtherStructure"),
+			TypeRefField("structure", testType("struct MyOtherStructure")),
 		)
 	)
 
 	val otherStructure = NativeStructure(
 		name = "MyOtherStructure",
 		fields = listOf(
-			"structure" to testType("long"),
+			TypeRefField("structure", testType("long")),
 		)
 	)
 

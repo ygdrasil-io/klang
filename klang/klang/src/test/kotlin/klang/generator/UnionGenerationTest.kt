@@ -4,6 +4,7 @@ import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.shouldBe
 import klang.InMemoryDeclarationRepository
 import klang.domain.NativeStructure
+import klang.domain.TypeRefField
 import klang.mapper.toSpec
 import klang.parser.testType
 
@@ -12,12 +13,12 @@ class UnionGenerationTest : FreeSpec({
 	val structure = NativeStructure(
 		name = "MyStructure",
 		fields = listOf(
-			"first" to testType("long"),
-			"second" to testType("int"),
-			"third" to testType("float"),
-			"fourth" to testType("double"),
-			"fifth" to testType("void *"),
-			"string" to testType("char *"),
+			TypeRefField("first", testType("long")),
+			TypeRefField("second", testType("int")),
+			TypeRefField("third", testType("float")),
+			TypeRefField("fourth", testType("double")),
+			TypeRefField("fifth", testType("void *")),
+			TypeRefField("string", testType("char *"))
 		),
 		isUnion = true,
 	)

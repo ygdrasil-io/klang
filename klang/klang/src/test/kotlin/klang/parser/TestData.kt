@@ -105,9 +105,9 @@ object TestData {
 		NativeStructure(
 			name = "MyUnion",
 			fields = listOf(
-				"i" to testType("int"),
-				"f" to testType("float"),
-				"c" to testType("char"),
+				TypeRefField("i", testType("int")),
+				TypeRefField("f", testType("float")),
+				TypeRefField("c", testType("char")),
 
 				),
 			isUnion = true
@@ -119,17 +119,17 @@ object TestData {
 		NativeStructure(
 			name = "StructName",
 			fields = listOf(
-				"field1" to testType("enum EnumName *"),
-				"field2" to testType("EnumName2"),
-				"field3" to testType("char")
+				TypeRefField("field1", testType("enum EnumName *")),
+				TypeRefField("field2", testType("EnumName2")),
+				TypeRefField("field3", testType("char"))
 			)
 		),
 		NativeStructure(
 			name = "StructName2",
 			fields = listOf(
-				"field1" to testType("struct StructName"),
-				"field2" to testType("struct StructName *"),
-				"field3" to testType("char")
+				TypeRefField("field1", testType("struct StructName")),
+				TypeRefField("field2", testType("struct StructName *")),
+				TypeRefField("field3", testType("char"))
 			)
 		)
 	)
@@ -139,17 +139,17 @@ object TestData {
 		NativeStructure(
 			name = "StructName",
 			fields = listOf(
-				"field1" to testType("enum EnumName *"),
-				"field2" to testType("EnumName2"),
-				"field3" to testType("char")
+				TypeRefField("field1", testType("enum EnumName *")),
+				TypeRefField("field2", testType("EnumName2")),
+				TypeRefField("field3", testType("char"))
 			)
 		),
 		NativeStructure(
 			name = "StructName2",
 			fields = listOf(
-				"field1" to testType("StructName"),
-				"field2" to testType("StructName *"),
-				"field3" to testType("char")
+				TypeRefField("field1", testType("StructName")),
+					TypeRefField("field2", testType("StructName *")),
+						TypeRefField("field3", testType("char"))
 			)
 		)
 	)

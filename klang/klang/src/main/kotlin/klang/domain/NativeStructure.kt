@@ -2,6 +2,13 @@ package klang.domain
 
 import klang.DeclarationRepository
 
+/**
+ * Represents a native structure declaration.
+ *
+ * @property name The name of the structure
+ * @property fields The list of fields in the structure, each represented by a pair of field name and field type reference
+ * @property isUnion Indicates whether the structure is a union
+ */
 data class NativeStructure(
 	override val name: String,
 	var fields: List<Pair<String, TypeRef>> = listOf(),

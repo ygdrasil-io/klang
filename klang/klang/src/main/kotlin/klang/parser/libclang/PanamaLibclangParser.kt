@@ -11,47 +11,50 @@ import mu.KotlinLogging
 import org.openjdk.jextract.Declaration
 import org.openjdk.jextract.Declaration.Scoped
 import org.openjdk.jextract.Declaration.Typedef
-import org.openjdk.jextract.JextractTool
 import org.openjdk.jextract.impl.TypeImpl
-import java.io.IOException
-import java.nio.file.Files
 import java.nio.file.Path
-import java.nio.file.Paths
+import kotlin.io.path.pathString
 
 private val logger = KotlinLogging.logger {}
 
-fun parseFileWithPanama(file: String, filePath: Path?, headerPaths: Array<Path>): DeclarationRepository = InMemoryDeclarationRepository().apply {
-	val header = Path.of(file)
+fun parseFileWithPanama(file: String, filePath: Path?, headerPaths: Array<Path>): DeclarationRepository =
+	InMemoryDeclarationRepository().apply {
+		val header = Path.of(file)
 
-	var clangArguments = filePath?.let { "-I${it.toFile().absolutePath}" }
-		?.let { arrayOf(it) }
-		?: arrayOf()
-	clangArguments += headerPaths.map { "-I${it.toFile().absolutePath}" }
+		var clangArguments = filePath?.let { "-I${it.toFile().absolutePath}" }
+			?.let { arrayOf(it) }
+			?: arrayOf()
+		clangArguments += headerPaths.map { "-I${it.toFile().absolutePath}" }
 
-	val topLevel = parse(
-		listOf(header),
-		*clangArguments
-	)
+		val topLevel = parse(
+			listOf(header),
+			*clangArguments
+		)
 
-	assert(topLevel.kind() == Declaration.Scoped.Kind.TOPLEVEL)
+		assert(topLevel.kind() == Declaration.Scoped.Kind.TOPLEVEL)
 
-	topLevel.members()
-		.asSequence()
-		.map {
-			when (it) {
-				is Scoped -> it.scopedToLocalDeclaration()
-				is Typedef -> it.typeDefToLocalDeclaration()
-				is Declaration.Function -> it.toNativeTypeAlias()
-				else -> {
-					logger.error { "not found $it" }
-					null
+		topLevel.members()
+			.asSequence()
+			.filter { it.declarationIsOnFilePath(filePath) }
+			.map {
+				when (it) {
+					is Scoped -> it.scopedToLocalDeclaration()
+					is Typedef -> it.typeDefToLocalDeclaration()
+					is Declaration.Function -> it.toNativeTypeAlias()
+					else -> {
+						logger.error { "not found $it" }
+						null
+					}
 				}
 			}
-		}
-		.filterNotNull()
-		.forEach { save(it) }
+			.filterNotNull()
+			.forEach { save(it) }
 
-}
+	}
+
+internal fun Declaration.declarationIsOnFilePath(filePath: Path?): Boolean = filePath
+	?.pathString
+	?.let { pos().path().parent.pathString.contains(it) } ?: true
 
 private fun Typedef.typeDefToLocalDeclaration(): NameableDeclaration? = type().let { type ->
 	when (type) {

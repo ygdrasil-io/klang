@@ -1,5 +1,6 @@
 package klang.parser.libclang
 
+import klang.domain.NameableDeclaration
 import klang.helper.unzipFromClasspath
 import klang.parser.INTEGRATION_ENABLED
 import klang.parser.IS_OS_DARWIN
@@ -20,29 +21,37 @@ class SDL2ItTest : ParserTestCommon({
 	"test SDL2 parsing" {
 
 		// Given
-		val tempDirectory = initSDL2HeaderDirectory()
+		val (tempDirectory, otherHeaderTempDirectoryPath) = initSDL2HeaderDirectory()
 		val fileToParse = "SDL2/SDL.h"
 		val filePath = tempDirectory.absolutePathString()
 		val headerPaths = arrayOf(
-			tempDirectory.resolve("c").resolve("include").absolutePathString(),
-			tempDirectory.resolve("darwin-headers").absolutePathString(),
+			otherHeaderTempDirectoryPath.resolve("c").resolve("include").absolutePathString(),
+			otherHeaderTempDirectoryPath.resolve("darwin-headers").absolutePathString(),
 		)
 
 		// When
 		val repository = parseFile(fileToParse, filePath, headerPaths)
-			//.also { it.resolveTypes() }
+			.also {
+				it.resolveTypes { resolvableDeclaration ->
+					when (resolvableDeclaration) {
+						is NameableDeclaration -> resolvableDeclaration.name.startsWith("_").not()
+						else -> true
+					}
+				}
+			}
 
 		// Then
 		repository.apply {
 			println(declarations.size)
 		}
 
-
 	}
 })
 
-private fun initSDL2HeaderDirectory(): Path {
+private fun initSDL2HeaderDirectory(): Pair<Path, Path> {
 	val tempDirectoryPath = Files.createTempDirectory("SDL2")
+		.also { it.toFile().deleteOnExit() }
+	val otherHeaderTempDirectoryPath = Files.createTempDirectory("headers")
 		.also { it.toFile().deleteOnExit() }
 
 	logger.info { "will use directory ${tempDirectoryPath.absolutePathString()} to parse SDL2" }
@@ -50,17 +59,17 @@ private fun initSDL2HeaderDirectory(): Path {
 	val sdl2HeadersFile = "/SDL2-headers-${inferPlatformSuffix()}.zip"
 	val cHeadersFile = "/c-headers.zip"
 	unzipFromClasspath(sdl2HeadersFile, tempDirectoryPath.toFile())
-	unzipFromClasspath(cHeadersFile, tempDirectoryPath.toFile())
+	unzipFromClasspath(cHeadersFile, otherHeaderTempDirectoryPath.toFile())
 
 	if (operatingSystem == OperatingSystem.MAC) {
 		val darwinHeaders = "/darwin-headers.zip"
-		unzipFromClasspath(darwinHeaders, tempDirectoryPath.toFile())
+		unzipFromClasspath(darwinHeaders, otherHeaderTempDirectoryPath.toFile())
 	}
 
-	return tempDirectoryPath
+	return tempDirectoryPath to otherHeaderTempDirectoryPath
 }
 
-private fun inferPlatformSuffix() = when(operatingSystem) {
+private fun inferPlatformSuffix() = when (operatingSystem) {
 	OperatingSystem.MAC -> "darwin"
 	OperatingSystem.LINUX -> "linux"
 	else -> error("Operating system $operatingSystem not supported")

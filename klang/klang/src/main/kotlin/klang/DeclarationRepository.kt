@@ -1,6 +1,7 @@
 package klang
 
 import klang.domain.*
+import java.nio.file.DirectoryStream.Filter
 
 interface DeclarationRepository {
 
@@ -9,7 +10,7 @@ interface DeclarationRepository {
 	fun save(declaration: NameableDeclaration)
 	fun clear()
 	fun update(nativeEnumeration: NativeDeclaration, provider: () -> NativeDeclaration): NativeDeclaration
-	fun resolveTypes()
+	fun resolveTypes(filter: (ResolvableDeclaration) -> Boolean = {true})
 
 	fun findEnumerationByName(name: String) = findDeclarationByName<NativeEnumeration>(name)
 

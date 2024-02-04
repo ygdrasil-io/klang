@@ -1,6 +1,7 @@
 package klang.parser.libclang.panama
 
 import klang.domain.TypeRef
+import klang.domain.UnresolvedTypeRef
 import klang.domain.typeOf
 import klang.domain.unchecked
 import org.openjdk.jextract.Type
@@ -10,7 +11,17 @@ import org.openjdk.jextract.impl.TypeImpl
 internal fun Type.toTypeRef(): TypeRef = when (this) {
 	is Delegated -> when (kind()) {
 		Delegated.Kind.TYPEDEF -> typeOf(name().get()).unchecked()
-		Delegated.Kind.POINTER -> typeOf(type().toTypeString() + " *").unchecked()
+		Delegated.Kind.POINTER -> type().let { type ->
+			when (type) {
+				is TypeImpl.FunctionImpl -> UnresolvedTypeRef(
+					toString(),
+					type.toTypeString(),
+					isPointer = true,
+					isCallback = true
+				)
+				else -> UnresolvedTypeRef(toString(), type.toTypeString(), isPointer = true)
+			}
+		}
 		Delegated.Kind.SIGNED -> typeOf(type().toTypeString()).unchecked()
 		Delegated.Kind.UNSIGNED -> typeOf("unsigned " + type().toTypeString()).unchecked()
 		Delegated.Kind.ATOMIC -> TODO("unsupported yet")
@@ -22,7 +33,8 @@ internal fun Type.toTypeRef(): TypeRef = when (this) {
 	is TypeImpl.FunctionImpl -> returnType().toTypeRef()
 	is TypeImpl.PrimitiveImpl -> typeOf(toTypeString()).unchecked()
 	is TypeImpl.ArrayImpl -> typeOf(toTypeString()).unchecked()
-	else -> typeOf(toTypeString() + " *").unchecked()
+	is TypeImpl.DeclaredImpl -> typeOf(toTypeString()).unchecked()
+	else -> TODO("unsupported yet")
 }
 
 private fun Type.toTypeString(): String = when (this) {
@@ -31,7 +43,7 @@ private fun Type.toTypeString(): String = when (this) {
 	is TypeImpl.QualifiedImpl -> name().orElse(type().toTypeString())
 	is TypeImpl.ArrayImpl -> elementType().toTypeString().let { typeAsString -> countElements()?.let { "$typeAsString[$it]" } ?: "$typeAsString[]" }
 	is TypeImpl.FunctionImpl -> functionToTypeString()
-	is TypeImpl.PointerImpl -> "${this.type().toTypeString()} *"
+	is TypeImpl.PointerImpl -> "${type().toTypeString()} *"
 	else -> TODO("unsupported yet with $this")
 }
 
@@ -40,7 +52,7 @@ private fun TypeImpl.FunctionImpl.functionToTypeString(): String {
 }
 
 private fun List<Type>.toTypeString(): String  = map {
-	it.toTypeString()
+	it.toTypeRef().typeName
 }.joinToString { "," }
 
 private fun TypeImpl.DeclaredImpl.toTypeString(): String = tree().name()

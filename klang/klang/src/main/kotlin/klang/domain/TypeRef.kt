@@ -139,16 +139,16 @@ internal fun String.toFunctionPointerType(): FunctionPointerType {
 class UnresolvedTypeRef internal constructor(
 	override val referenceAsString: String,
 	override val typeName: String,
-	override val isConstant: Boolean,
-	override val isPointer: Boolean,
-	override val isStructure: Boolean,
-	override val isEnumeration: Boolean,
-	override val isNullable: Boolean?,
-	override val isVolatile: Boolean,
-	override val isUnion: Boolean,
-	override val isCallback: Boolean,
-	override var isArray: Boolean,
-	override var arraySize: Int?,
+	override val isConstant: Boolean = false,
+	override val isPointer: Boolean = false,
+	override val isStructure: Boolean = false,
+	override val isEnumeration: Boolean = false,
+	override val isNullable: Boolean? = null,
+	override val isVolatile: Boolean = false,
+	override val isUnion: Boolean = false,
+	override val isCallback: Boolean = false,
+	override var isArray: Boolean = false,
+	override var arraySize: Int? = null,
 ) : TypeRef {
 
 	override fun toString() = "UnresolvedType($typeName from declaration $referenceAsString)"

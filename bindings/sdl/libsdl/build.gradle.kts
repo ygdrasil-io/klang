@@ -1,4 +1,5 @@
 import io.ygdrasil.ParsingMethod
+import klang.domain.TypeRefField
 import klang.domain.typeOf
 import klang.domain.unchecked
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
@@ -61,7 +62,7 @@ klang {
 
 	download(headerUrl)
 		.let(::unpack)
-		.let {
+		.let { it ->
 			parse(fileToParse = "SDL2/SDL.h", at = it) {
 				findTypeAliasByName("Uint8")?.apply {
 					// Type is dumped as Int instead of char
@@ -70,12 +71,14 @@ klang {
 
 				// Replace SDL_PixelFormat by void * to avoid circular dependency when calculating size of structure
 				findStructureByName("SDL_PixelFormat")?.apply {
-					fields = fields.map { (name, fields) ->
-						when (name) {
-							"next" -> name to typeOf("void *").unchecked()
-							else -> name to fields
-						}
-					}
+					fields = fields
+						.filterIsInstance<TypeRefField>()
+						.map { (name, fields) ->
+							when (name) {
+								"next" -> name to typeOf("void *").unchecked()
+								else -> name to fields
+							}
+						}.map { TypeRefField(it.first, it.second) }
 				}
 			}
 		}

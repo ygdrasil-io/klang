@@ -60,7 +60,7 @@ private fun TypeImpl.FunctionImpl.functionToTypeString(): String {
 
 private fun List<Type>.toTypeString(): String = map {
 	it.toTypeRef().typeName
-}.joinToString { "," }
+}.joinToString("," )
 
 @Suppress("INACCESSIBLE_TYPE")
 private fun TypeImpl.DeclaredImpl.toTypeString(): String = tree().name()

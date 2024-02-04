@@ -1,7 +1,6 @@
 package klang
 
 import klang.domain.*
-import java.nio.file.DirectoryStream.Filter
 
 interface DeclarationRepository {
 

@@ -1,12 +1,17 @@
 package klang.parser.json.type
 
-import arrow.core.getOrElse
-import klang.domain.*
+import klang.domain.ObjectiveCClass
+import klang.domain.ObjectiveCProtocol
+import klang.domain.typeOf
+import klang.domain.unchecked
 import klang.parser.json.domain.TranslationUnitKind
 import klang.parser.json.domain.TranslationUnitNode
 import klang.parser.json.domain.json
 import klang.parser.json.domain.kind
-import kotlinx.serialization.json.*
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.jsonArray
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
 
 internal fun TranslationUnitNode.toObjectiveCProtocol(): ObjectiveCProtocol {
 	return ObjectiveCProtocol(

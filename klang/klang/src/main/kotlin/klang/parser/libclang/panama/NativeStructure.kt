@@ -2,7 +2,6 @@ package klang.parser.libclang.panama
 
 import klang.domain.NativeStructure
 import klang.domain.StructureField
-import klang.domain.TypeRef
 import klang.domain.TypeRefField
 import org.openjdk.jextract.Declaration
 

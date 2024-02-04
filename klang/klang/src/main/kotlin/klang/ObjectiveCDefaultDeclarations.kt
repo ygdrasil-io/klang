@@ -1,7 +1,6 @@
 package klang
 
 import klang.domain.NameableDeclaration
-import klang.domain.NativeDeclaration
 import klang.domain.ObjectiveCProtocol
 
 object ObjectiveCRootClass: NameableDeclaration {

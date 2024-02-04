@@ -1,11 +1,13 @@
 package klang.parser.json.type
 
-import klang.domain.*
+import klang.domain.NativeStructure
+import klang.domain.StructureField
+import klang.domain.TypeRefField
+import klang.domain.typeOf
 import klang.parser.json.domain.TranslationUnitKind
 import klang.parser.json.domain.TranslationUnitNode
 import klang.parser.json.domain.json
 import kotlinx.serialization.json.JsonObject
-import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 
 

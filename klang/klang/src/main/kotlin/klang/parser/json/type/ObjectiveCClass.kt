@@ -1,7 +1,6 @@
 package klang.parser.json.type
 
 import arrow.core.Either
-import arrow.core.getOrElse
 import klang.domain.*
 import klang.parser.json.domain.TranslationUnitKind
 import klang.parser.json.domain.TranslationUnitNode

@@ -2,7 +2,8 @@ package klang.mapper
 
 import arrow.core.raise.either
 import arrow.core.raise.ensure
-import com.squareup.kotlinpoet.*
+import com.squareup.kotlinpoet.TypeAliasSpec
+import com.squareup.kotlinpoet.TypeSpec
 import klang.domain.FunctionPointerType
 import klang.domain.NativeTypeAlias
 import klang.domain.ResolvedTypeRef

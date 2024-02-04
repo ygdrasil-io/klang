@@ -1,7 +1,9 @@
 package klang.mapper
 
-import com.squareup.kotlinpoet.*
-import klang.domain.NativeStructure
+import com.squareup.kotlinpoet.ClassName
+import com.squareup.kotlinpoet.FunSpec
+import com.squareup.kotlinpoet.ParameterSpec
+import com.squareup.kotlinpoet.TypeSpec
 import klang.domain.ObjectiveCClass
 
 internal fun ObjectiveCClass.toSpec() = ClassName("", name)

@@ -1,7 +1,3 @@
 
-#docker build -t ubuntu-clang-16 -f ./ubuntu-clang-16 .
-#docker build -t ubuntu-java-21 -f ./ubuntu-java-21 .
-#docker build -t ubuntu-all-tools -f ./ubuntu-all-tools .
-docker build -t ubuntu-qemu -f ./ubuntu-qemu .
-
-#docker run -it --privileged qemu-image
+docker buildx build --platform linux/amd64 -t ubuntu-all-tools:jdk21-adm64 .
+docker buildx build --platform linux/arm64 -t ubuntu-all-tools:jdk21-arm64 .

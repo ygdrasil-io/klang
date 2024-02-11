@@ -4,6 +4,7 @@ import klang.DeclarationRepository
 import mu.KotlinLogging
 import java.io.File
 import java.nio.file.Path
+import kotlin.io.path.absolutePathString
 import kotlin.io.path.exists
 
 private val logger = KotlinLogging.logger {}
@@ -32,7 +33,7 @@ fun parseFile(
 }
 
 private fun computeHeadersPaths(headerPathsAsString: Array<String>) =
-	headerPathsAsString.map { Path.of(it).also { assert(it.exists()) } }.toTypedArray()
+	headerPathsAsString.map { Path.of(it).also { assert(it.exists()) { "File not found ${it.absolutePathString()}" } } }.toTypedArray()
 
 private fun computePath(filePathAsString: String?) = filePathAsString?.let { Path.of(it) }
 	?.also { assert(it.exists()) }

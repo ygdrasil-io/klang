@@ -22,10 +22,16 @@ class SDL2ItTest : ParserTestCommon({
 		val (tempDirectory, otherHeaderTempDirectoryPath) = initSDL2HeaderDirectory()
 		val fileToParse = "SDL2/SDL.h"
 		val filePath = tempDirectory.absolutePathString()
-		val headerPaths = arrayOf(
-			otherHeaderTempDirectoryPath.resolve("c").resolve("include").absolutePathString(),
-			otherHeaderTempDirectoryPath.resolve("darwin-headers").absolutePathString(),
-		)
+		val headerPaths = when (operatingSystem) {
+			OperatingSystem.MAC -> arrayOf(
+				otherHeaderTempDirectoryPath.resolve("c").resolve("include").absolutePathString(),
+				otherHeaderTempDirectoryPath.resolve("darwin-headers").absolutePathString(),
+			)
+			else -> arrayOf(
+				otherHeaderTempDirectoryPath.resolve("c").resolve("include").absolutePathString()
+			)
+		}
+
 
 		// When
 		val repository = parseFile(fileToParse, filePath, headerPaths)

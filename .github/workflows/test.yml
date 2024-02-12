@@ -34,7 +34,7 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
           restore-keys: ${{ runner.os }}-gradle
       - name: find clang
-        run: whereis clang-15
+        run: find / -name "libclang-15.so*"
         if: matrix.os == 'ubuntu-latest'
       - name: Build & test klang
         run: |

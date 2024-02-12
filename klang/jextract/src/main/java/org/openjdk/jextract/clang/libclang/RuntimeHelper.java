@@ -53,18 +53,22 @@ final class RuntimeHelper {
             (size, align) -> Arena.ofAuto().allocate(size, align);
 
     static {
-        var libraryFile = new File(getTemporaryDirectory() + inferLibraryFileName());
-        if (!libraryFile.exists()) {
-            var embeddedLibraryFile = findFileInClasspath(inferEmbeddedLibraryFileName());
-            try {
-                copyInputStreamToFile(embeddedLibraryFile, libraryFile.getAbsolutePath());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+        if (System.getenv("LIBCLANG_PATH") != null) {
+            System.load(System.getenv("LIBCLANG_PATH"));
+        } else {
+            var libraryFile = new File(getTemporaryDirectory() + inferLibraryFileName());
+            if (!libraryFile.exists()) {
+                var embeddedLibraryFile = findFileInClasspath(inferEmbeddedLibraryFileName());
+                try {
+                    copyInputStreamToFile(embeddedLibraryFile, libraryFile.getAbsolutePath());
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             }
+            libraryFile.deleteOnExit();
+            System.load(libraryFile.getAbsolutePath());
         }
-        libraryFile.deleteOnExit();
 
-        System.load(libraryFile.getAbsolutePath());
 
         SymbolLookup loaderLookup = SymbolLookup.loaderLookup();
         SYMBOL_LOOKUP = name -> loaderLookup.find(name).or(() -> LINKER.defaultLookup().find(name));

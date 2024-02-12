@@ -40,9 +40,10 @@ jobs:
           ./gradlew test
       - name: Build & test klang ubuntu
         if: matrix.os == 'ubuntu-latest'
+        env:
+          LIBCLANG_PATH: "/usr/lib/llvm-15/lib/libclang-15.so.1"
         run: |
           cd ./klang
-          LIBCLANG_PATH="/usr/lib/llvm-15/lib/libclang-15.so.1"
           ./gradlew test
       - name: Bundle the build report
         if: failure()

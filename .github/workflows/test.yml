@@ -33,6 +33,12 @@ jobs:
           path: ~/.gradle/caches
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
           restore-keys: ${{ runner.os }}-gradle
+      - name: seek libc
+        run: ldconfig -p | grep libc.so
+        if: matrix.os == 'ubuntu-latest'
+      - name: libc trick
+        run: ln -s /usr/libc.so.6  /lib/x86_64-linux-gnu/libc.so.6
+        if: matrix.os == 'ubuntu-latest'
       - name: Build & test klang
         run: |
           cd ./klang

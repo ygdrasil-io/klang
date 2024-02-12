@@ -24,11 +24,11 @@ class SDL2ItTest : ParserTestCommon({
 		val filePath = tempDirectory.absolutePathString()
 		val headerPaths = when (operatingSystem) {
 			OperatingSystem.MAC -> arrayOf(
-				otherHeaderTempDirectoryPath.resolve("c").resolve("include").absolutePathString(),
+				otherHeaderTempDirectoryPath.resolve("c").absolutePathString(),
 				otherHeaderTempDirectoryPath.resolve("darwin-headers").absolutePathString(),
 			)
 			else -> arrayOf(
-				otherHeaderTempDirectoryPath.resolve("c").resolve("include").absolutePathString()
+				otherHeaderTempDirectoryPath.resolve("c").absolutePathString()
 			)
 		}
 
@@ -61,8 +61,9 @@ private fun initSDL2HeaderDirectory(): Pair<Path, Path> {
 	logger.info { "will use directory ${tempDirectoryPath.absolutePathString()} to parse SDL2" }
 
 	val sdl2HeadersFile = "/SDL2-headers-${inferPlatformSuffix()}.zip"
-	val cHeadersFile = "/c-headers.zip"
 	unzipFromClasspath(sdl2HeadersFile, tempDirectoryPath.toFile())
+
+	val cHeadersFile = "/c-${inferPlatformSuffix()}-headers.zip"
 	unzipFromClasspath(cHeadersFile, otherHeaderTempDirectoryPath.toFile())
 
 	if (operatingSystem == OperatingSystem.MAC) {

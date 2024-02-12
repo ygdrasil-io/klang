@@ -1,11 +1,14 @@
 package klang.helper
 
+import mu.KotlinLogging
 import java.io.File
 import java.io.FileInputStream
 import java.io.InputStream
 import java.util.zip.ZipInputStream
 
 private object ZipHelper
+
+private val logger = KotlinLogging.logger {}
 
 /**
  * Unzips a file from the classpath to a target directory.
@@ -14,6 +17,7 @@ private object ZipHelper
  * @param targetPath The target directory to unzip the file to.
  */
 fun unzipFromClasspath(sourceFile: String, targetPath: File) {
+	logger.info { "will unzip file $sourceFile to ${targetPath.absolutePath}" }
 	getResourceAsStream(sourceFile)
 		.decompress(targetPath)
 }

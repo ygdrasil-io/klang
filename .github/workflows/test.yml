@@ -33,19 +33,16 @@ jobs:
           path: ~/.gradle/caches
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
           restore-keys: ${{ runner.os }}-gradle
-      - name: find clang
-        run: find / -name "libclang-15.so*"
-        if: matrix.os == 'ubuntu-latest'
       - name: Build & test klang macos
         if: matrix.os == 'macos-14'
         run: |
           cd ./klang
-          LIBCLANG_PATH="/usr/lib/llvm-15/lib/libclang-15.so.1"
           ./gradlew test
       - name: Build & test klang ubuntu
         if: matrix.os == 'ubuntu-latest'
         run: |
           cd ./klang
+          LIBCLANG_PATH="/usr/lib/llvm-15/lib/libclang-15.so.1"
           ./gradlew test
       - name: Bundle the build report
         if: failure()

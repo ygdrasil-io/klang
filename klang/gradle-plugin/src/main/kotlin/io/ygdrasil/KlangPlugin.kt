@@ -7,11 +7,13 @@ import klang.domain.NativeFunction
 import klang.domain.NativeStructure
 import klang.domain.NativeTypeAlias
 import klang.generator.generateKotlinFile
-import klang.helper.*
+import klang.helper.HeaderManager
+import klang.helper.doesNotExists
+import klang.helper.isDirectoryEmpty
+import klang.helper.unzip
 import klang.parser.json.parseAstJson
 import klang.parser.libclang.parseFile
 import klang.tools.generateAstFromDocker
-import operatingSystem
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.Task
@@ -81,11 +83,11 @@ class KlangPlugin : Plugin<Project> {
 	private val Project.workingDirectory: File
 		get() = buildDir.resolve("klang").also { it.mkdirs() }
 
-	private val Project.cHeadersExtractDirectory: File
-		get() = workingDirectory.resolve("c-headers")
-	
 	private val Project.cHeadersDirectory: File
-		get() = cHeadersExtractDirectory.resolve("c")
+		get() = workingDirectory.resolve("c-headers")
+
+	private val Project.platformSpecificHeadersDirectory: File
+		get() = workingDirectory.resolve("platform-headers")
 
 	override fun apply(project: Project) {
 		val extension = project.extensions.create("klang", KlangPluginExtension::class.java)
@@ -156,7 +158,7 @@ class KlangPlugin : Plugin<Project> {
 							parseFile(
 								fileToParse,
 								sourcePath.absolutePath,
-								arrayOf(cHeadersDirectory.absolutePath)
+								HeaderManager.listPlatformHeadersFromPath(cHeadersDirectory.toPath())
 							)
 						}
 					}.also { it.resolveTypes() }
@@ -200,10 +202,10 @@ class KlangPlugin : Plugin<Project> {
 	}
 
 	private fun Project.unpackCHeaderTask(): Task = task("unpackCHeader") { task ->
-		task.onlyIf { cHeadersDirectory.doesNotExists() || cHeadersDirectory.isDirectoryEmpty() }
+		task.onlyIf { this.cHeadersDirectory.doesNotExists() || this.cHeadersDirectory.isDirectoryEmpty() }
 		task.doFirst {
-			cHeadersExtractDirectory.deleteRecursively()
-			unzipFromClasspath("/c-${inferPlatformSuffix()}-headers.zip", cHeadersDirectory)
+			this.cHeadersDirectory.deleteRecursively()
+			HeaderManager.putPlatformHeaderAt(cHeadersDirectory.toPath())
 		}
 	}
 
@@ -274,11 +276,4 @@ fun downloadFile(fileUrl: URL, targetFile: File): File? = try {
 } catch (e: Exception) {
 	logger.error("An error occurred: ${e.message}")
 	null
-}
-
-
-private fun inferPlatformSuffix() = when (operatingSystem) {
-	OperatingSystem.MAC -> "darwin"
-	OperatingSystem.LINUX -> "linux"
-	else -> error("Operating system $operatingSystem not supported")
 }

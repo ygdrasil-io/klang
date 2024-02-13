@@ -11,6 +11,7 @@ import klang.helper.*
 import klang.parser.json.parseAstJson
 import klang.parser.libclang.parseFile
 import klang.tools.generateAstFromDocker
+import operatingSystem
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.Task
@@ -84,7 +85,7 @@ class KlangPlugin : Plugin<Project> {
 		get() = workingDirectory.resolve("c-headers")
 	
 	private val Project.cHeadersDirectory: File
-		get() = cHeadersExtractDirectory.resolve("c").resolve("include")
+		get() = cHeadersExtractDirectory.resolve("c")
 
 	override fun apply(project: Project) {
 		val extension = project.extensions.create("klang", KlangPluginExtension::class.java)
@@ -202,7 +203,7 @@ class KlangPlugin : Plugin<Project> {
 		task.onlyIf { cHeadersDirectory.doesNotExists() || cHeadersDirectory.isDirectoryEmpty() }
 		task.doFirst {
 			cHeadersExtractDirectory.deleteRecursively()
-			unzipFromClasspath("/c-headers.zip", cHeadersDirectory)
+			unzipFromClasspath("/c-${inferPlatformSuffix()}-headers.zip", cHeadersDirectory)
 		}
 	}
 
@@ -275,3 +276,9 @@ fun downloadFile(fileUrl: URL, targetFile: File): File? = try {
 	null
 }
 
+
+private fun inferPlatformSuffix() = when (operatingSystem) {
+	OperatingSystem.MAC -> "darwin"
+	OperatingSystem.LINUX -> "linux"
+	else -> error("Operating system $operatingSystem not supported")
+}

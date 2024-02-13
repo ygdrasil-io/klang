@@ -1,12 +1,13 @@
 package klang.parser.libclang.panama
 
+import klang.domain.DeclarationOrigin
 import klang.domain.NativeStructure
 import klang.domain.StructureField
 import klang.domain.TypeRefField
 import org.openjdk.jextract.Declaration
 import org.openjdk.jextract.impl.TypeImpl
 
-internal fun Declaration.Scoped.toNativeStructure(name: String?, isUnion: Boolean = false) = Triple(
+internal fun Declaration.Scoped.toNativeStructure(name: String?, isUnion: Boolean = false, origin: DeclarationOrigin) = Triple(
 	name ?: name(),
 	members().toStructureFields(),
 	isUnion
@@ -14,7 +15,8 @@ internal fun Declaration.Scoped.toNativeStructure(name: String?, isUnion: Boolea
 	NativeStructure(
 		name,
 		fields,
-		isUnion
+		isUnion,
+		origin
 	)
 }
 

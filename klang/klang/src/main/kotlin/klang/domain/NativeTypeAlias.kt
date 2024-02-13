@@ -4,7 +4,8 @@ import klang.DeclarationRepository
 
 data class NativeTypeAlias(
 	override val name: String,
-	var typeRef: TypeRef
+	var typeRef: TypeRef,
+	override val source: DeclarationOrigin = DeclarationOrigin.UnknownOrigin
 ) :NameableDeclaration, NativeDeclaration, ResolvableDeclaration {
 
 	override fun DeclarationRepository.resolve() {

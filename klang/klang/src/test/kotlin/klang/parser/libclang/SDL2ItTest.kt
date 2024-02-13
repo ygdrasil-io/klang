@@ -1,6 +1,7 @@
 package klang.parser.libclang
 
-import klang.domain.NameableDeclaration
+import klang.domain.DeclarationOrigin.LibraryHeader
+import klang.domain.SourceableDeclaration
 import klang.helper.HeaderManager
 import klang.helper.HeaderManager.inferPlatformSuffix
 import klang.helper.unzipFromClasspath
@@ -27,17 +28,19 @@ class SDL2ItTest : ParserTestCommon({
 			.also {
 				it.resolveTypes { resolvableDeclaration ->
 					when (resolvableDeclaration) {
-						is NameableDeclaration -> resolvableDeclaration.name.startsWith("_").not()
-						else -> true
+						is SourceableDeclaration -> (resolvableDeclaration.source is LibraryHeader)
+						else -> false
 					}
 				}
 			}
 
-
+		repository.findFunctionByName("SDL_Rect")
+			.let { println("SDL_Rect $it") }
 
 		// Then
 		repository.apply {
-			println(declarations.size)
+			val libraryDeclarations = findLibraryDeclaration()
+			println(libraryDeclarations.size)
 		}
 
 	}

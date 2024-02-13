@@ -7,7 +7,8 @@ internal val AnonymousCategoryName = "AnonymousCategory"
 data class ObjectiveCCategory(
 	override val name: String,
 	var superType: TypeRef,
-	val methods: List<ObjectiveCClass.Method>
+	val methods: List<ObjectiveCClass.Method>,
+	override val source: DeclarationOrigin = DeclarationOrigin.UnknownOrigin
 ) : NameableDeclaration, ResolvableDeclaration {
 
 	override fun DeclarationRepository.resolve() {

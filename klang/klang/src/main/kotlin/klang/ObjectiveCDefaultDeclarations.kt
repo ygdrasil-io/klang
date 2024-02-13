@@ -1,11 +1,12 @@
 package klang
 
+import klang.domain.DeclarationOrigin
 import klang.domain.NameableDeclaration
 import klang.domain.ObjectiveCProtocol
 
 object ObjectiveCRootClass: NameableDeclaration {
 	override val name: String = "NSObject"
-
+	override val source: DeclarationOrigin = DeclarationOrigin.PlatformHeader
 }
 
 

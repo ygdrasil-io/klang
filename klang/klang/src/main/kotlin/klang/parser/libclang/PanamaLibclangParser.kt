@@ -2,8 +2,10 @@ package klang.parser.libclang
 
 import klang.DeclarationRepository
 import klang.InMemoryDeclarationRepository
+import klang.domain.DeclarationOrigin
 import klang.domain.NameableDeclaration
 import klang.parse
+import klang.parser.libclang.panama.OriginProcessor.toOrigin
 import klang.parser.libclang.panama.toNativeEnumeration
 import klang.parser.libclang.panama.toNativeStructure
 import klang.parser.libclang.panama.toNativeTypeAlias
@@ -37,10 +39,11 @@ fun parseFileWithPanama(file: String, filePath: Path?, headerPaths: Array<Path>)
 			.asSequence()
 			.filter { it.declarationIsOnFilePath(filePath) }
 			.map {
+				val origin = it.pos().toOrigin(filePath)
 				when (it) {
-					is Scoped -> it.scopedToLocalDeclaration()
-					is Typedef -> it.typeDefToLocalDeclaration()
-					is Declaration.Function -> it.toNativeTypeAlias()
+					is Scoped -> it.scopedToLocalDeclaration(origin = origin)
+					is Typedef -> it.typeDefToLocalDeclaration(origin)
+					is Declaration.Function -> it.toNativeTypeAlias(origin)
 					else -> {
 						logger.error { "not found $it" }
 						null
@@ -56,18 +59,18 @@ internal fun Declaration.declarationIsOnFilePath(filePath: Path?): Boolean = fil
 	?.pathString
 	?.let { pos().path().parent.pathString.contains(it) } ?: true
 
-private fun Typedef.typeDefToLocalDeclaration(): NameableDeclaration? = type().let { type ->
+private fun Typedef.typeDefToLocalDeclaration(origin: DeclarationOrigin): NameableDeclaration? = type().let { type ->
 	when (type) {
-		is TypeImpl.DeclaredImpl -> type.tree().scopedToLocalDeclaration(name())
-		else -> toNativeTypeAlias()
+		is TypeImpl.DeclaredImpl -> type.tree().scopedToLocalDeclaration(name(), origin)
+		else -> toNativeTypeAlias(origin)
 	}
 }
 
-private fun Scoped.scopedToLocalDeclaration(name: String? = null): NameableDeclaration? {
+private fun Scoped.scopedToLocalDeclaration(name: String? = null, origin: DeclarationOrigin): NameableDeclaration? {
 	return when (kind()) {
-		Declaration.Scoped.Kind.ENUM -> toNativeEnumeration(name)
-		Declaration.Scoped.Kind.STRUCT -> toNativeStructure(name)
-		Declaration.Scoped.Kind.UNION -> toNativeStructure(name, isUnion = true)
+		Declaration.Scoped.Kind.ENUM -> toNativeEnumeration(name, origin)
+		Declaration.Scoped.Kind.STRUCT -> toNativeStructure(name, origin = origin)
+		Declaration.Scoped.Kind.UNION -> toNativeStructure(name, isUnion = true, origin)
 
 		else -> {
 			logger.error { "not found ${kind()}" }

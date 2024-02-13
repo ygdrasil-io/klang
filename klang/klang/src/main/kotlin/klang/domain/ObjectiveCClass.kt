@@ -8,7 +8,8 @@ data class ObjectiveCClass(
 	var protocols: Set<TypeRef>,
 	var properties: List<Property>,
 	var methods: List<Method>,
-	var categories: Set<ObjectiveCCategory> = setOf()
+	var categories: Set<ObjectiveCCategory> = setOf(),
+	override val source: DeclarationOrigin = DeclarationOrigin.UnknownOrigin
 ) : NameableDeclaration, ResolvableDeclaration {
 
 	data class Property(
@@ -17,14 +18,16 @@ data class ObjectiveCClass(
 		val assign: Boolean? = null,
 		val readwrite: Boolean? = null,
 		val nonatomic: Boolean? = null,
-		val unsafe_unretained: Boolean? = null
+		val unsafe_unretained: Boolean? = null,
+		override val source: DeclarationOrigin= DeclarationOrigin.UnknownOrigin
 	) : NameableDeclaration
 
 	data class Method(
 		override val name: String,
 		var returnType: TypeRef,
 		val instance: Boolean,
-		val arguments: List<Argument> = listOf()
+		val arguments: List<Argument> = listOf(),
+		override val source: DeclarationOrigin = DeclarationOrigin.UnknownOrigin
 	) : NameableDeclaration, ResolvableDeclaration {
 		data class Argument(
 			val name: String,

@@ -5,7 +5,8 @@ import klang.DeclarationRepository
 data class NativeFunction(
 	override val name: String,
 	var returnType: TypeRef,
-	val arguments: List<Argument>
+	val arguments: List<Argument>,
+	override val source: DeclarationOrigin = DeclarationOrigin.UnknownOrigin
 ): NameableDeclaration, NativeDeclaration, ResolvableDeclaration {
 
 	data class Argument(

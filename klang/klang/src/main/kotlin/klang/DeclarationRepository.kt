@@ -25,6 +25,10 @@ interface DeclarationRepository {
 
 	fun findObjectiveCCategoryByName(name: String) = findDeclarationByName<ObjectiveCCategory>(name)
 
+	fun findLibraryDeclaration() = declarations.asSequence()
+		.filterIsInstance<SourceableDeclaration>()
+		.filter { it.source is DeclarationOrigin.LibraryHeader }
+		.toList()
 }
 
 inline fun <reified T : NameableDeclaration> DeclarationRepository.findDeclarationByName(declarationName: String) = declarations

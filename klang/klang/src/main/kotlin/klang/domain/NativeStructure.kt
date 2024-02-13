@@ -24,6 +24,7 @@ data class NativeStructure(
 	override val name: String,
 	var fields: List<StructureField> = listOf(),
 	var isUnion: Boolean = false,
+	override val source: DeclarationOrigin = DeclarationOrigin.UnknownOrigin,
 ) : NameableDeclaration, ResolvableDeclaration {
 	override fun <T : NativeDeclaration> merge(other: T) {
 		if (other is NativeStructure) {

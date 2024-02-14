@@ -3,7 +3,9 @@ package klang.generator
 import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.shouldBe
 import klang.InMemoryDeclarationRepository
+import klang.allDeclarationsFilter
 import klang.domain.NativeStructure
+import klang.domain.NotBlankString
 import klang.domain.TypeRefField
 import klang.mapper.toSpec
 import klang.parser.testType
@@ -11,7 +13,7 @@ import klang.parser.testType
 class StructureGenerationTest : FreeSpec({
 
 	val structure = NativeStructure(
-		name = "MyStructure",
+		name = NotBlankString("MyStructure"),
 		fields = listOf(
 			TypeRefField("first", testType("long")),
 			TypeRefField("second", testType("int")),
@@ -24,7 +26,7 @@ class StructureGenerationTest : FreeSpec({
 
 	InMemoryDeclarationRepository().apply {
 		save(structure)
-		resolveTypes()
+		resolveTypes(allDeclarationsFilter)
 	}
 
 	"generate kotlin structure" {
@@ -88,7 +90,7 @@ public open class MyStructure : com.sun.jna.Structure {
 
 
 	val structureWithNoFields = NativeStructure(
-		name = "MyStructure",
+		name = NotBlankString("MyStructure"),
 		fields = listOf()
 	)
 

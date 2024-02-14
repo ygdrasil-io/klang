@@ -2,10 +2,11 @@ package klang.parser.libclang.panama
 
 import klang.domain.DeclarationOrigin
 import klang.domain.NativeEnumeration
+import klang.domain.NotBlankString
 import org.openjdk.jextract.Declaration
 
 internal fun Declaration.Scoped.toNativeEnumeration(name: String?, origin: DeclarationOrigin) = NativeEnumeration(
-	name ?: name(),
+	NotBlankString(name ?: name()),
 	members().toEnumValues(),
 	source = origin
 )

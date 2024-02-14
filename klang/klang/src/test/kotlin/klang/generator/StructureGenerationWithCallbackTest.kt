@@ -3,8 +3,10 @@ package klang.generator
 import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.shouldBe
 import klang.InMemoryDeclarationRepository
+import klang.allDeclarationsFilter
 import klang.domain.NativeStructure
 import klang.domain.NativeTypeAlias
+import klang.domain.NotBlankString
 import klang.domain.TypeRefField
 import klang.mapper.toSpec
 import klang.parser.TestData.basicFunctionPointer
@@ -13,7 +15,7 @@ import klang.parser.testType
 class StructureGenerationWithCallbackTest : FreeSpec({
 
 	val structure = NativeStructure(
-		name = "MyStructure",
+		name = NotBlankString("MyStructure"),
 		fields = listOf(
 			TypeRefField("callback", testType(basicFunctionPointer)),
 			TypeRefField("callback2", testType("MyAlias"))
@@ -21,14 +23,14 @@ class StructureGenerationWithCallbackTest : FreeSpec({
 	)
 
 	val typeAlias = NativeTypeAlias(
-		name = "MyAlias",
+		name = NotBlankString("MyAlias"),
 		typeRef = testType(basicFunctionPointer)
 	)
 
 	InMemoryDeclarationRepository().apply {
 		save(structure)
 		save(typeAlias)
-		resolveTypes()
+		resolveTypes(allDeclarationsFilter)
 	}
 
 	"generate kotlin structure with callback" {
@@ -80,7 +82,7 @@ public open class MyStructure : com.sun.jna.Structure {
 
 
 	val structureWithNoFields = NativeStructure(
-		name = "MyStructure",
+		name = NotBlankString("MyStructure"),
 		fields = listOf()
 	)
 

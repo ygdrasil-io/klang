@@ -3,8 +3,10 @@ package klang.generator
 import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.shouldBe
 import klang.InMemoryDeclarationRepository
+import klang.allDeclarationsFilter
 import klang.domain.NativeFunction
 import klang.domain.NativeStructure
+import klang.domain.NotBlankString
 import klang.domain.TypeRefField
 import klang.mapper.toInterfaceSpec
 import klang.parser.testType
@@ -13,7 +15,7 @@ class FunctionGenerationWithStructurePointerTest : FreeSpec({
 
 
 	val structure = NativeStructure(
-		name = "MyStructure",
+		name = NotBlankString("MyStructure"),
 		fields = listOf(
 			TypeRefField("field1", testType("int")),
 			TypeRefField("field2", testType("char")),
@@ -21,7 +23,7 @@ class FunctionGenerationWithStructurePointerTest : FreeSpec({
 	)
 
 	val function = NativeFunction(
-			name = "function",
+			name = NotBlankString("function"),
 			returnType = testType("void"),
 			arguments = listOf(
 				NativeFunction.Argument("structure", testType("MyStructure *")),
@@ -31,7 +33,7 @@ class FunctionGenerationWithStructurePointerTest : FreeSpec({
 	InMemoryDeclarationRepository().apply {
 		save(function)
 		save(structure)
-		resolveTypes()
+		resolveTypes(allDeclarationsFilter)
 	}
 
 	"generate kotlin functions" {

@@ -3,7 +3,9 @@ package klang.generator
 import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.shouldBe
 import klang.InMemoryDeclarationRepository
+import klang.allDeclarationsFilter
 import klang.domain.NativeTypeAlias
+import klang.domain.NotBlankString
 import klang.mapper.toSpec
 import klang.parser.TestData
 import klang.parser.testType
@@ -11,13 +13,13 @@ import klang.parser.testType
 class CallbackGenerationTest : FreeSpec({
 
 	val callback = NativeTypeAlias(
-		name = "MyCallback",
+		name = NotBlankString("MyCallback"),
 		typeRef = testType(TestData.basicFunctionPointer),
 	)
 
 	InMemoryDeclarationRepository().apply {
 		save(callback)
-		resolveTypes()
+		resolveTypes(allDeclarationsFilter)
 	}
 
 	"generate kotlin callback" {

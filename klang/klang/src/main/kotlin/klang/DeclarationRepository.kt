@@ -9,6 +9,8 @@ val libraryDeclarationsFilter: (ResolvableDeclaration) -> Boolean  = { resolvabl
 	}
 }
 
+val allDeclarationsFilter: (ResolvableDeclaration) -> Boolean  = { _ -> true }
+
 interface DeclarationRepository {
 
 	val declarations: Set<NativeDeclaration>
@@ -18,19 +20,26 @@ interface DeclarationRepository {
 	fun update(nativeEnumeration: NativeDeclaration, provider: () -> NativeDeclaration): NativeDeclaration
 	fun resolveTypes(filter: (ResolvableDeclaration) -> Boolean = libraryDeclarationsFilter)
 
-	fun findEnumerationByName(name: String) = findDeclarationByName<NativeEnumeration>(name)
+	fun findEnumerationByName(name: String) = findEnumerationByName(NotBlankString(name))
+	fun findEnumerationByName(name: NotBlankString) = findDeclarationByName<NativeEnumeration>(name)
 
-	fun findStructureByName(name: String) = findDeclarationByName<NativeStructure>(name)
+	fun findStructureByName(name: String) = findStructureByName(NotBlankString(name))
+	fun findStructureByName(name: NotBlankString) = findDeclarationByName<NativeStructure>(name)
 
-	fun findFunctionByName(name: String) = findDeclarationByName<NativeFunction>(name)
+	fun findFunctionByName(name: String) = findFunctionByName(NotBlankString(name))
+	fun findFunctionByName(name: NotBlankString) = findDeclarationByName<NativeFunction>(name)
 
-	fun findTypeAliasByName(name: String) = findDeclarationByName<NativeTypeAlias>(name)
+	fun findTypeAliasByName(name: String) = findTypeAliasByName(NotBlankString(name))
+	fun findTypeAliasByName(name: NotBlankString) = findDeclarationByName<NativeTypeAlias>(name)
 
-	fun findObjectiveCClassByName(name: String) = findDeclarationByName<ObjectiveCClass>(name)
+	fun findObjectiveCClassByName(name: String) = findObjectiveCClassByName(NotBlankString(name))
+	fun findObjectiveCClassByName(name: NotBlankString) = findDeclarationByName<ObjectiveCClass>(name)
 
-	fun findObjectiveCProtocolByName(name: String) = findDeclarationByName<ObjectiveCProtocol>(name)
+	fun findObjectiveCProtocolByName(name: String) = findObjectiveCProtocolByName(NotBlankString(name))
+	fun findObjectiveCProtocolByName(name: NotBlankString) = findDeclarationByName<ObjectiveCProtocol>(name)
 
-	fun findObjectiveCCategoryByName(name: String) = findDeclarationByName<ObjectiveCCategory>(name)
+	fun findObjectiveCCategoryByName(name: String) = findObjectiveCCategoryByName(NotBlankString(name))
+	fun findObjectiveCCategoryByName(name: NotBlankString) = findDeclarationByName<ObjectiveCCategory>(name)
 
 	fun findLibraryDeclaration() = declarations.asSequence()
 		.filterIsInstance<SourceableDeclaration>()
@@ -38,7 +47,10 @@ interface DeclarationRepository {
 		.toList()
 }
 
-inline fun <reified T : NameableDeclaration> DeclarationRepository.findDeclarationByName(declarationName: String) = declarations
+
+inline fun <reified T : NameableDeclaration> DeclarationRepository.findDeclarationByName(declarationName: String) = findDeclarationByName<T>(NotBlankString(declarationName))
+
+inline fun <reified T : NameableDeclaration> DeclarationRepository.findDeclarationByName(declarationName: NotBlankString) = declarations
 	.asSequence()
 	.filterIsInstance<T>()
 	.firstOrNull { it.name == declarationName }

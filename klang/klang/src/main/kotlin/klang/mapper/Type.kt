@@ -13,10 +13,10 @@ internal fun TypeRef.toType(packageName: String, nullable: Boolean = false) = wh
 				else -> ClassName("kotlin", "String")
 			}
 
-			is NativeStructure -> ClassName(packageName, typeName)
+			is NativeStructure -> ClassName(packageName, typeName.value)
 			is FunctionPointerType -> jnaCallback
 			is PrimitiveType -> jnaPointer
-			else -> ClassName(packageName, typeName)
+			else -> ClassName(packageName, typeName.value)
 		}
 
 		else -> jnaPointer
@@ -26,10 +26,10 @@ internal fun TypeRef.toType(packageName: String, nullable: Boolean = false) = wh
 		is FunctionPointerType -> jnaCallback
 		is VoidType -> ClassName("kotlin", "Unit")
 		is PrimitiveType -> toPrimitiveType(packageName)
-		else -> ClassName(packageName, typeName)
+		else -> ClassName(packageName, typeName.value)
 	}
 
-	else -> ClassName(packageName, typeName)
+	else -> ClassName(packageName, typeName.value)
 }.let { if (nullable) it.copy(nullable = true) else it }
 
 // @see https://github.com/java-native-access/jna/blob/master/www/Mappings.md
@@ -84,6 +84,6 @@ private fun ResolvedTypeRef.toPrimitiveType(packageName: String): ClassName = th
 			// Default
 			else -> null
 		}
-	} ?: ClassName(packageName, typeName)
+	} ?: ClassName(packageName, typeName.value)
 
 }

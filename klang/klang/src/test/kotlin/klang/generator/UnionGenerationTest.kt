@@ -3,7 +3,9 @@ package klang.generator
 import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.shouldBe
 import klang.InMemoryDeclarationRepository
+import klang.allDeclarationsFilter
 import klang.domain.NativeStructure
+import klang.domain.NotBlankString
 import klang.domain.TypeRefField
 import klang.mapper.toSpec
 import klang.parser.testType
@@ -11,7 +13,7 @@ import klang.parser.testType
 class UnionGenerationTest : FreeSpec({
 
 	val structure = NativeStructure(
-		name = "MyStructure",
+		name = NotBlankString("MyStructure"),
 		fields = listOf(
 			TypeRefField("first", testType("long")),
 			TypeRefField("second", testType("int")),
@@ -25,7 +27,7 @@ class UnionGenerationTest : FreeSpec({
 
 	InMemoryDeclarationRepository().apply {
 		save(structure)
-		resolveTypes()
+		resolveTypes(allDeclarationsFilter)
 	}
 
 	"generate kotlin union" {
@@ -93,7 +95,7 @@ public open class MyStructure : com.sun.jna.Union {
 
 
 	val structureWithNoFields = NativeStructure(
-		name = "MyStructure",
+		name = NotBlankString("MyStructure"),
 		fields = listOf()
 	)
 

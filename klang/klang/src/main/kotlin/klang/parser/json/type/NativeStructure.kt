@@ -1,9 +1,6 @@
 package klang.parser.json.type
 
-import klang.domain.NativeStructure
-import klang.domain.StructureField
-import klang.domain.TypeRefField
-import klang.domain.typeOf
+import klang.domain.*
 import klang.parser.json.domain.TranslationUnitKind
 import klang.parser.json.domain.TranslationUnitNode
 import klang.parser.json.domain.json
@@ -12,13 +9,13 @@ import kotlinx.serialization.json.jsonPrimitive
 
 
 internal fun TranslationUnitNode.toNativeTypeDefStructure(sibling: TranslationUnitNode) = NativeStructure(
-	name = sibling.json.name(),
+	name = NotBlankString(sibling.json.name()),
 	fields = this.extractFields(),
 	isUnion = json.isUnion()
 )
 
 internal fun TranslationUnitNode.toNativeStructure() = NativeStructure(
-	name = json.name(),
+	name = NotBlankString(json.name()),
 	fields = this.extractFields(),
 	isUnion = json.isUnion()
 )

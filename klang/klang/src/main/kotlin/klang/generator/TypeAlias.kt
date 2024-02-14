@@ -9,7 +9,7 @@ import java.io.File
 
 fun List<NativeTypeAlias>.generateKotlinFile(outputDirectory: File, packageName: String) {
 
-	assert(outputDirectory.isDirectory) { "Output directory must be a directory" }
+	check(outputDirectory.isDirectory) { "Output directory must be a directory" }
 
 	FileSpec.builder(packageName, "TypeAlias")
 		.also { fileSpec ->

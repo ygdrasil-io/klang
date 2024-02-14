@@ -18,7 +18,7 @@ fun createOrCompare(actual: String, expectedFileName: String) {
             val out = PrintWriter(File(expectedFileName))
             out.print(actual)
             out.close()
-            assert(actual == "") {
+			check(actual == "") {
                 "Expected file wasn't found, it will be created"
             }
         } catch (ee: IOException) {

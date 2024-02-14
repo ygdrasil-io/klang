@@ -1,9 +1,6 @@
 package klang.parser.json.type
 
-import klang.domain.ObjectiveCClass
-import klang.domain.ObjectiveCProtocol
-import klang.domain.typeOf
-import klang.domain.unchecked
+import klang.domain.*
 import klang.parser.json.domain.TranslationUnitKind
 import klang.parser.json.domain.TranslationUnitNode
 import klang.parser.json.domain.json
@@ -15,7 +12,7 @@ import kotlinx.serialization.json.jsonPrimitive
 
 internal fun TranslationUnitNode.toObjectiveCProtocol(): ObjectiveCProtocol {
 	return ObjectiveCProtocol(
-		name = json.name(),
+		name = NotBlankString(json.name()),
 		protocols = json.protocols(),
 		properties = json.properties(),
 		methods = json.methods()
@@ -34,7 +31,7 @@ private fun JsonObject.methods(): List<ObjectiveCClass.Method> = inner()
 	?.map { it.toMethod() } ?: listOf()
 
 private fun JsonObject.toMethod() = ObjectiveCClass.Method(
-	name = name(),
+	name = NotBlankString(name()),
 	returnType = returnType(),
 	instance = booleanValueOf("instance"),
 	arguments = arguments()
@@ -54,7 +51,7 @@ private fun JsonObject.properties(): List<ObjectiveCClass.Property> = inner()
 	?.map { it.toProperty() } ?: listOf()
 
 private fun JsonObject.toProperty(): ObjectiveCClass.Property = ObjectiveCClass.Property(
-	name = name(),
+	name = NotBlankString(name()),
 	type = type(),
 	assign = nullableBooleanValueOf("assign"),
 	readwrite = nullableBooleanValueOf("readwrite"),

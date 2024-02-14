@@ -12,7 +12,7 @@ import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 
 internal fun TranslationUnitNode.toObjectiveCClass(): ObjectiveCClass {
-	val name = json.name()
+	val name = NotBlankString(json.name())
 	return ObjectiveCClass(
 		name = name,
 		superType = json.superType(),
@@ -44,7 +44,7 @@ private fun JsonObject.methods(): List<ObjectiveCClass.Method> = inner()
 	?.map { it.toMethod() } ?: listOf()
 
 private fun JsonObject.toMethod() = ObjectiveCClass.Method(
-	name = name(),
+	name = NotBlankString(name()),
 	returnType = returnType(),
 	instance = booleanValueOf("instance"),
 	arguments = arguments()
@@ -64,7 +64,7 @@ private fun JsonObject.properties(): List<ObjectiveCClass.Property> = inner()
 	?.map { it.toProperty() } ?: listOf()
 
 private fun JsonObject.toProperty(): ObjectiveCClass.Property = ObjectiveCClass.Property(
-	name = name(),
+	name = NotBlankString(name()),
 	type = type(),
 	assign = nullableBooleanValueOf("assign"),
 	readwrite = nullableBooleanValueOf("readwrite"),

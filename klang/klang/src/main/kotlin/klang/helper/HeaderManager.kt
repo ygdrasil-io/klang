@@ -9,7 +9,7 @@ import kotlin.io.path.exists
 object HeaderManager {
 	fun putPlatformHeaderAt(headerDirectoryPath: Path) {
 
-		assert(headerDirectoryPath.exists()) { "path ${headerDirectoryPath.absolutePathString()} does not exists" }
+		check(headerDirectoryPath.exists()) { "path ${headerDirectoryPath.absolutePathString()} does not exists" }
 
 		val cHeadersFile = "/c-${inferPlatformSuffix()}-headers.zip"
 		unzipFromClasspath(cHeadersFile, headerDirectoryPath.toFile())

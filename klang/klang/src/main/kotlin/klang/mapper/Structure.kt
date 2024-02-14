@@ -3,7 +3,7 @@ package klang.mapper
 import com.squareup.kotlinpoet.*
 import klang.domain.*
 
-internal fun NativeStructure.toSpec(packageName: String) = ClassName("", name)
+internal fun NativeStructure.toSpec(packageName: String) = ClassName("", name.value)
 	.let { structureClass ->
 		generateFunctionPointerTypeInterface(packageName) + when {
 			fields.isEmpty() -> toSpecWithNoAttributes(structureClass)
@@ -16,7 +16,7 @@ private fun NativeStructure.generateFunctionPointerTypeInterface(packageName: St
 	//TODO support SubStructureField
 	.filterIsInstance<TypeRefField>()
 	.map { it.name to it.type }
-	.mapNotNull { it.toFunctionPointerTypeInterface(packageName, name) }
+	.mapNotNull { it.toFunctionPointerTypeInterface(packageName, name.value) }
 
 private fun Pair<String, TypeRef>.toFunctionPointerTypeInterface(packageName: String, structureName: String) =
 	let { (fieldName, typeRef) ->
@@ -171,7 +171,7 @@ private fun ResolvedTypeRef.toPropertySpec(
 		rootType is NativeStructure -> toType(packageName)
 		// If FunctionPointerType generate an interface or use the one defined by the typealias
 		rootType is FunctionPointerType -> when (type) {
-			is NativeTypeAlias -> ClassName(packageName, type.name)
+			is NativeTypeAlias -> ClassName(packageName, type.name.value)
 			else -> ClassName(packageName, generateNativePointerName(nativeStructure, name))
 		}.copy(nullable = true)
 
@@ -228,7 +228,7 @@ private fun generateNativePointerName(structureName: String, fieldName: String) 
 	"${structureName}${fieldName.replaceFirstChar { it.uppercaseChar() }}Function"
 
 private fun generateNativePointerName(nativeStructure: NativeStructure, fieldName: String) =
-	generateNativePointerName(nativeStructure.name, fieldName)
+	generateNativePointerName(nativeStructure.name.value, fieldName)
 
 private fun TypeRef.defaultPropertySpec(
 	name: String

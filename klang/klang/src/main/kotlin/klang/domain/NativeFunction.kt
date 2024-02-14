@@ -3,7 +3,7 @@ package klang.domain
 import klang.DeclarationRepository
 
 data class NativeFunction(
-	override val name: String,
+	override val name: NotBlankString,
 	var returnType: TypeRef,
 	val arguments: List<Argument>,
 	override val source: DeclarationOrigin = DeclarationOrigin.UnknownOrigin

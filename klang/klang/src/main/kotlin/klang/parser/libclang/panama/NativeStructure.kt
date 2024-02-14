@@ -1,9 +1,6 @@
 package klang.parser.libclang.panama
 
-import klang.domain.DeclarationOrigin
-import klang.domain.NativeStructure
-import klang.domain.StructureField
-import klang.domain.TypeRefField
+import klang.domain.*
 import org.openjdk.jextract.Declaration
 import org.openjdk.jextract.impl.TypeImpl
 
@@ -13,7 +10,7 @@ internal fun Declaration.Scoped.toNativeStructure(name: String?, isUnion: Boolea
 	isUnion
 ).let { (name, fields, isUnion) ->
 	NativeStructure(
-		name,
+		NotBlankString(name),
 		fields,
 		isUnion,
 		origin

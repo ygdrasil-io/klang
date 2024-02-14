@@ -3,7 +3,7 @@ package klang.domain
 import klang.DeclarationRepository
 
 data class ObjectiveCClass(
-	override val name: String,
+	override val name: NotBlankString,
 	var superType: TypeRef?,
 	var protocols: Set<TypeRef>,
 	var properties: List<Property>,
@@ -13,7 +13,7 @@ data class ObjectiveCClass(
 ) : NameableDeclaration, ResolvableDeclaration {
 
 	data class Property(
-		override val name: String,
+		override val name: NotBlankString,
 		val type: String,
 		val assign: Boolean? = null,
 		val readwrite: Boolean? = null,
@@ -23,7 +23,7 @@ data class ObjectiveCClass(
 	) : NameableDeclaration
 
 	data class Method(
-		override val name: String,
+		override val name: NotBlankString,
 		var returnType: TypeRef,
 		val instance: Boolean,
 		val arguments: List<Argument> = listOf(),
@@ -61,7 +61,7 @@ data class ObjectiveCClass(
 		categories = declarations
 			.asSequence()
 			.filterIsInstance<ObjectiveCCategory>()
-			.filter { it.superType.referenceAsString == name }
+			.filter { it.superType.referenceAsString == name.value }
 			.toSet()
 
 		methods.forEach { with(it) { resolve() } }

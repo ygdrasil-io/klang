@@ -3,7 +3,7 @@ package klang.domain
 import klang.DeclarationRepository
 
 data class NativeTypeAlias(
-	override val name: String,
+	override val name: NotBlankString,
 	var typeRef: TypeRef,
 	override val source: DeclarationOrigin = DeclarationOrigin.UnknownOrigin
 ) :NameableDeclaration, NativeDeclaration, ResolvableDeclaration {

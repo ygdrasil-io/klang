@@ -17,7 +17,7 @@ internal fun List<NativeFunction>.toInterfaceSpec(packageName: String, name: Str
 	}
 
 private fun NativeFunction.toSpec(packageName: String) = FunSpec
-	.builder(name)
+	.builder(name.value)
 	.addModifiers(KModifier.PUBLIC, KModifier.ABSTRACT)
 	.returns(returnType.toType(packageName))
 	.addParameters(arguments.mapIndexed { index, argument -> argument.toSpec(packageName, index) })

@@ -60,7 +60,7 @@ private fun isEnumOrStruct(info: DeclarationInfo) = info.cursor.children().isNot
 	&& info.cursor.children().first().kind in listOf(CursorKind.ENUM_DECL, CursorKind.STRUCT_DECL)
 
 private fun ParsingContext.declareTypeAlias(info: DeclarationInfo) {
-	val name = info.cursor.spelling
+	val name = NotBlankString(info.cursor.spelling)
 	val type = info.cursor.underlyingType.spelling
 	currentDefinition = NativeTypeAlias(
 		name = name,
@@ -89,12 +89,12 @@ private fun ParsingContext.updateEnumerationField(info: DeclarationInfo) {
 }
 
 private fun ParsingContext.declareStructure(info: DeclarationInfo) {
-	currentDefinition = NativeStructure(lastTypeDefName.consume() ?: info.cursor.spelling)
+	currentDefinition = NativeStructure(NotBlankString(lastTypeDefName.consume() ?: info.cursor.spelling))
 		.also(declarationRepository::save)
 }
 
 private fun ParsingContext.declareEnumeration(info: DeclarationInfo) {
-	currentDefinition = NativeEnumeration(lastTypeDefName.consume() ?: info.cursor.spelling)
+	currentDefinition = NativeEnumeration(NotBlankString(lastTypeDefName.consume() ?: info.cursor.spelling))
 		.also(declarationRepository::save)
 }
 

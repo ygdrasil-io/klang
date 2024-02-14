@@ -33,7 +33,7 @@ fun parseFileWithPanama(file: String, filePath: Path?, headerPaths: Array<Path>)
 			*clangArguments
 		)
 
-		assert(topLevel.kind() == Declaration.Scoped.Kind.TOPLEVEL)
+		check(topLevel.kind() == Declaration.Scoped.Kind.TOPLEVEL)
 
 		topLevel.members()
 			.asSequence()

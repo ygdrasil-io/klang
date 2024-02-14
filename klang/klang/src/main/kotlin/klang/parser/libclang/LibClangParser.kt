@@ -33,17 +33,17 @@ fun parseFile(
 }
 
 private fun computeHeadersPaths(headerPathsAsString: Array<String>) =
-	headerPathsAsString.map { Path.of(it).also { assert(it.exists()) { "File not found ${it.absolutePathString()}" } } }.toTypedArray()
+	headerPathsAsString.map { Path.of(it).also { check(it.exists()) { "File not found ${it.absolutePathString()}" } } }.toTypedArray()
 
 private fun computePath(filePathAsString: String?) = filePathAsString?.let { Path.of(it) }
-	?.also { assert(it.exists()) }
+	?.also { check(it.exists()) }
 
 private fun computeFile(filePathAsString: String?, fileAsString: String) = when (filePathAsString != null) {
 	true -> filePathAsString.let { "$it/$fileAsString" }
 		.let(::File)
 
 	false -> File(fileAsString)
-}.also { assert(it.exists()) }
+}.also { check(it.exists()) }
 
 private fun parseFile(
 	file: File,
@@ -53,8 +53,8 @@ private fun parseFile(
 ) = when (parserTechnology) {
 
 	ParserTechnology.JNA -> {
-		assert(filePath == null) { "file path is not supported on JNA" }
-		assert(headerPaths.isEmpty()) { "header paths is not supported on JNA" }
+		check(filePath == null) { "file path is not supported on JNA" }
+		check(headerPaths.isEmpty()) { "header paths is not supported on JNA" }
 		parseFileWithJna(file.absolutePath)
 	}
 

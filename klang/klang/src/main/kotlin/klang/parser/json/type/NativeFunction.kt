@@ -1,6 +1,7 @@
 package klang.parser.json.type
 
 import klang.domain.NativeFunction
+import klang.domain.NotBlankString
 import klang.domain.typeOf
 import klang.domain.unchecked
 import klang.parser.json.domain.TranslationUnitKind
@@ -10,7 +11,7 @@ import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.jsonPrimitive
 
 internal fun TranslationUnitNode.toNativeFunction() = NativeFunction(
-	name = json.functionName(),
+	name = NotBlankString(json.functionName()),
 	returnType = typeOf(json.type().adapt()).unchecked("fail to create type ${json.type()}"),
 	arguments = arguments()
 )

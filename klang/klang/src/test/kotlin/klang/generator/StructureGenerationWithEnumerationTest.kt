@@ -3,8 +3,10 @@ package klang.generator
 import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.shouldBe
 import klang.InMemoryDeclarationRepository
+import klang.allDeclarationsFilter
 import klang.domain.NativeEnumeration
 import klang.domain.NativeStructure
+import klang.domain.NotBlankString
 import klang.domain.TypeRefField
 import klang.mapper.toSpec
 import klang.parser.testType
@@ -12,21 +14,21 @@ import klang.parser.testType
 class StructureGenerationWithEnumerationTest : FreeSpec({
 
 	val structure = NativeStructure(
-		name = "MyStructure",
+		name = NotBlankString("MyStructure"),
 		fields = listOf(
 			TypeRefField("enumeration", testType("MyEnumeration")),
 		)
 	)
 
 	val enumeration = NativeEnumeration(
-		name = "MyEnumeration",
+		name = NotBlankString("MyEnumeration"),
 		values = listOf("first" to 1L)
 	)
 
 	InMemoryDeclarationRepository().apply {
 		save(structure)
 		save(enumeration)
-		resolveTypes()
+		resolveTypes(allDeclarationsFilter)
 	}
 
 	"generate kotlin structure with enumeration" {
@@ -60,7 +62,7 @@ public open class MyStructure : com.sun.jna.Structure {
 
 
 	val structureWithNoFields = NativeStructure(
-		name = "MyStructure",
+		name = NotBlankString("MyStructure"),
 		fields = listOf()
 	)
 

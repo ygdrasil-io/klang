@@ -9,20 +9,20 @@ class TypeRefTest : FreeSpec({
 	"test FunctionPointerType parsing" {
 		TestData.basicFunctionPointer.toFunctionPointerType().apply {
 			returnType.apply {
-				typeName shouldBe "void"
+				typeName shouldBe NotBlankString("void")
 				isPointer shouldBe false
 			}
 			arguments.size shouldBe 3
 			arguments[0].apply {
-				typeName shouldBe "void"
+				typeName shouldBe NotBlankString("void")
 				isPointer shouldBe true
 			}
 			arguments[1].apply {
-				typeName shouldBe "char"
+				typeName shouldBe NotBlankString("char")
 				isPointer shouldBe true
 			}
 			arguments[2].apply {
-				typeName shouldBe "int"
+				typeName shouldBe NotBlankString("int")
 				isPointer shouldBe false
 			}
 		}
@@ -38,7 +38,7 @@ class TypeRefTest : FreeSpec({
 					isStructure shouldBe false
 					isEnumeration shouldBe false
 					isNullable shouldBe null
-					typeName shouldBe "void"
+					typeName shouldBe NotBlankString("void")
 				}
 			}
 		}
@@ -54,7 +54,7 @@ class TypeRefTest : FreeSpec({
 					isStructure shouldBe false
 					isEnumeration shouldBe false
 					isNullable shouldBe null
-					typeName shouldBe "int"
+					typeName shouldBe NotBlankString("int")
 				}
 			}
 		}
@@ -71,7 +71,7 @@ class TypeRefTest : FreeSpec({
 					isStructure shouldBe false
 					isEnumeration shouldBe false
 					isNullable shouldBe null
-					typeName shouldBe "int"
+					typeName shouldBe NotBlankString("int")
 				}
 			}
 		}
@@ -87,7 +87,7 @@ class TypeRefTest : FreeSpec({
 					isStructure shouldBe false
 					isEnumeration shouldBe false
 					isNullable shouldBe null
-					typeName shouldBe "unsigned int"
+					typeName shouldBe NotBlankString("unsigned int")
 				}
 			}
 		}
@@ -103,7 +103,7 @@ class TypeRefTest : FreeSpec({
 					isStructure shouldBe true
 					isEnumeration shouldBe false
 					isNullable shouldBe null
-					typeName shouldBe "AnyStruct"
+					typeName shouldBe NotBlankString("AnyStruct")
 				}
 			}
 		}
@@ -119,7 +119,7 @@ class TypeRefTest : FreeSpec({
 					isStructure shouldBe false
 					isEnumeration shouldBe true
 					isNullable shouldBe null
-					typeName shouldBe "AnyEnum"
+					typeName shouldBe NotBlankString("AnyEnum")
 				}
 			}
 		}

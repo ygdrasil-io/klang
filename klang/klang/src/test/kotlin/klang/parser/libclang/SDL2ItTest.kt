@@ -39,7 +39,7 @@ class SDL2ItTest : ParserTestCommon({
 			libraryDeclarations.filterIsInstance<NativeEnumeration>()
 				.forEach {
 					logger.info("testing ${it.name} enumeration")
-					it.name.isNotBlank() shouldNotBe true
+					it.name.value.isNotBlank() shouldNotBe true
 					it.values.isEmpty() shouldNotBe true
 				}
 		}

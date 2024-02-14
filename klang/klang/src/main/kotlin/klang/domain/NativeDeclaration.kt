@@ -37,7 +37,7 @@ sealed interface NativeDeclaration {
  * This interface represents a nameable declaration.
  */
 interface NameableDeclaration : SourceableDeclaration {
-	val name: String
+	val name: NotBlankString
 }
 
 interface ResolvableDeclaration {

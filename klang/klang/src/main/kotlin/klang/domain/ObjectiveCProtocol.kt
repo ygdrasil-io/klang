@@ -1,7 +1,7 @@
 package klang.domain
 
 data class ObjectiveCProtocol(
-	override val name: String,
+	override val name: NotBlankString,
 	val protocols: Set<String>,
 	var properties: List<ObjectiveCClass.Property>,
 	var methods: List<ObjectiveCClass.Method>,

@@ -8,7 +8,7 @@ import java.io.File
 
 fun List<NativeFunction>.generateKotlinFile(outputDirectory: File, packageName: String, libraryName: String) {
 
-	assert(outputDirectory.isDirectory) { "Output directory must be a directory" }
+	check(outputDirectory.isDirectory) { "Output directory must be a directory" }
 
 	val libraryInterfaceName = "${libraryName}Library"
 

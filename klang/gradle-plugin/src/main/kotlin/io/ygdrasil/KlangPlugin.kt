@@ -138,10 +138,10 @@ class KlangPlugin : Plugin<Project> {
 				.map { Triple(it.sourceFile, workingDirectory.resolve(it.sourcePath), it.onSuccess) }
 				.forEach { (fileToParse, sourcePath, onSuccess) ->
 					val localFileToParse = File(fileToParse)
-					assert(localFileToParse.exists()) { "File to parse does not exist" }
-					assert(localFileToParse.isFile()) { "${localFileToParse.absolutePath} is not a file" }
-					assert(localFileToParse.canRead()) { "${localFileToParse.absolutePath} is not readable" }
-					assert(localFileToParse.length() > 0) { "${localFileToParse.absolutePath} is empty" }
+					check(localFileToParse.exists()) { "File to parse does not exist" }
+					check(localFileToParse.isFile()) { "${localFileToParse.absolutePath} is not a file" }
+					check(localFileToParse.canRead()) { "${localFileToParse.absolutePath} is not readable" }
+					check(localFileToParse.length() > 0) { "${localFileToParse.absolutePath} is empty" }
 
 					extension.declarations = when (extension.parsingMethod) {
 						ParsingMethod.Docker -> {

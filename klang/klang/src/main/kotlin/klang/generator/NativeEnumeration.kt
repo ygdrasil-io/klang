@@ -7,7 +7,7 @@ import java.io.File
 
 fun List<NativeEnumeration>.generateKotlinFile(outputDirectory: File, packageName: String) {
 
-	assert(outputDirectory.isDirectory) { "Output directory must be a directory" }
+	check(outputDirectory.isDirectory) { "Output directory must be a directory" }
 
 	FileSpec.builder(packageName, "Enumerations")
 		.also { builder -> forEach { builder.addType(it.toSpecAsEnumeration(packageName)) } }

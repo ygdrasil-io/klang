@@ -6,7 +6,7 @@ import com.squareup.kotlinpoet.ParameterSpec
 import com.squareup.kotlinpoet.TypeSpec
 import klang.domain.ObjectiveCClass
 
-internal fun ObjectiveCClass.toSpec() = ClassName("", name)
+internal fun ObjectiveCClass.toSpec() = ClassName("", name.value)
 	.let { structureClass ->
 		TypeSpec.classBuilder(structureClass)
 			.superclass(nsobjectDefinition)

@@ -21,7 +21,7 @@ data class SubStructureField(override val name: String, val structure: NativeStr
  * @property isUnion Indicates whether the structure is a union
  */
 data class NativeStructure(
-	override val name: String,
+	override val name: NotBlankString,
 	var fields: List<StructureField> = listOf(),
 	var isUnion: Boolean = false,
 	override val source: DeclarationOrigin = DeclarationOrigin.UnknownOrigin,

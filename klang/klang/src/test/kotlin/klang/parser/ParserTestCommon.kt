@@ -6,6 +6,7 @@ import io.kotest.core.spec.style.scopes.FreeSpecContainerScope
 import io.kotest.matchers.shouldBe
 import klang.DeclarationRepository
 import klang.domain.NativeStructure
+import klang.domain.NotBlankString
 import klang.parser.json.ParserRepository
 
 @Ignored
@@ -22,7 +23,7 @@ open class ParserTestCommon(body: FreeSpec.() -> Unit = {}) : FreeSpec({
 	body()
 })
 
- suspend fun FreeSpecContainerScope.validateEnumerations(repository: DeclarationRepository, enumerations: List<Pair<String, List<Pair<String, Long>>>>) {
+ suspend fun FreeSpecContainerScope.validateEnumerations(repository: DeclarationRepository, enumerations: List<Pair<NotBlankString, List<Pair<String, Long>>>>) {
 	enumerations.forEach { (name, values) ->
 		"test $name" {
 			repository.findEnumerationByName(name)

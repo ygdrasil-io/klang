@@ -82,7 +82,7 @@ fun typeOf(reference: String): Either<String, TypeRef> = either {
 	}
 	UnresolvedTypeRef(
 		reference,
-		typeName,
+		NotBlankString(typeName),
 		isConstant,
 		isPointer,
 		isStructure,
@@ -99,7 +99,7 @@ fun typeOf(reference: String): Either<String, TypeRef> = either {
 sealed interface TypeRef {
 
 	val referenceAsString: String
-	val typeName: String
+	val typeName: NotBlankString
 	val isConstant: Boolean
 	val isPointer: Boolean
 	val isStructure: Boolean
@@ -113,7 +113,7 @@ sealed interface TypeRef {
 
 	fun DeclarationRepository.resolveType(): TypeRef = when {
 		isCallback -> ResolvedTypeRef(this@TypeRef, typeName.toFunctionPointerType())
-		isPointer && typeName == "char" -> ResolvedTypeRef(this@TypeRef, StringType)
+		isPointer && typeName == NotBlankString("char") -> ResolvedTypeRef(this@TypeRef, StringType)
 		else -> findDeclarationByName<NameableDeclaration>(typeName)
 				?.let { ResolvedTypeRef(this@TypeRef, it) }
 				?: (this@TypeRef.also { logger.warn { "fail to resolve type : $it" } })
@@ -121,10 +121,10 @@ sealed interface TypeRef {
 
 }
 
-internal fun String.toFunctionPointerType(): FunctionPointerType {
-	val returnType = substringBefore("(").let { typeOf(it).unchecked() }
+internal fun NotBlankString.toFunctionPointerType(): FunctionPointerType {
+	val returnType = value.substringBefore("(").let { typeOf(it).unchecked() }
 
-	val arguments = substringAfter("(*)")
+	val arguments = value.substringAfter("(*)")
 		.replace("(", "")
 		.replace(")", "")
 		.split(",")
@@ -138,7 +138,7 @@ internal fun String.toFunctionPointerType(): FunctionPointerType {
 
 class UnresolvedTypeRef internal constructor(
 	override val referenceAsString: String,
-	override val typeName: String,
+	override val typeName: NotBlankString,
 	override val isConstant: Boolean = false,
 	override val isPointer: Boolean = false,
 	override val isStructure: Boolean = false,
@@ -159,12 +159,6 @@ class UnresolvedTypeRef internal constructor(
 
 	override fun hashCode(): Int {
 		return typeName.hashCode()
-	}
-
-	init {
-	    if (typeName == "char *") {
-			error("erratum")
-		}
 	}
 
 }

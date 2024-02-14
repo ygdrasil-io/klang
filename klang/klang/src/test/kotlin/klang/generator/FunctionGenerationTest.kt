@@ -3,6 +3,7 @@ package klang.generator
 import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.shouldBe
 import klang.InMemoryDeclarationRepository
+import klang.allDeclarationsFilter
 import klang.mapper.generateInterfaceLibrarySpec
 import klang.mapper.toInterfaceSpec
 import klang.parser.TestData
@@ -13,7 +14,7 @@ class FunctionGenerationTest : FreeSpec({
 
 	InMemoryDeclarationRepository().apply {
 		functions.forEach { save(it) }
-		resolveTypes()
+		resolveTypes(allDeclarationsFilter)
 	}
 
 	"generate kotlin functions" {

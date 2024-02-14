@@ -54,7 +54,7 @@ class TypeMaker(private val treeMaker: TreeMaker, val parsingContext: ParsingCon
     }
 
     fun declareClass(scopeClass: Scoped, type: Type) {
-        assert(type.kind == TypeKind.Record) { "illegal state with kind ${type.kind} instead of ${TypeKind.Record}" }
+        check(type.kind == TypeKind.Record) { "illegal state with kind ${type.kind} instead of ${TypeKind.Record}" }
         parsingContext.addTyped(type, Typed.Declared(scopeClass.cursor.fullName, scopeClass))
     }
 

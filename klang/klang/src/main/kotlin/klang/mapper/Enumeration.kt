@@ -3,7 +3,7 @@ package klang.mapper
 import com.squareup.kotlinpoet.*
 import klang.domain.NativeEnumeration
 
-internal fun NativeEnumeration.toSpecAsEnumeration(packageName: String) = ClassName(packageName, name)
+internal fun NativeEnumeration.toSpecAsEnumeration(packageName: String) = ClassName(packageName, name.value)
 	.let { enumerationClass ->
 		val valueType = type.toType(packageName)
 		val valueName = "value"

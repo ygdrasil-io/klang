@@ -2,6 +2,7 @@ package klang.parser.json.type
 
 import klang.domain.AnonymousEnumeration
 import klang.domain.NativeEnumeration
+import klang.domain.NotBlankString
 import klang.parser.json.domain.TranslationUnitKind
 import klang.parser.json.domain.TranslationUnitNode
 import klang.parser.json.domain.json
@@ -10,12 +11,12 @@ import kotlinx.serialization.json.jsonPrimitive
 import kotlinx.serialization.json.longOrNull
 
 internal fun TranslationUnitNode.toNativeTypeDefEnumeration(sibling: TranslationUnitNode) = NativeEnumeration(
-	name = sibling.json.typeAliasName(),
+	name = NotBlankString(sibling.json.typeAliasName()),
 	values = this.extractFields()
 )
 
 internal fun TranslationUnitNode.toNativeEnumeration() = NativeEnumeration(
-	name = json.typeAliasName(),
+	name = NotBlankString(json.typeAliasName()),
 	values = this.extractFields()
 )
 

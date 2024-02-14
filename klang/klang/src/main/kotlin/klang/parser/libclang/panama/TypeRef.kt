@@ -1,9 +1,6 @@
 package klang.parser.libclang.panama
 
-import klang.domain.TypeRef
-import klang.domain.UnresolvedTypeRef
-import klang.domain.typeOf
-import klang.domain.unchecked
+import klang.domain.*
 import org.openjdk.jextract.Type
 import org.openjdk.jextract.Type.Delegated
 import org.openjdk.jextract.impl.TypeImpl
@@ -16,12 +13,12 @@ internal fun Type.toTypeRef(): TypeRef = when (this) {
 			when (type) {
 				is TypeImpl.FunctionImpl -> UnresolvedTypeRef(
 					toString(),
-					type.toTypeString(),
+					NotBlankString(type.toTypeString()),
 					isPointer = true,
 					isCallback = true
 				)
 				else -> type.toTypeString().removeConstPrefix().removePointerSuffix()
-					.let { typeName -> UnresolvedTypeRef(toString(), typeName, isPointer = true)  }
+					.let { typeName -> UnresolvedTypeRef(toString(), NotBlankString(typeName), isPointer = true)  }
 			}
 		}
 

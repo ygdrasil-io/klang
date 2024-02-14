@@ -3,13 +3,15 @@ package klang.generator
 import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.shouldBe
 import klang.InMemoryDeclarationRepository
+import klang.allDeclarationsFilter
 import klang.domain.NativeEnumeration
+import klang.domain.NotBlankString
 import klang.mapper.toSpecAsEnumeration
 
 class EnumerationGenerationTest : FreeSpec({
 
 	val enumeration = NativeEnumeration(
-		name = "MyEnum",
+		name = NotBlankString("MyEnum"),
 		values = listOf(
 			Pair("FIRST", 1),
 			Pair("SECOND", 2),
@@ -19,7 +21,7 @@ class EnumerationGenerationTest : FreeSpec({
 
 	InMemoryDeclarationRepository().apply {
 		save(enumeration)
-		resolveTypes()
+		resolveTypes(allDeclarationsFilter)
 	}
 
 	"generate kotlin enumeration" {

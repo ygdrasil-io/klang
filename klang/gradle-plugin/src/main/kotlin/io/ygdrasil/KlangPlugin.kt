@@ -203,9 +203,10 @@ class KlangPlugin : Plugin<Project> {
 	}
 
 	private fun Project.unpackCHeaderTask(): Task = task("unpackCHeader") { task ->
-		task.onlyIf { this.cHeadersDirectory.doesNotExists() || this.cHeadersDirectory.isDirectoryEmpty() }
+		task.onlyIf { cHeadersDirectory.doesNotExists() || cHeadersDirectory.isDirectoryEmpty() }
 		task.doFirst {
-			this.cHeadersDirectory.deleteRecursively()
+			cHeadersDirectory.deleteRecursively()
+			cHeadersDirectory.mkdirs()
 			HeaderManager.putPlatformHeaderAt(cHeadersDirectory.toPath())
 		}
 	}

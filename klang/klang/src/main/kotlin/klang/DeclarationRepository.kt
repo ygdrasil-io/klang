@@ -2,6 +2,13 @@ package klang
 
 import klang.domain.*
 
+val libraryDeclarationsFilter: (ResolvableDeclaration) -> Boolean  = { resolvableDeclaration ->
+	when (resolvableDeclaration) {
+		is SourceableDeclaration -> (resolvableDeclaration.source is DeclarationOrigin.LibraryHeader)
+		else -> false
+	}
+}
+
 interface DeclarationRepository {
 
 	val declarations: Set<NativeDeclaration>
@@ -9,7 +16,7 @@ interface DeclarationRepository {
 	fun save(declaration: NameableDeclaration)
 	fun clear()
 	fun update(nativeEnumeration: NativeDeclaration, provider: () -> NativeDeclaration): NativeDeclaration
-	fun resolveTypes(filter: (ResolvableDeclaration) -> Boolean = {true})
+	fun resolveTypes(filter: (ResolvableDeclaration) -> Boolean = libraryDeclarationsFilter)
 
 	fun findEnumerationByName(name: String) = findDeclarationByName<NativeEnumeration>(name)
 

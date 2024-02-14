@@ -5,6 +5,9 @@ import mu.KotlinLogging
 
 private val logger = KotlinLogging.logger {}
 
+/**
+ * This sealed interface represents a native C/C++ or Objective-C declaration.
+ */
 sealed interface NativeDeclaration {
 	fun <T : NativeDeclaration> merge(other: T) {
 		logger.debug { "merging $this with $other is not relevant" }

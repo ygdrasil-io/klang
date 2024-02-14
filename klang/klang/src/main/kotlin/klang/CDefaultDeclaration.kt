@@ -6,6 +6,7 @@ import klang.domain.VoidType
 
 fun DeclarationRepository.insertCDefaultDeclaration() {
 	save(VoidType)
+	save(PlatformDependantSizeType(32..64, "size_t"))
 	byteType.forEach { save(FixeSizeType(8, it)) }
 	shortType.forEach { save(FixeSizeType(16, it)) }
 	intType.forEach { save(FixeSizeType(32, it)) }
@@ -15,7 +16,6 @@ fun DeclarationRepository.insertCDefaultDeclaration() {
 	longType.forEach { save(PlatformDependantSizeType(32..64, it)) }
 	charType.forEach { save(PlatformDependantSizeType(16..32, it)) }
 }
-
 
 // 8 bits
 private val byteType = listOf("char", "unsigned char", "uint16_t", "int16_t")

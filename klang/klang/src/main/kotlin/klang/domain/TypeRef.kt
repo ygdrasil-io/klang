@@ -160,6 +160,13 @@ class UnresolvedTypeRef internal constructor(
 	override fun hashCode(): Int {
 		return typeName.hashCode()
 	}
+
+	init {
+	    if (typeName == "char *") {
+			error("erratum")
+		}
+	}
+
 }
 
 class ResolvedTypeRef internal constructor(private val typeRef: TypeRef, val type: NativeDeclaration) :

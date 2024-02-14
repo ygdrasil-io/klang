@@ -1,7 +1,8 @@
 package klang.parser.libclang
 
-import klang.domain.DeclarationOrigin.LibraryHeader
-import klang.domain.SourceableDeclaration
+import io.kotest.matchers.shouldNotBe
+import klang.DeclarationRepository
+import klang.domain.NativeEnumeration
 import klang.helper.HeaderManager
 import klang.helper.HeaderManager.inferPlatformSuffix
 import klang.helper.unzipFromClasspath
@@ -25,22 +26,22 @@ class SDL2ItTest : ParserTestCommon({
 
 		// When
 		val repository = parseFile(fileToParse, filePath, headerPaths)
-			.also {
-				it.resolveTypes { resolvableDeclaration ->
-					when (resolvableDeclaration) {
-						is SourceableDeclaration -> (resolvableDeclaration.source is LibraryHeader)
-						else -> false
-					}
-				}
-			}
+			.also(DeclarationRepository::resolveTypes)
 
-		repository.findFunctionByName("SDL_Rect")
+		repository.findStructureByName("SDL_Rect")
 			.let { println("SDL_Rect $it") }
 
 		// Then
 		repository.apply {
 			val libraryDeclarations = findLibraryDeclaration()
 			println(libraryDeclarations.size)
+
+			libraryDeclarations.filterIsInstance<NativeEnumeration>()
+				.forEach {
+					logger.info("testing ${it.name} enumeration")
+					it.name.isNotBlank() shouldNotBe true
+					it.values.isEmpty() shouldNotBe true
+				}
 		}
 
 	}

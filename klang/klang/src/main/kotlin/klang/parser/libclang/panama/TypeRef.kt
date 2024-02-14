@@ -1,6 +1,5 @@
 package klang.parser.libclang.panama
 
-import jdk.internal.foreign.layout.ValueLayouts
 import klang.domain.TypeRef
 import klang.domain.UnresolvedTypeRef
 import klang.domain.typeOf
@@ -21,8 +20,8 @@ internal fun Type.toTypeRef(): TypeRef = when (this) {
 					isPointer = true,
 					isCallback = true
 				)
-
-				else -> UnresolvedTypeRef(toString(), type.toTypeString(), isPointer = true)
+				else -> type.toTypeString().removeConstPrefix().removePointerSuffix()
+					.let { typeName -> UnresolvedTypeRef(toString(), typeName, isPointer = true)  }
 			}
 		}
 
@@ -41,11 +40,18 @@ internal fun Type.toTypeRef(): TypeRef = when (this) {
 	else -> TODO("unsupported yet")
 }
 
+//TODO find a better way to handle this
+private fun String.removePointerSuffix(): String = removeSuffix(" *")
+
+//TODO find a better way to handle this
+private fun String.removeConstPrefix(): String = removePrefix("const ")
+
 private fun Type.toTypeString(): String = when (this) {
 	is TypeImpl.DeclaredImpl -> toTypeString()
 	is TypeImpl.PrimitiveImpl -> kind().typeName()
 	is TypeImpl.QualifiedImpl -> name()
 		.orElseGet { type().toTypeString() }
+
 	is TypeImpl.ArrayImpl -> elementType().toTypeString()
 		.let { typeAsString -> countElements()?.let { "$typeAsString[$it]" } ?: "$typeAsString[]" }
 
@@ -60,7 +66,7 @@ private fun TypeImpl.FunctionImpl.functionToTypeString(): String {
 
 private fun List<Type>.toTypeString(): String = map {
 	it.toTypeRef().typeName
-}.joinToString("," )
+}.joinToString(",")
 
 @Suppress("INACCESSIBLE_TYPE")
 private fun TypeImpl.DeclaredImpl.toTypeString(): String = tree().name()
@@ -68,7 +74,7 @@ private fun TypeImpl.DeclaredImpl.toTypeString(): String = tree().name()
 // if declared name is not accessible, we try to get type name directly
 	?: tree().layout()?.orElse(null)?.let {
 		when {
-			it is ValueLayout.OfInt && it.byteSize() == 4L-> "int"
+			it is ValueLayout.OfInt && it.byteSize() == 4L -> "int"
 			else -> error("fail to get type name from type ${it.javaClass.name}")
 		}
 	}

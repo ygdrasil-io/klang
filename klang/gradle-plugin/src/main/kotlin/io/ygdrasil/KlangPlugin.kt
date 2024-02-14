@@ -216,42 +216,24 @@ private fun DeclarationRepository.generateKotlinFiles(outputDirectory: File, bas
 	outputDirectory.deleteRecursively()
 	outputDirectory.mkdirs()
 
+	val declarations = findLibraryDeclaration()
+
 	declarations
 		.filterIsInstance<NativeEnumeration>()
 		.generateKotlinFile(outputDirectory, basePackage)
 
-	declarations.asSequence()
+	declarations
 		.filterIsInstance<NativeFunction>()
-		.removeCNativeFunctions()
-		.toList()
 		.generateKotlinFile(outputDirectory, basePackage, libraryName)
 
-	declarations.asSequence()
+	declarations
 		.filterIsInstance<NativeTypeAlias>()
-		.filter { it.name.startsWith("__").not() }
-		.filter { it.typeRef.typeName.startsWith("__").not() }
-		.filter { findStructureByName(it.typeRef.typeName) == null }
-		.filter { findEnumerationByName(it.typeRef.typeName) == null }
-		.toList()
 		.generateKotlinFile(outputDirectory, basePackage)
 
-	declarations.asSequence()
+	declarations
 		.filterIsInstance<NativeStructure>()
-		.filter { it.name.startsWith("__").not() }
-		.filter { it.fields.none { it.name.startsWith("__") } }
-		.toList()
 		.generateKotlinFile(outputDirectory, basePackage)
 }
-
-// TODO find a better way to do that
-// Skip specific C functions
-private fun Sequence<NativeFunction>.removeCNativeFunctions(): Sequence<NativeFunction> =
-	filter { function ->
-		function.name.startsWith("__").not() && function.name.startsWith("_")
-			.not() && function.arguments
-			.mapNotNull { it.name }
-			.none { name -> name.startsWith("__") && name.startsWith("_") }
-	}
 
 private val String.hash
 	get() = toByteArray()

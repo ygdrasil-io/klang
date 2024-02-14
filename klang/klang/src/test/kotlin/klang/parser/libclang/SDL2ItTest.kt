@@ -43,6 +43,12 @@ class SDL2ItTest : ParserTestCommon({
 					it.name.value.isNotBlank() shouldBe true
 					it.values.isEmpty() shouldNotBe true
 				}
+			
+			findFunctionByName("SDL_ReportAssertion")
+				.let { 
+					it shouldNotBe null
+					//it?.arguments?.forEachIndexed { index, argument -> argument.name shouldBe "arg$index"  }
+				}
 		}
 
 	}

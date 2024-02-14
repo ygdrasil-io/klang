@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory
 import java.io.File
 import java.net.URL
 import java.nio.file.Files
+import java.nio.file.Path
 import java.nio.file.StandardCopyOption
 import java.security.MessageDigest
 
@@ -137,8 +138,8 @@ class KlangPlugin : Plugin<Project> {
 				.filterIsInstance<KlangPluginTask.Parse>()
 				.map { Triple(it.sourceFile, workingDirectory.resolve(it.sourcePath), it.onSuccess) }
 				.forEach { (fileToParse, sourcePath, onSuccess) ->
-					val localFileToParse = File(fileToParse)
-					check(localFileToParse.exists()) { "File to parse does not exist" }
+					val localFileToParse = Path.of(sourcePath.absolutePath).resolve(fileToParse).toFile()
+					check(localFileToParse.exists()) { "${localFileToParse.absolutePath} to parse does not exist" }
 					check(localFileToParse.isFile()) { "${localFileToParse.absolutePath} is not a file" }
 					check(localFileToParse.canRead()) { "${localFileToParse.absolutePath} is not readable" }
 					check(localFileToParse.length() > 0) { "${localFileToParse.absolutePath} is empty" }

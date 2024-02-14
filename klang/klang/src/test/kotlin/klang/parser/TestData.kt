@@ -15,9 +15,9 @@ object TestData {
 			name = NotBlankString("function"),
 			returnType = testType("char"),
 			arguments = listOf(
-				NativeFunction.Argument("a", testType("int *")),
-				NativeFunction.Argument("b", testType("void *")),
-				NativeFunction.Argument("myEnum", testType("enum EnumName")),
+				NativeFunction.Argument(NotBlankString("a"), testType("int *")),
+				NativeFunction.Argument(NotBlankString("b"), testType("void *")),
+				NativeFunction.Argument(NotBlankString("myEnum"), testType("enum EnumName")),
 			)
 		),
 		NativeFunction(

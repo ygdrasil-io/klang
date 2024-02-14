@@ -10,7 +10,7 @@ data class NativeFunction(
 ): NameableDeclaration, NativeDeclaration, ResolvableDeclaration {
 
 	data class Argument(
-		val name: String?,
+		val name: NotBlankString?,
 		var type: TypeRef
 	) : ResolvableDeclaration {
 

@@ -1,9 +1,6 @@
 package klang.parser.json.type
 
-import klang.domain.NativeFunction
-import klang.domain.NotBlankString
-import klang.domain.typeOf
-import klang.domain.unchecked
+import klang.domain.*
 import klang.parser.json.domain.TranslationUnitKind
 import klang.parser.json.domain.TranslationUnitNode
 import klang.parser.json.domain.json
@@ -21,10 +18,10 @@ private fun TranslationUnitNode.arguments() =
 			.map { it.extractArguments() }
 
 private fun TranslationUnitNode.extractArguments(): NativeFunction.Argument {
-	val name = json.nullableName()
+	val name = json.nullableName() ?: ""
 	val type = json.nullableType()
 		?: error("no type for : $this")
-	return NativeFunction.Argument(name, typeOf(type).unchecked("fail to create type $type"))
+	return NativeFunction.Argument(notBlankString(name), typeOf(type).unchecked("fail to create type $type"))
 }
 
 private fun String.adapt() = let { it.substring(0, it.indexOf("(")) }

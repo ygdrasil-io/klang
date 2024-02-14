@@ -26,7 +26,7 @@ class FunctionGenerationWithStructurePointerTest : FreeSpec({
 			name = NotBlankString("function"),
 			returnType = testType("void"),
 			arguments = listOf(
-				NativeFunction.Argument("structure", testType("MyStructure *")),
+				NativeFunction.Argument(NotBlankString("structure"), testType("MyStructure *")),
 			)
 		)
 

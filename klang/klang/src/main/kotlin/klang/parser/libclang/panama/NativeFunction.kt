@@ -1,9 +1,6 @@
 package klang.parser.libclang.panama
 
-import klang.domain.DeclarationOrigin
-import klang.domain.NameableDeclaration
-import klang.domain.NativeFunction
-import klang.domain.NotBlankString
+import klang.domain.*
 import org.openjdk.jextract.Declaration
 import org.openjdk.jextract.Declaration.Variable
 
@@ -15,6 +12,6 @@ internal fun Declaration.Function.toNativeTypeAlias(origin: DeclarationOrigin): 
 )
 
 private fun Variable.toArgument() = NativeFunction.Argument(
-	name(),
+	notBlankString(name()),
 	type().toTypeRef()
 )

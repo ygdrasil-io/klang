@@ -24,7 +24,7 @@ private fun NativeFunction.toSpec(packageName: String) = FunSpec
 	.build()
 
 private fun NativeFunction.Argument.toSpec(packageName: String, index: Int) = ParameterSpec
-	.builder(name ?: "parameter$index", type.toType(packageName).copy(nullable = type.isNullable ?: true))
+	.builder(name?.value ?: "parameter$index", type.toType(packageName).copy(nullable = type.isNullable ?: true))
 	//TODO find how to escape %
 	.addKdoc("mapped from ${type.referenceAsString.replace("%", "")}")
 	.build()

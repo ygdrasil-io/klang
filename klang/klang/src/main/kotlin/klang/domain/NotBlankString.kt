@@ -7,7 +7,9 @@ fun notBlankString(value: String) = value.takeIf(String::isNotBlank)
 value class NotBlankString(val value: String) : Comparable<String> by value  {
 
 	init {
-		check(value.isNotBlank()) { error("value cannot be blank")}
+		check(value.isNotBlank()) {
+			error("value cannot be blank")
+		}
 	}
 
 	override fun toString(): String {

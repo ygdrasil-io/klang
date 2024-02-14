@@ -1,5 +1,6 @@
 package klang.parser.libclang
 
+import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import klang.DeclarationRepository
 import klang.domain.NativeEnumeration
@@ -39,7 +40,7 @@ class SDL2ItTest : ParserTestCommon({
 			libraryDeclarations.filterIsInstance<NativeEnumeration>()
 				.forEach {
 					logger.info("testing ${it.name} enumeration")
-					it.name.value.isNotBlank() shouldNotBe true
+					it.name.value.isNotBlank() shouldBe true
 					it.values.isEmpty() shouldNotBe true
 				}
 		}

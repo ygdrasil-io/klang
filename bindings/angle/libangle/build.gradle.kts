@@ -1,5 +1,6 @@
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
+import java.net.URI
 import java.net.URL
 
 buildscript {
@@ -49,7 +50,8 @@ sourceSets.main {
 	java.srcDirs(buildDir)
 }
 
-val headerUrl = URL("https://github.com/klang-toolkit/ANGLE-binary/releases/download/2-beta/headers.zip")
+val headerUrl = URI("https://github.com/klang-toolkit/ANGLE-binary/releases/download/2-beta/headers.zip")
+	.toURL()
 
 klang {
 	download(headerUrl)

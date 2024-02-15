@@ -1,3 +1,4 @@
+import io.ygdrasil.ParsingMethod
 import klang.domain.typeOf
 import klang.domain.unchecked
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
@@ -53,6 +54,9 @@ sourceSets.main {
 val headerUrl = URL("https://github.com/gfx-rs/wgpu-native/releases/download/v0.18.1.2/wgpu-macos-x86_64-release.zip")
 
 klang {
+
+	parsingMethod = ParsingMethod.Libclang
+
 	download(headerUrl)
 		.let(::unpack)
 		.let {

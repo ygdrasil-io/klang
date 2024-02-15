@@ -2,6 +2,7 @@ import klang.domain.typeOf
 import klang.domain.unchecked
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
+import java.net.URI
 import java.net.URL
 
 buildscript {
@@ -50,7 +51,8 @@ sourceSets.main {
 	java.srcDirs(buildDir)
 }
 
-val headerUrl = URL("https://github.com/klang-toolkit/ANGLE-binary/releases/download/2-beta/headers.zip")
+val headerUrl = URI("https://github.com/klang-toolkit/ANGLE-binary/releases/download/2-beta/headers.zip")
+	.toURL()
 
 klang {
 	download(headerUrl)
@@ -58,7 +60,7 @@ klang {
 		.let {
 			parse(fileToParse = "GLES3/gl3.h", at = it) {
 				findFunctionByName("glShaderSource")?.let { function ->
-					function.arguments.first { it.name == "string" }.apply {
+					function.arguments.first { it.name?.value == "string" }.apply {
 						type = typeOf("char *").unchecked()
 					}
 				}

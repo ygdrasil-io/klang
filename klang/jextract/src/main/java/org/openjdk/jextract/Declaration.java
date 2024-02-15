@@ -178,7 +178,7 @@ public interface Declaration {
          * The (optional) layout associated with this scoped declaration.
          * @return The (optional) layout associated with this scoped declaration.
          *
-         * @implSpec a layout is present if the scoped declaration kind is one of {@link Kind#STRUCT}, {@link Kind#UNION},
+         * implSpec a layout is present if the scoped declaration kind is one of {@link Kind#STRUCT}, {@link Kind#UNION},
          * {@link Kind#ENUM}, {@link Kind#BITFIELDS}, {@link Kind#CLASS} <em>and</em> if this declaration models an entity in the foreign
          * language that is associated with a <em>definition</em>.
          */

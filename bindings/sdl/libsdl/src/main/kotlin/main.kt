@@ -25,12 +25,17 @@ fun SDL_WINDOWPOS_CENTERED_DISPLAY(X: Int): Int {
 val SDL_WINDOWPOS_CENTERED: Int = SDL_WINDOWPOS_CENTERED_DISPLAY(0)
 
 fun main() {
-	libSDL2Library.SDL_Init(0)
+	//libSDL2Library.SDL_Init(0)
+
+	println("Init SDL")
 
 	if (libSDL2Library.SDL_Init(SDL_INIT_EVERYTHING) != 0) {
 		println("error initializing SDL: ${libSDL2Library.SDL_GetError()}" );
 		return
 	}
+
+	println("create window")
+
 	libSDL2Library.SDL_CreateWindow(
 		"Game",
 		SDL_WINDOWPOS_CENTERED,

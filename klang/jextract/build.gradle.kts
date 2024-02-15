@@ -19,6 +19,12 @@ tasks.withType<JavaCompile>().configureEach {
 	options.compilerArgs.add("--enable-preview")
 }
 
+tasks.withType<Javadoc>().configureEach {
+	val javadocOptions = options as CoreJavadocOptions
+	javadocOptions.addBooleanOption("-enable-preview", true)
+	javadocOptions.addStringOption("source", "21")
+}
+
 task("runTest", JavaExec::class) {
 	jvmArgs(
 		"--enable-preview",

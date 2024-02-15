@@ -264,7 +264,7 @@ public interface Type {
          * The (optional) array element count.
          * @return The (optional) array element count.
          *
-         * @implSpec an element count is present if the array type kind is one of {@link Kind#VECTOR}, {@link Kind#ARRAY}.
+         * implSpec an element count is present if the array type kind is one of {@link Kind#VECTOR}, {@link Kind#ARRAY}.
          */
         OptionalLong elementCount();
 
@@ -325,7 +325,7 @@ public interface Type {
          * The delegated type (optional) name.
          * @return The delegated type (optional) name.
          *
-         * @implSpec an element count is present if the array type kind is one of {@link Kind#TYPEDEF}.
+         * implSpec an element count is present if the array type kind is one of {@link Kind#TYPEDEF}.
          */
         Optional<String> name();
 

@@ -67,7 +67,7 @@ class SdlUI(width: Int, height: Int): AutoCloseable {
 	private val pixelHeight = height * Sprites.h
 
 	init {
-		if (libSDL2Library.SDL_Init(SDL_INIT_EVERYTHING) != 0) {
+		if (libSDL2Library.SDL_Init(SDL_INIT_EVERYTHING.toInt()) != 0) {
 			println("SDL_Init Error: ${libSDL2Library.SDL_GetError()}")
 			throw Error()
 		}
@@ -94,7 +94,7 @@ class SdlUI(width: Int, height: Int): AutoCloseable {
 
 	fun draw(game: Game) {
 		libSDL2Library.SDL_RenderClear(renderer)
-		libSDL2Library.SDL_SetRenderDrawColor(renderer, (200 / 2).toByte(), (230 / 2).toByte(), (151 / 2).toByte(), SDL_ALPHA_OPAQUE)
+		libSDL2Library.SDL_SetRenderDrawColor(renderer, (200 / 2).toByte(), (230 / 2).toByte(), (151 / 2).toByte(), SDL_ALPHA_OPAQUE.toByte())
 
 		val grassW = 256
 		val grassScaledW = 400 // scale grass up to reduce its resolution so that it's similar to snake sprites

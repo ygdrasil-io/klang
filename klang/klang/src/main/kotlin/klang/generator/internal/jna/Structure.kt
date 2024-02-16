@@ -1,4 +1,4 @@
-package klang.generator
+package klang.generator.internal.jna
 
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.TypeSpec

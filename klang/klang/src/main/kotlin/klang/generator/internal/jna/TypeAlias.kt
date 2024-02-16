@@ -1,4 +1,4 @@
-package klang.generator
+package klang.generator.internal.jna
 
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.TypeAliasSpec
@@ -7,7 +7,7 @@ import klang.domain.NativeTypeAlias
 import klang.mapper.toSpec
 import java.io.File
 
-fun List<NativeTypeAlias>.generateKotlinFile(outputDirectory: File, packageName: String) {
+internal fun List<NativeTypeAlias>.generateKotlinFile(outputDirectory: File, packageName: String) {
 
 	check(outputDirectory.isDirectory) { "Output directory must be a directory" }
 

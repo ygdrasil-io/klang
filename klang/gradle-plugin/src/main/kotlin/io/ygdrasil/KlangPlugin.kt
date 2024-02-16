@@ -2,11 +2,7 @@ package io.ygdrasil
 
 import klang.DeclarationRepository
 import klang.InMemoryDeclarationRepository
-import klang.domain.NativeEnumeration
-import klang.domain.NativeFunction
-import klang.domain.NativeStructure
-import klang.domain.NativeTypeAlias
-import klang.generator.generateKotlinFile
+import klang.generator.JnaBindingGenerator.generateKotlinFiles
 import klang.helper.HeaderManager
 import klang.helper.doesNotExists
 import klang.helper.isDirectoryEmpty
@@ -211,30 +207,6 @@ class KlangPlugin : Plugin<Project> {
 		}
 	}
 
-}
-
-private fun DeclarationRepository.generateKotlinFiles(outputDirectory: File, basePackage: String, libraryName: String) {
-
-	outputDirectory.deleteRecursively()
-	outputDirectory.mkdirs()
-
-	val declarations = findLibraryDeclaration()
-
-	declarations
-		.filterIsInstance<NativeEnumeration>()
-		.generateKotlinFile(outputDirectory, basePackage)
-
-	declarations
-		.filterIsInstance<NativeFunction>()
-		.generateKotlinFile(outputDirectory, basePackage, libraryName)
-
-	declarations
-		.filterIsInstance<NativeTypeAlias>()
-		.generateKotlinFile(outputDirectory, basePackage)
-
-	declarations
-		.filterIsInstance<NativeStructure>()
-		.generateKotlinFile(outputDirectory, basePackage)
 }
 
 private val String.hash

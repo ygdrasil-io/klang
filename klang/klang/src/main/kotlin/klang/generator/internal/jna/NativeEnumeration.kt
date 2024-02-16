@@ -1,11 +1,11 @@
-package klang.generator
+package klang.generator.internal.jna
 
 import com.squareup.kotlinpoet.FileSpec
 import klang.domain.NativeEnumeration
 import klang.mapper.toSpecAsEnumeration
 import java.io.File
 
-fun List<NativeEnumeration>.generateKotlinFile(outputDirectory: File, packageName: String) {
+internal fun List<NativeEnumeration>.generateKotlinFile(outputDirectory: File, packageName: String) {
 
 	check(outputDirectory.isDirectory) { "Output directory must be a directory" }
 

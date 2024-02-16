@@ -8,7 +8,7 @@ import kotlin.io.path.absolutePathString
 object OriginProcessor {
 
 	internal fun Position?.toOrigin(filePath: Path?): DeclarationOrigin = when {
-		filePath == null || this == null -> DeclarationOrigin.UnknownOrigin
+		filePath == null || this == null -> DeclarationOrigin.Unknown
 		else -> when {
 			isInFilePath(filePath) -> DeclarationOrigin.LibraryHeader(path().absolutePathString())
 			else -> DeclarationOrigin.PlatformHeader

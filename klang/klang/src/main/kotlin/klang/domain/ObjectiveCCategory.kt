@@ -8,7 +8,7 @@ data class ObjectiveCCategory(
 	override val name: NotBlankString,
 	var superType: TypeRef,
 	val methods: List<ObjectiveCClass.Method>,
-	override val source: DeclarationOrigin = DeclarationOrigin.UnknownOrigin
+	override val source: DeclarationOrigin = DeclarationOrigin.Unknown
 ) : NameableDeclaration, ResolvableDeclaration {
 
 	override fun DeclarationRepository.resolve() {

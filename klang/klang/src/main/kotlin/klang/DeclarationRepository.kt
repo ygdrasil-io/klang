@@ -20,6 +20,9 @@ interface DeclarationRepository {
 	fun update(nativeEnumeration: NativeDeclaration, provider: () -> NativeDeclaration): NativeDeclaration
 	fun resolveTypes(filter: (ResolvableDeclaration) -> Boolean = libraryDeclarationsFilter)
 
+	fun findConstantByName(name: String) = findConstantByName(NotBlankString(name))
+	fun findConstantByName(name: NotBlankString) = findDeclarationByName<NativeConstant<*>>(name)
+
 	fun findEnumerationByName(name: String) = findEnumerationByName(NotBlankString(name))
 	fun findEnumerationByName(name: NotBlankString) = findDeclarationByName<NativeEnumeration>(name)
 

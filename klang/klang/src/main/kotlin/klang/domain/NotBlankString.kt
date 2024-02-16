@@ -4,7 +4,7 @@ fun notBlankString(value: String) = value.takeIf(String::isNotBlank)
 	?.let { NotBlankString(value) }
 
 @JvmInline
-value class NotBlankString(val value: String) : Comparable<String> by value  {
+value class NotBlankString(val value: String) : Comparable<String> by value, CharSequence by value  {
 
 	init {
 		check(value.isNotBlank()) {
@@ -15,4 +15,5 @@ value class NotBlankString(val value: String) : Comparable<String> by value  {
 	override fun toString(): String {
 		return value
 	}
+
 }

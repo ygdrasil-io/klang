@@ -6,7 +6,7 @@ data class NativeFunction(
 	override val name: NotBlankString,
 	var returnType: TypeRef,
 	val arguments: List<Argument>,
-	override val source: DeclarationOrigin = DeclarationOrigin.UnknownOrigin
+	override val source: DeclarationOrigin = DeclarationOrigin.Unknown
 ): NameableDeclaration, NativeDeclaration, ResolvableDeclaration {
 
 	data class Argument(

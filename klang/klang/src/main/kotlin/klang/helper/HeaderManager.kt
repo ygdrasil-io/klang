@@ -1,9 +1,13 @@
 package klang.helper
 
 import OperatingSystem
+import klang.domain.NotBlankString
 import operatingSystem
+import java.nio.file.Files
 import java.nio.file.Path
+import kotlin.io.path.ExperimentalPathApi
 import kotlin.io.path.absolutePathString
+import kotlin.io.path.deleteRecursively
 import kotlin.io.path.exists
 
 object HeaderManager {
@@ -36,5 +40,19 @@ object HeaderManager {
 		OperatingSystem.LINUX -> "linux"
 		else -> error("Operating system $operatingSystem not supported")
 	}
+
+	fun createTemporaryHeaderDirectory(directoryName: String = "headers") = createTemporaryHeaderDirectory(NotBlankString(directoryName))
+
+	@OptIn(ExperimentalPathApi::class)
+	fun createTemporaryHeaderDirectory(directoryName: NotBlankString): Path = Files.createTempDirectory("headers")
+			.also(::deleteDirectoryOnShutdown)
 }
 
+@OptIn(ExperimentalPathApi::class)
+private fun deleteDirectoryOnShutdown(it: Path) {
+	Runtime.getRuntime().addShutdownHook(object : Thread() {
+		override fun run() {
+			it.deleteRecursively()
+		}
+	})
+}

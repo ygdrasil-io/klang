@@ -4,8 +4,11 @@ import klang.DeclarationRepository
 import klang.InMemoryDeclarationRepository
 import klang.domain.DeclarationOrigin
 import klang.domain.NameableDeclaration
+import klang.domain.NativeConstant
+import klang.domain.notBlankString
 import klang.parse
 import klang.parser.libclang.panama.OriginProcessor.toOrigin
+import klang.parser.libclang.panama.toNativeConstant
 import klang.parser.libclang.panama.toNativeEnumeration
 import klang.parser.libclang.panama.toNativeStructure
 import klang.parser.libclang.panama.toNativeTypeAlias
@@ -44,6 +47,7 @@ fun parseFileWithPanama(file: String, filePath: Path?, headerPaths: Array<Path>)
 					is Scoped -> it.scopedToLocalDeclaration(origin = origin)
 					is Typedef -> it.typeDefToLocalDeclaration(origin)
 					is Declaration.Function -> it.toNativeTypeAlias(origin)
+					is Declaration.Constant -> it.toNativeConstant(origin)
 					else -> {
 						logger.error { "not found $it" }
 						null
@@ -54,6 +58,8 @@ fun parseFileWithPanama(file: String, filePath: Path?, headerPaths: Array<Path>)
 			.forEach { save(it) }
 
 	}
+
+
 
 internal fun Declaration.declarationIsOnFilePath(filePath: Path?): Boolean = filePath
 	?.pathString

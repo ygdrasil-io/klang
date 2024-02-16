@@ -27,15 +27,12 @@ class SDL2ItTest : ParserTestCommon({
 
 		// When
 		val repository = parseFile(fileToParse, filePath, headerPaths)
+			// And
 			.also(DeclarationRepository::resolveTypes)
-
-		repository.findStructureByName("SDL_Rect")
-			.let { println("SDL_Rect $it") }
 
 		// Then
 		repository.apply {
 			val libraryDeclarations = findLibraryDeclaration()
-			println(libraryDeclarations.size)
 
 			libraryDeclarations.filterIsInstance<NativeEnumeration>()
 				.forEach {
@@ -43,22 +40,17 @@ class SDL2ItTest : ParserTestCommon({
 					it.name.value.isNotBlank() shouldBe true
 					it.values.isEmpty() shouldNotBe true
 				}
-			
-			findFunctionByName("SDL_ReportAssertion")
-				.let { 
-					it shouldNotBe null
-					//it?.arguments?.forEachIndexed { index, argument -> argument.name shouldBe "arg$index"  }
-				}
+
+			findFunctionByName("SDL_ReportAssertion") shouldNotBe null
+			findStructureByName("SDL_Rect") shouldNotBe null
 		}
 
 	}
 })
 
 private fun initSDL2HeaderDirectory(): Pair<Path, Path> {
-	val tempDirectoryPath = Files.createTempDirectory("SDL2")
-		.also { it.toFile().deleteOnExit() }
-	val otherHeaderTempDirectoryPath = Files.createTempDirectory("headers")
-		.also { it.toFile().deleteOnExit() }
+	val tempDirectoryPath = HeaderManager.createTemporaryHeaderDirectory("SDL2")
+	val otherHeaderTempDirectoryPath = HeaderManager.createTemporaryHeaderDirectory("headers")
 
 	logger.info { "will use directory ${tempDirectoryPath.absolutePathString()} to parse SDL2" }
 

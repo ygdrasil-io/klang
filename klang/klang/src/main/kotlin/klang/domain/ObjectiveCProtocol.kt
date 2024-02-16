@@ -5,5 +5,5 @@ data class ObjectiveCProtocol(
 	val protocols: Set<String>,
 	var properties: List<ObjectiveCClass.Property>,
 	var methods: List<ObjectiveCClass.Method>,
-	override val source: DeclarationOrigin = DeclarationOrigin.UnknownOrigin
+	override val source: DeclarationOrigin = DeclarationOrigin.Unknown
 ) : NameableDeclaration

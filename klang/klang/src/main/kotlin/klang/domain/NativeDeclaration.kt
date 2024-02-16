@@ -52,7 +52,7 @@ sealed interface DeclarationOrigin {
 	/**
 	 * Represents an unknown origin of a native declaration.
 	 */
-	object UnknownOrigin : DeclarationOrigin
+	object Unknown : DeclarationOrigin
 
 	/**
 	 * Represents a platform-specific header used for native declarations, like libc.

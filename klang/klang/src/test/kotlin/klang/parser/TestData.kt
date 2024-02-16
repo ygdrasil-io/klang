@@ -150,8 +150,8 @@ object TestData {
 			name = NotBlankString("StructName2"),
 			fields = listOf(
 				TypeRefField("field1", testType("StructName")),
-					TypeRefField("field2", testType("StructName *")),
-						TypeRefField("field3", testType("char"))
+				TypeRefField("field2", testType("StructName *")),
+				TypeRefField("field3", testType("char"))
 			)
 		)
 	)
@@ -230,5 +230,29 @@ object TestData {
 			name = NotBlankString("arr_of_unsigned_char_t"),
 			typeRef = testType("char[10]")
 		)
+	)
+
+	val stringConstants = listOf(
+		NativeConstant(NotBlankString("STRING_CONSTANT1"), "Hello"),
+		NativeConstant(NotBlankString("STRING_CONSTANT2"), "World"),
+		NativeConstant(NotBlankString("STRING_CONSTANT3"), "AI"),
+		NativeConstant(NotBlankString("STRING_CONSTANT4"), "Programming"),
+		NativeConstant(NotBlankString("STRING_CONSTANT5"), "Assistant")
+	)
+
+	val longConstants = listOf(
+		NativeConstant(NotBlankString("LONG_CONSTANT1"), 10000000000L),
+		NativeConstant(NotBlankString("LONG_CONSTANT2"), 20000000000L),
+		NativeConstant(NotBlankString("LONG_CONSTANT3"), 30000000000L),
+		NativeConstant(NotBlankString("LONG_CONSTANT4"), 40000000000L),
+		NativeConstant(NotBlankString("LONG_CONSTANT5"), 50000000000L)
+	)
+
+	val doubleConstants = listOf(
+		NativeConstant(NotBlankString("DOUBLE_CONSTANT1"), 1.11),
+		NativeConstant(NotBlankString("DOUBLE_CONSTANT2"), 2.22),
+		NativeConstant(NotBlankString("DOUBLE_CONSTANT3"), 3.33),
+		NativeConstant(NotBlankString("DOUBLE_CONSTANT4"), 4.44),
+		NativeConstant(NotBlankString("DOUBLE_CONSTANT5"), 5.55)
 	)
 }

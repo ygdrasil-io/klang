@@ -9,7 +9,7 @@ data class NativeEnumeration(
 	var values: List<Pair<String, Long>> = emptyList(),
 	//TODO add support for other types
 	var type: TypeRef = typeOf("int").unchecked("Type 'int' not found"),
-	override val source: DeclarationOrigin = DeclarationOrigin.UnknownOrigin
+	override val source: DeclarationOrigin = DeclarationOrigin.Unknown
 ) : NameableDeclaration, ResolvableDeclaration {
 
 	override fun <T : NativeDeclaration> merge(other: T) {

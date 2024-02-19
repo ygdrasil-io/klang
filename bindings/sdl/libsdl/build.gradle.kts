@@ -5,7 +5,6 @@ import klang.domain.unchecked
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 import java.net.URI
-import java.net.URL
 
 buildscript {
 	dependencies {
@@ -53,7 +52,7 @@ sourceSets.main {
 	java.srcDirs(buildDir)
 }
 
-val headerUrl = URI("https://github.com/klang-toolkit/SDL-binary/releases/download/2.28.2-Alpha3/headers.zip")
+val headerUrl = URI("https://github.com/klang-toolkit/SDL-binary/releases/download/2.30.0/headers.zip")
 	.toURL() ?: error("cannot create header url")
 
 klang {

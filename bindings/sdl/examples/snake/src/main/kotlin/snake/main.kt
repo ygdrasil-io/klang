@@ -1,17 +1,11 @@
 package snake
 
-
-import SDL_WINDOWPOS_CENTERED
-import com.sun.jna.Native
-import com.sun.jna.Pointer
 import com.sun.jna.ptr.IntByReference
 import com.sun.jna.ptr.PointerByReference
 import libsdl.*
 import java.io.File
-import java.nio.ByteBuffer
 import kotlin.math.max
 import kotlin.random.Random
-
 
 fun main() {
 	val initialGame = Game(
@@ -36,7 +30,7 @@ fun main() {
 			ticks++
 			if (ticks >= speed) {
 				game = game.update()
-				ticks -= speed
+				ticks = 0
 			}
 
 			sdlUI.readCommands().forEach { command ->
@@ -72,8 +66,8 @@ class SdlUI(width: Int, height: Int): AutoCloseable {
 			throw Error()
 		}
 
-		window = libSDL2Library.SDL_CreateWindow("Snake", SDL_WINDOWPOS_CENTERED,
-			SDL_WINDOWPOS_CENTERED, pixelWidth, pixelHeight,
+		window = libSDL2Library.SDL_CreateWindow("Snake", SDL_WINDOWPOS_CENTERED.toInt(),
+			SDL_WINDOWPOS_CENTERED.toInt(), pixelWidth, pixelHeight,
 			SDL_WindowFlags.SDL_WINDOW_SHOWN.value
 		)
 
@@ -116,7 +110,7 @@ class SdlUI(width: Int, height: Int): AutoCloseable {
 			val srcRect = if (direction == nextDirection) {
 				when (direction) {
 					Direction.right, Direction.left -> sprites.bodyHorRect
-					Direction.up, Direction.down    -> sprites.bodyVertRect
+					Direction.up, Direction.down -> sprites.bodyVertRect
 				}
 			} else if ((direction == Direction.left && nextDirection == Direction.down) || (direction == Direction.up && nextDirection == Direction.right)) {
 				sprites.bodyLeftDownRect
@@ -133,17 +127,17 @@ class SdlUI(width: Int, height: Int): AutoCloseable {
 		}
 
 		val tipRect = when (game.snake.cells.let { direction(from = it.last(), to = it[it.size - 2]) }) {
-			Direction.up    -> sprites.tipUpRect
-			Direction.down  -> sprites.tipDownRect
-			Direction.left  -> sprites.tipLeftRect
+			Direction.up -> sprites.tipUpRect
+			Direction.down -> sprites.tipDownRect
+			Direction.left -> sprites.tipLeftRect
 			Direction.right -> sprites.tipRightRect
 		}
 		sprites.render(tipRect, cellRect(game.snake.tail.last()))
 
 		val headRect = when (game.snake.direction) {
-			Direction.up    -> sprites.headUpRect
-			Direction.down  -> sprites.headDownRect
-			Direction.left  -> sprites.headLeftRect
+			Direction.up -> sprites.headUpRect
+			Direction.down -> sprites.headDownRect
+			Direction.left -> sprites.headLeftRect
 			Direction.right -> sprites.headRightRect
 		}
 		sprites.render(headRect, cellRect(game.snake.head))

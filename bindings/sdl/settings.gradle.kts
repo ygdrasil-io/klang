@@ -8,6 +8,6 @@ pluginManagement {
 	}
 }
 
-include(":libsdl")
+include(":libsdl", ":examples:snake")
 findProject(":libsdl")?.name = "sdl4k"
 

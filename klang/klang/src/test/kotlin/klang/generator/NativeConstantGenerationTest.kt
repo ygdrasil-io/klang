@@ -24,6 +24,20 @@ class NativeConstantGenerationTest : FreeSpec({
       			|
 		""".trimMargin()
 		}
+
+		NativeConstant(NotBlankString("CONSTANT"), Long.MAX_VALUE).toSpec("test").apply {
+			toString() shouldBe """
+      			|val CONSTANT: kotlin.Long = Long.MAX_VALUE
+      			|
+		""".trimMargin()
+		}
+
+		NativeConstant(NotBlankString("CONSTANT"), Long.MIN_VALUE).toSpec("test").apply {
+			toString() shouldBe """
+      			|val CONSTANT: kotlin.Long = Long.MIN_VALUE
+      			|
+		""".trimMargin()
+		}
 	}
 
 	"generate kotlin double constant" {

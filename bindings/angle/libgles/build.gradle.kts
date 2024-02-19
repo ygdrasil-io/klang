@@ -1,9 +1,9 @@
+import io.ygdrasil.ParsingMethod
 import klang.domain.typeOf
 import klang.domain.unchecked
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 import java.net.URI
-import java.net.URL
 
 buildscript {
 	dependencies {
@@ -55,6 +55,9 @@ val headerUrl = URI("https://github.com/klang-toolkit/ANGLE-binary/releases/down
 	.toURL()
 
 klang {
+
+	parsingMethod = ParsingMethod.Libclang
+
 	download(headerUrl)
 		.let(::unpack)
 		.let {

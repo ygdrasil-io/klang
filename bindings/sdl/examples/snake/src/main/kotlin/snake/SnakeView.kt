@@ -8,30 +8,18 @@ import sdl.rect
 import java.io.File
 
 class SnakeView(
-	context: AppContext,
-	width: Int,
-	height: Int
+	context: AppContext
 ) : AutoCloseable, AppContext by context {
 
-	private val controller: SDL_GameController?
-	private val font: Font
-	private val sprites: Sprites
-	private val pixelWidth = width * Sprites.w
-	private val pixelHeight = height * Sprites.h
-
+	private val font = Font()
+	private val sprites = Sprites()
+	var game = initialGameState
+	private val pixelWidth = game.width * sprites.w
+	private val pixelHeight = game.height * sprites.h
 
 	init {
-
 		SDL_SetWindowSize(window, pixelWidth, pixelHeight)
 		SDL_SetWindowTitle(window, "snake")
-
-		controller = when (SDL_NumJoysticks() != 0) {
-			true -> SDL_GameControllerOpen(0)
-			false -> null
-		}
-
-		font = Font(context)
-		sprites = Sprites(context)
 
 		//playMusic()
 	}
@@ -197,9 +185,9 @@ class SnakeView(
 	}
 
 	private fun cellRect(cell: Cell): SDL_Rect {
-		val x = cell.x * Sprites.w
-		val y = cell.y * Sprites.h
-		return rect(x, y, Sprites.w, Sprites.h)
+		val x = cell.x * sprites.w
+		val y = cell.y * sprites.h
+		return rect(x, y, sprites.w, sprites.h)
 	}
 
 	private fun renderStringCentered(y: Int, width: Int, s: String) {
@@ -219,13 +207,11 @@ class SnakeView(
 	}
 
 
-	class Font(context: AppContext) : AppContext by context {
-		companion object {
-			const val w = 48
-			const val h = 46
-		}
+	private inner class Font {
+		val w = 48
+		val h = 46
 
-		internal val texture = addTexture("Font16_42_Normal4_sheet.bmp")
+		val texture = addTexture("Font16_42_Normal4_sheet.bmp")
 		private val letters: Map<Char, SDL_Rect>
 
 		init {
@@ -282,14 +268,12 @@ class SnakeView(
 		}
 	}
 
-	class Sprites(context: AppContext) : AppContext by context {
-		companion object {
-			const val w = 64
-			const val h = 64
-		}
+	private inner class Sprites {
+		val w = 64
+		val h = 64
 
-		internal val texture = addTexture("snake-graphics.bmp")
-		internal val grassTexture = addTexture("grass.bmp")
+		val texture = addTexture("snake-graphics.bmp")
+		val grassTexture = addTexture("grass.bmp")
 
 		val headUpRect = textureRect(3, 0)
 		val headRightRect = textureRect(4, 0)
@@ -322,8 +306,6 @@ class SnakeView(
 	}
 
 	override fun close() {
-		controller.takeIf { it != null }
-			?.let { SDL_GameControllerClose(it) }
 		removeTexture(sprites.texture)
 		removeTexture(sprites.grassTexture)
 		removeTexture(font.texture)

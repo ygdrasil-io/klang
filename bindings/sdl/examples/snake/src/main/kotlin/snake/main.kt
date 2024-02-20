@@ -4,20 +4,19 @@ import sdl.app
 
 fun main() = app {
 
-	SnakeView(this, initialGameState.width, initialGameState.height).use { view ->
+	SnakeView(this).use { view ->
 
-		var game = initialGameState
 		var ticks = 0
 		val speed = 10
 
 		while (true) {
 
-			view.draw(game)
+			view.draw(view.game)
 
 			view.delay(1000 / 60)
 			ticks++
 			if (ticks >= speed) {
-				game = game.update()
+				view.game = view.game.update()
 				ticks = 0
 			}
 
@@ -28,11 +27,11 @@ fun main() = app {
 					SnakeView.UserCommand.down -> direction = Direction.down
 					SnakeView.UserCommand.left -> direction = Direction.left
 					SnakeView.UserCommand.right -> direction = Direction.right
-					SnakeView.UserCommand.restart -> game = initialGameState
+					SnakeView.UserCommand.restart -> view.game = initialGameState
 					SnakeView.UserCommand.quit -> return@app
 				}
-				game = game.update(direction)
-				view.draw(game)
+				view.game = view.game.update(direction)
+				view.draw(view.game)
 			}
 		}
 	}

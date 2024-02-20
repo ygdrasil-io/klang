@@ -154,10 +154,9 @@ class SDLView(private val width: Int, private val height: Int) : GameFieldVisual
         window = libSDL2Library.SDL_CreateWindow(
             "Tetris", windowX, windowY, windowWidth, windowHeight,
             SDL_WindowFlags.SDL_WINDOW_SHOWN or SDL_WindowFlags.SDL_WINDOW_ALLOW_HIGHDPI
-        ) ?: error("SDL_CreateWindow Error")
+        )
 
         renderer = libSDL2Library.SDL_CreateRenderer(window, -1, SDL_RendererFlags.SDL_RENDERER_ACCELERATED or SDL_RendererFlags.SDL_RENDERER_PRESENTVSYNC)
-            ?: error("libSDL2Library.SDL_CreateRenderer Error")
 
 		val realWidth = IntByReference()
 		val realHeight = IntByReference()
@@ -170,17 +169,10 @@ class SDLView(private val width: Int, private val height: Int) : GameFieldVisual
         texture = loadImage(renderer, "tetris_all.bmp")
     }
 
-
-    private fun findFile(name: String): String {
-        return "${libSDL2Library.SDL_GetBasePath() ?: "/"}$name"
-    }
-
     private fun loadImage(ren: SDL_Renderer, imagePath: String): SDL_Texture {
-        val bmp = libSDL2Library.SDL_LoadBMP_RW(libSDL2Library.SDL_RWFromFile(imagePath, "rb") ?: error("SDL_RWFromFile Error"), 1)
-            ?: error("SDL_LoadBMP_RW Error")
+        val bmp = libSDL2Library.SDL_LoadBMP_RW(libSDL2Library.SDL_RWFromFile(imagePath, "rb"), 1)
 
         val tex = libSDL2Library.SDL_CreateTextureFromSurface(ren, bmp)
-            ?: error("SDL_CreateTextureFromSurface Error")
         libSDL2Library.SDL_FreeSurface(bmp)
         return tex
     }

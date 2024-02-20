@@ -3,11 +3,12 @@ package snake
 import com.sun.jna.ptr.IntByReference
 import com.sun.jna.ptr.PointerByReference
 import libsdl.*
+import sdl.AppContext
+import sdl.SdlApp
 import java.io.File
-import kotlin.math.max
-import kotlin.random.Random
 
 fun main() {
+
 	val initialGame = Game(
 		width = 20,
 		height = 10,
@@ -18,7 +19,7 @@ fun main() {
 	)
 	var game = initialGame
 
-	SdlUI(game.width, game.height).use { sdlUI ->
+	SnakeView(SdlApp(), game.width, game.height).use { sdlUI ->
 
 		var ticks = 0
 		val speed = 10
@@ -36,12 +37,12 @@ fun main() {
 			sdlUI.readCommands().forEach { command ->
 				var direction: Direction? = null
 				when (command) {
-					SdlUI.UserCommand.up -> direction = Direction.up
-					SdlUI.UserCommand.down -> direction = Direction.down
-					SdlUI.UserCommand.left -> direction = Direction.left
-					SdlUI.UserCommand.right -> direction = Direction.right
-					SdlUI.UserCommand.restart -> game = initialGame
-					SdlUI.UserCommand.quit -> return
+					SnakeView.UserCommand.up -> direction = Direction.up
+					SnakeView.UserCommand.down -> direction = Direction.down
+					SnakeView.UserCommand.left -> direction = Direction.left
+					SnakeView.UserCommand.right -> direction = Direction.right
+					SnakeView.UserCommand.restart -> game = initialGame
+					SnakeView.UserCommand.quit -> return
 				}
 				game = game.update(direction)
 				sdlUI.draw(game)
@@ -50,30 +51,23 @@ fun main() {
 	}
 }
 
-class SdlUI(width: Int, height: Int): AutoCloseable {
-	private val window: SDL_Window
-	private val renderer: SDL_Renderer
+class SnakeView(
+	context: AppContext,
+	width: Int,
+	height: Int
+): AutoCloseable, AppContext by context {
+
 	private val controller: SDL_GameController?
 	private val font: Font
 	private val sprites: Sprites
-
 	private val pixelWidth = width * Sprites.w
 	private val pixelHeight = height * Sprites.h
 
+
 	init {
-		if (libSDL2Library.SDL_Init(SDL_INIT_EVERYTHING.toInt()) != 0) {
-			println("SDL_Init Error: ${libSDL2Library.SDL_GetError()}")
-			throw Error()
-		}
 
-		window = libSDL2Library.SDL_CreateWindow("Snake", SDL_WINDOWPOS_CENTERED.toInt(),
-			SDL_WINDOWPOS_CENTERED.toInt(), pixelWidth, pixelHeight,
-			SDL_WindowFlags.SDL_WINDOW_SHOWN.value
-		)
-
-		renderer = libSDL2Library.SDL_CreateRenderer(
-			window, -1, SDL_RendererFlags.SDL_RENDERER_ACCELERATED or SDL_RendererFlags.SDL_RENDERER_PRESENTVSYNC
-		)
+		libSDL2Library.SDL_SetWindowSize(window, pixelWidth, pixelHeight)
+		libSDL2Library.SDL_SetWindowTitle(window, "snake")
 
 		controller = when (libSDL2Library.SDL_NumJoysticks() != 0) {
 			true -> libSDL2Library.SDL_GameControllerOpen(0)
@@ -390,77 +384,4 @@ class SdlUI(width: Int, height: Int): AutoCloseable {
 		libSDL2Library.SDL_DestroyWindow(window)
 		libSDL2Library.SDL_Quit()
 	}
-}
-
-data class Game(
-	val width: Int,
-	val height: Int,
-	val snake: Snake,
-	val apples: Apples = Apples(width, height)
-) {
-	val isOver =
-		snake.tail.contains(snake.head) ||
-			snake.cells.any { it.x < 0 || it.x >= width || it.y < 0 || it.y >= height }
-
-	val score = snake.cells.size
-
-	fun update(direction: Direction? = null): Game {
-		if (isOver) return this
-		val (newSnake, newApples) = snake.turn(direction).move().eat(apples.grow())
-		return copy(snake = newSnake, apples = newApples)
-	}
-}
-
-data class Snake(
-	val cells: List<Cell>,
-	val direction: Direction,
-	val eatenApples: Int = 0
-) {
-	val head = cells.first()
-	val tail = cells.subList(1, cells.size)
-
-	fun move(): Snake {
-		val newHead = head.move(direction)
-		val newTail = if (eatenApples == 0) cells.dropLast(1) else cells
-		return copy(
-			cells = listOf(newHead) + newTail,
-			eatenApples = max(eatenApples - 1, 0)
-		)
-	}
-
-	fun turn(newDirection: Direction?): Snake {
-		if (newDirection == null || newDirection.isOpposite(direction)) return this
-		return copy(direction = newDirection)
-	}
-
-	fun eat(apples: Apples): Pair<Snake, Apples> {
-		if (!apples.cells.contains(head)) return Pair(this, apples)
-		return Pair(
-			copy(eatenApples = eatenApples + 1),
-			apples.copy(cells = apples.cells - head)
-		)
-	}
-}
-
-data class Apples(
-	val fieldWidth: Int,
-	val fieldHeight: Int,
-	val cells: Set<Cell> = emptySet(),
-	val growthSpeed: Int = 3,
-	val random: Random = Random
-) {
-	fun grow(): Apples {
-		if (random.nextInt(growthSpeed) != 0) return this
-		return copy(cells = cells + Cell(random.nextInt(fieldWidth), random.nextInt(fieldHeight)))
-	}
-}
-
-data class Cell(val x: Int, val y: Int) {
-	fun move(direction: Direction) = Cell(x + direction.dx, y + direction.dy)
-}
-
-enum class Direction(val dx: Int, val dy: Int) {
-	up(0, -1), down(0, 1), left(-1, 0), right(1, 0);
-
-	fun isOpposite(that: Direction) = dx + that.dx == 0 && dy + that.dy == 0
 }

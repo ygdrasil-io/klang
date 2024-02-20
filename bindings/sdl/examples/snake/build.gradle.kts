@@ -22,13 +22,14 @@ application {
 }
 
 jlink {
-	//options = listOf("--strip-debug", "--compress", "2", "--no-header-files", "--no-man-pages")
+	addOptions("--strip-debug", "--compress", "2", "--no-header-files", "--no-man-pages")
 	launcher{
 		moduleName = "io.ygdrasil"
 		//name = "Snake"
 		jvmArgs = listOf("-XstartOnFirstThread")
 	}
 }
+
 
 tasks.named("compileJava", JavaCompile::class.java) {
 	options.compilerArgumentProviders.add(CommandLineArgumentProvider {

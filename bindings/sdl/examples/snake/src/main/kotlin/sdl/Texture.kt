@@ -1,6 +1,6 @@
-package sdl
+package io.ygdrasil.sdl
 
-import libsdl.*
+import io.ygdrasil.libsdl.*
 import java.io.File
 
 internal fun SDL_Renderer.loadTexture(fileName: String): SDL_Texture {

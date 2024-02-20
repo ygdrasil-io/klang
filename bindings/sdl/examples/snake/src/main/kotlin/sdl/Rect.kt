@@ -1,6 +1,6 @@
-package sdl
+package io.ygdrasil.sdl
 
-import libsdl.SDL_Rect
+import io.ygdrasil.libsdl.SDL_Rect
 
 fun rect(x: Int, y: Int, w: Int, h: Int) = SDL_Rect().also {
 	it.x = x

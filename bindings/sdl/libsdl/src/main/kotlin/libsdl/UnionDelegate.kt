@@ -1,6 +1,6 @@
-package libsdl
+package io.ygdrasil.libsdl
 
-import libsdl.SDL_EventType.*
+import io.ygdrasil.libsdl.SDL_EventType.*
 
 object SDL_HapticEffectDelegate {
 	fun read(union: SDL_HapticEffect) {

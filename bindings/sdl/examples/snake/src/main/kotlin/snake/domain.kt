@@ -1,4 +1,4 @@
-package snake
+package io.ygdrasil.snake
 
 import kotlin.math.max
 import kotlin.random.Random

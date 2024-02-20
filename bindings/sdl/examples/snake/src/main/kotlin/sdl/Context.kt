@@ -1,9 +1,9 @@
-package sdl
+package io.ygdrasil.sdl
 
-import libsdl.SDL_GameController
-import libsdl.SDL_Renderer
-import libsdl.SDL_Texture
-import libsdl.SDL_Window
+import io.ygdrasil.libsdl.SDL_GameController
+import io.ygdrasil.libsdl.SDL_Renderer
+import io.ygdrasil.libsdl.SDL_Texture
+import io.ygdrasil.libsdl.SDL_Window
 
 interface AppContext {
 	val window: SDL_Window

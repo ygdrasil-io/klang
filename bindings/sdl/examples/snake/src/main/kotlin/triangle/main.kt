@@ -1,8 +1,11 @@
-package io.ygdrasil.snake
+package triangle
 
 import io.ygdrasil.sdl.app
+import io.ygdrasil.snake.Direction
+import io.ygdrasil.snake.SnakeView
+import io.ygdrasil.snake.initialGameState
 
-fun main() = app {
+fun main() = app(useGlES = true) {
 
 	SnakeView(this).use { view ->
 

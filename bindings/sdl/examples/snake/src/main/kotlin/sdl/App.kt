@@ -1,6 +1,6 @@
-package sdl
+package io.ygdrasil.sdl
 
-import libsdl.*
+import io.ygdrasil.libsdl.*
 
 private class App : AutoCloseable, AppContext {
 
@@ -40,7 +40,12 @@ private class App : AutoCloseable, AppContext {
 		.mapNotNull { index -> SDL_GameControllerOpen(index).also { if (it == null) println("fail to get controller at index $index") } }
 }
 
-fun app(block: AppContext.() -> Unit) {
+fun app(
+	useGlES: Boolean = false,
+	block: AppContext.() -> Unit
+) {
+
+	//SDL_HINT()
 
 	if (SDL_Init(SDL_INIT_EVERYTHING.toInt()) != 0) {
 		error("SDL_Init Error: ${SDL_GetError()}")

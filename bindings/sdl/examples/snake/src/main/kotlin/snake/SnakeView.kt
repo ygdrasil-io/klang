@@ -1,19 +1,22 @@
-package snake
+package io.ygdrasil.snake
 
 import com.sun.jna.ptr.IntByReference
 import com.sun.jna.ptr.PointerByReference
-import libsdl.*
-import sdl.AppContext
-import sdl.rect
+import io.ygdrasil.libsdl.*
+import io.ygdrasil.sdl.AppContext
+import io.ygdrasil.sdl.rect
 import java.io.File
 
 class SnakeView(
 	context: AppContext
 ) : AutoCloseable, AppContext by context {
 
+	var game = initialGameState
+	var ticks = 0
+	val speed = 10
+
 	private val font = Font()
 	private val sprites = Sprites()
-	var game = initialGameState
 	private val pixelWidth = game.width * sprites.w
 	private val pixelHeight = game.height * sprites.h
 

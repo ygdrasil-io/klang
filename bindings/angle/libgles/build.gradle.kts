@@ -17,7 +17,7 @@ buildscript {
 }
 
 plugins {
-	kotlin("jvm") version "1.9.10"
+	kotlin("jvm") version libs.versions.kotlin
 	alias(libs.plugins.klang)
 }
 

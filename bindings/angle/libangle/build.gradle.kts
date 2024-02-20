@@ -2,7 +2,6 @@ import io.ygdrasil.ParsingMethod
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 import java.net.URI
-import java.net.URL
 
 buildscript {
 	dependencies {
@@ -16,7 +15,7 @@ buildscript {
 }
 
 plugins {
-	kotlin("jvm") version "1.9.10"
+	kotlin("jvm") version libs.versions.kotlin
 	alias(libs.plugins.klang)
 }
 

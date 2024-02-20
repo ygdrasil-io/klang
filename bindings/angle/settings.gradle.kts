@@ -8,7 +8,7 @@ pluginManagement {
 	}
 }
 
-include(":libgles")
-include(":libangle")
+include(":libgles", ":libangle", ":binaries")
 findProject(":libangle")?.name = "angle4k"
-include("example")
+findProject(":binaries")?.name = "angle-binaries"
+//include("example")

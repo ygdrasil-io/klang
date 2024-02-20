@@ -5,7 +5,7 @@ import com.sun.jna.ptr.PointerByReference
 import libsdl.*
 import sdl.App
 import sdl.AppContext
-import sdl.allocRect
+import sdl.rect
 import java.io.File
 
 fun main() = App().use { app ->
@@ -88,7 +88,7 @@ class SnakeView(
 		val grassScaledW = 400 // scale grass up to reduce its resolution so that it's similar to snake sprites
 		0.until(pixelWidth / grassW + 1).forEach { x ->
 			0.until(pixelHeight / grassW + 1).forEach { y ->
-				sprites.render(sprites.grassRect, allocRect(x * grassW, y * grassW, grassScaledW, grassScaledW))
+				sprites.render(sprites.grassRect, rect(x * grassW, y * grassW, grassScaledW, grassScaledW))
 			}
 		}
 
@@ -237,7 +237,7 @@ class SnakeView(
 	private fun cellRect(cell: Cell): SDL_Rect {
 		val x = cell.x * Sprites.w
 		val y = cell.y * Sprites.h
-		return allocRect(x, y, Sprites.w, Sprites.h)
+		return rect(x, y, Sprites.w, Sprites.h)
 	}
 
 	private fun renderStringCentered(y: Int, width: Int, s: String) {
@@ -304,7 +304,7 @@ class SnakeView(
 				'7' to textureRect(9, 5),
 				'8' to textureRect(0, 6),
 				'9' to textureRect(1, 6),
-				' ' to allocRect(0, 0, 0, 0)
+				' ' to rect(0, 0, 0, 0)
 			)
 		}
 
@@ -316,7 +316,7 @@ class SnakeView(
 		private fun textureRect(x: Int, y: Int, wAdjust: Int = 0): SDL_Rect {
 			val xShift = x * w
 			val yShift = y * h
-			return allocRect(xShift, yShift, w + wAdjust, h)
+			return rect(xShift, yShift, w + wAdjust, h)
 		}
 	}
 
@@ -349,9 +349,9 @@ class SnakeView(
 		val appleRect = textureRect(0, 3)
 		val emptyRect = textureRect(0, 2)
 
-		val grassRect = allocRect(0, 0, 256, 256)
+		val grassRect = rect(0, 0, 256, 256)
 
-		private fun textureRect(x: Int, y: Int) = allocRect(x * w, y * h, w, h)
+		private fun textureRect(x: Int, y: Int) = rect(x * w, y * h, w, h)
 
 		fun render(srcRect: SDL_Rect, dstRect: SDL_Rect) {
 			if (srcRect == grassRect) libSDL2Library.SDL_RenderCopy(renderer, grassTexture, srcRect, dstRect)

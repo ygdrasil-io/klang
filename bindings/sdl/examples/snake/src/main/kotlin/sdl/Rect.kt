@@ -2,7 +2,7 @@ package sdl
 
 import libsdl.SDL_Rect
 
-fun allocRect(x: Int, y: Int, w: Int, h: Int) = SDL_Rect().also {
+fun rect(x: Int, y: Int, w: Int, h: Int) = SDL_Rect().also {
 	it.x = x
 	it.y = y
 	it.w = w

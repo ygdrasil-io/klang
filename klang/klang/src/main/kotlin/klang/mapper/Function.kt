@@ -12,15 +12,22 @@ internal fun List<NativeFunction>.toInterfaceSpec(packageName: String, name: Str
 	.let { interfaceClass ->
 		TypeSpec.interfaceBuilder(interfaceClass)
 			.addSuperinterface(jnaLibrary)
-			.addFunctions(map { it.toSpec(packageName) })
+			.addFunctions(map { it.toInterfaceFunSpec(packageName) })
 			.build()
 	}
 
-private fun NativeFunction.toSpec(packageName: String) = FunSpec
+internal fun List<NativeFunction>.toFunctionsSpec(packageName: String, libraryName: String) = map {
+		 it.toInterfaceFunSpec(packageName) {
+			 "return $libraryName.${it.name}(${it.arguments.mapIndexed { index, argument -> argument.name?.value ?: "parameter$index" }.joinToString(", ")})"
+		 }
+	}
+
+private fun NativeFunction.toInterfaceFunSpec(packageName: String, bodyProvider: (() -> String)? = null) = FunSpec
 	.builder(name.value)
-	.addModifiers(KModifier.PUBLIC, KModifier.ABSTRACT)
-	.returns(returnType.toType(packageName))
+	.addModifiers(if(bodyProvider == null) listOf(KModifier.PUBLIC, KModifier.ABSTRACT) else listOf(KModifier.PUBLIC))
+	.returns(returnType.toType(packageName).copy(nullable = returnType.isPointer))
 	.addParameters(arguments.mapIndexed { index, argument -> argument.toSpec(packageName, index) })
+	.also { if(bodyProvider != null) it.addStatement(bodyProvider()) }
 	.build()
 
 private fun NativeFunction.Argument.toSpec(packageName: String, index: Int) = ParameterSpec

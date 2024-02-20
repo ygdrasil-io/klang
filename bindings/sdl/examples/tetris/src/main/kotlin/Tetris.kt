@@ -1,6 +1,6 @@
 package tetris
 
-import libsdl.libSDL2Library
+import libsdl.SDL_Delay
 import kotlin.random.Random
 
 typealias Field = Array<ByteArray>
@@ -321,7 +321,7 @@ class GameField(val width: Int, val height: Int, val visualizer: GameFieldVisual
         if (clearedLines.size == 0) return 0
         draw(false)
         visualizer.refresh()
-        libSDL2Library.SDL_Delay(500)
+        SDL_Delay(500)
         for (i in clearedLines) {
             for (k in i - 1 downTo 1)
                 for (j in 0..width - 1)
@@ -446,7 +446,7 @@ class Game(width: Int, height: Int, val visualizer: GameFieldVisualizer, val use
     private fun mainLoop() {
         var attemptsToLock = 0
         while (!gameOver) {
-            libSDL2Library.SDL_Delay((1000 / 60)) // Refresh rate - 60 frames per second.
+            SDL_Delay((1000 / 60)) // Refresh rate - 60 frames per second.
             val commands = userInput.readCommands()
             for (cmd in commands) {
                 val success: Boolean

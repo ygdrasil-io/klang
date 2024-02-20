@@ -6,10 +6,10 @@ import libsdl.*
 class SDLView(private val width: Int, private val height: Int) : GameFieldVisualizer, UserInput {
 
     fun error(message: Any): Nothing {
-        if (this::renderer.isInitialized) libSDL2Library.SDL_DestroyRenderer(renderer)
-        if (this::window.isInitialized) libSDL2Library.SDL_DestroyWindow(window)
-        println("$message: ${libSDL2Library.SDL_GetError()}")
-        libSDL2Library.SDL_Quit()
+        if (this::renderer.isInitialized) SDL_DestroyRenderer(renderer)
+        if (this::window.isInitialized) SDL_DestroyWindow(window)
+        println("$message: ${SDL_GetError()}")
+        SDL_Quit()
         throw IllegalStateException()
     }
 
@@ -116,16 +116,16 @@ class SDLView(private val width: Int, private val height: Int) : GameFieldVisual
     private val gamePadButtons: GamePadButtons?
 
     init {
-        if (libSDL2Library.SDL_Init(SDL_INIT_EVERYTHING.toInt()) != 0) {
-            throw Error("SDL_Init Error: ${libSDL2Library.SDL_GetError()}")
+        if (SDL_Init(SDL_INIT_EVERYTHING.toInt()) != 0) {
+            throw Error("SDL_Init Error: ${SDL_GetError()}")
         }
 
-        val platform: String = libSDL2Library.SDL_GetPlatform()
+        val platform: String = SDL_GetPlatform() ?: error("fail to get platform")
 
 		val displayMode = SDL_DisplayMode()
-        if (libSDL2Library.SDL_GetCurrentDisplayMode(0, displayMode) != 0) {
-            println("SDL_GetCurrentDisplayMode Error: ${libSDL2Library.SDL_GetError()}")
-            libSDL2Library.SDL_Quit()
+        if (SDL_GetCurrentDisplayMode(0, displayMode) != 0) {
+            println("SDL_GetCurrentDisplayMode Error: ${SDL_GetError()}")
+            SDL_Quit()
             throw Error()
         }
         displayWidth = displayMode.w
@@ -151,16 +151,17 @@ class SDLView(private val width: Int, private val height: Int) : GameFieldVisual
             ratio = 1.0f
         }
 
-        window = libSDL2Library.SDL_CreateWindow(
+        window = SDL_CreateWindow(
             "Tetris", windowX, windowY, windowWidth, windowHeight,
             SDL_WindowFlags.SDL_WINDOW_SHOWN or SDL_WindowFlags.SDL_WINDOW_ALLOW_HIGHDPI
-        )
+        ) ?: error("")
 
-        renderer = libSDL2Library.SDL_CreateRenderer(window, -1, SDL_RendererFlags.SDL_RENDERER_ACCELERATED or SDL_RendererFlags.SDL_RENDERER_PRESENTVSYNC)
+        renderer = SDL_CreateRenderer(window, -1, SDL_RendererFlags.SDL_RENDERER_ACCELERATED or SDL_RendererFlags.SDL_RENDERER_PRESENTVSYNC)
+			?: error("")
 
 		val realWidth = IntByReference()
 		val realHeight = IntByReference()
-        libSDL2Library.SDL_GetRendererOutputSize(renderer, realWidth.pointer, realHeight.pointer) ?: error("SDL_GetRendererOutputSize Error")
+        SDL_GetRendererOutputSize(renderer, realWidth.pointer, realHeight.pointer)
         if (platform != "iOS" && windowHeight != realHeight.value) {
             println("DPI differs ${realWidth} x ${realHeight} vs $windowWidth x $windowHeight")
             ratio = realHeight.value.toFloat() / windowHeight
@@ -170,10 +171,10 @@ class SDLView(private val width: Int, private val height: Int) : GameFieldVisual
     }
 
     private fun loadImage(ren: SDL_Renderer, imagePath: String): SDL_Texture {
-        val bmp = libSDL2Library.SDL_LoadBMP_RW(libSDL2Library.SDL_RWFromFile(imagePath, "rb"), 1)
+        val bmp = SDL_LoadBMP_RW(SDL_RWFromFile(imagePath, "rb"), 1)
 
-        val tex = libSDL2Library.SDL_CreateTextureFromSurface(ren, bmp)
-        libSDL2Library.SDL_FreeSurface(bmp)
+        val tex = SDL_CreateTextureFromSurface(ren, bmp) ?: error("")
+        SDL_FreeSurface(bmp)
         return tex
     }
 
@@ -193,12 +194,12 @@ class SDLView(private val width: Int, private val height: Int) : GameFieldVisual
     }
 
     override fun refresh() {
-        libSDL2Library.SDL_RenderClear(renderer)
+        SDL_RenderClear(renderer)
         drawField()
         drawInfo()
         drawNextPiece()
         drawGamePad()
-        libSDL2Library.SDL_RenderPresent(renderer)
+        SDL_RenderPresent(renderer)
     }
 
     private fun drawBorder(topLeftX: Int, topLeftY: Int, width: Int, height: Int) {
@@ -384,13 +385,13 @@ class SDLView(private val width: Int, private val height: Int) : GameFieldVisual
 
     private fun drawGamePad() {
         if (gamePadButtons == null) return
-        libSDL2Library.SDL_SetRenderDrawColor(renderer, 127, 127, 127, SDL_ALPHA_OPAQUE.toByte())
+        SDL_SetRenderDrawColor(renderer, 127, 127, 127, SDL_ALPHA_OPAQUE.toByte())
         fillRect(gamePadButtons.leftRect)
         fillRect(gamePadButtons.downRect)
         fillRect(gamePadButtons.dropRect)
         fillRect(gamePadButtons.rightRect)
         fillRect(gamePadButtons.rotateRect)
-        libSDL2Library.SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE.toByte())
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE.toByte())
     }
 
     private fun fillRect(rect: SDL_Rect) {
@@ -400,7 +401,7 @@ class SDLView(private val width: Int, private val height: Int) : GameFieldVisual
             x = stretch(rect.x)
             y = stretch(rect.y)
         }
-        libSDL2Library.SDL_RenderFillRect(renderer, stretchedRect)
+        SDL_RenderFillRect(renderer, stretchedRect)
     }
 
 
@@ -417,13 +418,13 @@ class SDLView(private val width: Int, private val height: Int) : GameFieldVisual
             x = stretch(destX)
             y = stretch(destY)
         }
-        libSDL2Library.SDL_RenderCopy(renderer, texture, srcRect, destRect)
+        SDL_RenderCopy(renderer, texture, srcRect, destRect)
     }
 
     override fun readCommands(): List<UserCommand> {
         val commands = mutableListOf<UserCommand>()
 		val event = SDL_Event()
-        libSDL2Library.SDL_PollEvent(event)
+        SDL_PollEvent(event)
         while (event != null) {
             when (SDL_EventType.of(event.type)) {
                 SDL_EventType.SDL_QUIT -> commands.add(UserCommand.EXIT)
@@ -450,15 +451,15 @@ class SDLView(private val width: Int, private val height: Int) : GameFieldVisual
 				else -> { }
 			}
 
-			libSDL2Library.SDL_PollEvent(event)
+			SDL_PollEvent(event)
         }
         return commands
     }
 
     fun destroy() {
-		libSDL2Library.SDL_DestroyTexture(texture)
-		libSDL2Library.SDL_DestroyRenderer(renderer)
-		libSDL2Library.SDL_DestroyWindow(window)
-		libSDL2Library.SDL_Quit()
+		SDL_DestroyTexture(texture)
+		SDL_DestroyRenderer(renderer)
+		SDL_DestroyWindow(window)
+		SDL_Quit()
     }
 }

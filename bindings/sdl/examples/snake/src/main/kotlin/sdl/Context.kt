@@ -18,19 +18,19 @@ class App : AutoCloseable, AppContext {
 	override val textures = mutableListOf<SDL_Texture>()
 
 	init {
-		if (libSDL2Library.SDL_Init(SDL_INIT_EVERYTHING.toInt()) != 0) {
-			error("SDL_Init Error: ${libSDL2Library.SDL_GetError()}")
+		if (SDL_Init(SDL_INIT_EVERYTHING.toInt()) != 0) {
+			error("SDL_Init Error: ${SDL_GetError()}")
 		}
 
-		window = libSDL2Library.SDL_CreateWindow(
+		window = SDL_CreateWindow(
 			"", SDL_WINDOWPOS_CENTERED.toInt(),
 			SDL_WINDOWPOS_CENTERED.toInt(), 1, 1,
 			SDL_WindowFlags.SDL_WINDOW_SHOWN.value
-		)
+		) ?: error("fail to create window")
 
-		renderer = libSDL2Library.SDL_CreateRenderer(
+		renderer = SDL_CreateRenderer(
 			window, -1, SDL_RendererFlags.SDL_RENDERER_ACCELERATED or SDL_RendererFlags.SDL_RENDERER_PRESENTVSYNC
-		)
+		) ?: error("fail to create renderer")
 
 	}
 
@@ -39,14 +39,14 @@ class App : AutoCloseable, AppContext {
 
 	override fun removeTexture(texture: SDL_Texture) {
 		if (textures.remove(texture)) {
-			libSDL2Library.SDL_DestroyTexture(texture)
+			SDL_DestroyTexture(texture)
 		}
 	}
 
 	override fun close() {
-		textures.forEach(libSDL2Library::SDL_DestroyTexture)
-		libSDL2Library.SDL_DestroyRenderer(renderer)
-		libSDL2Library.SDL_DestroyWindow(window)
-		libSDL2Library.SDL_Quit()
+		textures.forEach(::SDL_DestroyTexture)
+		SDL_DestroyRenderer(renderer)
+		SDL_DestroyWindow(window)
+		SDL_Quit()
 	}
 }

@@ -60,11 +60,11 @@ class SnakeView(
 
 	init {
 
-		libSDL2Library.SDL_SetWindowSize(window, pixelWidth, pixelHeight)
-		libSDL2Library.SDL_SetWindowTitle(window, "snake")
+		SDL_SetWindowSize(window, pixelWidth, pixelHeight)
+		SDL_SetWindowTitle(window, "snake")
 
-		controller = when (libSDL2Library.SDL_NumJoysticks() != 0) {
-			true -> libSDL2Library.SDL_GameControllerOpen(0)
+		controller = when (SDL_NumJoysticks() != 0) {
+			true -> SDL_GameControllerOpen(0)
 			false -> null
 		}
 
@@ -75,8 +75,8 @@ class SnakeView(
 	}
 
 	fun draw(game: Game) {
-		libSDL2Library.SDL_RenderClear(renderer)
-		libSDL2Library.SDL_SetRenderDrawColor(
+		SDL_RenderClear(renderer)
+		SDL_SetRenderDrawColor(
 			renderer,
 			(200 / 2).toByte(),
 			(230 / 2).toByte(),
@@ -141,18 +141,18 @@ class SnakeView(
 			renderStringCentered(5, game.width, "your score is ${game.score}")
 		}
 
-		libSDL2Library.SDL_RenderPresent(renderer)
+		SDL_RenderPresent(renderer)
 
 	}
 
 	fun delay(timeMs: Int) {
-		libSDL2Library.SDL_Delay(timeMs)
+		SDL_Delay(timeMs)
 	}
 
 	fun readCommands(): List<UserCommand> {
 		val result = ArrayList<UserCommand>()
 		val event = SDL_Event()
-		while (libSDL2Library.SDL_PollEvent(event) != 0) {
+		while (SDL_PollEvent(event) != 0) {
 			event.read()
 			println("event(${event.type}): ${SDL_EventType.of(event.type)}")
 			when (SDL_EventType.of(event.type)) {
@@ -208,11 +208,11 @@ class SnakeView(
 		val fileName = "Crowander-Stop-on-a-Bench.wav"
 		val paths = listOf(fileName, "resources/$fileName", "../resources/$fileName")
 		val filePath = paths.find { File(it).canRead() } ?: error("Can't find sound file.")
-		val audioFile = libSDL2Library.SDL_RWFromFile(filePath, "rb")
+		val audioFile = SDL_RWFromFile(filePath, "rb")
 		val audio_spec = SDL_AudioSpec()
 		val audio_buf = PointerByReference()
 		val audio_len = IntByReference()
-		libSDL2Library.SDL_LoadWAV_RW(
+		SDL_LoadWAV_RW(
 			src = audioFile,
 			freesrc = 1,
 			spec = audio_spec,
@@ -220,10 +220,10 @@ class SnakeView(
 			audio_len.pointer
 		)
 
-		val deviceName = libSDL2Library.SDL_GetAudioDeviceName(0, 0)
-		val device_id = libSDL2Library.SDL_OpenAudioDevice(deviceName, 0, audio_spec, SDL_AudioSpec(), 0)
-		libSDL2Library.SDL_QueueAudio(device_id, audio_buf.value, audio_len.value)
-		libSDL2Library.SDL_PauseAudioDevice(device_id, 0)
+		val deviceName = SDL_GetAudioDeviceName(0, 0)
+		val device_id = SDL_OpenAudioDevice(deviceName, 0, audio_spec, SDL_AudioSpec(), 0)
+		SDL_QueueAudio(device_id, audio_buf.value, audio_len.value)
+		SDL_PauseAudioDevice(device_id, 0)
 	}
 
 	private fun direction(from: Cell, to: Cell): Direction = when {
@@ -310,7 +310,7 @@ class SnakeView(
 
 		fun render(char: Char, cellRect: SDL_Rect) {
 			val charRect = letters[char.uppercaseChar()] ?: (letters[' '] ?: error(""))
-			libSDL2Library.SDL_RenderCopy(renderer, texture, charRect, cellRect)
+			SDL_RenderCopy(renderer, texture, charRect, cellRect)
 		}
 
 		private fun textureRect(x: Int, y: Int, wAdjust: Int = 0): SDL_Rect {
@@ -354,14 +354,14 @@ class SnakeView(
 		private fun textureRect(x: Int, y: Int) = rect(x * w, y * h, w, h)
 
 		fun render(srcRect: SDL_Rect, dstRect: SDL_Rect) {
-			if (srcRect == grassRect) libSDL2Library.SDL_RenderCopy(renderer, grassTexture, srcRect, dstRect)
-			else libSDL2Library.SDL_RenderCopy(renderer, texture, srcRect, dstRect)
+			if (srcRect == grassRect) SDL_RenderCopy(renderer, grassTexture, srcRect, dstRect)
+			else SDL_RenderCopy(renderer, texture, srcRect, dstRect)
 		}
 	}
 
 	override fun close() {
 		controller.takeIf { it != null }
-			?.let { libSDL2Library.SDL_GameControllerClose(it) }
+			?.let { SDL_GameControllerClose(it) }
 		removeTexture(sprites.texture)
 		removeTexture(sprites.grassTexture)
 		removeTexture(font.texture)

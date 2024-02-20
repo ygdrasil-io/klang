@@ -5,6 +5,7 @@ import io.kotest.matchers.shouldBe
 import klang.InMemoryDeclarationRepository
 import klang.allDeclarationsFilter
 import klang.mapper.generateInterfaceLibrarySpec
+import klang.mapper.toFunctionsSpec
 import klang.mapper.toInterfaceSpec
 import klang.parser.TestData
 
@@ -17,7 +18,7 @@ class FunctionGenerationTest : FreeSpec({
 		resolveTypes(allDeclarationsFilter)
 	}
 
-	"generate kotlin functions" {
+	"generate kotlin interface functions" {
 		functions.toInterfaceSpec("", "Interface").toString() shouldBe """
 			|public interface Interface : com.sun.jna.Library {
 			|  /**
@@ -31,10 +32,30 @@ class FunctionGenerationTest : FreeSpec({
 			|    myEnum: EnumName?,
 			|  ): kotlin.Byte
 			|
-			|  public fun function2(): com.sun.jna.Pointer
+			|  public fun function2(): com.sun.jna.Pointer?
 			|
-			|  public fun function3(): com.sun.jna.Pointer
+			|  public fun function3(): com.sun.jna.Pointer?
 			|}
+			|
+		""".trimMargin()
+	}
+
+	"generate kotlin functions" {
+		functions.toFunctionsSpec("", "Library").joinToString("\n") shouldBe """
+			|/**
+			| * @param a mapped from int *
+			| * @param b mapped from void *
+			| * @param myEnum mapped from enum EnumName
+			| */
+			|public fun function(
+			|  a: com.sun.jna.Pointer?,
+			|  b: com.sun.jna.Pointer?,
+			|  myEnum: EnumName?,
+			|): kotlin.Byte = Library.function(a, b, myEnum)
+			|
+			|public fun function2(): com.sun.jna.Pointer? = Library.function2()
+			|
+			|public fun function3(): com.sun.jna.Pointer? = Library.function3()
 			|
 		""".trimMargin()
 	}

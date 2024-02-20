@@ -3,49 +3,43 @@ package snake
 import com.sun.jna.ptr.IntByReference
 import com.sun.jna.ptr.PointerByReference
 import libsdl.*
+import sdl.App
 import sdl.AppContext
-import sdl.SdlApp
+import sdl.allocRect
 import java.io.File
 
-fun main() {
+fun main() = App().use { app ->
 
-	val initialGame = Game(
-		width = 20,
-		height = 10,
-		snake = Snake(
-			cells = listOf(Cell(4, 4), Cell(3, 4), Cell(2, 4), Cell(1, 4), Cell(0, 4)),
-			direction = Direction.right
-		)
-	)
-	var game = initialGame
 
-	SnakeView(SdlApp(), game.width, game.height).use { sdlUI ->
+	SnakeView(app, initialGameState.width, initialGameState.height).use { view ->
 
+		var game = initialGameState
 		var ticks = 0
 		val speed = 10
+
 		while (true) {
 
-			sdlUI.draw(game)
+			view.draw(game)
 
-			sdlUI.delay(1000 / 60)
+			view.delay(1000 / 60)
 			ticks++
 			if (ticks >= speed) {
 				game = game.update()
 				ticks = 0
 			}
 
-			sdlUI.readCommands().forEach { command ->
+			view.readCommands().forEach { command ->
 				var direction: Direction? = null
 				when (command) {
 					SnakeView.UserCommand.up -> direction = Direction.up
 					SnakeView.UserCommand.down -> direction = Direction.down
 					SnakeView.UserCommand.left -> direction = Direction.left
 					SnakeView.UserCommand.right -> direction = Direction.right
-					SnakeView.UserCommand.restart -> game = initialGame
+					SnakeView.UserCommand.restart -> game = initialGameState
 					SnakeView.UserCommand.quit -> return
 				}
 				game = game.update(direction)
-				sdlUI.draw(game)
+				view.draw(game)
 			}
 		}
 	}
@@ -55,7 +49,7 @@ class SnakeView(
 	context: AppContext,
 	width: Int,
 	height: Int
-): AutoCloseable, AppContext by context {
+) : AutoCloseable, AppContext by context {
 
 	private val controller: SDL_GameController?
 	private val font: Font
@@ -74,15 +68,21 @@ class SnakeView(
 			false -> null
 		}
 
-		font = Font(renderer)
-		sprites = Sprites(renderer)
+		font = Font(context)
+		sprites = Sprites(context)
 
 		playMusic()
 	}
 
 	fun draw(game: Game) {
 		libSDL2Library.SDL_RenderClear(renderer)
-		libSDL2Library.SDL_SetRenderDrawColor(renderer, (200 / 2).toByte(), (230 / 2).toByte(), (151 / 2).toByte(), SDL_ALPHA_OPAQUE.toByte())
+		libSDL2Library.SDL_SetRenderDrawColor(
+			renderer,
+			(200 / 2).toByte(),
+			(230 / 2).toByte(),
+			(151 / 2).toByte(),
+			SDL_ALPHA_OPAQUE.toByte()
+		)
 
 		val grassW = 256
 		val grassScaledW = 400 // scale grass up to reduce its resolution so that it's similar to snake sprites
@@ -149,7 +149,7 @@ class SnakeView(
 		libSDL2Library.SDL_Delay(timeMs)
 	}
 
-	fun readCommands(): List<UserCommand>  {
+	fun readCommands(): List<UserCommand> {
 		val result = ArrayList<UserCommand>()
 		val event = SDL_Event()
 		while (libSDL2Library.SDL_PollEvent(event) != 0) {
@@ -164,6 +164,7 @@ class SnakeView(
 						//playMusic()
 					}
 				}
+
 				SDL_EventType.SDL_QUIT -> result.add(UserCommand.quit)
 				SDL_EventType.SDL_CONTROLLERBUTTONDOWN -> {
 					val controllerButtonEvent = event.cbutton
@@ -180,6 +181,7 @@ class SnakeView(
 					}
 					if (command != null) result.add(command)
 				}
+
 				SDL_EventType.SDL_KEYDOWN -> {
 					val keyboardEvent = event.key
 					val keysym = keyboardEvent.keysym
@@ -191,10 +193,11 @@ class SnakeView(
 						SDL_Scancode.SDL_SCANCODE_L -> UserCommand.right
 						SDL_Scancode.SDL_SCANCODE_R -> UserCommand.restart
 						SDL_Scancode.SDL_SCANCODE_Q -> UserCommand.quit
-						else           -> null
+						else -> null
 					}
 					if (command != null) result.add(command)
 				}
+
 				else -> Unit
 			}
 		}
@@ -206,7 +209,7 @@ class SnakeView(
 		val paths = listOf(fileName, "resources/$fileName", "../resources/$fileName")
 		val filePath = paths.find { File(it).canRead() } ?: error("Can't find sound file.")
 		val audioFile = libSDL2Library.SDL_RWFromFile(filePath, "rb")
-		val audio_spec =  SDL_AudioSpec()
+		val audio_spec = SDL_AudioSpec()
 		val audio_buf = PointerByReference()
 		val audio_len = IntByReference()
 		libSDL2Library.SDL_LoadWAV_RW(
@@ -228,7 +231,7 @@ class SnakeView(
 		from.x == to.x && from.y < to.y -> Direction.down
 		from.x > to.x && from.y == to.y -> Direction.left
 		from.x < to.x && from.y == to.y -> Direction.right
-		else                            -> error("")
+		else -> error("")
 	}
 
 	private fun cellRect(cell: Cell): SDL_Rect {
@@ -254,13 +257,13 @@ class SnakeView(
 	}
 
 
-	class Font(private val renderer: SDL_Renderer) {
+	class Font(context: AppContext) : AppContext by context {
 		companion object {
 			const val w = 48
 			const val h = 46
 		}
 
-		internal val texture = renderer.loadTexture("Font16_42_Normal4_sheet.bmp")
+		internal val texture = addTexture("Font16_42_Normal4_sheet.bmp")
 		private val letters: Map<Char, SDL_Rect>
 
 		init {
@@ -317,14 +320,14 @@ class SnakeView(
 		}
 	}
 
-	class Sprites(private val renderer: SDL_Renderer) {
+	class Sprites(context: AppContext) : AppContext by context {
 		companion object {
 			const val w = 64
 			const val h = 64
 		}
 
-		internal val texture = renderer.loadTexture("snake-graphics.bmp")
-		internal val grassTexture = renderer.loadTexture("grass.bmp")
+		internal val texture = addTexture("snake-graphics.bmp")
+		internal val grassTexture = addTexture("grass.bmp")
 
 		val headUpRect = textureRect(3, 0)
 		val headRightRect = textureRect(4, 0)
@@ -356,32 +359,11 @@ class SnakeView(
 		}
 	}
 
-	companion object {
-		fun SDL_Renderer.loadTexture(fileName: String): SDL_Texture {
-			val paths = listOf(fileName, "resources/$fileName", "../resources/$fileName")
-			val filePath = paths.find { File(it).canRead() } ?: error("Can't find image file.")
-
-			val bmp = libSDL2Library.SDL_LoadBMP_RW(libSDL2Library.SDL_RWFromFile(filePath, "rb"), 1)
-
-			return libSDL2Library.SDL_CreateTextureFromSurface(this@loadTexture, bmp)
-		}
-
-		fun allocRect(x: Int, y: Int, w: Int, h: Int) = SDL_Rect().also {
-			it.x = x
-			it.y = y
-			it.w = w
-			it.h = h
-		}
-	}
-
 	override fun close() {
 		controller.takeIf { it != null }
 			?.let { libSDL2Library.SDL_GameControllerClose(it) }
-		libSDL2Library.SDL_DestroyTexture(sprites.texture)
-		libSDL2Library.SDL_DestroyTexture(sprites.grassTexture)
-		libSDL2Library.SDL_DestroyTexture(font.texture)
-		libSDL2Library.SDL_DestroyRenderer(renderer)
-		libSDL2Library.SDL_DestroyWindow(window)
-		libSDL2Library.SDL_Quit()
+		removeTexture(sprites.texture)
+		removeTexture(sprites.grassTexture)
+		removeTexture(font.texture)
 	}
 }

@@ -22,6 +22,15 @@ data class Game(
 	}
 }
 
+val initialGameState = Game(
+	width = 20,
+	height = 10,
+	snake = Snake(
+		cells = listOf(Cell(4, 4), Cell(3, 4), Cell(2, 4), Cell(1, 4), Cell(0, 4)),
+		direction = Direction.right
+	)
+)
+
 data class Snake(
 	val cells: List<Cell>,
 	val direction: Direction,

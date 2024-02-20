@@ -1,4 +1,4 @@
-package sample.tetris
+package tetris
 
 
 fun main() {

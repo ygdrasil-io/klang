@@ -1,4 +1,4 @@
-package sample.tetris
+package tetris
 
 import com.sun.jna.ptr.IntByReference
 import libsdl.*
@@ -123,7 +123,7 @@ class SDLView(private val width: Int, private val height: Int) : GameFieldVisual
         val platform: String = libSDL2Library.SDL_GetPlatform()
 
 		val displayMode = SDL_DisplayMode()
-        if (libSDL2Library.SDL_GetCurrentDisplayMode(0, displayMode) == 0) {
+        if (libSDL2Library.SDL_GetCurrentDisplayMode(0, displayMode) != 0) {
             println("SDL_GetCurrentDisplayMode Error: ${libSDL2Library.SDL_GetError()}")
             libSDL2Library.SDL_Quit()
             throw Error()
@@ -153,7 +153,7 @@ class SDLView(private val width: Int, private val height: Int) : GameFieldVisual
 
         window = libSDL2Library.SDL_CreateWindow(
             "Tetris", windowX, windowY, windowWidth, windowHeight,
-            SDL_WindowFlags.SDL_WINDOW_SHOWN or SDL_WindowFlags.SDL_WINDOW_ALLOW_HIGHDPI or SDL_WindowFlags.SDL_WINDOW_VULKAN.value
+            SDL_WindowFlags.SDL_WINDOW_SHOWN or SDL_WindowFlags.SDL_WINDOW_ALLOW_HIGHDPI
         ) ?: error("SDL_CreateWindow Error")
 
         renderer = libSDL2Library.SDL_CreateRenderer(window, -1, SDL_RendererFlags.SDL_RENDERER_ACCELERATED or SDL_RendererFlags.SDL_RENDERER_PRESENTVSYNC)
@@ -167,7 +167,7 @@ class SDLView(private val width: Int, private val height: Int) : GameFieldVisual
             ratio = realHeight.value.toFloat() / windowHeight
         }
 
-        texture = loadImage(renderer, findFile("tetris_all.bmp"))
+        texture = loadImage(renderer, "tetris_all.bmp")
     }
 
 
@@ -436,7 +436,7 @@ class SDLView(private val width: Int, private val height: Int) : GameFieldVisual
             when (SDL_EventType.of(event.type)) {
                 SDL_EventType.SDL_QUIT -> commands.add(UserCommand.EXIT)
                 SDL_EventType.SDL_KEYDOWN -> {
-                    val keyboardEvent = event as SDL_KeyboardEvent
+					val keyboardEvent = event.key
                     when (keyboardEvent.keysym.scancode.toInt()) {
                         SDL_Scancode.SDL_SCANCODE_LEFT.value -> commands.add(UserCommand.LEFT)
 						SDL_Scancode.SDL_SCANCODE_RIGHT.value -> commands.add(UserCommand.RIGHT)
@@ -455,7 +455,7 @@ class SDLView(private val width: Int, private val height: Int) : GameFieldVisual
                         commands.add(command)
                 }
 
-				else -> error("unreachable statement")
+				else -> { }
 			}
 
 			libSDL2Library.SDL_PollEvent(event)

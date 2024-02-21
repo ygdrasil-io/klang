@@ -1,4 +1,4 @@
-package triangle
+package io.ygdrasil.triangle
 
 import io.ygdrasil.sdl.app
 import io.ygdrasil.snake.Direction

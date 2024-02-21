@@ -10,13 +10,15 @@ publishing {
 		create<MavenPublication>("mavenJava") { from(components["java"]) }
 	}
 }
-version = "chrome-121.0.6167.184"
+version = "chrome-122.0.6261"
 
 val directory = project.file("src/main/resources")
 val baseUrl = "https://github.com/klang-toolkit/ANGLE-binary/releases/download/$version/"
 val fileToDownload = listOf(
 	"libEGL.dylib" to directory.resolve("darwin").resolve("libEGL.dylib"),
 	"libGLESv2.dylib" to directory.resolve("darwin").resolve("libGLESv2.dylib"),
+	"libEGL.dll" to directory.resolve("win32").resolve("libEGL.dylib"),
+	"libGLESv2.dll" to directory.resolve("win32").resolve("libGLESv2.dylib"),
 ).forEach { (fileName, target) ->
 	val url = "$baseUrl$fileName"
 	val taskName = "downloadFile-$fileName"

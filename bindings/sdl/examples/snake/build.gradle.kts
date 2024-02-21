@@ -16,9 +16,9 @@ dependencies {
 
 application {
 	mainModule = "io.ygdrasil"
-	mainClass.set("io.ygdrasil.snake.MainKt")
+	mainClass.set("io.ygdrasil.triangle.MainKt")
 	applicationDefaultJvmArgs += "-XstartOnFirstThread"
-	tasks.run.get().workingDir = project.projectDir.resolve("src").resolve("main").resolve("resources")
+	//tasks.run.get().workingDir = project.projectDir.resolve("src").resolve("main").resolve("resources")
 }
 
 jlink {

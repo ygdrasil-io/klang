@@ -1,4 +1,4 @@
-package tetris
+package io.ygdrasil.tetris
 
 import io.ygdrasil.libsdl.SDL_Delay
 import kotlin.random.Random

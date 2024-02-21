@@ -22,7 +22,7 @@ class SnakeView(
 
 	init {
 		SDL_SetWindowSize(window, pixelWidth, pixelHeight)
-		SDL_SetWindowTitle(window, "snake")
+		SDL_SetWindowTitle(window, "io/ygdrasil/snake")
 
 		//playMusic()
 	}
@@ -215,49 +215,45 @@ class SnakeView(
 		val h = 46
 
 		val texture = addTexture("Font16_42_Normal4_sheet.bmp")
-		private val letters: Map<Char, SDL_Rect>
-
-		init {
-			letters = mapOf(
-				'A' to textureRect(0, 0, -7),
-				'B' to textureRect(1, 0),
-				'C' to textureRect(2, 0, -9),
-				'D' to textureRect(3, 0),
-				'E' to textureRect(4, 0, -5),
-				'F' to textureRect(5, 0, -5),
-				'G' to textureRect(6, 0),
-				'H' to textureRect(7, 0, -7),
-				'I' to textureRect(8, 0, -15),
-				'J' to textureRect(9, 0, -5),
-				'K' to textureRect(0, 1, -10),
-				'L' to textureRect(1, 1, -5),
-				'M' to textureRect(2, 1),
-				'N' to textureRect(3, 1),
-				'O' to textureRect(4, 1, -7),
-				'P' to textureRect(5, 1, -7),
-				'Q' to textureRect(6, 1),
-				'R' to textureRect(7, 1),
-				'S' to textureRect(8, 1),
-				'T' to textureRect(9, 1),
-				'U' to textureRect(0, 2, -13),
-				'V' to textureRect(1, 2, -10),
-				'W' to textureRect(2, 2),
-				'X' to textureRect(3, 2),
-				'Y' to textureRect(4, 2, -5),
-				'Z' to textureRect(5, 2),
-				'0' to textureRect(2, 5),
-				'1' to textureRect(3, 5, -15),
-				'2' to textureRect(4, 5),
-				'3' to textureRect(5, 5),
-				'4' to textureRect(6, 5),
-				'5' to textureRect(7, 5),
-				'6' to textureRect(8, 5),
-				'7' to textureRect(9, 5),
-				'8' to textureRect(0, 6),
-				'9' to textureRect(1, 6),
-				' ' to rect(0, 0, 0, 0)
-			)
-		}
+		private val letters = mapOf(
+			'A' to textureRect(0, 0, -7),
+			'B' to textureRect(1, 0),
+			'C' to textureRect(2, 0, -9),
+			'D' to textureRect(3, 0),
+			'E' to textureRect(4, 0, -5),
+			'F' to textureRect(5, 0, -5),
+			'G' to textureRect(6, 0),
+			'H' to textureRect(7, 0, -7),
+			'I' to textureRect(8, 0, -15),
+			'J' to textureRect(9, 0, -5),
+			'K' to textureRect(0, 1, -10),
+			'L' to textureRect(1, 1, -5),
+			'M' to textureRect(2, 1),
+			'N' to textureRect(3, 1),
+			'O' to textureRect(4, 1, -7),
+			'P' to textureRect(5, 1, -7),
+			'Q' to textureRect(6, 1),
+			'R' to textureRect(7, 1),
+			'S' to textureRect(8, 1),
+			'T' to textureRect(9, 1),
+			'U' to textureRect(0, 2, -13),
+			'V' to textureRect(1, 2, -10),
+			'W' to textureRect(2, 2),
+			'X' to textureRect(3, 2),
+			'Y' to textureRect(4, 2, -5),
+			'Z' to textureRect(5, 2),
+			'0' to textureRect(2, 5),
+			'1' to textureRect(3, 5, -15),
+			'2' to textureRect(4, 5),
+			'3' to textureRect(5, 5),
+			'4' to textureRect(6, 5),
+			'5' to textureRect(7, 5),
+			'6' to textureRect(8, 5),
+			'7' to textureRect(9, 5),
+			'8' to textureRect(0, 6),
+			'9' to textureRect(1, 6),
+			' ' to rect(0, 0, 0, 0)
+		)
 
 		fun render(char: Char, cellRect: SDL_Rect) {
 			val charRect = letters[char.uppercaseChar()] ?: (letters[' '] ?: error(""))

@@ -47,9 +47,29 @@ fun app(
 
 	//SDL_HINT()
 
+	if (useGlES) {
+		// IMPORTANT! These sets must go BEFORE SDL_Init
+		// Request OpenGL ES 3.0
+		SDL_GL_SetAttribute(SDL_GLattr.SDL_GL_CONTEXT_FLAGS.value, SDL_GLprofile.SDL_GL_CONTEXT_PROFILE_ES.value);
+		SDL_GL_SetAttribute(SDL_GLattr.SDL_GL_CONTEXT_MAJOR_VERSION.value, 3);
+		SDL_GL_SetAttribute(SDL_GLattr.SDL_GL_CONTEXT_MINOR_VERSION.value, 0);
+
+		// Want double-buffering
+		SDL_GL_SetAttribute(SDL_GLattr.SDL_GL_DOUBLEBUFFER.value, 1);
+	}
+
+
 	if (SDL_Init(SDL_INIT_EVERYTHING.toInt()) != 0) {
 		error("SDL_Init Error: ${SDL_GetError()}")
 	}
 
-	App().use(block)
+	App().use{
+
+		if (useGlES) {
+			val context = SDL_GL_CreateContext(it.window);
+		}
+
+		it.block()
+
+	}
 }

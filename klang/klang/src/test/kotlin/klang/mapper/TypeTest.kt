@@ -1,5 +1,6 @@
 package klang.mapper
 
+import com.squareup.kotlinpoet.ClassName
 import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
@@ -38,7 +39,7 @@ class TypeTest : FreeSpec({
 
 	"toType" {
 		(structure.fields[0] as TypeRefField).type.toType("test") shouldBe jnaCallback
-		(structure.fields[1]as TypeRefField).type.toType("test") shouldBe jnaCallback
+		(structure.fields[1]as TypeRefField).type.toType("test") shouldBe ClassName("test", "MyAlias")
 		primitiveArrayTypeAlias.typeRef
 			.let { it as? ResolvedTypeRef }
 			.also { it shouldNotBe null }

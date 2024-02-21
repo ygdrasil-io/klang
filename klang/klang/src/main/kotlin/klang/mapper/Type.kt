@@ -21,7 +21,7 @@ internal fun TypeRef.toType(packageName: String, nullable: Boolean = false) = wh
 
 		else -> jnaPointer
 	}
-
+	this is ResolvedTypeRef && type is NativeTypeAlias -> ClassName(packageName, type.name.value)
 	this is ResolvedTypeRef -> when (this.type.rootType()) {
 		is FunctionPointerType -> jnaCallback
 		is VoidType -> ClassName("kotlin", "Unit")

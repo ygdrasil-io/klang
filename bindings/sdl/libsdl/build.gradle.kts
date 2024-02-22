@@ -24,6 +24,7 @@ plugins {
 
 dependencies {
 	api(libs.jna)
+	api("io.ygdrasil:angle-binaries:chrome-122.0.6261")
 	testImplementation("org.junit.jupiter:junit-jupiter")
 	testImplementation(libs.kotest)
 }
@@ -80,6 +81,7 @@ klang {
 						}.map { TypeRefField(it.first, it.second) }
 				}
 			}
+			parse(fileToParse = "SDL2/SDL_opengles2.h", at = it)
 		}
 
 	generateBinding("io.ygdrasil.libsdl", "SDL2")

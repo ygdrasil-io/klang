@@ -49,7 +49,7 @@ internal sealed class KlangPluginTask {
 
 open class KlangPluginExtension {
 	internal val tasks = mutableListOf<KlangPluginTask>()
-	internal var declarations: DeclarationRepository = InMemoryDeclarationRepository()
+	internal val declarations: DeclarationRepository = InMemoryDeclarationRepository()
 	var parsingMethod = ParsingMethod.Docker
 
 	@Suppress("unused")
@@ -140,7 +140,7 @@ class KlangPlugin : Plugin<Project> {
 					check(localFileToParse.canRead()) { "${localFileToParse.absolutePath} is not readable" }
 					check(localFileToParse.length() > 0) { "${localFileToParse.absolutePath} is empty" }
 
-					extension.declarations = when (extension.parsingMethod) {
+					when (extension.parsingMethod) {
 						ParsingMethod.Docker -> {
 							val jsonFile = workingDirectory.resolve("${fileToParse.hash}.json")
 							generateAstFromDocker(
@@ -152,7 +152,7 @@ class KlangPlugin : Plugin<Project> {
 						}
 
 						ParsingMethod.Libclang -> {
-							parseFile(
+							extension.declarations.parseFile(
 								fileToParse,
 								sourcePath.absolutePath,
 								HeaderManager.listPlatformHeadersFromPath(cHeadersDirectory.toPath())

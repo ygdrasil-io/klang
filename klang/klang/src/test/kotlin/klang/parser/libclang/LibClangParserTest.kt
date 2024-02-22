@@ -1,6 +1,7 @@
 package klang.parser.libclang
 
 import io.kotest.matchers.shouldBe
+import klang.InMemoryDeclarationRepository
 import klang.parser.ParserTestCommon
 import klang.parser.TestData
 import klang.parser.validateEnumerations
@@ -13,7 +14,7 @@ class LibClangParserTest : ParserTestCommon({
 		val filePath = "src/test/c/types.h"
 
 		// When
-		val repository = parseFile(filePath)
+		val repository = InMemoryDeclarationRepository().parseFile(filePath)
 
 		// Then
 		TestData.exaustiveTypeDef.forEach { (name, type) ->
@@ -30,7 +31,7 @@ class LibClangParserTest : ParserTestCommon({
 		val filePath = "src/test/c/union.h"
 
 		// When
-		val repository = parseFile(filePath)
+		val repository = InMemoryDeclarationRepository().parseFile(filePath)
 
 		// Then
 		validateStructures(repository, TestData.union)
@@ -41,7 +42,7 @@ class LibClangParserTest : ParserTestCommon({
 		val filePath = "src/test/c/enum.h"
 
 		// When
-		val repository = parseFile(filePath)
+		val repository = InMemoryDeclarationRepository().parseFile(filePath)
 
 		// Then
 		validateEnumerations(repository, TestData.enumerations)
@@ -52,7 +53,7 @@ class LibClangParserTest : ParserTestCommon({
 		val filePath = "src/test/c/typedef-enum.h"
 
 		// When
-		val repository = parseFile(filePath)
+		val repository = InMemoryDeclarationRepository().parseFile(filePath)
 
 		// Then
 		validateEnumerations(repository, TestData.enumerations)
@@ -64,7 +65,7 @@ class LibClangParserTest : ParserTestCommon({
 		val filePath = "src/test/c/struct.h"
 
 		// When
-		val repository = parseFile(filePath)
+		val repository = InMemoryDeclarationRepository().parseFile(filePath)
 
 		// Then
 		validateStructures(repository, TestData.structures)
@@ -75,7 +76,7 @@ class LibClangParserTest : ParserTestCommon({
 		val filePath = "src/test/c/typedef-struct.h"
 
 		// When
-		val repository = parseFile(filePath)
+		val repository = InMemoryDeclarationRepository().parseFile(filePath)
 
 		// Then
 		validateStructures(repository, TestData.typeDefStructures)
@@ -86,7 +87,7 @@ class LibClangParserTest : ParserTestCommon({
 		val filePath = "src/test/c/typedef.h"
 
 		// When
-		val repository = parseFile(filePath)
+		val repository = InMemoryDeclarationRepository().parseFile(filePath)
 
 		// Then
 		TestData.typeDef.forEach { (name, type) ->
@@ -103,7 +104,7 @@ class LibClangParserTest : ParserTestCommon({
 		val filePath = "src/test/c/functions.h"
 
 		// When
-		val repository = parseFile(filePath)
+		val repository = InMemoryDeclarationRepository().parseFile(filePath)
 
 		// Then
 		TestData

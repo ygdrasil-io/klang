@@ -9,16 +9,10 @@ import kotlin.io.path.exists
 
 private val logger = KotlinLogging.logger {}
 
-enum class ParserTechnology {
-	JNA,
-	Panama
-}
-
-fun parseFile(
+fun DeclarationRepository.parseFile(
 	fileAsString: String,
 	filePathAsString: String? = null,
-	headerPathsAsString: Array<String> = arrayOf(),
-	parserTechnology: ParserTechnology = ParserTechnology.Panama
+	headerPathsAsString: Array<String> = arrayOf()
 ): DeclarationRepository {
 
 	val fileToParse = computeFile(filePathAsString, fileAsString)
@@ -26,10 +20,10 @@ fun parseFile(
 	val headerPaths = computeHeadersPaths(headerPathsAsString)
 
 	logger.info {
-		"will parse file at ${fileToParse.absolutePath} with $parserTechnology and paths ${headerPaths.map { it.toFile().absolutePath }}"
+		"will parse file at ${fileToParse.absolutePath} and paths ${headerPaths.map { it.toFile().absolutePath }}"
 	}
 
-	return parseFile(fileToParse, path, headerPaths, parserTechnology)
+	return parseFile(fileToParse, path, headerPaths)
 }
 
 private fun computeHeadersPaths(headerPathsAsString: Array<String>) =
@@ -45,18 +39,8 @@ private fun computeFile(filePathAsString: String?, fileAsString: String) = when 
 	false -> File(fileAsString)
 }.also { check(it.exists()) }
 
-private fun parseFile(
+private fun DeclarationRepository.parseFile(
 	file: File,
 	filePath: Path? = null,
-	headerPaths: Array<Path> = arrayOf(),
-	parserTechnology: ParserTechnology = ParserTechnology.Panama
-) = when (parserTechnology) {
-
-	ParserTechnology.JNA -> {
-		check(filePath == null) { "file path is not supported on JNA" }
-		check(headerPaths.isEmpty()) { "header paths is not supported on JNA" }
-		parseFileWithJna(file.absolutePath)
-	}
-
-	ParserTechnology.Panama -> parseFileWithPanama(file.absolutePath, filePath, headerPaths)
-}
+	headerPaths: Array<Path> = arrayOf()
+) = parseFileWithPanama(file.absolutePath, filePath, headerPaths)

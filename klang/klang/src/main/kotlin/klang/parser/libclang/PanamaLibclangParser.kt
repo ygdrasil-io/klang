@@ -22,8 +22,7 @@ import kotlin.io.path.pathString
 
 private val logger = KotlinLogging.logger {}
 
-fun parseFileWithPanama(file: String, filePath: Path?, headerPaths: Array<Path>): DeclarationRepository =
-	InMemoryDeclarationRepository().apply {
+fun DeclarationRepository.parseFileWithPanama(file: String, filePath: Path?, headerPaths: Array<Path>): DeclarationRepository = apply {
 		val header = Path.of(file)
 
 		var clangArguments = filePath?.let { "-I${it.toFile().absolutePath}" }

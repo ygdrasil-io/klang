@@ -3,13 +3,13 @@ package klang.parser.libclang
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import klang.DeclarationRepository
+import klang.InMemoryDeclarationRepository
 import klang.domain.NativeEnumeration
 import klang.helper.HeaderManager
 import klang.helper.HeaderManager.inferPlatformSuffix
 import klang.helper.unzipFromClasspath
 import klang.parser.ParserTestCommon
 import mu.KotlinLogging
-import java.nio.file.Files
 import java.nio.file.Path
 import kotlin.io.path.absolutePathString
 
@@ -21,12 +21,15 @@ class SDL2ItTest : ParserTestCommon({
 
 		// Given
 		val (tempDirectory, otherHeaderTempDirectoryPath) = initSDL2HeaderDirectory()
-		val fileToParse = "SDL2/SDL.h"
+		val SDL2header = "SDL2/SDL.h"
+		val SDL2OpenglESheader = "SDL2/SDL_opengles2.h"
 		val filePath = tempDirectory.absolutePathString()
 		val headerPaths = HeaderManager.listPlatformHeadersFromPath(otherHeaderTempDirectoryPath)
 
 		// When
-		val repository = parseFile(fileToParse, filePath, headerPaths)
+		val repository = InMemoryDeclarationRepository()
+			.parseFile(SDL2header, filePath, headerPaths)
+			.parseFile(SDL2OpenglESheader, filePath, headerPaths)
 			// And
 			.also(DeclarationRepository::resolveTypes)
 

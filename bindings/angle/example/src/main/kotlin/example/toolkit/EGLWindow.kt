@@ -31,28 +31,7 @@ class EGLWindow(window: OSWindow) {
 	}
 
 	fun initializeDisplay(osWindow: OSWindow, glWindowingLibrary: Library, driverType: GLESDriverType, params: EGLPlatformParameters): Boolean {
-		if (driverType == GLESDriverType.ZinkEGL) {
-			val driDirStream = StringBuilder()
-			val s = GetPathSeparator()
-			driDirStream.append(GetModuleDirectory()).append("mesa").append(s).append("src").append(s).append("gallium").append(s).append("targets").append(s).append("dri")
 
-			val driDir = driDirStream.toString()
-
-			SetEnvironmentVar("MESA_LOADER_DRIVER_OVERRIDE", "zink")
-			SetEnvironmentVar("LIBGL_DRIVERS_PATH", driDir)
-		}
-
-		if (ANGLE_USE_UTIL_LOADER) {
-			var getProcAddress: PFNEGLGETPROCADDRESSPROC
-			glWindowingLibrary.getAs("eglGetProcAddress", getProcAddress)
-			if (getProcAddress == null) {
-				println("Cannot load eglGetProcAddress")
-				return false
-			}
-
-			// Likely we will need to use a fallback to Library::getAs on non-ANGLE platforms.
-			LoadUtilEGL(getProcAddress)
-		}
 
 		// EGL_NO_DISPLAY + EGL_EXTENSIONS returns NULL before Android 10
 		val extensionString = eglQueryString(EGL_NO_DISPLAY, EGL_EXTENSIONS) as String?
@@ -210,7 +189,6 @@ enum class GLESDriverType {
 	AngleVulkanSecondariesEGL,
 	SystemEGL,
 	SystemWGL,
-	ZinkEGL,
 }
 
 enum class GLWindowResult {

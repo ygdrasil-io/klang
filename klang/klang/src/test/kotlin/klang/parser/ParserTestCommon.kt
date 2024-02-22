@@ -5,6 +5,7 @@ import io.kotest.core.spec.style.FreeSpec
 import io.kotest.core.spec.style.scopes.FreeSpecContainerScope
 import io.kotest.matchers.shouldBe
 import klang.DeclarationRepository
+import klang.InMemoryDeclarationRepository
 import klang.domain.NativeConstant
 import klang.domain.NativeStructure
 import klang.domain.NotBlankString
@@ -30,7 +31,7 @@ open class ParserTestCommon(body: FreeSpec.() -> Unit = {}) : FreeSpec({
 	body()
 })
 
-suspend fun File.parseIt(function: suspend DeclarationRepository.() -> Unit) = parseFile(absolutePath)
+suspend fun File.parseIt(function: suspend DeclarationRepository.() -> Unit) = InMemoryDeclarationRepository().parseFile(absolutePath)
 	.function()
 
 fun createHeader(fileName: String, function: () -> String): File {

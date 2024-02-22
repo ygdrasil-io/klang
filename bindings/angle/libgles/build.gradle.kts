@@ -4,6 +4,7 @@ import klang.domain.unchecked
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 import java.net.URI
+import io.ygdrasil.noMacros
 
 buildscript {
 	dependencies {
@@ -61,7 +62,7 @@ klang {
 	download(headerUrl)
 		.let(::unpack)
 		.let {
-			parse(fileToParse = "GLES3/gl3.h", at = it) {
+			parse(fileToParse = "GLES3/gl3.h", at = it, noMacros) {
 				findFunctionByName("glShaderSource")?.let { function ->
 					function.arguments.first { it.name?.value == "string" }.apply {
 						type = typeOf("char *").unchecked()

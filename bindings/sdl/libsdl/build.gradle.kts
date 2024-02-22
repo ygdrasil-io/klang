@@ -5,6 +5,7 @@ import klang.domain.unchecked
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 import java.net.URI
+import io.ygdrasil.noMacros
 
 buildscript {
 	dependencies {
@@ -63,7 +64,7 @@ klang {
 	download(headerUrl)
 		.let(::unpack)
 		.let { it ->
-			parse(fileToParse = "SDL2/SDL.h", at = it) {
+			parse(fileToParse = "SDL2/SDL.h", at = it, noMacros) {
 				findTypeAliasByName("Uint8")?.apply {
 					// Type is dumped as Int instead of char
 					typeRef = typeOf("char").unchecked()
@@ -81,7 +82,7 @@ klang {
 						}.map { TypeRefField(it.first, it.second) }
 				}
 			}
-			parse(fileToParse = "SDL2/SDL_opengles2.h", at = it)
+			parse(fileToParse = "SDL2/SDL_opengles2.h", at = it, mapOf("SDL_USE_BUILTIN_OPENGL_DEFINITIONS" to "1"))
 		}
 
 	generateBinding("io.ygdrasil.libsdl", "SDL2")

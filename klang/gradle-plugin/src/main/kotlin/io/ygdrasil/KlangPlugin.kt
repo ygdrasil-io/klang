@@ -27,6 +27,8 @@ private val hasher by lazy {
 }
 private const val taskGroup = "klang"
 
+val noMacros = mapOf<String, String?>()
+
 enum class ParsingMethod {
 	Docker,
 	Libclang
@@ -40,7 +42,7 @@ internal sealed class KlangPluginTask {
 	class Unpack(val sourceFile: String, val targetPath: String) : KlangPluginTask()
 
 	// TODO use a value object instead of a string
-	class Parse(val sourceFile: String, val sourcePath: String, val onSuccess: DeclarationRepository.() -> Unit) :
+	class Parse(val sourceFile: String, val sourcePath: String, val macros: Map<String, String?>, val onSuccess: DeclarationRepository.() -> Unit) :
 		KlangPluginTask()
 
 	// TODO use a value object instead of a string
@@ -58,8 +60,8 @@ open class KlangPluginExtension {
 		.also { hash -> tasks.add(KlangPluginTask.Unpack(urlToUnpack, hash)) }
 
 	@Suppress("unused")
-	fun parse(fileToParse: String, at: String, onSuccess: DeclarationRepository.() -> Unit = {}) {
-		tasks.add(KlangPluginTask.Parse(fileToParse, at, onSuccess))
+	fun parse(fileToParse: String, at: String, macros: Map<String, String?>, onSuccess: DeclarationRepository.() -> Unit = {}) {
+		tasks.add(KlangPluginTask.Parse(fileToParse, at, macros, onSuccess))
 	}
 
 	@Suppress("unused")
@@ -132,8 +134,11 @@ class KlangPlugin : Plugin<Project> {
 			extension.tasks
 				.asSequence()
 				.filterIsInstance<KlangPluginTask.Parse>()
-				.map { Triple(it.sourceFile, workingDirectory.resolve(it.sourcePath), it.onSuccess) }
-				.forEach { (fileToParse, sourcePath, onSuccess) ->
+				//.map { Triple(it.sourceFile, workingDirectory.resolve(it.sourcePath), it.onSuccess) }
+				.forEach { //(fileToParse, sourcePath, onSuccess) ->
+					val fileToParse = it.sourceFile
+					val sourcePath = workingDirectory.resolve(it.sourcePath)
+					val onSuccess = it.onSuccess
 					val localFileToParse = Path.of(sourcePath.absolutePath).resolve(fileToParse).toFile()
 					check(localFileToParse.exists()) { "${localFileToParse.absolutePath} to parse does not exist" }
 					check(localFileToParse.isFile()) { "${localFileToParse.absolutePath} is not a file" }
@@ -155,7 +160,8 @@ class KlangPlugin : Plugin<Project> {
 							extension.declarations.parseFile(
 								fileToParse,
 								sourcePath.absolutePath,
-								HeaderManager.listPlatformHeadersFromPath(cHeadersDirectory.toPath())
+								HeaderManager.listPlatformHeadersFromPath(cHeadersDirectory.toPath()),
+								it.macros
 							)
 						}
 					}.also { it.resolveTypes() }

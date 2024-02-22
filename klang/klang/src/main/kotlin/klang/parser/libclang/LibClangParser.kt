@@ -12,7 +12,8 @@ private val logger = KotlinLogging.logger {}
 fun DeclarationRepository.parseFile(
 	fileAsString: String,
 	filePathAsString: String? = null,
-	headerPathsAsString: Array<String> = arrayOf()
+	headerPathsAsString: Array<String> = arrayOf(),
+	macros: Map<String, String?> = mapOf()
 ): DeclarationRepository {
 
 	val fileToParse = computeFile(filePathAsString, fileAsString)
@@ -23,7 +24,7 @@ fun DeclarationRepository.parseFile(
 		"will parse file at ${fileToParse.absolutePath} and paths ${headerPaths.map { it.toFile().absolutePath }}"
 	}
 
-	return parseFile(fileToParse, path, headerPaths)
+	return parseFile(fileToParse, path, headerPaths, macros)
 }
 
 private fun computeHeadersPaths(headerPathsAsString: Array<String>) =
@@ -42,5 +43,6 @@ private fun computeFile(filePathAsString: String?, fileAsString: String) = when 
 private fun DeclarationRepository.parseFile(
 	file: File,
 	filePath: Path? = null,
-	headerPaths: Array<Path> = arrayOf()
-) = parseFileWithPanama(file.absolutePath, filePath, headerPaths)
+	headerPaths: Array<Path>,
+	macros: Map<String, String?>
+) = parseFileWithPanama(file.absolutePath, filePath, headerPaths, macros)

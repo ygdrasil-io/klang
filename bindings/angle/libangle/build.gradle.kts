@@ -2,6 +2,7 @@ import io.ygdrasil.ParsingMethod
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 import java.net.URI
+import io.ygdrasil.noMacros
 
 buildscript {
 	dependencies {
@@ -59,7 +60,7 @@ klang {
 
 	download(headerUrl)
 		.let(::unpack)
-		.let { parse(fileToParse = "EGL/egl.h", at = it) { } }
+		.let { parse(fileToParse = "EGL/egl.h", at = it, noMacros) { } }
 
 	generateBinding("libangle", "EGL")
 }

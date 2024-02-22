@@ -22,13 +22,15 @@ import kotlin.io.path.pathString
 
 private val logger = KotlinLogging.logger {}
 
-fun DeclarationRepository.parseFileWithPanama(file: String, filePath: Path?, headerPaths: Array<Path>): DeclarationRepository = apply {
+fun DeclarationRepository.parseFileWithPanama(file: String, filePath: Path?, headerPaths: Array<Path>, macros: Map<String, String?>): DeclarationRepository = apply {
 		val header = Path.of(file)
 
 		var clangArguments = filePath?.let { "-I${it.toFile().absolutePath}" }
 			?.let { arrayOf(it) }
 			?: arrayOf()
 		clangArguments += headerPaths.map { "-I${it.toFile().absolutePath}" }
+
+	clangArguments += macros.map { (key, value) -> "-D${key}${value?.let { "=$it" } ?: ""}" }
 
 		val topLevel = parse(
 			listOf(header),

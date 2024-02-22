@@ -29,7 +29,7 @@ class SDL2ItTest : ParserTestCommon({
 		// When
 		val repository = InMemoryDeclarationRepository()
 			.parseFile(SDL2header, filePath, headerPaths)
-			.parseFile(SDL2OpenglESheader, filePath, headerPaths)
+			.parseFile(SDL2OpenglESheader, filePath, headerPaths, mapOf("SDL_USE_BUILTIN_OPENGL_DEFINITIONS" to "1"))
 			// And
 			.also(DeclarationRepository::resolveTypes)
 
@@ -45,6 +45,7 @@ class SDL2ItTest : ParserTestCommon({
 				}
 
 			findFunctionByName("SDL_ReportAssertion") shouldNotBe null
+			findFunctionByName("glGetString") shouldNotBe null
 			findStructureByName("SDL_Rect") shouldNotBe null
 		}
 

@@ -10,7 +10,7 @@ fun main() {
 
 	val window = SDL_CreateWindow(
 		"", SDL_WINDOWPOS_CENTERED.toInt(),
-		SDL_WINDOWPOS_CENTERED.toInt(), 1, 1,
+		SDL_WINDOWPOS_CENTERED.toInt(), 100, 100,
 		SDL_WindowFlags.SDL_WINDOW_SHOWN.value
 	) ?: error("fail to create window ${SDL_GetError()}")
 
@@ -35,7 +35,6 @@ fun main() {
 		val event = SDL_Event()
 		while (SDL_PollEvent(event) != 0) {
 
-			SDL_PollEvent(event)
 		}
 	}
 }

@@ -21,6 +21,8 @@ gradle-app.setting
 .classpath
 /.idea/
 /toolkit/*.log
-/bindings/sdl/binaries/src/main/resources/darwin-aarch64/libSDL2.dylib
-/bindings/sdl/binaries/src/main/resources/darwin-amd64/libSDL2.dylib
-/bindings/sdl/binaries/src/main/resources/win32/libSDL2.dll
+
+# Ignore native libraries
+*.dll
+*.dylib
+*.so

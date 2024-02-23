@@ -176,7 +176,10 @@ private fun ResolvedTypeRef.toPropertySpec(
 		}.copy(nullable = true)
 
 		rootType is StringType -> toType(packageName)
-		rootType is PrimitiveType && isPointer.not() -> toType(packageName)
+		rootType is PrimitiveType && isPointer.not() -> when {
+			isArray && type is NativeTypeAlias && rootType is FixeSizeType -> ClassName(packageName, "${type.name}${'$'}Array")
+			else -> toType(packageName)
+		}
 		rootType is NativeEnumeration && isPointer.not() -> when (rootType.type) {
 			is ResolvedTypeRef -> rootType.type.toType(packageName)
 			else -> null
@@ -194,6 +197,7 @@ private fun ResolvedTypeRef.toPropertySpec(
 		isPointer -> "null"
 		rootType is FixeSizeType -> when {
 			isArray ->  when {
+				this.type is NativeTypeAlias -> "`${this.type.name}${'$'}Array`(${arraySize ?: 0})"
 				rootType.isFloating && rootType.size == 32 -> "FloatArray(${arraySize ?: 0})"
 				rootType.isFloating && rootType.size == 64 -> "DoubleArray(${arraySize ?: 0})"
 				rootType.size == 8 -> "ByteArray(${arraySize ?: 0})"

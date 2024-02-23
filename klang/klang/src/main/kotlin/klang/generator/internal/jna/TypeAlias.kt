@@ -14,7 +14,7 @@ internal fun List<NativeTypeAlias>.generateKotlinFile(outputDirectory: File, pac
 	FileSpec.builder(packageName, "TypeAlias")
 		.also { fileSpec ->
 			asSequence()
-				.map { typeAlias -> typeAlias.toSpec(packageName) }
+				.flatMap { typeAlias -> typeAlias.toSpec(packageName) }
 				.forEach {
 					when (it) {
 						is TypeAliasSpec -> fileSpec.addTypeAlias(it)

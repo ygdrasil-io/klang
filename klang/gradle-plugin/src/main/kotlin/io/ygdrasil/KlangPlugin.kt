@@ -65,6 +65,11 @@ open class KlangPluginExtension {
 	}
 
 	@Suppress("unused")
+	fun parse(fileToParse: String, at: String, onSuccess: DeclarationRepository.() -> Unit = {}) {
+		parse(fileToParse, at, noMacros, onSuccess)
+	}
+
+	@Suppress("unused")
 	fun download(urlToDownload: URL): String = urlToDownload
 		.toString()
 		.hash

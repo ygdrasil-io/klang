@@ -24,7 +24,6 @@ plugins {
 
 dependencies {
 	api(libs.jna)
-	api("io.ygdrasil:angle-binaries:chrome-122.0.6261")
 	testImplementation("org.junit.jupiter:junit-jupiter")
 	testImplementation(libs.kotest)
 }

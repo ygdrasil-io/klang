@@ -5,7 +5,7 @@ plugins {
 }
 
 dependencies {
-	api(project(":sdl4k"))
+	api(project(":sdl2-4k"))
 	api(project(":sdl2-binaries"))
 	testImplementation("org.junit.jupiter:junit-jupiter")
 	testImplementation(libs.kotest)

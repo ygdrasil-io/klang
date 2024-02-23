@@ -1,7 +1,7 @@
 package tetris
 
 import com.sun.jna.ptr.IntByReference
-import libsdl.*
+import io.ygdrasil.libsdl.*
 
 class SDLView(private val width: Int, private val height: Int) : GameFieldVisualizer, UserInput {
 

@@ -17,7 +17,7 @@ buildscript {
 }
 
 plugins {
-	kotlin("jvm") version "1.9.10"
+	kotlin("jvm")
 	alias(libs.plugins.klang)
 }
 
@@ -51,7 +51,7 @@ sourceSets.main {
 	java.srcDirs(buildDir)
 }
 
-val headerUrl = URL("https://github.com/gfx-rs/wgpu-native/releases/download/v0.18.1.2/wgpu-macos-x86_64-release.zip")
+val headerUrl = URL("https://github.com/gfx-rs/wgpu-native/releases/download/${libs.versions.wgpu.get()}/wgpu-macos-x86_64-release.zip")
 
 klang {
 
@@ -65,5 +65,5 @@ klang {
 			}
 		}
 
-	generateBinding("libwgpu", "wgpu")
+	generateBinding("libwgpu", "WGPU")
 }

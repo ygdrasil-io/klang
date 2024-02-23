@@ -23,7 +23,7 @@ class CallbackGenerationTest : FreeSpec({
 	}
 
 	"generate kotlin callback" {
-		callback.toSpec("test").toString() shouldBe """
+		callback.toSpec("test").first().toString() shouldBe """
 			|public interface MyCallback : com.sun.jna.Callback {
 			|  public operator fun invoke(
 			|    param1: com.sun.jna.Pointer,

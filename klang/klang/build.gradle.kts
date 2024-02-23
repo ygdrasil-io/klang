@@ -22,7 +22,6 @@ dependencies {
 	implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0")
 	implementation("io.github.microutils:kotlin-logging:1.7.4")
 	implementation("org.slf4j:slf4j-simple:1.7.26")
-	api(project(":libclang"))
 	api(project(":jextract"))
 	implementation(libs.arrow.core)
 	implementation(libs.arrow.fx.coroutines)

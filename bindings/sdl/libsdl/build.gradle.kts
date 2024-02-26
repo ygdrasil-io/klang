@@ -80,6 +80,7 @@ klang {
 						}.map { TypeRefField(it.first, it.second) }
 				}
 			}
+			parse(fileToParse = "SDL2/SDL_syswm.h", at = it)
 		}
 
 	generateBinding("io.ygdrasil.libsdl", "SDL2")

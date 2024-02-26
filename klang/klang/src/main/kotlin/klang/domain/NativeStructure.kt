@@ -28,7 +28,7 @@ data class NativeStructure(
 ) : NameableDeclaration, ResolvableDeclaration {
 	override fun <T : NativeDeclaration> merge(other: T) {
 		if (other is NativeStructure) {
-			fields += other.fields
+			fields = other.fields
 		} else super.merge(other)
 	}
 

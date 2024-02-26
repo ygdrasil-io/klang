@@ -23,6 +23,7 @@ class SDL2ItTest : ParserTestCommon({
 		val (tempDirectory, otherHeaderTempDirectoryPath) = initSDL2HeaderDirectory()
 		val SDL2header = "SDL2/SDL.h"
 		val SDL2OpenglESheader = "SDL2/SDL_opengles2.h"
+		val SDL2SysHeader = "SDL2/SDL_syswm.h"
 		val filePath = tempDirectory.absolutePathString()
 		val headerPaths = HeaderManager.listPlatformHeadersFromPath(otherHeaderTempDirectoryPath)
 
@@ -32,6 +33,8 @@ class SDL2ItTest : ParserTestCommon({
 			.parseFile(SDL2OpenglESheader, filePath, headerPaths, mapOf("SDL_USE_BUILTIN_OPENGL_DEFINITIONS" to "1"))
 			// And
 			.also(DeclarationRepository::resolveTypes)
+		    // And
+			.also { it.parseFile(SDL2SysHeader, filePath, headerPaths) }
 
 		// Then
 		repository.apply {

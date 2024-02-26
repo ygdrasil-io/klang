@@ -1,12 +1,20 @@
 package io.ygdrasil.triangle
 
+import com.sun.jna.Pointer
 import io.ygdrasil.libsdl.*
+import libwgpu.WGPULogLevel
+import libwgpu.*
+import libwgpu.wgpuSetLogLevel
+
+
 
 
 fun main() {
 	if (SDL_Init(SDL_INIT_EVERYTHING.toInt()) != 0) {
 		error("SDL_Init Error: ${SDL_GetError()}")
 	}
+	frmwrk_setup_logging(WGPULogLevel.WGPULogLevel_Warn)
+	val instance = wgpuCreateInstance(null);
 
 	val window = SDL_CreateWindow(
 		"", SDL_WINDOWPOS_CENTERED.toInt(),
@@ -18,6 +26,32 @@ fun main() {
 		window, -1, SDL_RendererFlags.SDL_RENDERER_ACCELERATED or SDL_RendererFlags.SDL_RENDERER_PRESENTVSYNC
 	) ?: error("fail to create renderer")
 
+	val metalLayer = SDL_RenderGetMetalLayer(renderer) ?: error("fail to get metal layer")
+
+	val surfaceDescriptor = WGPUSurfaceDescriptor().apply {
+		nextInChain =  WGPUSurfaceDescriptorFromMetalLayer().apply {
+			chain = WGPUChainedStruct().apply {
+				sType = WGPUSType.WGPUSType_SurfaceDescriptorFromMetalLayer.value
+			}
+			layer = metalLayer
+		}
+	}
+
+	val surface = wgpuInstanceCreateSurface(instance, surfaceDescriptor)
+	check(surface != null) { "fail to create surface" }
+
+	val options = WGPURequestAdapterOptions().apply {
+		compatibleSurface = surface
+	}
+
+	var adapter: WGPUAdapterImpl? = null
+
+	val handleRequestAdapter = handleRequestAdapter() {
+		adapter = it
+	}
+
+	wgpuInstanceRequestAdapter(instance, options, handleRequestAdapter, null);
+	check(adapter != null) { "fail to get adapter" }
 
 	while (true) {
 

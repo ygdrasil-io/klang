@@ -1,15 +1,11 @@
 package io.ygdrasil.triangle
 
-import com.sun.jna.Pointer
 import io.ygdrasil.libsdl.*
-import libwgpu.WGPULogLevel
 import libwgpu.*
-import libwgpu.wgpuSetLogLevel
-
-
 
 
 fun main() {
+
 	if (SDL_Init(SDL_INIT_EVERYTHING.toInt()) != 0) {
 		error("SDL_Init Error: ${SDL_GetError()}")
 	}

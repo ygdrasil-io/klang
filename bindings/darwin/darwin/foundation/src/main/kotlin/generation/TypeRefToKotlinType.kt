@@ -9,7 +9,7 @@ internal fun TypeRef.toKotlinType(): String = when (this) {
 	is ResolvedTypeRef -> toKotlinType()
 }
 
-private fun ResolvedTypeRef.toKotlinType(): String = typeName
+private fun ResolvedTypeRef.toKotlinType(): String = typeName.toString()
 
 private fun UnresolvedTypeRef.toKotlinType(): String = when (referenceAsString) {
 	"void" -> "Unit"

@@ -5,12 +5,13 @@ import klang.domain.NativeDeclaration
 import klang.domain.NativeEnumeration
 import klang.domain.ObjectiveCClass
 import klang.findDeclarationByName
+import klang.generator.JnaBindingGenerator
 import klang.generator.generateKotlinFile
 import klang.parser.json.ParserRepository
 import klang.parser.json.parseAstJson
 import java.io.File
 
-const val baseDirectory = "binding/darwin/foundation/"
+const val baseDirectory = "binding/darwin/darwin/foundation/"
 const val astPath = "${baseDirectory}src/main/objective-c/cocoa.m.ast.json"
 const val outputDirectory = "${baseDirectory}src/main/generated/"
 
@@ -35,12 +36,15 @@ fun main() {
 
 		cleanupTargetPath()
 
+		 with(JnaBindingGenerator) {
+			 generateKotlinFiles(File(outputDirectory), "darwin", "na")
+		 }
+
 		declarations
 			.filterIsInstance<NameableDeclaration>()
-			.filter { it.name != "NSString" }
-			.filter { it.name == "NSWindow" || it is NativeEnumeration }
+			.filter { it.name.toString() != "NSString" }
+			.filter { it.name.toString() == "NSWindow" || it is NativeEnumeration }
 			.forEach(::generateKotlinFile)
-
 
 	}
 
@@ -50,7 +54,7 @@ fun main() {
 private fun generateKotlinFile(declaration: NativeDeclaration) {
 	when (declaration) {
 		is ObjectiveCClass -> declaration.generateKotlinFile("${outputDirectory}darwin/")
-		is NativeEnumeration -> declaration.generateKotlinFile(outputDirectory)
+		//is NativeEnumeration -> declaration.toSpecAsEnumeration("darwin")//outputDirectory)
 		else -> println("Not implemented: $declaration")
 	}
 }

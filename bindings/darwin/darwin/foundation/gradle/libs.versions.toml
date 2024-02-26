@@ -1,0 +1,11 @@
+[versions]
+arrow = "1.2.0"
+kotest = "5.6.1"
+kotlinpoet = "1.14.2"
+kotlin = "1.9.22"
+
+[libraries]
+arrow-core = { module = "io.arrow-kt:arrow-core", version.ref = "arrow" }
+arrow-fx-coroutines = { module = "io.arrow-kt:arrow-fx-coroutines", version.ref = "arrow" }
+kotest = { module = "io.kotest:kotest-runner-junit5-jvm", version.ref = "kotest" }
+kotlinpoet = { module = "com.squareup:kotlinpoet", version.ref = "kotlinpoet" }

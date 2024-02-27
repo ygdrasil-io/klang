@@ -9,6 +9,7 @@ group = "io.ygdrasil"
 version = "1.0.0-SNAPSHOT"
 
 library {
+
 	linkage = listOf(Linkage.SHARED)
 
 	targetMachines.add(machines.windows.x86_64)

@@ -15,7 +15,7 @@ val fileToDownload = listOf(
 	),
 	NativeLibrary(
 		"wgpu-macos-x86_64-release.zip",
-		resourcesDirectory.resolve("darwin-amd64").resolve("libWGPU.dylib"),
+		resourcesDirectory.resolve("darwin-x86-64").resolve("libWGPU.dylib"),
 		"libwgpu_native.dylib"
 	),
 	NativeLibrary(

@@ -16,7 +16,7 @@ fun main() {
 	if (SDL_Init(SDL_INIT_EVERYTHING.toInt()) != 0) {
 		error("SDL_Init Error: ${SDL_GetError()}")
 	}
-	//frmwrk_setup_logging(WGPULogLevel.WGPULogLevel_Warn)
+
 	val instance = wgpuCreateInstance(null) ?: error("fail to wgpu instance")
 
 	val window = SDL_CreateWindow(
@@ -65,6 +65,21 @@ fun main() {
 
 	wgpuAdapterRequestDevice(adapter, null, handleRequestDevice, null)
 	check(device != null) { "fail to get device" }
+
+	val queue = wgpuDeviceGetQueue(device) ?: error("fail to get queue")
+
+	val shader_module = wgpuDeviceCreateShaderModule(
+		device,
+		WGPUShaderModuleDescriptor().apply {
+			label = "shader.wgsl"
+			nextInChain = WGPUShaderModuleWGSLDescriptor().apply {
+				chain = WGPUChainedStruct().apply {
+					sType = WGPUSType.WGPUSType_ShaderModuleWGSLDescriptor.value
+				}
+				code = shader
+			}
+		})
+
 
 	while (true) {
 

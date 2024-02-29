@@ -12,12 +12,12 @@ fun helloTriangle(device: WGPUDevice, adapter: WGPUAdapterImpl, surface: WGPUSur
 	val shader_module = wgpuDeviceCreateShaderModule(
 		device,
 		WGPUShaderModuleDescriptor().apply {
-			nextInChain = WGPUShaderModuleWGSLDescriptor.ByReference().apply {
+			nextInChain = WGPUShaderModuleWGSLDescriptor().apply {
 				code = shader
 				chain.apply {
 					sType = WGPUSType.WGPUSType_ShaderModuleWGSLDescriptor.value
 				}
-			}
+			}.pointer
 		})
 	check(shader_module != null) { "fail to get shader module" }
 
@@ -37,15 +37,15 @@ fun helloTriangle(device: WGPUDevice, adapter: WGPUAdapterImpl, surface: WGPUSur
 				module = shader_module
 				entryPoint = "vs_main"
 			}
-			fragment.apply {
+			fragment = WGPUFragmentState().apply {
 				module = shader_module
 				entryPoint = "fs_main"
 				targetCount = NativeLong(1)
-				targets.apply {
-					format = surface_capabilities.formats!!.value
+				targets = WGPUColorTargetState().apply {
+					format = surface_capabilities.formats!!.getInt(0)
 					writeMask = WGPUColorWriteMask.WGPUColorWriteMask_All.value
-				}
-			}
+				}.pointer
+			}.pointer
 			primitive.apply {
 				topology = WGPUPrimitiveTopology.WGPUPrimitiveTopology_TriangleList.value
 			}

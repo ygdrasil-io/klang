@@ -1,43 +1,54 @@
-package klang.generator
+package klang.generator.structure
 
 import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.shouldBe
 import klang.InMemoryDeclarationRepository
 import klang.allDeclarationsFilter
 import klang.domain.NativeStructure
+import klang.domain.NativeTypeAlias
 import klang.domain.NotBlankString
 import klang.domain.TypeRefField
 import klang.mapper.toSpec
 import klang.parser.testType
 
-class StructureGenerationWithPrimitiveArrayTest : FreeSpec({
+class StructureGenerationWithTypeAliasAndArray  : FreeSpec({
+
+	val alias = NativeTypeAlias(
+		name = NotBlankString("NewType"),
+		typeRef = testType("int")
+	)
 
 	val structure = NativeStructure(
 		name = NotBlankString("MyStructure"),
 		fields = listOf(
-			TypeRefField("first", testType("int[10]").also {
-				it.isArray = true
-				it.arraySize = 10
-			}),
+			TypeRefField("first", testType("NewType")),
+			TypeRefField("second", testType("NewType[4]")),
 		)
 	)
 
 	InMemoryDeclarationRepository().apply {
+		save(alias)
 		save(structure)
 		resolveTypes(allDeclarationsFilter)
 	}
 
-	"generate kotlin structure with primitive array" {
+	"generate kotlin structure" {
 		structure.toSpec("test").apply {
 			size shouldBe 1
 			first().toString() shouldBe """
-@com.sun.jna.Structure.FieldOrder("first")
+@com.sun.jna.Structure.FieldOrder("first", "second")
 public open class MyStructure : com.sun.jna.Structure {
   /**
-   * mapped from int[10]
+   * mapped from NewType
    */
   @kotlin.jvm.JvmField
-  public var first: kotlin.IntArray = IntArray(10)
+  public var first: test.NewType = 0
+
+  /**
+   * mapped from NewType[4]
+   */
+  @kotlin.jvm.JvmField
+  public var second: test.`NewType${'$'}Array` = `NewType${'$'}Array`(4)
 
   public constructor(pointer: com.sun.jna.Pointer?) : super(pointer)
 
@@ -55,31 +66,4 @@ public open class MyStructure : com.sun.jna.Structure {
 		""".trimIndent()
 		}
 	}
-
-
-	val structureWithNoFields = NativeStructure(
-		name = NotBlankString("MyStructure"),
-		fields = listOf()
-	)
-
-	"generate kotlin structure with no fields" {
-		structureWithNoFields.toSpec("test").apply {
-			size shouldBe 1
-			first().toString() shouldBe """
-			|public class MyStructure : com.sun.jna.PointerType {
-			|  public constructor() : super()
-			|
-			|  public constructor(pointer: com.sun.jna.Pointer?) : super(pointer)
-			|
-			|  public class ByReference : com.sun.jna.ptr.PointerByReference {
-			|    public constructor() : super()
-			|
-			|    public constructor(pointer: com.sun.jna.Pointer?) : super(pointer)
-			|  }
-			|}
-			|
-		""".trimMargin()
-		}
-	}
 })
-

@@ -69,7 +69,7 @@ public open class MyStructure : com.sun.jna.Union {
    * mapped from char *
    */
   @kotlin.jvm.JvmField
-  public var string: kotlin.String = ""
+  public var string: kotlin.String? = null
 
   public constructor(pointer: com.sun.jna.Pointer?) : super(pointer)
 

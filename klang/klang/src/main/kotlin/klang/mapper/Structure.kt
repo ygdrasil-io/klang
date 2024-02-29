@@ -168,14 +168,14 @@ private fun ResolvedTypeRef.toPropertySpec(
 	val rootType = type.rootType()
 
 	val type = when {
-		rootType is NativeStructure -> toType(packageName)
+		rootType is NativeStructure -> toType(packageName, fromStructure = true)
 		// If FunctionPointerType generate an interface or use the one defined by the typealias
 		rootType is FunctionPointerType -> when (type) {
 			is NativeTypeAlias -> ClassName(packageName, type.name.value)
 			else -> ClassName(packageName, generateNativePointerName(nativeStructure, name))
 		}.copy(nullable = true)
 
-		rootType is StringType -> toType(packageName)
+		rootType is StringType -> toType(packageName).copy(nullable = true)
 		rootType is PrimitiveType && isPointer.not() -> when {
 			isArray && type is NativeTypeAlias && rootType is FixeSizeType -> ClassName(packageName, "${type.name}${'$'}Array")
 			else -> toType(packageName)
@@ -190,10 +190,10 @@ private fun ResolvedTypeRef.toPropertySpec(
 
 	val defaultValue = when {
 		rootType is NativeStructure -> when {
-			isPointer -> "${rootType.name}()"
+			isPointer -> "null"
 			else -> "${rootType.name}()"
 		}
-		rootType is StringType -> "\"\""
+		rootType is StringType -> "null"
 		isPointer -> "null"
 		rootType is FixeSizeType -> when {
 			isArray ->  when {

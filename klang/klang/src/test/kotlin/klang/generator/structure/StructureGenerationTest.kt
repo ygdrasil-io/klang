@@ -1,4 +1,4 @@
-package klang.generator
+package klang.generator.structure
 
 import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.shouldBe
@@ -10,24 +10,21 @@ import klang.domain.TypeRefField
 import klang.mapper.toSpec
 import klang.parser.testType
 
-class StructureWithStructureGenerationTest : FreeSpec({
+class StructureGenerationTest : FreeSpec({
 
 	val structure = NativeStructure(
 		name = NotBlankString("MyStructure"),
 		fields = listOf(
-			TypeRefField("structure", testType("struct MyOtherStructure")),
-		)
-	)
-
-	val otherStructure = NativeStructure(
-		name = NotBlankString("MyOtherStructure"),
-		fields = listOf(
-			TypeRefField("structure", testType("long")),
+			TypeRefField("first", testType("long")),
+			TypeRefField("second", testType("int")),
+			TypeRefField("third", testType("float")),
+			TypeRefField("fourth", testType("double")),
+			TypeRefField("fifth", testType("void *")),
+			TypeRefField("string", testType("char *"))
 		)
 	)
 
 	InMemoryDeclarationRepository().apply {
-		save(otherStructure)
 		save(structure)
 		resolveTypes(allDeclarationsFilter)
 	}
@@ -36,13 +33,43 @@ class StructureWithStructureGenerationTest : FreeSpec({
 		structure.toSpec("test").apply {
 			size shouldBe 1
 			first().toString() shouldBe """
-@com.sun.jna.Structure.FieldOrder("structure")
+@com.sun.jna.Structure.FieldOrder("first", "second", "third", "fourth", "fifth", "string")
 public open class MyStructure : com.sun.jna.Structure {
   /**
-   * mapped from struct MyOtherStructure
+   * mapped from long
    */
   @kotlin.jvm.JvmField
-  public var structure: test.MyOtherStructure = MyOtherStructure()
+  public var first: com.sun.jna.NativeLong = com.sun.jna.NativeLong(0)
+
+  /**
+   * mapped from int
+   */
+  @kotlin.jvm.JvmField
+  public var second: kotlin.Int = 0
+
+  /**
+   * mapped from float
+   */
+  @kotlin.jvm.JvmField
+  public var third: kotlin.Float = 0.0f
+
+  /**
+   * mapped from double
+   */
+  @kotlin.jvm.JvmField
+  public var fourth: kotlin.Double = 0.0
+
+  /**
+   * mapped from void *
+   */
+  @kotlin.jvm.JvmField
+  public var fifth: com.sun.jna.Pointer? = null
+
+  /**
+   * mapped from char *
+   */
+  @kotlin.jvm.JvmField
+  public var string: kotlin.String? = null
 
   public constructor(pointer: com.sun.jna.Pointer?) : super(pointer)
 

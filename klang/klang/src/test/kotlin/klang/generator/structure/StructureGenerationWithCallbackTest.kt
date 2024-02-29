@@ -1,4 +1,4 @@
-package klang.generator
+package klang.generator.structure
 
 import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.shouldBe

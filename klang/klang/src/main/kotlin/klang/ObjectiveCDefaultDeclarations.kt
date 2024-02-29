@@ -7,7 +7,7 @@ import klang.domain.ObjectiveCProtocol
 
 object ObjectiveCRootClass: NameableDeclaration {
 	override val name: NotBlankString = NotBlankString("NSObject")
-	override val source: DeclarationOrigin = DeclarationOrigin.PlatformHeader
+	override val source: DeclarationOrigin = DeclarationOrigin.Platform
 }
 
 

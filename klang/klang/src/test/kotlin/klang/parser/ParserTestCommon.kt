@@ -9,10 +9,10 @@ import klang.InMemoryDeclarationRepository
 import klang.domain.NativeConstant
 import klang.domain.NativeStructure
 import klang.domain.NotBlankString
+import klang.generator.JnaBindingGenerator
 import klang.helper.HeaderManager
 import klang.parser.json.ParserRepository
 import klang.parser.libclang.parseFile
-import mu.KotlinLogging
 import java.io.File
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
@@ -31,8 +31,20 @@ open class ParserTestCommon(body: FreeSpec.() -> Unit = {}) : FreeSpec({
 	body()
 })
 
-suspend fun File.parseIt(function: suspend DeclarationRepository.() -> Unit) = InMemoryDeclarationRepository().parseFile(absolutePath)
-	.function()
+suspend fun File.parseIt(block: suspend DeclarationRepository.() -> Unit): DeclarationRepository =
+	InMemoryDeclarationRepository()
+		.parseFile(absolutePath)
+		.also { it.block() }
+
+suspend fun DeclarationRepository.generateJNABinding(block: suspend (List<File>) -> Unit) {
+	with(JnaBindingGenerator) {
+		generateKotlinFiles(
+			HeaderManager.createTemporaryHeaderDirectory().toFile(),
+			"test",
+			"test"
+		)
+	}
+}
 
 fun createHeader(fileName: String, function: () -> String): File {
 	val tempDirectory = HeaderManager.createTemporaryHeaderDirectory()
@@ -44,7 +56,10 @@ fun createHeader(fileName: String, function: () -> String): File {
 	return headerFile.toFile()
 }
 
- suspend fun FreeSpecContainerScope.validateEnumerations(repository: DeclarationRepository, enumerations: List<Pair<NotBlankString, List<Pair<String, Long>>>>) {
+suspend fun FreeSpecContainerScope.validateEnumerations(
+	repository: DeclarationRepository,
+	enumerations: List<Pair<NotBlankString, List<Pair<String, Long>>>>
+) {
 	enumerations.forEach { (name, values) ->
 		"test $name" {
 			repository.findEnumerationByName(name)
@@ -54,7 +69,10 @@ fun createHeader(fileName: String, function: () -> String): File {
 	}
 }
 
-suspend fun FreeSpecContainerScope.validateStructures(repository: DeclarationRepository, structures: List<NativeStructure>) {
+suspend fun FreeSpecContainerScope.validateStructures(
+	repository: DeclarationRepository,
+	structures: List<NativeStructure>
+) {
 	structures.forEach { (name, fields, isUnion) ->
 		"test $name" {
 			repository.findStructureByName(name)
@@ -65,7 +83,10 @@ suspend fun FreeSpecContainerScope.validateStructures(repository: DeclarationRep
 	}
 }
 
-suspend fun FreeSpecContainerScope.validateConstants(repository: DeclarationRepository, constants: List<NativeConstant<*>>) {
+suspend fun FreeSpecContainerScope.validateConstants(
+	repository: DeclarationRepository,
+	constants: List<NativeConstant<*>>
+) {
 	constants.forEach { (name, value, _) ->
 		"expected $name with value $value" {
 			repository.findConstantByName(name)

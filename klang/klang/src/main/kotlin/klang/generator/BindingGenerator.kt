@@ -12,6 +12,6 @@ interface BindingGenerator {
 	 * @param basePackage The base package name for the generated Kotlin classes.
 	 * @param libraryName The name of the library.
 	 */
-	fun DeclarationRepository.generateKotlinFiles(outputDirectory: File, basePackage: String, libraryName: String)
+	fun DeclarationRepository.generateKotlinFiles(outputDirectory: File, basePackage: String, libraryName: String): List<File>
 
 }

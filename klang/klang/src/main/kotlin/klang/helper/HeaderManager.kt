@@ -2,6 +2,7 @@ package klang.helper
 
 import OperatingSystem
 import klang.domain.NotBlankString
+import mu.KotlinLogging
 import operatingSystem
 import java.nio.file.Files
 import java.nio.file.Path
@@ -11,6 +12,9 @@ import kotlin.io.path.deleteRecursively
 import kotlin.io.path.exists
 
 object HeaderManager {
+
+	private val logger = KotlinLogging.logger {}
+
 	fun putPlatformHeaderAt(headerDirectoryPath: Path) {
 
 		check(headerDirectoryPath.exists()) { "path ${headerDirectoryPath.absolutePathString()} does not exists" }
@@ -42,6 +46,7 @@ object HeaderManager {
 	}
 
 	fun createTemporaryHeaderDirectory(directoryName: String = "headers") = createTemporaryHeaderDirectory(NotBlankString(directoryName))
+		.also { logger.info { "did create a temporary directory at ${it.absolutePathString()}" } }
 
 	@OptIn(ExperimentalPathApi::class)
 	fun createTemporaryHeaderDirectory(directoryName: NotBlankString): Path = Files.createTempDirectory("headers")

@@ -58,23 +58,6 @@ fun helloTriangle(device: WGPUDevice, adapter: WGPUAdapterImpl, surface: WGPUSur
 	/*
 
 
-	demo.config = (const WGPUSurfaceConfiguration){
-	  .device = demo.device,
-	  .usage = WGPUTextureUsage_RenderAttachment,
-	  .format = surface_capabilities.formats[0],
-	  .presentMode = WGPUPresentMode_Fifo,
-	  .alphaMode = surface_capabilities.alphaModes[0],
-	};
-
-	{
-	int width, height;
-	glfwGetWindowSize(window, &width, &height);
-	demo.config.width = width;
-	demo.config.height = height;
-	}
-
-	wgpuSurfaceConfigure(demo.surface, &demo.config);
-
 	while (!glfwWindowShouldClose(window)) {
 	glfwPollEvents();
 

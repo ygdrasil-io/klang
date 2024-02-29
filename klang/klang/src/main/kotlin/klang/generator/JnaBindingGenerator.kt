@@ -7,32 +7,35 @@ import java.io.File
 
 object JnaBindingGenerator: BindingGenerator {
 
-	override fun DeclarationRepository.generateKotlinFiles(outputDirectory: File, basePackage: String, libraryName: String) {
+	override fun DeclarationRepository.generateKotlinFiles(outputDirectory: File, basePackage: String, libraryName: String): List<File> {
 
 		outputDirectory.deleteRecursively()
 		outputDirectory.mkdirs()
 
 		val declarations = findLibraryDeclaration()
+		val files = mutableListOf<File>()
 
-		declarations
+		files += declarations
 			.filterIsInstance<NativeEnumeration>()
 			.generateKotlinFile(outputDirectory, basePackage)
 
-		declarations
+		files += declarations
 			.filterIsInstance<NativeFunction>()
 			.generateKotlinFile(outputDirectory, basePackage, libraryName)
 
-		declarations
+		files += declarations
 			.filterIsInstance<NativeTypeAlias>()
 			.generateKotlinFile(outputDirectory, basePackage)
 
-		declarations
+		files += declarations
 			.filterIsInstance<NativeStructure>()
 			.generateKotlinFile(outputDirectory, basePackage)
 
-		declarations
+		files += declarations
 			.filterIsInstance<NativeConstant<*>>()
 			.generateKotlinFile(outputDirectory, basePackage)
+
+		return files.toList()
 	}
 
 }

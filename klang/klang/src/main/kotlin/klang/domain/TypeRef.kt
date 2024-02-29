@@ -112,6 +112,7 @@ sealed interface TypeRef {
 	val isCallback: Boolean
 
 	fun DeclarationRepository.resolveType(): TypeRef = when {
+		this@TypeRef is ResolvedTypeRef -> this@TypeRef
 		isCallback -> ResolvedTypeRef(this@TypeRef, typeName.toFunctionPointerType())
 		isPointer && typeName == NotBlankString("char") -> ResolvedTypeRef(this@TypeRef, StringType)
 		else -> findDeclarationByName<NameableDeclaration>(typeName)

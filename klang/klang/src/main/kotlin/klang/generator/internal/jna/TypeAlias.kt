@@ -7,11 +7,13 @@ import klang.domain.NativeTypeAlias
 import klang.mapper.toSpec
 import java.io.File
 
-internal fun List<NativeTypeAlias>.generateKotlinFile(outputDirectory: File, packageName: String) {
+private const val fileName = "TypeAlias"
+
+internal fun List<NativeTypeAlias>.generateKotlinFile(outputDirectory: File, packageName: String): File {
 
 	check(outputDirectory.isDirectory) { "Output directory must be a directory" }
 
-	FileSpec.builder(packageName, "TypeAlias")
+	FileSpec.builder(packageName, fileName)
 		.also { fileSpec ->
 			asSequence()
 				.flatMap { typeAlias -> typeAlias.toSpec(packageName) }
@@ -25,4 +27,5 @@ internal fun List<NativeTypeAlias>.generateKotlinFile(outputDirectory: File, pac
 		.build()
 		.writeTo(outputDirectory)
 
+	return outputDirectory.resolve("$fileName.kt")
 }

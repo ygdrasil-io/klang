@@ -66,5 +66,17 @@ fun main() {
 	wgpuAdapterRequestDevice(adapter, null, handleRequestDevice, null)
 	check(device != null) { "fail to get device" }
 
-	step1(device!!)
+	val surface_capabilities = WGPUSurfaceCapabilities();
+	wgpuSurfaceGetCapabilities(surface, adapter, surface_capabilities);
+	val config = WGPUSurfaceConfiguration().apply{
+		this.device = device
+		usage = WGPUTextureUsage.WGPUTextureUsage_RenderAttachment.value
+		format = surface_capabilities.formats[0]
+		presentMode = WGPUPresentMode.WGPUPresentMode_Fifo.value
+		alphaMode = surface_capabilities.alphaModes[0]
+	};
+
+	wgpuSurfaceConfigure(surface, config);
+
+	step1(device!!, adapter!!, surface, window, config)
 }

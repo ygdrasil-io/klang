@@ -11,7 +11,7 @@ object OriginProcessor {
 		filePath == null || this == null -> DeclarationOrigin.Unknown
 		else -> when {
 			isInFilePath(filePath) -> DeclarationOrigin.LibraryHeader(path().absolutePathString())
-			else -> DeclarationOrigin.PlatformHeader
+			else -> DeclarationOrigin.Platform
 		}
 	}
 

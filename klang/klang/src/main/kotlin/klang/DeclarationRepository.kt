@@ -11,14 +11,31 @@ val libraryDeclarationsFilter: (ResolvableDeclaration) -> Boolean  = { resolvabl
 
 val allDeclarationsFilter: (ResolvableDeclaration) -> Boolean  = { _ -> true }
 
+/**
+ * The DeclarationRepository interface represents a repository for native declarations From C headers so far.
+ */
 interface DeclarationRepository {
 
+	/**
+	 * Set of native C/C++ or Objective-C declarations.
+	 */
 	val declarations: Set<NativeDeclaration>
 
+	/**
+	 * Saves the given [declaration] in the DeclarationRepository.
+	 * Some native declaration support merging, if the definition exist, they will be merged
+	 *
+	 * @param declaration The nameable declaration to be saved.
+	 */
 	fun save(declaration: NameableDeclaration)
+
+	/**
+	 * Remove all declaration of the DeclarationRepository.
+	 */
 	fun clear()
 	fun update(nativeEnumeration: NativeDeclaration, provider: () -> NativeDeclaration): NativeDeclaration
 	fun resolveTypes(filter: (ResolvableDeclaration) -> Boolean = libraryDeclarationsFilter)
+	fun resolveAllTypes() = resolveTypes(allDeclarationsFilter)
 
 	fun findConstantByName(name: String) = findConstantByName(NotBlankString(name))
 	fun findConstantByName(name: NotBlankString) = findDeclarationByName<NativeConstant<*>>(name)

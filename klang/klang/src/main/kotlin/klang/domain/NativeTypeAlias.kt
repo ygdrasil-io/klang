@@ -9,7 +9,9 @@ data class NativeTypeAlias(
 ) :NameableDeclaration, NativeDeclaration, ResolvableDeclaration {
 
 	override fun DeclarationRepository.resolve() {
-		typeRef = with(typeRef) { resolveType() }
+		if (typeRef is UnresolvedTypeRef) {
+			typeRef = with(typeRef) { resolveType() }
+		}
 		typeRef.resolveIfFunctionPointerType(this)
 	}
 

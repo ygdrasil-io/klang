@@ -1,4 +1,6 @@
 import io.ygdrasil.ParsingMethod
+import klang.domain.FunctionPointerType
+import klang.domain.ResolvedTypeRef
 import klang.domain.typeOf
 import klang.domain.unchecked
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
@@ -61,7 +63,29 @@ klang {
 		.let(::unpack)
 		.let {
 			parse(fileToParse = "wgpu.h", at = it) {
-
+				// Hardfixes until Callback are fixed
+				(findTypeAliasByName("WGPURequestDeviceCallback") ?: error("WGPURequestAdapterCallback should exist"))
+					.let { callback ->
+						(((callback.typeRef as? ResolvedTypeRef)?.type as? FunctionPointerType) ?: error("should be resolved"))
+							.let { function ->
+								val arguments = function.arguments.toMutableList()
+								arguments[0] = typeOf("int").unchecked()
+								arguments[2] = typeOf("char *").unchecked()
+								arguments[3] = typeOf("void *").unchecked()
+								function.arguments = arguments.toList()
+							}
+					}
+				(findTypeAliasByName("WGPURequestAdapterCallback") ?: error("WGPURequestAdapterCallback should exist"))
+					.let { callback ->
+						(((callback.typeRef as? ResolvedTypeRef)?.type as? FunctionPointerType) ?: error("should be resolved"))
+							.let { function ->
+								val arguments = function.arguments.toMutableList()
+								arguments[0] = typeOf("int").unchecked()
+								arguments[2] = typeOf("char *").unchecked()
+								arguments[3] = typeOf("void *").unchecked()
+								function.arguments = arguments.toList()
+							}
+					}
 			}
 		}
 

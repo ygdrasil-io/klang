@@ -49,7 +49,7 @@ public open class MyStructure : com.sun.jna.Structure {
    * mapped from MyOtherStructure *
    */
   @kotlin.jvm.JvmField
-  public var structure2: test.MyOtherStructure.ByReference? = null
+  public var structure2: com.sun.jna.Pointer? = null
 
   public constructor(pointer: com.sun.jna.Pointer?) : super(pointer)
 

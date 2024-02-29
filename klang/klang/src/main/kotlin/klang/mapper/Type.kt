@@ -14,7 +14,7 @@ internal fun TypeRef.toType(packageName: String, nullable: Boolean = false, from
 			}
 
 			is NativeStructure -> when (fromStructure) {
-				true -> ClassName(packageName, "${typeName.value}.ByReference").copy(nullable = true)
+				true -> jnaNullablePointer
 				else -> ClassName(packageName, typeName.value)
 			}
 			is FunctionPointerType -> jnaCallback

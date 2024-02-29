@@ -28,21 +28,20 @@ private class App : AutoCloseable, AppContext {
 	}
 
 	private fun createWindow() = SDL_CreateWindow(
-			"", SDL_WINDOWPOS_CENTERED.toInt(),
-			SDL_WINDOWPOS_CENTERED.toInt(), 1, 1,
-			SDL_WindowFlags.SDL_WINDOW_SHOWN.value
-		) ?: error("fail to create window ${SDL_GetError()}")
+		"", SDL_WINDOWPOS_CENTERED.toInt(),
+		SDL_WINDOWPOS_CENTERED.toInt(), 1, 1,
+		SDL_WindowFlags.SDL_WINDOW_SHOWN.value
+	) ?: error("fail to create window ${SDL_GetError()}")
 
 	private fun createRenderer() = SDL_CreateRenderer(
 		window, -1, SDL_RendererFlags.SDL_RENDERER_ACCELERATED or SDL_RendererFlags.SDL_RENDERER_PRESENTVSYNC
 	) ?: error("fail to create renderer")
 
-	private fun findControllers() = (0 until SDL_NumJoysticks())
-		.mapNotNull { index -> SDL_GameControllerOpen(index).also { if (it == null) println("fail to get controller at index $index") } }
-}
+	private fun findControllers() = (0 until SDL_NumJoysticks()).mapNotNull { index ->
+		SDL_GameControllerOpen(index).also { if (it == null) println("fail to get controller at index $index") }
+	}
 
-interface GLESv2: Library { }
-interface EGL: Library { }
+}
 
 fun app(
 	block: AppContext.() -> Unit

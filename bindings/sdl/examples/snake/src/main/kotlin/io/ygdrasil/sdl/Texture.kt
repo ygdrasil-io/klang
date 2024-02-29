@@ -6,6 +6,7 @@ import java.io.InputStream
 import java.nio.ByteBuffer
 
 internal fun SDL_Renderer.loadTexture(fileName: String): SDL_Texture {
+	println("load texture $fileName")
 	val resourceStream = findClassPathResource(fileName) ?: error("fail to find resource with name filename")
 	val (buffer, bufferSize) = resourceStream.toBuffer()
 	val bufferPointer = Native.getDirectBufferPointer(buffer)

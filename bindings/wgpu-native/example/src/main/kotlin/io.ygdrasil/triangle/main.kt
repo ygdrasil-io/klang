@@ -86,7 +86,7 @@ fun main() {
 
 	wgpuSurfaceConfigure(surface, config);
 
-	step1(device!!, adapter!!, surface, window, config)
+	helloTriangle(device!!, adapter!!, surface, window, config)
 
 	wgpuSurfaceRelease(surface)
 	wgpuAdapterRelease(adapter)

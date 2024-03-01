@@ -1,7 +1,10 @@
 import com.sun.jna.NativeLong
+import com.sun.jna.ptr.IntByReference
 import io.ygdrasil.libsdl.SDL_Event
+import io.ygdrasil.libsdl.SDL_GetWindowSize
 import io.ygdrasil.libsdl.SDL_PollEvent
 import io.ygdrasil.libsdl.SDL_Window
+import io.ygdrasil.triangle.LOG_PREFIX
 import io.ygdrasil.triangle.shader
 import libwgpu.*
 
@@ -16,23 +19,19 @@ fun helloTriangle(
 
 	val queue = wgpuDeviceGetQueue(device) ?: error("fail to get queue")
 
-	val shaderModuleWGSLDescriptor = WGPUShaderModuleWGSLDescriptor().apply {
-		code = shader
-		chain.apply {
-			sType = WGPUSType.WGPUSType_ShaderModuleWGSLDescriptor.value
-		}
-	}
-	val shaderModuleDescriptor = WGPUShaderModuleDescriptor().apply {
-		label = "WGPUShaderModuleDescriptorKt"
-		nextInChain = shaderModuleWGSLDescriptor.pointer
-	}
 	val shader_module = wgpuDeviceCreateShaderModule(
 		device,
-		shaderModuleDescriptor
+		WGPUShaderModuleDescriptor().apply {
+			label = "WGPUShaderModuleDescriptorKt"
+			nextInChain = WGPUShaderModuleWGSLDescriptor.ByReference().apply {
+				code = shader
+				chain.apply {
+					sType = WGPUSType.WGPUSType_ShaderModuleWGSLDescriptor.value
+				}
+			}
+		}
 	)
 	check(shader_module != null) { "fail to get shader module" }
-	println(shaderModuleWGSLDescriptor)
-	println( shaderModuleDescriptor)
 
 	val pipeline_layout = wgpuDeviceCreatePipelineLayout(device, WGPUPipelineLayoutDescriptor().apply {
 		label = "pipeline_layout"
@@ -50,15 +49,15 @@ fun helloTriangle(
 				module = shader_module
 				entryPoint = "vs_main"
 			}
-			fragment = WGPUFragmentState().apply {
+			fragment = WGPUFragmentState.ByReference().apply {
 				module = shader_module
 				entryPoint = "fs_main"
 				targetCount = NativeLong(1)
-				targets = WGPUColorTargetState().apply {
+				targets = arrayOf( WGPUColorTargetState.ByReference().apply {
 					format = surface_capabilities.formats!!.getInt(0)
 					writeMask = WGPUColorWriteMask.WGPUColorWriteMask_All.value
-				}.pointer
-			}.pointer
+				})
+			}
 			primitive.apply {
 				topology = WGPUPrimitiveTopology.WGPUPrimitiveTopology_TriangleList.value
 			}
@@ -68,116 +67,84 @@ fun helloTriangle(
 			}
 		}) ?: error("fail to create render pipeline")
 
-	/*
-
-
-	while (!glfwWindowShouldClose(window)) {
-	glfwPollEvents();
-
-	WGPUSurfaceTexture surface_texture;
-	wgpuSurfaceGetCurrentTexture(demo.surface, &surface_texture);
-	switch (surface_texture.status) {
-	case WGPUSurfaceGetCurrentTextureStatus_Success:
-	  // All good, could check for `surface_texture.suboptimal` here.
-	  break;
-	case WGPUSurfaceGetCurrentTextureStatus_Timeout:
-	case WGPUSurfaceGetCurrentTextureStatus_Outdated:
-	case WGPUSurfaceGetCurrentTextureStatus_Lost: {
-	  // Skip this frame, and re-configure surface.
-	  if (surface_texture.texture != NULL) {
-		wgpuTextureRelease(surface_texture.texture);
-	  }
-	  int width, height;
-	  glfwGetWindowSize(window, &width, &height);
-	  if (width != 0 && height != 0) {
-		demo.config.width = width;
-		demo.config.height = height;
-		wgpuSurfaceConfigure(demo.surface, &demo.config);
-	  }
-	  continue;
-	}
-	case WGPUSurfaceGetCurrentTextureStatus_OutOfMemory:
-	case WGPUSurfaceGetCurrentTextureStatus_DeviceLost:
-	case WGPUSurfaceGetCurrentTextureStatus_Force32:
-	  // Fatal error
-	  printf(LOG_PREFIX " get_current_texture status=%#.8x\n",
-			 surface_texture.status);
-	  abort();
-	}
-	assert(surface_texture.texture);
-
-	WGPUTextureView frame =
-		wgpuTextureCreateView(surface_texture.texture, NULL);
-	assert(frame);
-
-	WGPUCommandEncoder command_encoder = wgpuDeviceCreateCommandEncoder(
-		demo.device, &(const WGPUCommandEncoderDescriptor){
-						 .label = "command_encoder",
-					 });
-	assert(command_encoder);
-
-	WGPURenderPassEncoder render_pass_encoder =
-		wgpuCommandEncoderBeginRenderPass(
-			command_encoder, &(const WGPURenderPassDescriptor){
-								 .label = "render_pass_encoder",
-								 .colorAttachmentCount = 1,
-								 .colorAttachments =
-									 (const WGPURenderPassColorAttachment[]){
-										 (const WGPURenderPassColorAttachment){
-											 .view = frame,
-											 .loadOp = WGPULoadOp_Clear,
-											 .storeOp = WGPUStoreOp_Store,
-											 .clearValue =
-												 (const WGPUColor){
-													 .r = 0.0,
-													 .g = 1.0,
-													 .b = 0.0,
-													 .a = 1.0,
-												 },
-										 },
-									 },
-							 });
-	assert(render_pass_encoder);
-
-	wgpuRenderPassEncoderSetPipeline(render_pass_encoder, render_pipeline);
-	wgpuRenderPassEncoderDraw(render_pass_encoder, 3, 1, 0, 0);
-	wgpuRenderPassEncoderEnd(render_pass_encoder);
-
-	WGPUCommandBuffer command_buffer = wgpuCommandEncoderFinish(
-		command_encoder, &(const WGPUCommandBufferDescriptor){
-							 .label = "command_buffer",
-						 });
-	assert(command_buffer);
-
-	wgpuQueueSubmit(queue, 1, (const WGPUCommandBuffer[]){command_buffer});
-	wgpuSurfacePresent(demo.surface);
-
-	wgpuCommandBufferRelease(command_buffer);
-	wgpuRenderPassEncoderRelease(render_pass_encoder);
-	wgpuCommandEncoderRelease(command_encoder);
-	wgpuTextureViewRelease(frame);
-	wgpuTextureRelease(surface_texture.texture);
-	}
-
-	wgpuRenderPipelineRelease(render_pipeline);
-	wgpuPipelineLayoutRelease(pipeline_layout);
-	wgpuShaderModuleRelease(shader_module);
-	wgpuSurfaceCapabilitiesFreeMembers(surface_capabilities);
-	wgpuQueueRelease(queue);
-	wgpuDeviceRelease(demo.device);
-	wgpuAdapterRelease(demo.adapter);
-	wgpuSurfaceRelease(demo.surface);
-	glfwDestroyWindow(window);
-	wgpuInstanceRelease(demo.instance);
-	glfwTerminate();
-	 */
-
 	while (true) {
+
+		val surface_texture = WGPUSurfaceTexture()
+		wgpuSurfaceGetCurrentTexture(surface, surface_texture);
+		when (WGPUSurfaceGetCurrentTextureStatus.of(surface_texture.status) ?: error("surface status not found")) {
+			WGPUSurfaceGetCurrentTextureStatus.WGPUSurfaceGetCurrentTextureStatus_Success -> Unit // All good, could check for `surface_texture.suboptimal` here.
+			WGPUSurfaceGetCurrentTextureStatus.WGPUSurfaceGetCurrentTextureStatus_Timeout,
+			WGPUSurfaceGetCurrentTextureStatus.WGPUSurfaceGetCurrentTextureStatus_Outdated,
+			WGPUSurfaceGetCurrentTextureStatus.WGPUSurfaceGetCurrentTextureStatus_Lost -> {
+				// Skip this frame, and re-configure surface.
+				if (surface_texture.texture != null) {
+					wgpuTextureRelease(surface_texture.texture);
+				}
+				val width = IntByReference()
+				val height = IntByReference()
+				SDL_GetWindowSize(window, width.pointer, height.pointer)
+				config.width = width.value
+				config.height = height.value
+				wgpuSurfaceConfigure(surface, config)
+				continue;
+			}
+
+			WGPUSurfaceGetCurrentTextureStatus.WGPUSurfaceGetCurrentTextureStatus_OutOfMemory,
+			WGPUSurfaceGetCurrentTextureStatus.WGPUSurfaceGetCurrentTextureStatus_DeviceLost,
+			WGPUSurfaceGetCurrentTextureStatus.WGPUSurfaceGetCurrentTextureStatus_Force32 -> {
+				// Fatal error
+				println(LOG_PREFIX + " get_current_texture status=%#.8x\n".format(surface_texture.status))
+				return;
+			}
+
+		}
+		val frame = wgpuTextureCreateView(surface_texture.texture, null) ?: error("fail to get frame")
+		val queue = wgpuDeviceGetQueue(device) ?: error("fail to get queue")
+		val encoder = wgpuDeviceCreateCommandEncoder(device, WGPUCommandEncoderDescriptor().apply {
+			label = "WGPUCommandEncoderDescriptorKt"
+		})
+
+		val render_pass_encoder = wgpuCommandEncoderBeginRenderPass(encoder,
+			WGPURenderPassDescriptor().apply {
+				label = "WGPURenderPassDescriptorKt"
+				colorAttachmentCount = 1L
+				colorAttachments = arrayOf(WGPURenderPassColorAttachment.ByReference().apply {
+					view = frame
+					loadOp = WGPULoadOp.WGPULoadOp_Clear.value
+					storeOp = WGPUStoreOp.WGPUStoreOp_Store.value
+					clearValue = WGPUColor().apply {
+						r = 0.0
+						g = 1.0
+						b = 0.0
+						a = 1.0
+					}
+				})
+			}
+		)
+		wgpuRenderPassEncoderEnd(render_pass_encoder)
+
+		wgpuRenderPassEncoderSetPipeline(render_pass_encoder, render_pipeline);
+		wgpuRenderPassEncoderDraw(render_pass_encoder, 3, 1, 0, 0);
+		wgpuRenderPassEncoderEnd(render_pass_encoder);
+
+		val commandBuffer = wgpuCommandEncoderFinish(encoder, WGPUCommandBufferDescriptor().apply {
+			label = "WGPUCommandBufferDescriptorKt"
+		}) ?: error("fail to get commandBuffer")
+		wgpuQueueSubmit(queue, NativeLong(1), arrayOf(commandBuffer))
+
+		wgpuSurfacePresent(surface);
+
+		wgpuCommandBufferRelease(commandBuffer);
+		wgpuRenderPassEncoderRelease(render_pass_encoder);
+		wgpuCommandEncoderRelease(encoder);
+		wgpuTextureViewRelease(frame);
+		wgpuTextureRelease(surface_texture.texture);
 
 		val event = SDL_Event()
 		while (SDL_PollEvent(event) != 0) {
 
 		}
 	}
+
 
 }

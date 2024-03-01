@@ -5,20 +5,20 @@ import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import klang.domain.*
 
 // TODO add tests
-internal fun TypeRef.toType(packageName: String, nullable: Boolean = false, fromStructure: Boolean = false) = when {
+internal fun TypeRef.toType(packageName: String, nullable: Boolean = false, fromStructure: Boolean = false, fromFunction: Boolean = false) = when {
 	isPointer -> when {
 		this is ResolvedTypeRef -> when (this.type.rootType()) {
 			is StringType -> when {
 				isArray -> ClassName("kotlin", "Array").parameterizedBy(ClassName("kotlin", "String"))
-				else -> ClassName("kotlin", "String")
+				else -> ClassName("kotlin", "String").copy(nullable = fromFunction)
 			}
 
 			is NativeStructure -> when (fromStructure) {
 				true -> jnaNullablePointer
 				else -> ClassName(packageName, typeName.value)
 			}
-			is FunctionPointerType -> jnaCallback
-			is PrimitiveType -> jnaPointer
+			is FunctionPointerType -> jnaCallback.copy(nullable = fromFunction)
+			is PrimitiveType -> jnaPointer.copy(nullable = fromFunction)
 			else -> ClassName(packageName, typeName.value)
 		}
 

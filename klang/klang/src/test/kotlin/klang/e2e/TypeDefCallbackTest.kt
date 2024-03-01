@@ -87,7 +87,7 @@ class TypeDefCallbackTest : ParserTestCommon({
 						|public interface MyCallback : Callback {
 						|  public operator fun invoke(
 						|    param1: Int,
-						|    param2: MyStruct?,
+						|    param2: MyStruct,
 						|    param3: String?,
 						|    param4: Pointer?,
 						|  )

@@ -26,8 +26,8 @@ class CallbackGenerationTest : FreeSpec({
 		callback.toSpec("test").first().toString() shouldBe """
 			|public interface MyCallback : com.sun.jna.Callback {
 			|  public operator fun invoke(
-			|    param1: com.sun.jna.Pointer,
-			|    param2: kotlin.String,
+			|    param1: com.sun.jna.Pointer?,
+			|    param2: kotlin.String?,
 			|    param3: kotlin.Int,
 			|  )
 			|}

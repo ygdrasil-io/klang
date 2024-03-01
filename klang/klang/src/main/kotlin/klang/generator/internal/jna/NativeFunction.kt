@@ -2,6 +2,7 @@ package klang.generator.internal.jna
 
 import com.squareup.kotlinpoet.FileSpec
 import klang.domain.NativeFunction
+import klang.generator.internal.jna.helper.getSourceFile
 import klang.mapper.generateInterfaceLibrarySpec
 import klang.mapper.toFunctionsSpec
 import klang.mapper.toInterfaceSpec
@@ -22,5 +23,6 @@ internal fun List<NativeFunction>.generateKotlinFile(outputDirectory: File, pack
 		.build()
 		.writeTo(outputDirectory)
 
-	return outputDirectory.resolve("$fileName.kt")
+
+	return outputDirectory.getSourceFile(fileName, packageName)
 }

@@ -4,6 +4,7 @@ import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.TypeAliasSpec
 import com.squareup.kotlinpoet.TypeSpec
 import klang.domain.NativeTypeAlias
+import klang.generator.internal.jna.helper.getSourceFile
 import klang.mapper.toSpec
 import java.io.File
 
@@ -27,5 +28,5 @@ internal fun List<NativeTypeAlias>.generateKotlinFile(outputDirectory: File, pac
 		.build()
 		.writeTo(outputDirectory)
 
-	return outputDirectory.resolve("$fileName.kt")
+	return outputDirectory.getSourceFile(fileName, packageName)
 }

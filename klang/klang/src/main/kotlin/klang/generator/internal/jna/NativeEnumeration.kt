@@ -2,6 +2,7 @@ package klang.generator.internal.jna
 
 import com.squareup.kotlinpoet.FileSpec
 import klang.domain.NativeEnumeration
+import klang.generator.internal.jna.helper.getSourceFile
 import klang.mapper.toSpecAsEnumeration
 import java.io.File
 
@@ -16,5 +17,6 @@ internal fun List<NativeEnumeration>.generateKotlinFile(outputDirectory: File, p
 		.build()
 		.writeTo(outputDirectory)
 
-	return outputDirectory.resolve("$fileName.kt")
+
+	return outputDirectory.getSourceFile(fileName, packageName)
 }

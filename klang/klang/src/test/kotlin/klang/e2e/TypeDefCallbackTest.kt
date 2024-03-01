@@ -3,10 +3,7 @@ package klang.e2e
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import klang.allDeclarationsFilter
-import klang.domain.FunctionPointerType
-import klang.domain.ResolvedTypeRef
-import klang.domain.StringType
-import klang.domain.VoidType
+import klang.domain.*
 import klang.parser.*
 import java.io.File
 
@@ -29,6 +26,19 @@ class TypeDefCallbackTest : ParserTestCommon({
 		}.parseIt {
 
 			// Hardfixe until callback are working TODO FIX
+			resolveTypes(allDeclarationsFilter)
+			(findTypeAliasByName("MyCallback") ?: error("MyCallback should exist"))
+				.let { callback ->
+					(((callback.typeRef as? ResolvedTypeRef)?.type as? FunctionPointerType) ?: error("should be resolved"))
+						.let { function ->
+							val arguments = function.arguments.toMutableList()
+							arguments[0] = typeOf("MyEnum").unchecked()
+							arguments[1] = typeOf("MyStruct").unchecked()
+							arguments[2] = typeOf("char *").unchecked()
+							arguments[3] = typeOf("void *").unchecked()
+							function.arguments = arguments.toList()
+						}
+				}
 
 			// And
 			resolveTypes(allDeclarationsFilter)
@@ -65,7 +75,24 @@ class TypeDefCallbackTest : ParserTestCommon({
 					?.let(File::readText)
 					?.let {
 						it shouldBe """
-						| TODO
+						|package test
+						|
+						|import com.sun.jna.Callback
+						|import com.sun.jna.Pointer
+						|import kotlin.Int
+						|import kotlin.String
+						|
+						|public typealias MyStruct = MyStructImpl
+						|
+						|public interface MyCallback : Callback {
+						|  public operator fun invoke(
+						|    param1: Int,
+						|    param2: MyStruct?,
+						|    param3: String?,
+						|    param4: Pointer?,
+						|  )
+						|}
+						|
 					""".trimMargin()
 					}
 			}

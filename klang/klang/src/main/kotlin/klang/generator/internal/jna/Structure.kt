@@ -3,6 +3,7 @@ package klang.generator.internal.jna
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.TypeSpec
 import klang.domain.NativeStructure
+import klang.generator.internal.jna.helper.getSourceFile
 import klang.mapper.toSpec
 import java.io.File
 
@@ -17,7 +18,7 @@ fun List<NativeStructure>.generateKotlinFile(outputDirectory: File, packageName:
 		.build()
 		.writeTo(outputDirectory)
 
-	return outputDirectory.resolve("$fileName.kt")
+	return outputDirectory.getSourceFile(fileName, packageName)
 }
 
 private fun FileSpec.Builder.addTypes(typeSpecs: List<TypeSpec>) = typeSpecs.forEach(::addType)

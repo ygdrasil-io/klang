@@ -33,7 +33,7 @@ open class ParserTestCommon(body: FreeSpec.() -> Unit = {}) : FreeSpec({
 
 suspend fun File.parseIt(block: suspend DeclarationRepository.() -> Unit): DeclarationRepository =
 	InMemoryDeclarationRepository()
-		.parseFile(absolutePath)
+		.parseFile(name, parent)
 		.also { it.block() }
 
 suspend fun DeclarationRepository.generateJNABinding(block: suspend (List<File>) -> Unit) {
@@ -42,7 +42,7 @@ suspend fun DeclarationRepository.generateJNABinding(block: suspend (List<File>)
 			HeaderManager.createTemporaryHeaderDirectory().toFile(),
 			"test",
 			"test"
-		)
+		).let { block(it) }
 	}
 }
 

@@ -1,6 +1,8 @@
 package io.ygdrasil.triangle
 
 import com.sun.jna.Pointer
+import com.sun.jna.ptr.IntByReference
+import helloTriangle
 import io.ygdrasil.libsdl.*
 import io.ygdrasil.wgpu.SDL_GetWGPUSurface
 import libwgpu.*
@@ -21,7 +23,7 @@ fun main() {
 
 	val window = SDL_CreateWindow(
 		"", SDL_WINDOWPOS_CENTERED.toInt(),
-		SDL_WINDOWPOS_CENTERED.toInt(), 100, 100,
+		SDL_WINDOWPOS_CENTERED.toInt(), 800, 600,
 		SDL_WindowFlags.SDL_WINDOW_SHOWN.value
 	) ?: error("fail to create window ${SDL_GetError()}")
 
@@ -36,7 +38,7 @@ fun main() {
 
 	var adapter: WGPUAdapterImpl? = null
 	val handleRequestAdapter = object : WGPURequestAdapterCallback {
-		override fun invoke(statusAsInt: Int, adapterImpl: WGPUAdapterImpl, message: String, param4: Pointer?) {
+		override fun invoke(statusAsInt: Int, adapterImpl: WGPUAdapterImpl, message: String?, param4: Pointer?) {
 			println("WGPURequestAdapterCallback")
 			val status = WGPURequestAdapterStatus.of(statusAsInt)
 			if (status == WGPURequestAdapterStatus.WGPURequestAdapterStatus_Success) {
@@ -52,7 +54,7 @@ fun main() {
 
 	var device: WGPUDevice? = null
 	val handleRequestDevice = object : WGPURequestDeviceCallback {
-		override fun invoke(statusAsInt: Int, deviceImpl: WGPUDeviceImpl, message: String, param4: Pointer?) {
+		override fun invoke(statusAsInt: Int, deviceImpl: WGPUDeviceImpl, message: String?, param4: Pointer?) {
 			println("WGPURequestDeviceCallback")
 			val status = WGPURequestDeviceStatus.of(statusAsInt)
 			if (status == WGPURequestDeviceStatus.WGPURequestDeviceStatus_Success) {
@@ -66,17 +68,27 @@ fun main() {
 	wgpuAdapterRequestDevice(adapter, null, handleRequestDevice, null)
 	check(device != null) { "fail to get device" }
 
+	val width = IntByReference()
+	val height = IntByReference()
+	SDL_GetWindowSize(window, width.pointer, height.pointer)
+
 	val surface_capabilities = WGPUSurfaceCapabilities();
 	wgpuSurfaceGetCapabilities(surface, adapter, surface_capabilities);
 	val config = WGPUSurfaceConfiguration().apply{
-		this.device = device
+		this.device = device ?: error("")
 		usage = WGPUTextureUsage.WGPUTextureUsage_RenderAttachment.value
-		format = surface_capabilities.formats[0]
+		format = surface_capabilities.formats?.getInt(0) ?: error("")
 		presentMode = WGPUPresentMode.WGPUPresentMode_Fifo.value
-		alphaMode = surface_capabilities.alphaModes[0]
+		alphaMode = surface_capabilities.alphaModes?.getInt(0) ?: error("")
+		this.width = width.value
+		this.height = height.value
 	};
 
 	wgpuSurfaceConfigure(surface, config);
 
 	step1(device!!, adapter!!, surface, window, config)
+
+	wgpuSurfaceRelease(surface)
+	wgpuAdapterRelease(adapter)
+	wgpuInstanceRelease(instance)
 }

@@ -20,7 +20,7 @@ fun step1(
 
 		val surface_texture = WGPUSurfaceTexture()
 		wgpuSurfaceGetCurrentTexture(surface, surface_texture);
-		when (WGPUSurfaceGetCurrentTextureStatus.of(surface_texture.status)) {
+		when (WGPUSurfaceGetCurrentTextureStatus.of(surface_texture.status) ?: error("surface status not found")) {
 			WGPUSurfaceGetCurrentTextureStatus.WGPUSurfaceGetCurrentTextureStatus_Success -> Unit // All good, could check for `surface_texture.suboptimal` here.
 			WGPUSurfaceGetCurrentTextureStatus.WGPUSurfaceGetCurrentTextureStatus_Timeout,
 			WGPUSurfaceGetCurrentTextureStatus.WGPUSurfaceGetCurrentTextureStatus_Outdated,
@@ -45,31 +45,46 @@ fun step1(
 				println(LOG_PREFIX + " get_current_texture status=%#.8x\n".format(surface_texture.status))
 				return;
 			}
-		}
-		assert(surface_texture.texture);
 
+		}
+		val frame = wgpuTextureCreateView(surface_texture.texture, null) ?: error("fail to get frame")
 
 		val queue = wgpuDeviceGetQueue(device) ?: error("fail to get queue")
-		val encoder = wgpuDeviceCreateCommandEncoder(device, null)
-		val pass = wgpuCommandEncoderBeginRenderPass(encoder,
+		val encoder = wgpuDeviceCreateCommandEncoder(device, WGPUCommandEncoderDescriptor().apply {
+			label = "WGPUCommandEncoderDescriptorKt"
+		})
+
+		val render_pass_encoder = wgpuCommandEncoderBeginRenderPass(encoder,
 			WGPURenderPassDescriptor().apply {
-				colorAttachmentCount = 1
-				colorAttachments = WGPURenderPassColorAttachment().apply {
-					//view = TODO()
-					loadOp = WGPULoadOp.WGPULoadOp_Clear
-					storeOp = WGPUStoreOp.WGPUStoreOp_Store
+				label = "WGPURenderPassDescriptorKt"
+				colorAttachmentCount = 1L
+				colorAttachments = arrayOf(WGPURenderPassColorAttachment.ByReference().apply {
+					view = frame
+					loadOp = WGPULoadOp.WGPULoadOp_Clear.value
+					storeOp = WGPUStoreOp.WGPUStoreOp_Store.value
 					clearValue = WGPUColor().apply {
 						r = 0.0
 						g = 0.0
 						b = 0.4
 						a = 1.0
 					}
-				}.pointer
+				})
 			}
 		)
-		wgpuRenderPassEncoderEnd(pass)
+		wgpuRenderPassEncoderEnd(render_pass_encoder)
 
-		wgpuQueueSubmit(queue, NativeLong(1), pass)
+		val commandBuffer = wgpuCommandEncoderFinish(encoder, WGPUCommandBufferDescriptor().apply {
+			label = "WGPUCommandBufferDescriptorKt"
+		}) ?: error("fail to get commandBuffer")
+		wgpuQueueSubmit(queue, NativeLong(1), arrayOf(commandBuffer))
+
+		wgpuSurfacePresent(surface);
+
+		wgpuCommandBufferRelease(commandBuffer);
+		wgpuRenderPassEncoderRelease(render_pass_encoder);
+		wgpuCommandEncoderRelease(encoder);
+		wgpuTextureViewRelease(frame);
+		wgpuTextureRelease(surface_texture.texture);
 
 
 		val event = SDL_Event()

@@ -1,25 +1,38 @@
 import com.sun.jna.NativeLong
 import io.ygdrasil.libsdl.SDL_Event
 import io.ygdrasil.libsdl.SDL_PollEvent
+import io.ygdrasil.libsdl.SDL_Window
 import io.ygdrasil.triangle.shader
 import libwgpu.*
 
 
-fun helloTriangle(device: WGPUDevice, adapter: WGPUAdapterImpl, surface: WGPUSurface) {
+fun helloTriangle(
+	device: WGPUDevice,
+	adapter: WGPUAdapterImpl,
+	surface: WGPUSurface,
+	window: SDL_Window,
+	config: WGPUSurfaceConfiguration
+) {
 
 	val queue = wgpuDeviceGetQueue(device) ?: error("fail to get queue")
 
+	val shaderModuleWGSLDescriptor = WGPUShaderModuleWGSLDescriptor().apply {
+		code = shader
+		chain.apply {
+			sType = WGPUSType.WGPUSType_ShaderModuleWGSLDescriptor.value
+		}
+	}
+	val shaderModuleDescriptor = WGPUShaderModuleDescriptor().apply {
+		label = "WGPUShaderModuleDescriptorKt"
+		nextInChain = shaderModuleWGSLDescriptor.pointer
+	}
 	val shader_module = wgpuDeviceCreateShaderModule(
 		device,
-		WGPUShaderModuleDescriptor().apply {
-			nextInChain = WGPUShaderModuleWGSLDescriptor().apply {
-				code = shader
-				chain.apply {
-					sType = WGPUSType.WGPUSType_ShaderModuleWGSLDescriptor.value
-				}
-			}.pointer
-		})
+		shaderModuleDescriptor
+	)
 	check(shader_module != null) { "fail to get shader module" }
+	println(shaderModuleWGSLDescriptor)
+	println( shaderModuleDescriptor)
 
 	val pipeline_layout = wgpuDeviceCreatePipelineLayout(device, WGPUPipelineLayoutDescriptor().apply {
 		label = "pipeline_layout"

@@ -11,22 +11,26 @@ import java.io.File
 private const val fileName = "TypeAlias"
 
 internal fun List<NativeTypeAlias>.generateKotlinFile(outputDirectory: File, packageName: String): File {
-
 	check(outputDirectory.isDirectory) { "Output directory must be a directory" }
 
-	FileSpec.builder(packageName, fileName)
-		.also { fileSpec ->
-			asSequence()
-				.flatMap { typeAlias -> typeAlias.toSpec(packageName) }
-				.forEach {
-					when (it) {
-						is TypeAliasSpec -> fileSpec.addTypeAlias(it)
-						is TypeSpec -> fileSpec.addType(it)
-					}
-				}
-		}
+	generateFileSpec(this, packageName)
 		.build()
 		.writeTo(outputDirectory)
 
 	return outputDirectory.getSourceFile(fileName, packageName)
+}
+
+private fun generateFileSpec(typeAliases: List<NativeTypeAlias>, packageName: String): FileSpec.Builder {
+	return FileSpec.builder(packageName, fileName)
+		.apply {
+			typeAliases
+				.asSequence()
+				.flatMap { typeAlias -> typeAlias.toSpec(packageName) }
+				.forEach {
+					when (it) {
+						is TypeAliasSpec -> addTypeAlias(it)
+						is TypeSpec -> addType(it)
+					}
+				}
+		}
 }

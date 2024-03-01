@@ -98,7 +98,7 @@ fun helloTriangle(
 			}
 
 		}
-		val frame = wgpuTextureCreateView(surface_texture.texture, null) ?: error("fail to get frame")
+		val view = wgpuTextureCreateView(surface_texture.texture, null) ?: error("fail to get frame")
 		val queue = wgpuDeviceGetQueue(device) ?: error("fail to get queue")
 		val encoder = wgpuDeviceCreateCommandEncoder(device, WGPUCommandEncoderDescriptor().apply {
 			label = "WGPUCommandEncoderDescriptorKt"
@@ -109,7 +109,7 @@ fun helloTriangle(
 				label = "WGPURenderPassDescriptorKt"
 				colorAttachmentCount = 1L
 				colorAttachments = arrayOf(WGPURenderPassColorAttachment.ByReference().apply {
-					view = frame
+					this.view = view
 					loadOp = WGPULoadOp.WGPULoadOp_Clear.value
 					storeOp = WGPUStoreOp.WGPUStoreOp_Store.value
 					clearValue = WGPUColor().apply {
@@ -137,7 +137,7 @@ fun helloTriangle(
 		wgpuCommandBufferRelease(commandBuffer);
 		wgpuRenderPassEncoderRelease(render_pass_encoder);
 		wgpuCommandEncoderRelease(encoder);
-		wgpuTextureViewRelease(frame);
+		wgpuTextureViewRelease(view);
 		wgpuTextureRelease(surface_texture.texture);
 
 		val event = SDL_Event()

@@ -1,6 +1,6 @@
-package io.ygdrasil.wgpu.examples
-
 import io.ygdrasil.wgpu.Device
+import io.ygdrasil.wgpu.RenderingContext
+import io.ygdrasil.wgpu.examples.blueScreen
 import io.ygdrasil.wgpu.internal.js.*
 import io.ygdrasil.wgpu.navigator
 import io.ygdrasil.wgpu.requestAdapter
@@ -9,10 +9,13 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.w3c.dom.HTMLCanvasElement
 
+
+external fun setInterval(render: () -> Unit, updateInterval: Int)
+
 class CanvasConfiguration(override var device: GPUDevice, override var format: String) : GPUCanvasConfiguration
 
 val UPDATE_INTERVAL = (1000.0 / 60.0).toInt() // 60 Frame per second
-private var blue = 0.0
+//private var blue = 0.0
 
 fun blueCanvas() = GlobalScope.launch {
 	val canvas = (document.getElementById("webgpu") as? HTMLCanvasElement) ?: error("fail to get canvas")
@@ -34,16 +37,14 @@ fun blueCanvas() = GlobalScope.launch {
 		}
 	)
 
-	println("UPDATE_INTERVAL $UPDATE_INTERVAL")
-
 	// Schedule render() to run repeatedly
 	setInterval({
-		blueScreen(device)
-		render(device, context)
+		blueScreen(device, RenderingContext(context))
+		//render(device, context)
 	}, UPDATE_INTERVAL);
 
 }
-
+/*
 fun render(device: Device, context: GPUCanvasContext) {
 	if (blue >= 255.0) {
 		blue = 0.0
@@ -72,7 +73,6 @@ fun render(device: Device, context: GPUCanvasContext) {
 	device.queue.submit(arrayOf(encoder.finish()))
 	texture.destroy()
 
-}
+}*/
 
-external fun setInterval(render: () -> Unit, updateInterval: Int)
 

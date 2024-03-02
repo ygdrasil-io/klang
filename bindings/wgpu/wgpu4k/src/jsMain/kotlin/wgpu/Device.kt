@@ -3,12 +3,10 @@
 package io.ygdrasil.wgpu
 
 import io.ygdrasil.wgpu.internal.js.GPUDevice
-import io.ygdrasil.wgpu.internal.js.GPUQueue
-import io.ygdrasil.wgpu.CommandEncoder
 
 actual class Device(val handler: GPUDevice): AutoCloseable {
 
-	val queue: GPUQueue = handler.queue
+	val queue: Queue by lazy { Queue(handler.queue) }
 
 	override fun close() {
 		// Nothing on JS

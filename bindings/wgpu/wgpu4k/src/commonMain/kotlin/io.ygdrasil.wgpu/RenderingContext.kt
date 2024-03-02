@@ -2,4 +2,6 @@
 
 package io.ygdrasil.wgpu
 
-expect class RenderingContext: AutoCloseable
+expect class RenderingContext: AutoCloseable {
+	fun getCurrentTexture(): Texture?
+}

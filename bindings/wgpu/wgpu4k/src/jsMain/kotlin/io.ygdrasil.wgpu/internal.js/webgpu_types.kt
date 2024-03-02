@@ -2,10 +2,13 @@
 
 package io.ygdrasil.wgpu.internal.js
 
-import kotlin.js.*
-import org.khronos.webgl.*
-import org.w3c.dom.*
-import org.w3c.dom.events.*
+import org.khronos.webgl.ArrayBuffer
+import org.khronos.webgl.ArrayBufferView
+import org.khronos.webgl.Uint32Array
+import org.w3c.dom.EventInit
+import org.w3c.dom.events.Event
+import org.w3c.dom.events.EventTarget
+import kotlin.js.Promise
 
 external interface GPUOrigin2DDictStrict : GPUOrigin2DDict
 

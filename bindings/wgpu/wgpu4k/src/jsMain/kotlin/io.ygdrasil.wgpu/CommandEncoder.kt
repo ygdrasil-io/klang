@@ -1,10 +1,6 @@
 package io.ygdrasil.wgpu
 
-import io.ygdrasil.wgpu.RenderPassEncoder
 import io.ygdrasil.wgpu.internal.js.*
-import io.ygdrasil.wgpu.internal.js.GPUQuerySet
-import io.ygdrasil.wgpu.internal.js.GPURenderPassDepthStencilAttachment
-import io.ygdrasil.wgpu.internal.js.GPURenderPassTimestampWrites
 
 actual class CommandEncoder(private val commandEncoder: GPUCommandEncoder) {
 	fun beginRenderPass(renderPassDescriptor: RenderPassDescriptor): RenderPassEncoder {

@@ -4,9 +4,7 @@ package io.ygdrasil.wgpu
 
 import io.ygdrasil.wgpu.internal.js.GPUAdapter
 import io.ygdrasil.wgpu.internal.js.GPURequestAdapterOptions
-import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.await
-import kotlin.js.Promise
 
 suspend fun requestAdapter(options: GPURequestAdapterOptions? = null): Adapter? {
 	// WebGPU device initialization

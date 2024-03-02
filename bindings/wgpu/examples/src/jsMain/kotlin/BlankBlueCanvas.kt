@@ -1,7 +1,8 @@
-import io.ygdrasil.wgpu.Device
 import io.ygdrasil.wgpu.RenderingContext
 import io.ygdrasil.wgpu.examples.blueScreen
-import io.ygdrasil.wgpu.internal.js.*
+import io.ygdrasil.wgpu.internal.js.GPUCanvasConfiguration
+import io.ygdrasil.wgpu.internal.js.GPUCanvasContext
+import io.ygdrasil.wgpu.internal.js.GPUDevice
 import io.ygdrasil.wgpu.navigator
 import io.ygdrasil.wgpu.requestAdapter
 import kotlinx.browser.document
@@ -44,35 +45,3 @@ fun blueCanvas() = GlobalScope.launch {
 	}, UPDATE_INTERVAL);
 
 }
-/*
-fun render(device: Device, context: GPUCanvasContext) {
-	if (blue >= 255.0) {
-		blue = 0.0
-	} else {
-		blue += 5.0
-	}
-
-	// Clear the canvas with a render pass
-	val encoder = device.createCommandEncoder() ?: error("fail to get command encoder")
-
-	val texture = context.getCurrentTexture()
-
-	val colorAttachment = object : GPURenderPassColorAttachment {
-		override var view = texture.createView()
-		override var loadOp = "clear"
-		override var clearValue: Array<Number>? = arrayOf(0, 0, blue / 255.0, 1.0)
-		override var storeOp = "store"
-	}
-
-	val renderPassDescriptor = object : GPURenderPassDescriptor {
-		override var colorAttachments: Array<GPURenderPassColorAttachment> = arrayOf(colorAttachment)
-	}
-
-	val pass = encoder.beginRenderPass(renderPassDescriptor)
-	pass.end()
-	device.queue.submit(arrayOf(encoder.finish()))
-	texture.destroy()
-
-}*/
-
-

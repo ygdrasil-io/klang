@@ -13,7 +13,7 @@ actual class Device(val handler: GPUDevice): AutoCloseable {
 		// Nothing on JS
 	}
 
-	actual fun createCommandEncoder(descriptor: CommandEncoderDescriptor?): CommandEncoder? {
+	actual fun createCommandEncoder(descriptor: CommandEncoderDescriptor?): CommandEncoder {
 		return CommandEncoder(
 			when (descriptor) {
 				null -> handler.createCommandEncoder()
@@ -21,7 +21,6 @@ actual class Device(val handler: GPUDevice): AutoCloseable {
 			}
 
 		)
-
 	}
 }
 

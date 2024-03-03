@@ -1,12 +1,11 @@
 package io.ygdrasil.wgpu.examples
 
-import com.sun.jna.NativeLong
-import com.sun.jna.Pointer
 import com.sun.jna.ptr.IntByReference
 import io.ygdrasil.libsdl.*
-import io.ygdrasil.wgpu.CommandEncoder
+import io.ygdrasil.wgpu.Device
 import io.ygdrasil.wgpu.RenderPassDescriptor
 import io.ygdrasil.wgpu.RenderingContext
+import io.ygdrasil.wgpu.examples.io.ygdrasil.wgpu.WGPU
 import io.ygdrasil.wgpu.internal.jvm.*
 import kotlinx.coroutines.runBlocking
 
@@ -27,7 +26,7 @@ suspend fun loop() {
 		error("SDL_Init Error: ${SDL_GetError()}")
 	}
 
-	val instance = wgpuCreateInstance(null) ?: error("fail to wgpu instance")
+	val instance = WGPU.createInstance() ?: error("fail to wgpu instance")
 
 	val window = SDL_CreateWindow(
 		"", SDL_WINDOWPOS_CENTERED.toInt(),
@@ -35,8 +34,7 @@ suspend fun loop() {
 		SDL_WindowFlags.SDL_WINDOW_SHOWN.value
 	) ?: error("fail to create window ${SDL_GetError()}")
 
-	val surface = SDL_GetWGPUSurface(instance, window)
-	check(surface != null) { "fail to create surface" }
+	val surface = instance.getSurface(window) ?: error("fail to create surface")
 
 	val options = WGPURequestAdapterOptions().apply {
 		compatibleSurface = surface
@@ -44,46 +42,20 @@ suspend fun loop() {
 		backendType = WGPUBackendType.WGPUBackendType_Metal.value
 	}
 
-	var adapter: WGPUAdapterImpl? = null
-	val handleRequestAdapter = object : WGPURequestAdapterCallback {
-		override fun invoke(statusAsInt: Int, adapterImpl: WGPUAdapterImpl, message: String?, param4: Pointer?) {
-			println("WGPURequestAdapterCallback")
-			val status = WGPURequestAdapterStatus.of(statusAsInt)
-			if (status == WGPURequestAdapterStatus.WGPURequestAdapterStatus_Success) {
-				adapter = adapterImpl
-			} else {
-				println("request_adapter status=%.8X message=%s\n".format(status, message))
-			}
-		}
-	}
+	val adapter = instance.requestAdapter(options)
+		?: error("fail to get adapter")
 
-	wgpuInstanceRequestAdapter(instance, options, handleRequestAdapter, null)
-	check(adapter != null) { "fail to get adapter" }
-
-	var device: WGPUDevice? = null
-	val handleRequestDevice = object : WGPURequestDeviceCallback {
-		override fun invoke(statusAsInt: Int, deviceImpl: WGPUDeviceImpl, message: String?, param4: Pointer?) {
-			println("WGPURequestDeviceCallback")
-			val status = WGPURequestDeviceStatus.of(statusAsInt)
-			if (status == WGPURequestDeviceStatus.WGPURequestDeviceStatus_Success) {
-				device = deviceImpl
-			} else {
-				println(" request_device status=%#.8x message=%s\n".format(status, message))
-			}
-		}
-	}
-
-	wgpuAdapterRequestDevice(adapter, null, handleRequestDevice, null)
-	check(device != null) { "fail to get device" }
+	val device = adapter.requestDevice()
+		?: error("fail to get device")
 
 	val width = IntByReference()
 	val height = IntByReference()
 	SDL_GetWindowSize(window, width.pointer, height.pointer)
 
 	val surface_capabilities = WGPUSurfaceCapabilities()
-	wgpuSurfaceGetCapabilities(surface, adapter, surface_capabilities)
+	wgpuSurfaceGetCapabilities(surface, adapter.handler, surface_capabilities)
 	val config = WGPUSurfaceConfiguration().apply {
-		this.device = device ?: error("")
+		this.device = device.handler ?: error("")
 		usage = WGPUTextureUsage.WGPUTextureUsage_RenderAttachment.value
 		format = surface_capabilities.formats?.getInt(0) ?: error("")
 		presentMode = WGPUPresentMode.WGPUPresentMode_Fifo.value
@@ -95,16 +67,16 @@ suspend fun loop() {
 	wgpuSurfaceConfigure(surface, config)
 
 	RenderingContext(surface).use { renderingContext ->
-		step1(device!!, renderingContext)
+		step1(device, renderingContext)
 	}
 
-
-	wgpuAdapterRelease(adapter)
-	wgpuInstanceRelease(instance)
+	device.close()
+	adapter.close()
+	instance.close()
 }
 
 fun step1(
-	device: WGPUDevice,
+	device: Device,
 	renderingContext: RenderingContext
 ) {
 
@@ -113,11 +85,7 @@ fun step1(
 		val texture = renderingContext.getCurrentTexture() ?: error("fail to get texture")
 		val view = texture.createView()
 
-		val queue = wgpuDeviceGetQueue(device) ?: error("fail to get queue")
-
-		val encoder = CommandEncoder(wgpuDeviceCreateCommandEncoder(device, WGPUCommandEncoderDescriptor().apply {
-			label = "WGPUCommandEncoderDescriptorKt"
-		}) ?: error(""))
+		val encoder = device.createCommandEncoder()
 
 		val renderPassEncoder = encoder.beginRenderPass(
 			RenderPassDescriptor(
@@ -141,7 +109,7 @@ fun step1(
 
 		val commandBuffer = encoder.finish()
 
-		wgpuQueueSubmit(queue, NativeLong(1), arrayOf(commandBuffer.handler))
+		device.queue.submit(arrayOf(commandBuffer))
 
 		renderingContext.present()
 

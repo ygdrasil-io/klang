@@ -1,12 +1,24 @@
 package io.ygdrasil.wgpu
 
-actual class Device : AutoCloseable {
-	actual fun createCommandEncoder(descriptor: CommandEncoderDescriptor?): CommandEncoder? {
-		TODO("Not yet implemented")
+import io.ygdrasil.wgpu.internal.jvm.*
+
+actual class Device(internal val handler: WGPUDeviceImpl) : AutoCloseable {
+
+	val queue: Queue by lazy { Queue(wgpuDeviceGetQueue(handler) ?: error("fail to get device queue")) }
+
+	actual fun createCommandEncoder(descriptor: CommandEncoderDescriptor?): CommandEncoder {
+		return CommandEncoder(
+			wgpuDeviceCreateCommandEncoder(handler, descriptor?.convert() ?: null)
+				?: error("fail to create command encoder")
+		)
 	}
 
 	override fun close() {
-		TODO("Not yet implemented")
+		wgpuDeviceRelease(handler)
 	}
 
+}
+
+private fun CommandEncoderDescriptor.convert(): WGPUCommandEncoderDescriptor = WGPUCommandEncoderDescriptor().also {
+	it.label = label
 }

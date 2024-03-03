@@ -3,7 +3,7 @@
 package io.ygdrasil.wgpu
 
 expect class RenderingContext: AutoCloseable {
-	fun getCurrentTexture(): Texture?
+	fun getCurrentTexture(): Texture
 
 	/**
 	 * Schedule this texture to be presented on the owning surface.

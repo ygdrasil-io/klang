@@ -12,7 +12,11 @@ abstract class Application(
 	val adapter: Adapter
 ) : AutoCloseable {
 
-	var currentScene: Scene = scenes.first()
+	lateinit var currentScene: Scene
+
+	init {
+		changeScene(scenes.first())
+	}
 
 	abstract class Scene {
 
@@ -20,6 +24,13 @@ abstract class Application(
 
 		abstract fun Application.render()
 
+	}
+
+	fun changeScene(nextScene: Scene) {
+		with(nextScene) {
+			initialiaze()
+		}
+		currentScene = nextScene
 	}
 
 	fun renderFrame() {

@@ -12,7 +12,7 @@ actual class RenderingContext(private val handler: GPUCanvasContext) : AutoClose
 		// Nothing to do on js
 	}
 
-	actual fun getCurrentTexture(): Texture? {
+	actual fun getCurrentTexture(): Texture {
 		return Texture(handler.getCurrentTexture())
 	}
 

@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalStdlibApi::class)
+
 import io.ygdrasil.wgpu.CanvasConfiguration
 import io.ygdrasil.wgpu.examples.Application
 import io.ygdrasil.wgpu.getRenderingContext

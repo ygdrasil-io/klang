@@ -1,25 +1,34 @@
+@file:OptIn(ExperimentalStdlibApi::class)
+
 package io.ygdrasil.wgpu
 
-import io.ygdrasil.wgpu.internal.js.*
+import io.ygdrasil.wgpu.internal.js.GPUCommandEncoder
+import io.ygdrasil.wgpu.internal.js.GPURenderPassColorAttachment
+import io.ygdrasil.wgpu.internal.js.GPURenderPassDescriptor
+import io.ygdrasil.wgpu.internal.js.GPUTextureView
 
-actual class CommandEncoder(private val commandEncoder: GPUCommandEncoder) {
-	fun beginRenderPass(renderPassDescriptor: RenderPassDescriptor): RenderPassEncoder {
-		return RenderPassEncoder(commandEncoder.beginRenderPass(renderPassDescriptor.convert()))
+actual class CommandEncoder(private val handler: GPUCommandEncoder) : AutoCloseable {
+	actual fun beginRenderPass(renderPassDescriptor: RenderPassDescriptor): RenderPassEncoder {
+		return RenderPassEncoder(handler.beginRenderPass(renderPassDescriptor.convert()))
 	}
 
-	fun finish(): GPUCommandBuffer {
-		return commandEncoder.finish()
+	actual fun finish(): CommandBuffer {
+		return CommandBuffer(handler.finish())
+	}
+
+	override fun close() {
+		// Nothing to do
 	}
 }
 
 private fun RenderPassDescriptor.convert(): GPURenderPassDescriptor = object : GPURenderPassDescriptor {
 	override var colorAttachments: Array<GPURenderPassColorAttachment> =
 		this@convert.colorAttachments.map { it.convert() }.toTypedArray()
-	// TODO implement
-	/*var depthStencilAttachment: GPURenderPassDepthStencilAttachment?
-	var occlusionQuerySet: GPUQuerySet?
-	var timestampWrites: GPURenderPassTimestampWrites?
-	var maxDrawCount: GPUSize64?*/
+	override var label: String? = this@convert.label ?: undefined
+	/*override var depthStencilAttachment: GPURenderPassDepthStencilAttachment?
+	override var occlusionQuerySet: GPUQuerySet?
+	override var timestampWrites: GPURenderPassTimestampWrites?
+	override var maxDrawCount: GPUSize64?*/
 }
 
 private fun RenderPassDescriptor.ColorAttachment.convert(): GPURenderPassColorAttachment =

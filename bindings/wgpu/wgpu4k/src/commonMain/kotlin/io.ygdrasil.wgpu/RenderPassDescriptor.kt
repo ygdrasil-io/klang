@@ -14,7 +14,8 @@ data class RenderPassDescriptor(
 	var depthStencilAttachment: GPURenderPassDepthStencilAttachment? = null,
 	var occlusionQuerySet: GPUQuerySet? = null,
 	var timestampWrites: GPURenderPassTimestampWrites? = null,
-	var maxDrawCount: GPUSize64? = null
+	var maxDrawCount: GPUSize64? = null,
+	var label: String? = null
 ) {
 
 	data class ColorAttachment(

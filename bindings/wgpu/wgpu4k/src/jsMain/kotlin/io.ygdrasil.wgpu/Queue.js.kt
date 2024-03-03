@@ -1,10 +1,9 @@
 package io.ygdrasil.wgpu
 
-import io.ygdrasil.wgpu.internal.js.GPUCommandBuffer
 import io.ygdrasil.wgpu.internal.js.GPUQueue
 
 actual class Queue(private val handler: GPUQueue) {
-	fun submit(commandsBuffer: Array<GPUCommandBuffer>) {
-		handler.submit(commandsBuffer)
+	fun submit(commandsBuffer: Array<CommandBuffer>) {
+		handler.submit(commandsBuffer.map { it.handler }.toTypedArray())
 	}
 }

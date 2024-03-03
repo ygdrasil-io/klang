@@ -3,6 +3,7 @@ package io.ygdrasil.wgpu.examples.io.ygdrasil.wgpu
 import com.sun.jna.Pointer
 import io.ygdrasil.libsdl.SDL_Window
 import io.ygdrasil.wgpu.Adapter
+import io.ygdrasil.wgpu.RenderingContext
 import io.ygdrasil.wgpu.internal.jvm.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
@@ -12,7 +13,18 @@ class WGPU(private val handler: WGPUInstance) : AutoCloseable {
 		wgpuInstanceRelease(handler)
 	}
 
-	suspend fun requestAdapter(options: WGPURequestAdapterOptions): Adapter? {
+	suspend fun requestAdapter(
+		renderingContext: RenderingContext,
+		powerPreference: WGPUPowerPreference = WGPUPowerPreference.WGPUPowerPreference_Undefined,
+		backendType: WGPUBackendType = WGPUBackendType.WGPUBackendType_Metal
+	): Adapter? {
+
+		val options = WGPURequestAdapterOptions().also {
+			it.compatibleSurface = renderingContext.handler
+			it.powerPreference = powerPreference.value
+			it.backendType = backendType.value
+		}
+
 		val adapterState = MutableStateFlow<WGPUAdapterImpl?>(null)
 
 		val handleRequestAdapter = object : WGPURequestAdapterCallback {

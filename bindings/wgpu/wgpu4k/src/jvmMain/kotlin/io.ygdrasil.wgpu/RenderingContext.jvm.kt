@@ -17,4 +17,23 @@ actual class RenderingContext(internal val handler: WGPUSurface) : AutoCloseable
 		wgpuSurfaceRelease(handler)
 	}
 
+	fun configure(device: Device, adapter: Adapter, sizeProvider: () -> Pair<Int, Int>) =
+		sizeProvider().let { (width, height) ->
+
+			val surface_capabilities = WGPUSurfaceCapabilities()
+			wgpuSurfaceGetCapabilities(handler, adapter.handler, surface_capabilities)
+			val config = WGPUSurfaceConfiguration().also {
+				it.device = device.handler ?: error("")
+				it.usage = WGPUTextureUsage.WGPUTextureUsage_RenderAttachment.value
+				it.format = surface_capabilities.formats?.getInt(0) ?: error("")
+				it.presentMode = WGPUPresentMode.WGPUPresentMode_Fifo.value
+				it.alphaMode = surface_capabilities.alphaModes?.getInt(0) ?: error("")
+				it.width = width
+				it.height = height
+			}
+
+			wgpuSurfaceConfigure(handler, config)
+
+		}
+
 }

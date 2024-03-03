@@ -6,7 +6,7 @@ import io.ygdrasil.wgpu.Device
 import io.ygdrasil.wgpu.RenderPassDescriptor
 import io.ygdrasil.wgpu.RenderingContext
 import io.ygdrasil.wgpu.examples.io.ygdrasil.wgpu.WGPU
-import io.ygdrasil.wgpu.internal.jvm.*
+import io.ygdrasil.wgpu.internal.jvm.wgpuGetVersion
 import kotlinx.coroutines.runBlocking
 
 fun main() {
@@ -35,14 +35,9 @@ suspend fun loop() {
 	) ?: error("fail to create window ${SDL_GetError()}")
 
 	val surface = instance.getSurface(window) ?: error("fail to create surface")
+	val renderingContext = RenderingContext(surface)
 
-	val options = WGPURequestAdapterOptions().apply {
-		compatibleSurface = surface
-		powerPreference = WGPUPowerPreference.WGPUPowerPreference_Undefined.value
-		backendType = WGPUBackendType.WGPUBackendType_Metal.value
-	}
-
-	val adapter = instance.requestAdapter(options)
+	val adapter = instance.requestAdapter(renderingContext)
 		?: error("fail to get adapter")
 
 	val device = adapter.requestDevice()
@@ -52,24 +47,19 @@ suspend fun loop() {
 	val height = IntByReference()
 	SDL_GetWindowSize(window, width.pointer, height.pointer)
 
-	val surface_capabilities = WGPUSurfaceCapabilities()
-	wgpuSurfaceGetCapabilities(surface, adapter.handler, surface_capabilities)
-	val config = WGPUSurfaceConfiguration().apply {
-		this.device = device.handler ?: error("")
-		usage = WGPUTextureUsage.WGPUTextureUsage_RenderAttachment.value
-		format = surface_capabilities.formats?.getInt(0) ?: error("")
-		presentMode = WGPUPresentMode.WGPUPresentMode_Fifo.value
-		alphaMode = surface_capabilities.alphaModes?.getInt(0) ?: error("")
-		this.width = width.value
-		this.height = height.value
+	renderingContext.configure(device, adapter) {
+		width.value to height.value
 	}
 
-	wgpuSurfaceConfigure(surface, config)
-
-	RenderingContext(surface).use { renderingContext ->
+	while (true) {
 		step1(device, renderingContext)
+
+		val event = SDL_Event()
+		while (SDL_PollEvent(event) != 0) {
+		}
 	}
 
+	renderingContext.close()
 	device.close()
 	adapter.close()
 	instance.close()
@@ -80,48 +70,42 @@ fun step1(
 	renderingContext: RenderingContext
 ) {
 
-	while (true) {
 
-		val texture = renderingContext.getCurrentTexture() ?: error("fail to get texture")
-		val view = texture.createView()
+	val texture = renderingContext.getCurrentTexture() ?: error("fail to get texture")
+	val view = texture.createView()
 
-		val encoder = device.createCommandEncoder()
+	val encoder = device.createCommandEncoder()
 
-		val renderPassEncoder = encoder.beginRenderPass(
-			RenderPassDescriptor(
-				colorAttachments = arrayOf(
-					RenderPassDescriptor.ColorAttachment(
-						view = view,
-						loadOp = "clear",
-						storeOp = "store",
-						clearValue = arrayOf(
-							0.0,
-							0.0,
-							0.4,
-							1.0
-						)
+	val renderPassEncoder = encoder.beginRenderPass(
+		RenderPassDescriptor(
+			colorAttachments = arrayOf(
+				RenderPassDescriptor.ColorAttachment(
+					view = view,
+					loadOp = "clear",
+					storeOp = "store",
+					clearValue = arrayOf(
+						0.0,
+						0.0,
+						0.4,
+						1.0
 					)
 				)
 			)
 		)
+	)
 
-		renderPassEncoder.end()
+	renderPassEncoder.end()
 
-		val commandBuffer = encoder.finish()
+	val commandBuffer = encoder.finish()
 
-		device.queue.submit(arrayOf(commandBuffer))
+	device.queue.submit(arrayOf(commandBuffer))
 
-		renderingContext.present()
+	renderingContext.present()
 
-		commandBuffer.close()
-		renderPassEncoder.close()
-		encoder.close()
-		view.close()
-		texture.close()
+	commandBuffer.close()
+	renderPassEncoder.close()
+	encoder.close()
+	view.close()
+	texture.close()
 
-		val event = SDL_Event()
-		while (SDL_PollEvent(event) != 0) {
-
-		}
-	}
 }

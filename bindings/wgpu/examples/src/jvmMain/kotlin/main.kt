@@ -2,29 +2,36 @@ package io.ygdrasil.wgpu.examples
 
 import com.sun.jna.ptr.IntByReference
 import io.ygdrasil.libsdl.*
-import io.ygdrasil.wgpu.Device
-import io.ygdrasil.wgpu.RenderPassDescriptor
 import io.ygdrasil.wgpu.RenderingContext
 import io.ygdrasil.wgpu.examples.io.ygdrasil.wgpu.WGPU
 import io.ygdrasil.wgpu.internal.jvm.wgpuGetVersion
 import kotlinx.coroutines.runBlocking
 
 fun main() {
+
+	printVersion()
+	initSDL()
+
 	runBlocking {
 		loop()
 	}
 }
 
-suspend fun loop() {
+fun initSDL() {
+	if (SDL_Init(SDL_INIT_EVERYTHING.toInt()) != 0) {
+		error("SDL_Init Error: ${SDL_GetError()}")
+	}
+}
+
+fun printVersion() {
 	println("WGPU version ${wgpuGetVersion()}")
 	SDL_version().apply {
 		SDL_GetVersion(this)
 		println("SDL version $major.$minor.$patch")
 	}
+}
 
-	if (SDL_Init(SDL_INIT_EVERYTHING.toInt()) != 0) {
-		error("SDL_Init Error: ${SDL_GetError()}")
-	}
+suspend fun loop() {
 
 	val instance = WGPU.createInstance() ?: error("fail to wgpu instance")
 
@@ -43,16 +50,15 @@ suspend fun loop() {
 	val device = adapter.requestDevice()
 		?: error("fail to get device")
 
-	val width = IntByReference()
-	val height = IntByReference()
-	SDL_GetWindowSize(window, width.pointer, height.pointer)
-
 	renderingContext.configure(device, adapter) {
+		val width = IntByReference()
+		val height = IntByReference()
+		SDL_GetWindowSize(window, width.pointer, height.pointer)
 		width.value to height.value
 	}
 
 	while (true) {
-		step1(device, renderingContext)
+		blueScreen(device, renderingContext)
 
 		val event = SDL_Event()
 		while (SDL_PollEvent(event) != 0) {
@@ -63,49 +69,4 @@ suspend fun loop() {
 	device.close()
 	adapter.close()
 	instance.close()
-}
-
-fun step1(
-	device: Device,
-	renderingContext: RenderingContext
-) {
-
-
-	val texture = renderingContext.getCurrentTexture() ?: error("fail to get texture")
-	val view = texture.createView()
-
-	val encoder = device.createCommandEncoder()
-
-	val renderPassEncoder = encoder.beginRenderPass(
-		RenderPassDescriptor(
-			colorAttachments = arrayOf(
-				RenderPassDescriptor.ColorAttachment(
-					view = view,
-					loadOp = "clear",
-					storeOp = "store",
-					clearValue = arrayOf(
-						0.0,
-						0.0,
-						0.4,
-						1.0
-					)
-				)
-			)
-		)
-	)
-
-	renderPassEncoder.end()
-
-	val commandBuffer = encoder.finish()
-
-	device.queue.submit(arrayOf(commandBuffer))
-
-	renderingContext.present()
-
-	commandBuffer.close()
-	renderPassEncoder.close()
-	encoder.close()
-	view.close()
-	texture.close()
-
 }

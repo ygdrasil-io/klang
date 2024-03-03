@@ -31,6 +31,7 @@ kotlin {
 			// applyBinaryen()
 		}
 	}
+	jvm()
 	//targetHierarchy.default()
 	//jvm()
 	/*androidTarget {

@@ -13,6 +13,13 @@ actual class Device(internal val handler: WGPUDeviceImpl) : AutoCloseable {
 		)
 	}
 
+	actual fun createShaderModule(descriptor: ShaderModuleDescriptor): ShaderModule {
+		return ShaderModule(
+			wgpuDeviceCreateShaderModule(handler, descriptor.convert())
+		)
+	}
+
+
 	override fun close() {
 		wgpuDeviceRelease(handler)
 	}

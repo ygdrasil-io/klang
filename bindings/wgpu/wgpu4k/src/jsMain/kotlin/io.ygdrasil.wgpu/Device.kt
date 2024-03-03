@@ -9,9 +9,6 @@ actual class Device(val handler: GPUDevice): AutoCloseable {
 
 	val queue: Queue by lazy { Queue(handler.queue) }
 
-	override fun close() {
-		// Nothing on JS
-	}
 
 	actual fun createCommandEncoder(descriptor: CommandEncoderDescriptor?): CommandEncoder {
 		return CommandEncoder(
@@ -21,6 +18,20 @@ actual class Device(val handler: GPUDevice): AutoCloseable {
 			}
 
 		)
+	}
+
+	actual fun createShaderModule(descriptor: ShaderModuleDescriptor): ShaderModule {
+		return ShaderModule(handler.createShaderModule(descriptor.convert()))
+	}
+
+	actual fun createPipelineLayout(): Any {
+		handler.createPipelineLayout(
+
+		)
+	}
+
+	override fun close() {
+		// Nothing on JS
 	}
 }
 

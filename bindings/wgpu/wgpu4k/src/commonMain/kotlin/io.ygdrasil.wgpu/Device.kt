@@ -4,6 +4,8 @@ package io.ygdrasil.wgpu
 expect class Device: AutoCloseable {
 
 	fun createCommandEncoder(descriptor: CommandEncoderDescriptor? = null): CommandEncoder
+	fun createShaderModule(descriptor: ShaderModuleDescriptor)
+	fun createPipelineLayout(): Any
 
 }
 

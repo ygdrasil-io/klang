@@ -3021,7 +3021,7 @@ public open class WGPUShaderModuleDescriptor : Structure {
 	 * Declared([a8(next):[*:b1]i4(sType)x4](WGPUChainedStruct)))*
 	 */
 	@JvmField
-	public var nextInChain: Pointer? = null
+	public var nextInChain: WGPUShaderModuleWGSLDescriptor.ByReference? = null
 
 	/**
 	 * mapped from (Char(layout = b1))*

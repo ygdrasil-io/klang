@@ -2,6 +2,7 @@
 
 package io.ygdrasil.wgpu.internal.js
 
+import io.ygdrasil.wgpu.*
 import org.khronos.webgl.ArrayBuffer
 import org.khronos.webgl.ArrayBufferView
 import org.khronos.webgl.Uint32Array
@@ -13,44 +14,6 @@ import kotlin.js.Promise
 external interface GPUOrigin2DDictStrict : GPUOrigin2DDict
 
 external interface GPUExtent3DDictStrict : GPUExtent3DDict
-
-typealias GPUBufferDynamicOffset = Number
-
-typealias GPUBufferUsageFlags = Number
-
-typealias GPUColorWriteFlags = Number
-
-typealias GPUDepthBias = Number
-
-typealias GPUFlagsConstant = Number
-
-typealias GPUIndex32 = Number
-
-typealias GPUIntegerCoordinate = Number
-
-typealias GPUIntegerCoordinateOut = Number
-
-typealias GPUMapModeFlags = Number
-
-typealias GPUPipelineConstantValue = Number
-
-typealias GPUSampleMask = Number
-
-typealias GPUShaderStageFlags = Number
-
-typealias GPUSignedOffset32 = Number
-
-typealias GPUSize32 = Number
-
-typealias GPUSize32Out = Number
-
-typealias GPUSize64 = Number
-
-typealias GPUSize64Out = Number
-
-typealias GPUStencilValue = Number
-
-typealias GPUTextureUsageFlags = Number
 
 external interface GPUBindGroupDescriptor : GPUObjectDescriptorBase {
     var layout: GPUBindGroupLayout
@@ -216,10 +179,10 @@ external interface GPUDepthStencilState {
     var depthBias: GPUDepthBias?
         get() = definedExternally
         set(value) = definedExternally
-    var depthBiasSlopeScale: Number?
+	var depthBiasSlopeScale: Float?
         get() = definedExternally
         set(value) = definedExternally
-    var depthBiasClamp: Number?
+	var depthBiasClamp: Float?
         get() = definedExternally
         set(value) = definedExternally
 }
@@ -666,11 +629,11 @@ external interface GPUVertexBufferLayout {
     var stepMode: String? /* "vertex" | "instance" */
         get() = definedExternally
         set(value) = definedExternally
-    var attributes: Iterable<GPUVertexAttribute>
+	var attributes: Array<GPUVertexAttribute>
 }
 
 external interface GPUVertexState : GPUProgrammableStage {
-    var buffers: Iterable<GPUVertexBufferLayout?>?
+	var buffers: Array<GPUVertexBufferLayout?>?
         get() = definedExternally
         set(value) = definedExternally
 }

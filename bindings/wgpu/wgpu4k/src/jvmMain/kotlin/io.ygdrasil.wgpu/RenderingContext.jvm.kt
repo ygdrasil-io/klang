@@ -3,10 +3,19 @@ package io.ygdrasil.wgpu
 import io.ygdrasil.wgpu.internal.jvm.*
 
 actual class RenderingContext(internal val handler: WGPUSurface) : AutoCloseable {
+
+	private val surfaceCapabilities = WGPUSurfaceCapabilities()
+
+	actual val textureFormat: TextureFormat by lazy {
+		surfaceCapabilities.formats?.getInt(0)
+			?.let { TextureFormat.of(it) ?: error("texture format not found") }
+			?: error("call first computeSurfaceCapabilities")
+	}
+
 	actual fun getCurrentTexture(): Texture {
-		val surface_texture = WGPUSurfaceTexture()
-		wgpuSurfaceGetCurrentTexture(handler, surface_texture)
-		return Texture(surface_texture)
+		val surfaceTexture = WGPUSurfaceTexture()
+		wgpuSurfaceGetCurrentTexture(handler, surfaceTexture)
+		return Texture(surfaceTexture)
 	}
 
 	actual fun present() {
@@ -17,17 +26,19 @@ actual class RenderingContext(internal val handler: WGPUSurface) : AutoCloseable
 		wgpuSurfaceRelease(handler)
 	}
 
-	fun configure(device: Device, adapter: Adapter, sizeProvider: () -> Pair<Int, Int>) =
+	fun computeSurfaceCapabilities(adapter: Adapter) {
+		wgpuSurfaceGetCapabilities(handler, adapter.handler, surfaceCapabilities)
+	}
+
+	fun configure(device: Device, sizeProvider: () -> Pair<Int, Int>) =
 		sizeProvider().let { (width, height) ->
 
-			val surface_capabilities = WGPUSurfaceCapabilities()
-			wgpuSurfaceGetCapabilities(handler, adapter.handler, surface_capabilities)
 			val config = WGPUSurfaceConfiguration().also {
 				it.device = device.handler ?: error("")
 				it.usage = WGPUTextureUsage.WGPUTextureUsage_RenderAttachment.value
-				it.format = surface_capabilities.formats?.getInt(0) ?: error("")
+				it.format = textureFormat.value
 				it.presentMode = WGPUPresentMode.WGPUPresentMode_Fifo.value
-				it.alphaMode = surface_capabilities.alphaModes?.getInt(0) ?: error("")
+				it.alphaMode = surfaceCapabilities.alphaModes?.getInt(0) ?: error("")
 				it.width = width
 				it.height = height
 			}

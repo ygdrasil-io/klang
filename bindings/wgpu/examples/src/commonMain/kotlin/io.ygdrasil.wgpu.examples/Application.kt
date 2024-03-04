@@ -12,7 +12,7 @@ abstract class Application(
 	val adapter: Adapter
 ) : AutoCloseable {
 
-	lateinit var currentScene: Scene
+	private lateinit var currentScene: Scene
 
 	init {
 		changeScene(scenes.first())
@@ -45,10 +45,10 @@ abstract class Application(
 		adapter.close()
 	}
 
-
 	abstract fun run()
 }
 
 val scenes = listOf(
+	SimpleTriangleScene(),
 	BlueTitlingScene()
 )

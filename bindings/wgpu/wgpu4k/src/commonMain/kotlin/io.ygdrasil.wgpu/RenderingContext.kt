@@ -3,6 +3,9 @@
 package io.ygdrasil.wgpu
 
 expect class RenderingContext: AutoCloseable {
+
+	val textureFormat: TextureFormat
+
 	fun getCurrentTexture(): Texture
 
 	/**

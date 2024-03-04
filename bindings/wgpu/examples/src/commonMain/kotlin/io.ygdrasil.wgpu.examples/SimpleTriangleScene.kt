@@ -1,10 +1,11 @@
 package io.ygdrasil.wgpu.examples
 
-import io.ygdrasil.wgpu.PipelineLayoutDescriptor
-import io.ygdrasil.wgpu.RenderPipelineDescriptor
-import io.ygdrasil.wgpu.ShaderModuleDescriptor
+import io.ygdrasil.wgpu.*
 
 class SimpleTriangleScene : Application.Scene() {
+
+	lateinit var renderPipeline: RenderPipeline
+
 	override fun Application.initialiaze() {
 		val shaderModule = device.createShaderModule(
 			ShaderModuleDescriptor(
@@ -14,27 +15,72 @@ class SimpleTriangleScene : Application.Scene() {
 
 		val pipelineLayout = device.createPipelineLayout(PipelineLayoutDescriptor())
 
-		val renderPipeline = device.createRenderPipeline(
+		renderPipeline = device.createRenderPipeline(
 			RenderPipelineDescriptor(
 				layout = pipelineLayout,
+				vertex = RenderPipelineDescriptor.VertexState(
+					module = shaderModule,
+					entryPoint = "vs_main"
+				),
 				fragment = RenderPipelineDescriptor.FragmentState(
 					module = shaderModule,
 					entryPoint = "fs_main",
 					targets = arrayOf(
-						RenderPipelineDescriptor.FragmentState.ColorTargetState().apply {
-							//format = TODO()
-							//writeMask = TODO()
-						}
+						RenderPipelineDescriptor.FragmentState.ColorTargetState(
+							format = renderingContext.textureFormat,
+							writeMask = ColorWriteMask.all
+						)
+					)
+				),
+				primitive = RenderPipelineDescriptor.PrimitiveState(
+					topology = PrimitiveTopology.trianglelist
+				),
+				multisample = RenderPipelineDescriptor.MultisampleState(
+					count = 1,
+					mask = 0xFFFFFFF
+				)
+			)
+		)
+	}
+
+	override fun Application.render() {
+
+		// Clear the canvas with a render pass
+		val encoder = device.createCommandEncoder()
+
+		val texture = renderingContext.getCurrentTexture()
+		val view = texture.createView()
+
+		val renderPassEncoder = encoder.beginRenderPass(
+			RenderPassDescriptor(
+				colorAttachments = arrayOf(
+					RenderPassDescriptor.ColorAttachment(
+						view = view,
+						loadOp = "clear",
+						clearValue = arrayOf(0, 1.0, 0, 1.0),
+						storeOp = "store"
 					)
 				)
 			)
 		)
+		renderPassEncoder.end()
 
-		TODO("Not yet implemented")
-	}
+		renderPassEncoder.setPipeline(renderPipeline)
+		renderPassEncoder.draw(3, 1, 0, 0)
+		renderPassEncoder.end()
 
-	override fun Application.render() {
-		TODO("Not yet implemented")
+		val commandBuffer = encoder.finish()
+
+		device.queue.submit(arrayOf(commandBuffer))
+
+		renderingContext.present()
+
+		commandBuffer.close()
+		renderPassEncoder.close()
+		encoder.close()
+		view.close()
+		texture.close()
+
 	}
 }
 

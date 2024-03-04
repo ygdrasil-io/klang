@@ -63,7 +63,7 @@ fun helloTriangle(
 			}
 			multisample.apply {
 				count = 1
-				mask = 0xFFFFFFFF.toInt()
+				mask = 0xFFFFFFF
 			}
 		}) ?: error("fail to create render pipeline")
 

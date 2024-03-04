@@ -1,9 +1,7 @@
 import io.ygdrasil.ParsingMethod
-import klang.domain.FunctionPointerType
-import klang.domain.ResolvedTypeRef
-import klang.domain.typeOf
-import klang.domain.unchecked
+import klang.domain.*
 import org.jetbrains.kotlin.de.undercouch.gradle.tasks.download.Download
+import org.jetbrains.kotlin.util.capitalizeDecapitalize.toLowerCaseAsciiOnly
 import java.net.URL
 
 buildscript {
@@ -54,7 +52,6 @@ kotlin {
         val commonMain by getting {
             dependencies {
 				implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0")
-                //put your multiplatform dependencies here
             }
         }
         val commonTest by getting {
@@ -109,6 +106,12 @@ klang {
 								arguments[3] = typeOf("void *").unchecked()
 								function.arguments = arguments.toList()
 							}
+					}
+				declarations.filterIsInstance<NativeEnumeration>()
+					.forEach { enumeration ->
+						enumeration.values = enumeration.values.map { (name, value) ->
+							name.removePrefix("${enumeration.name}_").toLowerCaseAsciiOnly() to value
+						}
 					}
 			}
 		}

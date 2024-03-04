@@ -22,7 +22,8 @@ suspend fun jvmApplication() = (WGPU.createInstance() ?: error("fail to wgpu ins
 	val device = adapter.requestDevice()
 		?: error("fail to get device")
 
-	renderingContext.configure(device, adapter) {
+	renderingContext.computeSurfaceCapabilities(adapter)
+	renderingContext.configure(device) {
 		val width = IntByReference()
 		val height = IntByReference()
 		SDL_GetWindowSize(window, width.pointer, height.pointer)

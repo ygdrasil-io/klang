@@ -6,16 +6,14 @@ actual class Device(internal val handler: WGPUDeviceImpl) : AutoCloseable {
 
 	actual val queue: Queue by lazy { Queue(wgpuDeviceGetQueue(handler) ?: error("fail to get device queue")) }
 
-	actual fun createCommandEncoder(descriptor: CommandEncoderDescriptor?): CommandEncoder {
-		return CommandEncoder(
-			wgpuDeviceCreateCommandEncoder(handler, descriptor?.convert() ?: null)
-				?: error("fail to create command encoder")
-		)
-	}
+	actual fun createCommandEncoder(descriptor: CommandEncoderDescriptor?): CommandEncoder =
+		wgpuDeviceCreateCommandEncoder(handler, descriptor?.convert())
+			?.let(::CommandEncoder) ?: error("fail to create command encoder")
+
 
 	actual fun createShaderModule(descriptor: ShaderModuleDescriptor): ShaderModule =
 		wgpuDeviceCreateShaderModule(handler, descriptor.convert())
-			?.let(::ShaderModule) ?: error("fail to create pipeline layout")
+			?.let(::ShaderModule) ?: error("fail to create shader module")
 
 
 	actual fun createPipelineLayout(descriptor: PipelineLayoutDescriptor): PipelineLayout =
@@ -24,7 +22,7 @@ actual class Device(internal val handler: WGPUDeviceImpl) : AutoCloseable {
 
 	actual fun createRenderPipeline(descriptor: RenderPipelineDescriptor): RenderPipeline =
 		wgpuDeviceCreateRenderPipeline(handler, descriptor.convert())
-			?.let(::RenderPipeline) ?: error("fail to create pipeline layout")
+			?.let(::RenderPipeline) ?: error("fail to create render pipeline")
 
 	override fun close() {
 		wgpuDeviceRelease(handler)

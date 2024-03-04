@@ -15,9 +15,19 @@ class SimpleTriangleScene : Application.Scene() {
 		val pipelineLayout = device.createPipelineLayout(PipelineLayoutDescriptor())
 
 		val renderPipeline = device.createRenderPipeline(
-			RenderPipelineDescriptor().apply {
-				layout = pipelineLayout
-			}
+			RenderPipelineDescriptor(
+				layout = pipelineLayout,
+				fragment = RenderPipelineDescriptor.FragmentState(
+					module = shaderModule,
+					entryPoint = "fs_main",
+					targets = arrayOf(
+						RenderPipelineDescriptor.FragmentState.ColorTargetState().apply {
+							//format = TODO()
+							//writeMask = TODO()
+						}
+					)
+				)
+			)
 		)
 
 		TODO("Not yet implemented")

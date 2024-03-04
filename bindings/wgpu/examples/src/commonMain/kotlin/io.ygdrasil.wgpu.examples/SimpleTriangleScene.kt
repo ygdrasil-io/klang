@@ -1,5 +1,7 @@
 package io.ygdrasil.wgpu.examples
 
+import io.ygdrasil.wgpu.PipelineLayoutDescriptor
+import io.ygdrasil.wgpu.RenderPipelineDescriptor
 import io.ygdrasil.wgpu.ShaderModuleDescriptor
 
 class SimpleTriangleScene : Application.Scene() {
@@ -10,7 +12,13 @@ class SimpleTriangleScene : Application.Scene() {
 			)
 		)
 
-		val pipeline = device.createPipelineLayout()
+		val pipelineLayout = device.createPipelineLayout(PipelineLayoutDescriptor())
+
+		val renderPipeline = device.createRenderPipeline(
+			RenderPipelineDescriptor().apply {
+				layout = pipelineLayout
+			}
+		)
 
 		TODO("Not yet implemented")
 	}

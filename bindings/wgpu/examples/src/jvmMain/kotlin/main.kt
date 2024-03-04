@@ -5,10 +5,8 @@ import io.ygdrasil.wgpu.internal.jvm.wgpuGetVersion
 import kotlinx.coroutines.runBlocking
 
 fun main() {
-
 	printVersion()
 	initSDL()
-
 	runBlocking {
 		jvmApplication()
 	}

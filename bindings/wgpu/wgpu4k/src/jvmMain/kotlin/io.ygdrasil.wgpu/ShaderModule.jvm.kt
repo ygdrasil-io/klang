@@ -3,7 +3,7 @@ package io.ygdrasil.wgpu
 import com.sun.jna.NativeLong
 import io.ygdrasil.wgpu.internal.jvm.*
 
-actual class ShaderModule(internal val handler: WGPUShaderModule?) : AutoCloseable {
+actual class ShaderModule(internal val handler: WGPUShaderModule) : AutoCloseable {
 	override fun close() {
 		wgpuShaderModuleRelease(handler)
 	}
@@ -18,8 +18,8 @@ internal fun ShaderModuleDescriptor.convert(): WGPUShaderModuleDescriptor = WGPU
 			sType = WGPUSType.WGPUSType_ShaderModuleWGSLDescriptor.value
 		}
 	}
-	it.hintCount = NativeLong(compilationHints.size)
-	it.hints = compilationHints.map { it.convert() }
+	it.hintCount = compilationHints?.let { NativeLong(it.size.toLong()) } ?: NativeLong(0)
+	it.hints = compilationHints?.map { it.convert() }?.toTypedArray()
 
 }
 

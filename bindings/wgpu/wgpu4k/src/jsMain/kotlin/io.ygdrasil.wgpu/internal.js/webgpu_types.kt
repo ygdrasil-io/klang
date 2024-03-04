@@ -258,7 +258,7 @@ external interface GPUExternalTextureDescriptor : GPUObjectDescriptorBase {
 }
 
 external interface GPUFragmentState : GPUProgrammableStage {
-    var targets: Iterable<GPUColorTargetState?>
+	var targets: Array<GPUColorTargetState?>
 }
 
 external interface GPUImageCopyBuffer : GPUImageDataLayout {

@@ -3040,7 +3040,7 @@ public open class WGPUShaderModuleDescriptor : Structure {
 	 * Declared([a8(nextInChain):[*:b1]a8(entryPoint):[*:b1]a8(layout):[*:b1]](WGPUShaderModuleCompilationHint)))*
 	 */
 	@JvmField
-	public var hints: Pointer? = null
+	public var hints: Array<WGPUShaderModuleCompilationHint.ByReference>? = null
 
 	public constructor(pointer: Pointer?) : super(pointer)
 

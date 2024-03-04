@@ -3,10 +3,15 @@ package io.ygdrasil.wgpu
 @OptIn(ExperimentalStdlibApi::class)
 expect class Device: AutoCloseable {
 
-	fun createCommandEncoder(descriptor: CommandEncoderDescriptor? = null): CommandEncoder
-	fun createShaderModule(descriptor: ShaderModuleDescriptor)
-	fun createPipelineLayout(): Any
+	val queue: Queue
 
+	fun createCommandEncoder(descriptor: CommandEncoderDescriptor? = null): CommandEncoder
+
+	fun createShaderModule(descriptor: ShaderModuleDescriptor): ShaderModule
+
+	fun createPipelineLayout(descriptor: PipelineLayoutDescriptor): PipelineLayout
+
+	fun createRenderPipeline(descriptor: RenderPipelineDescriptor): RenderPipeline
 }
 
 // TODO

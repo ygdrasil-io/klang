@@ -17,7 +17,7 @@ actual class RenderingContext(private val handler: GPUCanvasContext) : AutoClose
 	}
 
 	actual fun present() {
-		// Nothing to do
+		// Nothing to do on js
 	}
 
 	fun configure(canvasConfiguration: CanvasConfiguration) {

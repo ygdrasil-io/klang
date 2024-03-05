@@ -1,8 +1,6 @@
 package io.ygdrasil.wgpu
 
-import io.ygdrasil.wgpu.internal.jvm.WGPURenderPassEncoder
-import io.ygdrasil.wgpu.internal.jvm.wgpuRenderPassEncoderEnd
-import io.ygdrasil.wgpu.internal.jvm.wgpuRenderPassEncoderRelease
+import io.ygdrasil.wgpu.internal.jvm.*
 
 actual class RenderPassEncoder(private val handler: WGPURenderPassEncoder) : AutoCloseable {
 	actual fun end() {
@@ -10,7 +8,7 @@ actual class RenderPassEncoder(private val handler: WGPURenderPassEncoder) : Aut
 	}
 
 	actual fun setPipeline(renderPipeline: RenderPipeline) {
-		TODO("not yet implemented")
+		wgpuRenderPassEncoderSetPipeline(handler, renderPipeline.handler)
 	}
 
 	actual fun draw(
@@ -19,7 +17,7 @@ actual class RenderPassEncoder(private val handler: WGPURenderPassEncoder) : Aut
 		firstVertex: GPUSize32,
 		firstInstance: GPUSize32
 	) {
-		TODO("not yet implemented")
+		wgpuRenderPassEncoderDraw(handler, vertexCount, instanceCount, firstVertex, firstInstance)
 	}
 
 	override fun close() {

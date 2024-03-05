@@ -40,7 +40,7 @@ actual class Device(val handler: GPUDevice) : AutoCloseable {
 
 private fun RenderPipelineDescriptor.convert(): GPURenderPipelineDescriptor = object : GPURenderPipelineDescriptor {
 	override var vertex: GPUVertexState = this@convert.vertex.convert()
-	override var layout: dynamic = this@convert.layout ?: "auto"
+	override var layout: dynamic = this@convert.layout?.handler ?: "auto"
 	override var label: dynamic = this@convert.label ?: undefined
 	override var primitive: GPUPrimitiveState? = this@convert.primitive?.convert() ?: undefined
 	override var depthStencil: GPUDepthStencilState? = this@convert.depthStencil?.convert() ?: undefined
@@ -76,7 +76,7 @@ private fun RenderPipelineDescriptor.VertexState.VertexBufferLayout.VertexAttrib
 
 private fun RenderPipelineDescriptor.PrimitiveState.convert(): GPUPrimitiveState =
 	object : GPUPrimitiveState {
-		override var topology: String? = this@convert.topology?.name ?: undefined
+		override var topology: String? = this@convert.topology?.stringValue ?: undefined
 		override var stripIndexFormat: String? = this@convert.stripIndexFormat ?: undefined
 		override var frontFace: String? = this@convert.frontFace ?: undefined
 		override var cullMode: String? = this@convert.cullMode ?: undefined
@@ -128,18 +128,34 @@ private fun RenderPipelineDescriptor.FragmentState.ColorTargetState.convert(): G
 		override var writeMask: GPUColorWriteFlags? = this@convert.writeMask?.value ?: undefined
 	}
 
-private fun RenderPipelineDescriptor.FragmentState.ColorTargetState.BlendState?.convert(): GPUBlendState? {
-	TODO("Not yet implemented")
-}
+private fun RenderPipelineDescriptor.FragmentState.ColorTargetState.BlendState.convert(): GPUBlendState =
+	object : GPUBlendState {
+		override var color: GPUBlendComponent = this@convert.color.convert()
+		override var alpha: GPUBlendComponent = this@convert.alpha.convert()
+	}
+
+private fun RenderPipelineDescriptor.FragmentState.ColorTargetState.BlendState.BlendComponent.convert(): GPUBlendComponent =
+	object : GPUBlendComponent {
+		override var operation: String? = this@convert.operation ?: undefined
+		override var srcFactor: String? = this@convert.srcFactor ?: undefined
+		override var dstFactor: String? = this@convert.dstFactor ?: undefined
+	}
 
 /*** PipelineLayoutDescriptor ***/
 
 private fun PipelineLayoutDescriptor.convert(): GPUPipelineLayoutDescriptor = object : GPUPipelineLayoutDescriptor {
-	override var label: String? = TODO("Not yet implemented")
-	override var bindGroupLayouts: Iterable<GPUBindGroupLayout> = TODO("Not yet implemented")
+	override var label: String? = this@convert.label ?: undefined
+	override var bindGroupLayouts: Array<GPUBindGroupLayout> = this@convert.bindGroupLayouts
+		.map { it.convert() }.toTypedArray()
 }
 
+private fun PipelineLayoutDescriptor.BindGroupLayout.convert(): GPUBindGroupLayout =
+	object : GPUBindGroupLayout {
+		override var label: String = this@convert.label
+		override var __brand: String = this@convert.__brand
+	}
+
 private fun CommandEncoderDescriptor.convert(): GPUCommandEncoderDescriptor = object : GPUCommandEncoderDescriptor {
-	//TODO
+	override var label: String? = this@convert.label ?: undefined
 }
 

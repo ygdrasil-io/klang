@@ -549,13 +549,14 @@ public enum class PresentMode(
 
 public enum class PrimitiveTopology(
 	public val `value`: Int,
+	public val stringValue: String,
 ) {
-	pointlist(0),
-	linelist(1),
-	linestrip(2),
-	trianglelist(3),
-	trianglestrip(4),
-	force32(2_147_483_647),
+	pointlist(0, "point-list"),
+	linelist(1, "line-list"),
+	linestrip(2, "line-strip"),
+	trianglelist(3, "triangle-list"),
+	trianglestrip(4, "triangle-strip"),
+	force32(2_147_483_647, "force32"),
 	;
 
 	public infix fun or(other: Int): Int = value or other

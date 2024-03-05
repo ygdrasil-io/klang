@@ -324,7 +324,7 @@ external interface GPUPipelineErrorInit {
 }
 
 external interface GPUPipelineLayoutDescriptor : GPUObjectDescriptorBase {
-    var bindGroupLayouts: Iterable<GPUBindGroupLayout>
+	var bindGroupLayouts: Array<GPUBindGroupLayout>
 }
 
 external interface GPUPrimitiveState {

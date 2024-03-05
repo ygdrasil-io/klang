@@ -4,7 +4,16 @@ expect class PipelineLayout
 
 expect class RenderPipeline
 
-class PipelineLayoutDescriptor
+data class PipelineLayoutDescriptor(
+	var bindGroupLayouts: Array<BindGroupLayout> = arrayOf(),
+	var label: String? = null
+) {
+	data class BindGroupLayout(
+		var label: String,
+		var __brand: String
+	)
+}
+
 data class RenderPipelineDescriptor(
 	var vertex: VertexState,
 	var label: String? = null,

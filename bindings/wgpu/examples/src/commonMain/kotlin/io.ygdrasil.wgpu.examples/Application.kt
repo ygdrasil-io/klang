@@ -28,14 +28,22 @@ abstract class Application(
 
 	fun changeScene(nextScene: Scene) {
 		with(nextScene) {
-			initialiaze()
+			try {
+				initialiaze()
+			} catch (e: Throwable) {
+				e.printStackTrace()
+			}
 		}
 		currentScene = nextScene
 	}
 
 	fun renderFrame() {
 		with(currentScene) {
-			render()
+			try {
+				render()
+			} catch (e: Throwable) {
+				e.printStackTrace()
+			}
 		}
 	}
 

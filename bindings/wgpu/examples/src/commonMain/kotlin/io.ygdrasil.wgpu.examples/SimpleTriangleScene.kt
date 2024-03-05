@@ -63,7 +63,6 @@ class SimpleTriangleScene : Application.Scene() {
 				)
 			)
 		)
-		renderPassEncoder.end()
 
 		renderPassEncoder.setPipeline(renderPipeline)
 		renderPassEncoder.draw(3, 1, 0, 0)

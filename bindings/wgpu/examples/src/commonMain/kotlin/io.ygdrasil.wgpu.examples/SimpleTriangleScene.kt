@@ -43,13 +43,16 @@ class SimpleTriangleScene : Application.Scene() {
 		)
 	}
 
-	override fun Application.render() {
+	override fun Application.render() = autoClosableContext {
 
 		// Clear the canvas with a render pass
 		val encoder = device.createCommandEncoder()
+			.bind()
 
 		val texture = renderingContext.getCurrentTexture()
+			.bind()
 		val view = texture.createView()
+			.bind()
 
 		val renderPassEncoder = encoder.beginRenderPass(
 			RenderPassDescriptor(
@@ -63,22 +66,18 @@ class SimpleTriangleScene : Application.Scene() {
 				)
 			)
 		)
+			.bind()
 
 		renderPassEncoder.setPipeline(renderPipeline)
 		renderPassEncoder.draw(3, 1, 0, 0)
 		renderPassEncoder.end()
 
 		val commandBuffer = encoder.finish()
+			.bind()
 
 		device.queue.submit(arrayOf(commandBuffer))
 
 		renderingContext.present()
-
-		commandBuffer.close()
-		renderPassEncoder.close()
-		encoder.close()
-		view.close()
-		texture.close()
 
 	}
 }

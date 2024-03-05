@@ -31,14 +31,17 @@ class BlueTitlingScene : Application.Scene() {
 		titlingManager.reset()
 	}
 
-	override fun Application.render() {
+	override fun Application.render() = autoClosableContext {
 		titlingManager.nextFrame()
 
 		// Clear the canvas with a render pass
 		val encoder = device.createCommandEncoder()
+			.bind()
 
 		val texture = renderingContext.getCurrentTexture()
+			.bind()
 		val view = texture.createView()
+			.bind()
 
 		val renderPassEncoder = encoder.beginRenderPass(
 			RenderPassDescriptor(
@@ -51,20 +54,16 @@ class BlueTitlingScene : Application.Scene() {
 					)
 				)
 			)
-		)
+		).bind()
 		renderPassEncoder.end()
 
 		val commandBuffer = encoder.finish()
+			.bind()
 
 		device.queue.submit(arrayOf(commandBuffer))
 
 		renderingContext.present()
 
-		commandBuffer.close()
-		renderPassEncoder.close()
-		encoder.close()
-		view.close()
-		texture.close()
 	}
 
 }

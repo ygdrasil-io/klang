@@ -58,5 +58,5 @@ abstract class Application(
 
 val scenes = listOf(
 	SimpleTriangleScene(),
-	BlueTitlingScene()
+	BlueTitlingScene(),
 )

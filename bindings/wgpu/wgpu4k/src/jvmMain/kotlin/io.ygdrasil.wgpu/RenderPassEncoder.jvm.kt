@@ -9,6 +9,19 @@ actual class RenderPassEncoder(private val handler: WGPURenderPassEncoder) : Aut
 		wgpuRenderPassEncoderEnd(handler)
 	}
 
+	actual fun setPipeline(renderPipeline: RenderPipeline) {
+		TODO("not yet implemented")
+	}
+
+	actual fun draw(
+		vertexCount: GPUSize32,
+		instanceCount: GPUSize32,
+		firstVertex: GPUSize32,
+		firstInstance: GPUSize32
+	) {
+		TODO("not yet implemented")
+	}
+
 	override fun close() {
 		wgpuRenderPassEncoderRelease(handler)
 	}

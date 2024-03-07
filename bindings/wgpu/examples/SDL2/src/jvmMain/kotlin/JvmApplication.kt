@@ -30,12 +30,12 @@ suspend fun jvmApplication() = (WGPU.createInstance() ?: error("fail to wgpu ins
 		width.value to height.value
 	}
 
-	object : Application(
+	val application = object : Application(
 		renderingContext,
 		device,
 		adapter
 	) {
-		override fun run() {
+		override suspend fun run() {
 			while (true) {
 				renderFrame()
 				pollEvent()
@@ -49,7 +49,9 @@ suspend fun jvmApplication() = (WGPU.createInstance() ?: error("fail to wgpu ins
 		}
 
 
-	}.use(Application::run)
+	}
+
+	application.run()
 
 }
 

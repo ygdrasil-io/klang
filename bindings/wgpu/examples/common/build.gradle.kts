@@ -17,7 +17,7 @@ kotlin {
 		val commonMain by getting {
 			dependencies {
 				api(project(":wgpu4k"))
-				implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0")
+				api(libs.coroutines)
 
 			}
 		}

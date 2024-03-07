@@ -1,5 +1,6 @@
 package io.ygdrasil.wgpu
 
+import com.sun.jna.NativeLong
 import io.ygdrasil.wgpu.internal.jvm.*
 
 actual class Device(internal val handler: WGPUDeviceImpl) : AutoCloseable {
@@ -30,13 +31,40 @@ actual class Device(internal val handler: WGPUDeviceImpl) : AutoCloseable {
 
 }
 
-private fun RenderPipelineDescriptor.convert(): WGPURenderPipelineDescriptor {
+private fun RenderPipelineDescriptor.VertexState.VertexBufferLayout.convert(): WGPUVertexBufferLayout.ByReference {
 	TODO("Not yet implemented")
+}
+
+private fun RenderPipelineDescriptor.convert(): WGPURenderPipelineDescriptor = WGPURenderPipelineDescriptor().also {
+	it.vertex.let { wGPUVertexState ->
+		wGPUVertexState.module = vertex.module.handler
+		wGPUVertexState.entryPoint = vertex.entryPoint
+		wGPUVertexState.bufferCount = (vertex.buffers?.size ?: 0).toLong().let { NativeLong(it) }
+		wGPUVertexState.buffers =
+			vertex.buffers?.map { it.convert() }?.toTypedArray() ?: arrayOf(WGPUVertexBufferLayout.ByReference())
+	}
+	it.layout = layout?.handler
+	it.label = label
+	it.primitive.let { wgpuPrimitiveState ->
+		wgpuPrimitiveState.topology = primitive?.topology?.value
+		wgpuPrimitiveState.stripIndexFormat = primitive?.stripIndexFormat?.value
+		wgpuPrimitiveState.frontFace = primitive?.frontFace?.value
+		wgpuPrimitiveState.cullMode = primitive?.cullMode?.value
+		// TODO find how to map this
+		//wgpuPrimitiveState.unclippedDepth = primitive.unclippedDepth
+	}
+
+//	it.depthStencil = this@convert.depthStencil?.convert()
+//	it.fragment = this@convert.fragment?.convert()
+//	it.multisample = this@convert.multisample?.convert()
 
 }
 
-private fun PipelineLayoutDescriptor.convert(): WGPUPipelineLayoutDescriptor {
-	TODO("Not yet implemented")
+private fun PipelineLayoutDescriptor.convert(): WGPUPipelineLayoutDescriptor = WGPUPipelineLayoutDescriptor().also {
+	it.label = label
+	// TODO find how to map this
+	//it.bindGroupLayoutCount = bindGroupLayouts.size.toLong().let { NativeLong(it) }
+	//it.bindGroupLayouts = bindGroupLayouts.map { it.convert() }.toTypedArray()
 }
 
 private fun CommandEncoderDescriptor.convert(): WGPUCommandEncoderDescriptor = WGPUCommandEncoderDescriptor().also {

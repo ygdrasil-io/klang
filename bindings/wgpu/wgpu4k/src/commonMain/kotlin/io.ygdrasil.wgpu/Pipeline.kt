@@ -28,7 +28,7 @@ data class RenderPipelineDescriptor(
 		var module: ShaderModule,
 		var entryPoint: String? = null,
 		var constants: Map<String, GPUPipelineConstantValue>? = null,
-		var buffers: Array<VertexBufferLayout?>? = null,
+		var buffers: Array<VertexBufferLayout>? = null,
 	) {
 		data class VertexBufferLayout(
 			var arrayStride: GPUSize64,
@@ -50,11 +50,11 @@ data class RenderPipelineDescriptor(
 	data class PrimitiveState(
 		var topology: PrimitiveTopology? = null,
 		/* "point-list" | "line-list" | "line-strip" | "triangle-list" | "triangle-strip" */
-		var stripIndexFormat: String? = null,
+		var stripIndexFormat: IndexFormat? = null,
 		/* "uint16" | "uint32" */
-		var frontFace: String? = null,
+		var frontFace: FrontFace? = null,
 		/* "ccw" | "cw" */
-		var cullMode: String? = null,
+		var cullMode: CullMode? = null,
 		/* "none" | "front" | "back" */
 		var unclippedDepth: Boolean? = null,
 	)

@@ -1,48 +1,82 @@
 import androidx.compose.desktop.ui.tooling.preview.Preview
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
+import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.awt.ComposeWindow
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
+import androidx.compose.ui.window.WindowPosition
 import androidx.compose.ui.window.application
+import androidx.compose.ui.window.rememberWindowState
 import com.sun.jna.Pointer
 import darwin.NSWindow
 import io.ygdrasil.wgpu.RenderingContext
 import io.ygdrasil.wgpu.WGPU
 import io.ygdrasil.wgpu.examples.Application
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import org.rococoa.ID
 import org.rococoa.Rococoa
 
 @Composable
 @Preview
 fun App() {
-	var text by remember { mutableStateOf("Hello, World!") }
 
 	MaterialTheme {
-		Button(onClick = {
-			text = "Hello, Desktop!"
-		}) {
-			Text(text)
+		Column(
+			Modifier
+				.width(300.dp)
+				.fillMaxHeight()
+				.background(MaterialTheme.colors.background)
+		) {
+
+			Card(
+				Modifier
+					.fillMaxWidth()
+					.padding(5.dp)
+			) {
+				Column(
+					Modifier
+						.fillMaxWidth()
+						.background(MaterialTheme.colors.error)
+				) {
+					Text(
+						"Basic Graphics",
+						style = MaterialTheme.typography.h4
+					)
+					Button(
+						onClick = {
+
+						}
+					) {
+						Text(
+							"Titling screen",
+							style = MaterialTheme.typography.subtitle1
+						)
+					}
+				}
+			}
+
 		}
+
 	}
 }
 
 
-val windowState = MutableStateFlow<ComposeWindow?>(null)
+val windowStateFlow = MutableStateFlow<ComposeWindow?>(null)
 
 
 fun main() {
 	val thread = Thread {
 		runBlocking {
-			windowState
+			windowStateFlow
 				.filterNotNull()
 				.collect { window ->
 					runApp(window)
@@ -53,8 +87,17 @@ fun main() {
 
 
 	application {
-		Window(onCloseRequest = ::exitApplication) {
-			windowState.update { window }
+		val windowState = rememberWindowState(
+			width = 775.dp,
+			height = 1500.dp,
+			position = WindowPosition(0.dp, 0.dp)
+		)
+		Window(
+			onCloseRequest = ::exitApplication,
+			//alwaysOnTop = true,
+			state = windowState
+		) {
+			windowStateFlow.update { window }
 
 			App()
 		}
@@ -97,7 +140,7 @@ suspend fun runApp(window: ComposeWindow) {
 		) {
 			override suspend fun run() {
 				renderFrame()
-
+				delay(UPDATE_INTERVAL)
 				applicationScope.launch() {
 					run()
 				}
@@ -110,3 +153,5 @@ suspend fun runApp(window: ComposeWindow) {
 }
 
 
+// ~60 Frame per second
+val UPDATE_INTERVAL = (1000.0 / 60.0).toLong()

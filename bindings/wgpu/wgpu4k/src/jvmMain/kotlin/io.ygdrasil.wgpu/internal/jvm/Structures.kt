@@ -1246,25 +1246,25 @@ public open class WGPUPrimitiveState : Structure {
 	 * mapped from WGPUPrimitiveTopology
 	 */
 	@JvmField
-	public var topology: Int = 0
+	public var topology: Int? = null
 
 	/**
 	 * mapped from WGPUIndexFormat
 	 */
 	@JvmField
-	public var stripIndexFormat: Int = 0
+	public var stripIndexFormat: Int? = null
 
 	/**
 	 * mapped from WGPUFrontFace
 	 */
 	@JvmField
-	public var frontFace: Int = 0
+	public var frontFace: Int? = null
 
 	/**
 	 * mapped from WGPUCullMode
 	 */
 	@JvmField
-	public var cullMode: Int = 0
+	public var cullMode: Int? = null
 
 	public constructor(pointer: Pointer?) : super(pointer)
 
@@ -3533,7 +3533,7 @@ public open class WGPUVertexState : Structure {
 	 * Declared([j8(arrayStride)i4(stepMode)x4j8(attributeCount)a8(attributes):[*:b1]](WGPUVertexBufferLayout)))*
 	 */
 	@JvmField
-	public var buffers: Pointer? = null
+	public var buffers: Array<WGPUVertexBufferLayout.ByReference>? = null
 
 	public constructor(pointer: Pointer?) : super(pointer)
 
@@ -3633,7 +3633,7 @@ public open class WGPURenderPipelineDescriptor : Structure {
 	 * mapped from WGPUPipelineLayout
 	 */
 	@JvmField
-	public var layout: WGPUPipelineLayout = WGPUPipelineLayoutImpl()
+	public var layout: WGPUPipelineLayout? = null
 
 	/**
 	 * mapped from WGPUVertexState

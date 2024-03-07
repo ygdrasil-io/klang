@@ -43,6 +43,7 @@ abstract class Application(
 				render()
 			} catch (e: Throwable) {
 				e.printStackTrace()
+				throw e
 			}
 		}
 	}
@@ -57,6 +58,6 @@ abstract class Application(
 }
 
 val scenes = listOf(
-	BlueTitlingScene(),
 	SimpleTriangleScene(),
+	BlueTitlingScene(),
 )

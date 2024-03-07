@@ -19,7 +19,8 @@ internal fun ShaderModuleDescriptor.convert(): WGPUShaderModuleDescriptor = WGPU
 		}
 	}
 	it.hintCount = compilationHints?.let { NativeLong(it.size.toLong()) } ?: NativeLong(0)
-	it.hints = compilationHints?.map { it.convert() }?.toTypedArray()
+	it.hints =
+		compilationHints?.map { it.convert() }?.toTypedArray() ?: arrayOf(WGPUShaderModuleCompilationHint.ByReference())
 
 }
 

@@ -43,6 +43,7 @@ kotlin {
     sourceSets {
 		val jvmMain by getting {
 			dependencies {
+				implementation(kotlin("stdlib-common"))
 				api(libs.jna)
 				api("$group:sdl2-4k:$version")
 				api("$group:sdl2-binaries:$version")

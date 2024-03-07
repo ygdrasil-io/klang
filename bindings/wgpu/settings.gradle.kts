@@ -5,6 +5,7 @@ pluginManagement {
 		gradlePluginPortal()
 		mavenCentral()
 		mavenLocal()
+		maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
 	}
 }
 plugins {
@@ -12,4 +13,6 @@ plugins {
 }
 
 include("wgpu4k")
-include("examples")
+//include("examples")
+include("examples:common")
+include("examples:compose")

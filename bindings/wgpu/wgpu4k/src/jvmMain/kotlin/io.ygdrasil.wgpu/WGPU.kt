@@ -1,9 +1,7 @@
-package io.ygdrasil.wgpu.examples.io.ygdrasil.wgpu
+package io.ygdrasil.wgpu
 
 import com.sun.jna.Pointer
 import io.ygdrasil.libsdl.SDL_Window
-import io.ygdrasil.wgpu.Adapter
-import io.ygdrasil.wgpu.RenderingContext
 import io.ygdrasil.wgpu.internal.jvm.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
@@ -46,6 +44,15 @@ class WGPU(private val handler: WGPUInstance) : AutoCloseable {
 		return SDL_GetWGPUSurface(handler, window)
 	}
 
+	fun getSurfaceFromMetalLayer(layer: Pointer): WGPUSurface? {
+		val surfaceDescriptor = WGPUDarwinSurfaceDescriptor()
+		surfaceDescriptor.nextInChain.let { metalLayerDescriptor ->
+			metalLayerDescriptor.chain.sType = WGPUSType.WGPUSType_SurfaceDescriptorFromMetalLayer.value
+			metalLayerDescriptor.layer = layer
+		}
+
+		return wgpuInstanceCreateSurface(handler, surfaceDescriptor)
+	}
 
 	companion object {
 		fun createInstance() = wgpuCreateInstance(null)

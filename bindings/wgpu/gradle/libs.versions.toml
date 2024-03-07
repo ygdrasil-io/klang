@@ -4,6 +4,7 @@ klang = "0.0.0"
 jna = "5.13.0"
 kotlin = "1.9.22"
 wgpu = "v0.19.1.1"
+compose = "1.6.0"
 
 
 [libraries]
@@ -14,6 +15,9 @@ jna = { module = "net.java.dev.jna:jna", version.ref = "jna" }
 [plugins]
 klang = { id = "io.ygdrasil.klang-plugin", version.ref = "klang" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+compose = { id = "org.jetbrains.compose", version.ref = "compose" }
+
+
 
 [bundles]
 kotest = ["kotest-core", "kotest-assertions"]

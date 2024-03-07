@@ -3,7 +3,7 @@ package io.ygdrasil.wgpu.examples
 import com.sun.jna.ptr.IntByReference
 import io.ygdrasil.libsdl.*
 import io.ygdrasil.wgpu.RenderingContext
-import io.ygdrasil.wgpu.examples.io.ygdrasil.wgpu.WGPU
+import io.ygdrasil.wgpu.WGPU
 
 suspend fun jvmApplication() = (WGPU.createInstance() ?: error("fail to wgpu instance")).use { instance ->
 

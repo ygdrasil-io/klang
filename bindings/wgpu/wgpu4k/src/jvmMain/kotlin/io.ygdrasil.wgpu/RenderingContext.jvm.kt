@@ -33,6 +33,8 @@ actual class RenderingContext(internal val handler: WGPUSurface) : AutoCloseable
 	fun configure(device: Device, sizeProvider: () -> Pair<Int, Int>) =
 		sizeProvider().let { (width, height) ->
 
+			if (surfaceCapabilities.formats == null) error("call computeSurfaceCapabilities(adapter: Adapter) before configure")
+
 			val config = WGPUSurfaceConfiguration().also {
 				it.device = device.handler ?: error("")
 				it.usage = WGPUTextureUsage.WGPUTextureUsage_RenderAttachment.value

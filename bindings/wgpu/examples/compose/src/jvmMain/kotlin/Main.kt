@@ -7,7 +7,6 @@ import androidx.compose.ui.awt.ComposeWindow
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import com.sun.jna.Pointer
-import darwin.NSView
 import darwin.NSWindow
 import io.ygdrasil.wgpu.RenderingContext
 import io.ygdrasil.wgpu.WGPU
@@ -70,10 +69,6 @@ suspend fun runApp(window: ComposeWindow) {
 	val nswindow = Rococoa.wrap(ID.fromLong(window.windowHandle), NSWindow::class.java)
 	val layer = nswindow.contentView()?.layer() ?: error("fail to get layer")
 
-	val view = NSView.create(nswindow.frame())
-	view.setWantsLayer(true)
-	//val test = NSString("test")
-	//println("test ${test.length}")
 	println("window handler ${window.windowHandle}")
 	println("window hander ${nswindow.description()}")
 	println("window hander ${layer.description()}")

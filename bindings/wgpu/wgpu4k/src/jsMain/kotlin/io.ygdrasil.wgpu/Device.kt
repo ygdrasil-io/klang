@@ -77,9 +77,9 @@ private fun RenderPipelineDescriptor.VertexState.VertexBufferLayout.VertexAttrib
 private fun RenderPipelineDescriptor.PrimitiveState.convert(): GPUPrimitiveState =
 	object : GPUPrimitiveState {
 		override var topology: String? = this@convert.topology?.stringValue ?: undefined
-		override var stripIndexFormat: String? = this@convert.stripIndexFormat ?: undefined
-		override var frontFace: String? = this@convert.frontFace ?: undefined
-		override var cullMode: String? = this@convert.cullMode ?: undefined
+		override var stripIndexFormat: String? = this@convert.stripIndexFormat?.name ?: undefined
+		override var frontFace: String? = this@convert.frontFace?.name ?: undefined
+		override var cullMode: String? = this@convert.cullMode?.name ?: undefined
 		override var unclippedDepth: Boolean? = this@convert.unclippedDepth ?: undefined
 	}
 

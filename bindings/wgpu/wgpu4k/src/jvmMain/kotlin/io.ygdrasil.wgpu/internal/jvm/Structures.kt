@@ -1106,19 +1106,19 @@ public open class WGPUMultisampleState : Structure {
 	 * mapped from uint32_t
 	 */
 	@JvmField
-	public var count: Int = 0
+	public var count: Int? = null
 
 	/**
 	 * mapped from uint32_t
 	 */
 	@JvmField
-	public var mask: Int = 0
+	public var mask: Int? = null
 
 	/**
 	 * mapped from WGPUBool
 	 */
 	@JvmField
-	public var alphaToCoverageEnabled: WGPUBool = 0
+	public var alphaToCoverageEnabled: WGPUBool? = null
 
 	public constructor(pointer: Pointer?) : super(pointer)
 
@@ -3298,7 +3298,7 @@ public open class WGPUColorTargetState : Structure {
 	 * mapped from WGPUColorWriteMaskFlags
 	 */
 	@JvmField
-	public var writeMask: WGPUColorWriteMaskFlags = 0
+	public var writeMask: WGPUColorWriteMaskFlags? = null
 
 	public constructor(pointer: Pointer?) : super(pointer)
 
@@ -3533,7 +3533,7 @@ public open class WGPUVertexState : Structure {
 	 * Declared([j8(arrayStride)i4(stepMode)x4j8(attributeCount)a8(attributes):[*:b1]](WGPUVertexBufferLayout)))*
 	 */
 	@JvmField
-	public var buffers: Array<WGPUVertexBufferLayout.ByReference>? = null
+	public var buffers: Array<WGPUVertexBufferLayout.ByReference>? = arrayOf(WGPUVertexBufferLayout.ByReference())
 
 	public constructor(pointer: Pointer?) : super(pointer)
 
@@ -3596,7 +3596,7 @@ public open class WGPUFragmentState : Structure {
 	 * Declared([a8(nextInChain):[*:b1]i4(format)x4a8(blend):[*:b1]i4(writeMask)x4](WGPUColorTargetState)))*
 	 */
 	@JvmField
-	public var targets: Pointer? = null
+	public var targets: Array<WGPUColorTargetState.ByReference>? = null
 
 	public constructor(pointer: Pointer?) : super(pointer)
 
@@ -3639,13 +3639,13 @@ public open class WGPURenderPipelineDescriptor : Structure {
 	 * mapped from WGPUVertexState
 	 */
 	@JvmField
-	public var vertex: WGPUVertexState = WGPUVertexState()
+	public var vertex: WGPUVertexState? = null
 
 	/**
 	 * mapped from WGPUPrimitiveState
 	 */
 	@JvmField
-	public var primitive: WGPUPrimitiveState = WGPUPrimitiveState()
+	public var primitive: WGPUPrimitiveState? = null
 
 	/**
 	 * mapped from (typedef Optional[const WGPUDepthStencilState] =
@@ -3658,14 +3658,14 @@ public open class WGPURenderPipelineDescriptor : Structure {
 	 * mapped from WGPUMultisampleState
 	 */
 	@JvmField
-	public var multisample: WGPUMultisampleState = WGPUMultisampleState()
+	public var multisample: WGPUMultisampleState? = null
 
 	/**
 	 * mapped from (typedef Optional[const WGPUFragmentState] =
 	 * Declared([a8(nextInChain):[*:b1]a8(module):[*:b1]a8(entryPoint):[*:b1]j8(constantCount)a8(constants):[*:b1]j8(targetCount)a8(targets):[*:b1]](WGPUFragmentState)))*
 	 */
 	@JvmField
-	public var fragment: Pointer? = null
+	public var fragment: WGPUFragmentState.ByReference? = null
 
 	public constructor(pointer: Pointer?) : super(pointer)
 

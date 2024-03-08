@@ -40,6 +40,7 @@ class WGPU(private val handler: WGPUInstance) : AutoCloseable {
 		return adapterState.value?.let { Adapter(it) }
 	}
 
+	// TODO remove
 	fun getSurface(window: SDL_Window): WGPUSurface? {
 		return SDL_GetWGPUSurface(handler, window)
 	}

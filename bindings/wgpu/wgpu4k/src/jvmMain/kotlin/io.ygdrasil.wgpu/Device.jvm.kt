@@ -27,11 +27,21 @@ actual class Device(internal val handler: WGPUDeviceImpl) : AutoCloseable {
 			.let { wgpuDeviceCreateRenderPipeline(handler, it) }
 			?.let(::RenderPipeline) ?: error("fail to create render pipeline")
 
+	actual fun createBuffer(descriptor: BufferDescriptor): Buffer =
+		descriptor.convert()
+			.let { wgpuDeviceCreateBuffer(handler, it) }
+			?.let(::Buffer) ?: error("fail to create render pipeline")
 
 	override fun close() {
 		wgpuDeviceRelease(handler)
 	}
 
+}
+
+private fun BufferDescriptor.convert(): WGPUBufferDescriptor = WGPUBufferDescriptor().also {
+	it.usage = usage
+	it.size = size
+	it.mappedAtCreation = mappedAtCreation?.toInt()
 }
 
 private fun RenderPipelineDescriptor.VertexState.VertexBufferLayout.convert(): WGPUVertexBufferLayout.ByReference {

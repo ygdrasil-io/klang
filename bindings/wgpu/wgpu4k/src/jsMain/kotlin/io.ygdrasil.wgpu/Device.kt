@@ -31,9 +31,20 @@ actual class Device(val handler: GPUDevice) : AutoCloseable {
 		.let(::RenderPipeline)
 
 
+	actual fun createBuffer(descriptor: BufferDescriptor): Buffer = handler
+		.createBuffer(descriptor.convert())
+		.let(::Buffer)
+
+
 	override fun close() {
 		// Nothing on JS
 	}
+}
+
+private fun BufferDescriptor.convert(): GPUBufferDescriptor = object : GPUBufferDescriptor {
+	override var size: GPUSize64 = this@convert.size
+	override var usage: GPUBufferUsageFlags = this@convert.usage
+	override var mappedAtCreation: Boolean? = this@convert.mappedAtCreation
 }
 
 /*** RenderPipelineDescriptor ***/

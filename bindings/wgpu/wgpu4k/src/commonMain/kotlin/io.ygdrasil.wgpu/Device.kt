@@ -12,6 +12,8 @@ expect class Device: AutoCloseable {
 	fun createPipelineLayout(descriptor: PipelineLayoutDescriptor): PipelineLayout
 
 	fun createRenderPipeline(descriptor: RenderPipelineDescriptor): RenderPipeline
+
+	fun createBuffer(descriptor: BufferDescriptor): Buffer
 }
 
 // TODO

@@ -562,7 +562,7 @@ public open class WGPUBufferDescriptor : Structure {
 	 * mapped from WGPUBool
 	 */
 	@JvmField
-	public var mappedAtCreation: WGPUBool = 0
+	public var mappedAtCreation: WGPUBool? = null
 
 	public constructor(pointer: Pointer?) : super(pointer)
 

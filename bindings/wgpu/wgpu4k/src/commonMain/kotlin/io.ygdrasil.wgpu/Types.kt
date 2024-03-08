@@ -2,7 +2,7 @@ package io.ygdrasil.wgpu
 
 typealias GPUBufferDynamicOffset = Number
 
-typealias GPUBufferUsageFlags = Number
+typealias GPUBufferUsageFlags = Int
 
 typealias GPUColorWriteFlags = Number
 

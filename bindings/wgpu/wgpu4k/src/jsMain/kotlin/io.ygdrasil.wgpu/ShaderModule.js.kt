@@ -1,10 +1,15 @@
+@file:OptIn(ExperimentalStdlibApi::class)
+
 package io.ygdrasil.wgpu
 
 import io.ygdrasil.wgpu.internal.js.GPUShaderModule
 import io.ygdrasil.wgpu.internal.js.GPUShaderModuleCompilationHint
 import io.ygdrasil.wgpu.internal.js.GPUShaderModuleDescriptor
 
-actual class ShaderModule(internal val handler: GPUShaderModule) {
+actual class ShaderModule(internal val handler: GPUShaderModule) : AutoCloseable {
+	override fun close() {
+		// Nothing to do on JS
+	}
 }
 
 fun ShaderModuleDescriptor.convert(): GPUShaderModuleDescriptor = object : GPUShaderModuleDescriptor {

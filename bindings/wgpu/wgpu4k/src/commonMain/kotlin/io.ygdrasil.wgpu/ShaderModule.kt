@@ -1,6 +1,8 @@
+@file:OptIn(ExperimentalStdlibApi::class)
+
 package io.ygdrasil.wgpu
 
-expect class ShaderModule {
+expect class ShaderModule : AutoCloseable {
 }
 
 data class ShaderModuleDescriptor(

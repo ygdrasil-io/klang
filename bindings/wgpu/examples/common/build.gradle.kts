@@ -18,6 +18,7 @@ kotlin {
 			dependencies {
 				api(project(":wgpu4k"))
 				api(libs.coroutines)
+				implementation("com.soywiz.korge:korlibs-math-core:5.4.0")
 
 			}
 		}

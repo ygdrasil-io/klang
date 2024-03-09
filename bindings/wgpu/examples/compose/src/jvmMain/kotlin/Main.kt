@@ -120,7 +120,9 @@ suspend fun runApp(window: ComposeWindow) {
 
 
 		val surface = instance.getSurfaceFromMetalLayer(Pointer(layer.id().toLong())) ?: error("fail to get surface")
-		val renderingContext = RenderingContext(surface)
+		val renderingContext = RenderingContext(surface) {
+			window.width to window.height
+		}
 
 		val adapter = instance.requestAdapter(renderingContext)
 			?: error("fail to get adapter")
@@ -129,9 +131,7 @@ suspend fun runApp(window: ComposeWindow) {
 			?: error("fail to get device")
 
 		renderingContext.computeSurfaceCapabilities(adapter)
-		renderingContext.configure(device) {
-			window.size.width to window.size.height
-		}
+		renderingContext.configure(device)
 
 		val application = object : Application(
 			renderingContext,

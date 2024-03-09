@@ -35,10 +35,26 @@ actual class Device(val handler: GPUDevice) : AutoCloseable {
 		.createBuffer(descriptor.convert())
 		.let(::Buffer)
 
+	actual fun createTexture(descriptor: TextureDescriptor): Texture = handler
+		.createTexture(descriptor.convert())
+		.let(::Texture)
+
+	actual fun createBindGroup(descriptor: BindGroupDescriptor): BindGroup = handler
+		.createBindGroup(descriptor.convert())
+		.let(::BindGroup)
+
 
 	override fun close() {
 		// Nothing on JS
 	}
+}
+
+private fun BindGroupDescriptor.convert(): GPUBindGroupDescriptor {
+	TODO("Not yet implemented")
+}
+
+private fun TextureDescriptor.convert(): GPUTextureDescriptor {
+	TODO("Not yet implemented")
 }
 
 private fun BufferDescriptor.convert(): GPUBufferDescriptor = object : GPUBufferDescriptor {

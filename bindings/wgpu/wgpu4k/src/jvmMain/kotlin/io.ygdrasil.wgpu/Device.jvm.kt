@@ -30,12 +30,30 @@ actual class Device(internal val handler: WGPUDeviceImpl) : AutoCloseable {
 	actual fun createBuffer(descriptor: BufferDescriptor): Buffer =
 		descriptor.convert()
 			.let { wgpuDeviceCreateBuffer(handler, it) }
-			?.let(::Buffer) ?: error("fail to create render pipeline")
+			?.let(::Buffer) ?: error("fail to create buffer")
+
+	actual fun createBindGroup(descriptor: BindGroupDescriptor): BindGroup =
+		descriptor.convert()
+			.let { wgpuDeviceCreateBindGroup(handler, it) }
+			?.let(::BindGroup) ?: error("fail to create bind group")
+
+	actual fun createTexture(descriptor: TextureDescriptor): Texture =
+		descriptor.convert()
+			.let { wgpuDeviceCreateTexture(handler, it) }
+			?.let(::Texture) ?: error("fail to create texture")
 
 	override fun close() {
 		wgpuDeviceRelease(handler)
 	}
 
+}
+
+private fun TextureDescriptor.convert(): WGPUTextureDescriptor {
+	TODO()
+}
+
+private fun BindGroupDescriptor.convert(): WGPUBindGroupDescriptor = WGPUBindGroupDescriptor().also {
+	TODO()
 }
 
 private fun BufferDescriptor.convert(): WGPUBufferDescriptor = WGPUBufferDescriptor().also {

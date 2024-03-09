@@ -14,6 +14,10 @@ expect class Device: AutoCloseable {
 	fun createRenderPipeline(descriptor: RenderPipelineDescriptor): RenderPipeline
 
 	fun createBuffer(descriptor: BufferDescriptor): Buffer
+
+	fun createTexture(descriptor: TextureDescriptor): Texture
+
+	fun createBindGroup(descriptor: BindGroupDescriptor): BindGroup
 }
 
 // TODO

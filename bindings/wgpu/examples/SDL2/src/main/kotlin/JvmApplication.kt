@@ -14,7 +14,12 @@ suspend fun jvmApplication() = (WGPU.createInstance() ?: error("fail to wgpu ins
 	) ?: error("fail to create window ${SDL_GetError()}")
 
 	val surface = instance.getSurface(window) ?: error("fail to create surface")
-	val renderingContext = RenderingContext(surface)
+	val renderingContext = RenderingContext(surface) {
+		val width = IntByReference()
+		val height = IntByReference()
+		SDL_GetWindowSize(window, width.pointer, height.pointer)
+		width.value to height.value
+	}
 
 	val adapter = instance.requestAdapter(renderingContext)
 		?: error("fail to get adapter")
@@ -23,12 +28,7 @@ suspend fun jvmApplication() = (WGPU.createInstance() ?: error("fail to wgpu ins
 		?: error("fail to get device")
 
 	renderingContext.computeSurfaceCapabilities(adapter)
-	renderingContext.configure(device) {
-		val width = IntByReference()
-		val height = IntByReference()
-		SDL_GetWindowSize(window, width.pointer, height.pointer)
-		width.value to height.value
-	}
+	renderingContext.configure(device)
 
 	val application = object : Application(
 		renderingContext,

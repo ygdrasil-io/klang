@@ -1,8 +1,12 @@
+@file:OptIn(ExperimentalStdlibApi::class)
+
 package io.ygdrasil.wgpu
 
 expect class PipelineLayout
 
-expect class RenderPipeline
+expect class RenderPipeline : AutoCloseable {
+	fun getBindGroupLayout(index: Int): PipelineLayoutDescriptor.BindGroupLayout
+}
 
 data class PipelineLayoutDescriptor(
 	var bindGroupLayouts: Array<BindGroupLayout> = arrayOf(),

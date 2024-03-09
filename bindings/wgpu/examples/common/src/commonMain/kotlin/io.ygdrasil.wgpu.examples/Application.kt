@@ -15,7 +15,7 @@ abstract class Application(
 	private lateinit var currentScene: Scene
 
 	init {
-		changeScene(scenes.first())
+		changeScene(availableScenes.first())
 	}
 
 	abstract class Scene {
@@ -57,7 +57,7 @@ abstract class Application(
 	abstract suspend fun run()
 }
 
-val scenes = listOf(
+val availableScenes = listOf(
 	SimpleTriangleScene(),
 	BlueTitlingScene(),
 )

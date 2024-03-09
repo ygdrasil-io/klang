@@ -9,6 +9,11 @@ import org.w3c.dom.HTMLCanvasElement
 
 actual class RenderingContext(private val handler: GPUCanvasContext) : AutoCloseable {
 
+	actual val width: Int
+		get() = handler.canvas.width
+	actual val height: Int
+		get() = handler.canvas.height
+
 	actual val textureFormat: TextureFormat by lazy {
 		navigator.gpu
 			?.getPreferredCanvasFormat()

@@ -14,6 +14,8 @@ actual class RenderPassEncoder(private val handler: GPURenderPassEncoder) : Auto
 		handler.setPipeline(renderPipeline.handler)
 	}
 
+	actual fun draw(vertexCount: GPUSize32) = draw(vertexCount, 0, 0, 0)
+
 	actual fun draw(
 		vertexCount: GPUSize32,
 		instanceCount: GPUSize32,
@@ -21,6 +23,14 @@ actual class RenderPassEncoder(private val handler: GPURenderPassEncoder) : Auto
 		firstInstance: GPUSize32
 	) {
 		handler.draw(vertexCount, instanceCount, firstVertex, firstInstance)
+	}
+
+	actual fun setBindGroup(index: Int, bindGroup: BindGroup) {
+		handler.setBindGroup(index, bindGroup.handler)
+	}
+
+	actual fun setVertexBuffer(slot: Int, buffer: Buffer) {
+		handler.setVertexBuffer(slot, buffer.handler)
 	}
 
 	override fun close() {

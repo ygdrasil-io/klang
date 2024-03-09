@@ -6,11 +6,20 @@ import io.ygdrasil.wgpu.*
 import io.ygdrasil.wgpu.examples.Application
 import io.ygdrasil.wgpu.examples.AutoClosableContext
 import io.ygdrasil.wgpu.examples.autoClosableContext
-
+import korlibs.math.geom.Angle
+import korlibs.math.geom.Matrix4
+import kotlin.math.PI
 
 class RotatingCubeScene : Application.Scene(), AutoCloseable {
 
 	lateinit var renderPipeline: RenderPipeline
+	lateinit var modelViewProjectionMatrix: Matrix4
+	lateinit var projectionMatrix: Matrix4
+	lateinit var renderPassDescriptor: RenderPassDescriptor
+	lateinit var uniformBuffer: Buffer
+	lateinit var uniformBindGroup: BindGroup
+	lateinit var verticesBuffer: Buffer
+
 	val autoClosableContext = AutoClosableContext()
 
 	override fun Application.initialiaze() = with(autoClosableContext) {
@@ -24,7 +33,7 @@ class RotatingCubeScene : Application.Scene(), AutoCloseable {
 		).bind()
 
 		// Create a vertex buffer from the cube data.
-		val verticesBuffer = device.createBuffer(
+		verticesBuffer = device.createBuffer(
 			BufferDescriptor(
 				size = (cubeVertexArray.size * Float.SIZE_BYTES).toLong(),
 				usage = BufferUsage.vertex.value,
@@ -96,14 +105,14 @@ class RotatingCubeScene : Application.Scene(), AutoCloseable {
 		).bind()
 
 		val uniformBufferSize = 4L * 16L; // 4x4 matrix
-		val uniformBuffer = device.createBuffer(
+		uniformBuffer = device.createBuffer(
 			BufferDescriptor(
 				size = uniformBufferSize,
 				usage = BufferUsage.uniform or BufferUsage.copydst
 			)
 		).bind()
 
-		val uniformBindGroup = device.createBindGroup(
+		uniformBindGroup = device.createBindGroup(
 			BindGroupDescriptor(
 				layout = renderPipeline.getBindGroupLayout(0),
 				entries = arrayOf(
@@ -115,7 +124,7 @@ class RotatingCubeScene : Application.Scene(), AutoCloseable {
 			)
 		)
 
-		val renderPassDescriptor = RenderPassDescriptor(
+		renderPassDescriptor = RenderPassDescriptor(
 			colorAttachments = arrayOf(
 				RenderPassDescriptor.ColorAttachment(
 					view = dummyTexture.createView().bind(), // Assigned later
@@ -133,32 +142,38 @@ class RotatingCubeScene : Application.Scene(), AutoCloseable {
 		)
 
 
+		val aspect = renderingContext.width / renderingContext.height.toDouble()
+		val fox = Angle.fromRadians((2 * PI) / 5)
+		projectionMatrix = Matrix4.perspective(fox, aspect, 1.0, 100.0)
 	}
 
 	override fun Application.render() = autoClosableContext {
 
+		val transformationMatrix = getTransformationMatrix()
+		device.queue.writeBuffer(
+			uniformBuffer,
+			0,
+			transformationMatrix,
+			0,
+			transformationMatrix.size.toLong()
+		)
+
+		renderPassDescriptor.colorAttachments[0].view = renderingContext
+			.getCurrentTexture()
+			.bind()
+			.createView()
 
 		// Clear the canvas with a render pass
 		val encoder = device.createCommandEncoder()
 			.bind()
 
-		val texture = renderingContext.getCurrentTexture()
+		val renderPassEncoder = encoder
+			.beginRenderPass(renderPassDescriptor)
 			.bind()
-		val view = texture.createView()
-			.bind()
-
-		val renderPassEncoder = encoder.beginRenderPass(
-			RenderPassDescriptor(
-				colorAttachments = arrayOf(
-					RenderPassDescriptor.ColorAttachment(
-						view = view,
-						loadOp = "clear",
-						clearValue = arrayOf(0.5, 0.5, 0.5, 1.0),
-						storeOp = "store"
-					)
-				)
-			)
-		).bind()
+		renderPassEncoder.setPipeline(renderPipeline)
+		renderPassEncoder.setBindGroup(0, uniformBindGroup)
+		renderPassEncoder.setVertexBuffer(0, verticesBuffer)
+		renderPassEncoder.draw(cubeVertexCount)
 		renderPassEncoder.end()
 
 		val commandBuffer = encoder.finish()
@@ -174,6 +189,21 @@ class RotatingCubeScene : Application.Scene(), AutoCloseable {
 		autoClosableContext.close()
 	}
 
+	fun Application.getTransformationMatrix(): FloatArray {
+		var viewMatrix = Matrix4.IDENTITY
+		viewMatrix = viewMatrix.translated(0, 0, -4)
+
+		viewMatrix = viewMatrix.rotated(
+			Angle.fromRadians(Angle.fromDegrees(frame).sine),
+			Angle.fromRadians(Angle.fromDegrees(frame).cosine),
+			Angle.fromRadians(0)
+		)
+
+		modelViewProjectionMatrix = projectionMatrix * viewMatrix
+
+
+		return modelViewProjectionMatrix.copyToColumns()
+	}
 }
 
 val cubeVertexSize = 4L * 10L // Byte size of one cube vertex.

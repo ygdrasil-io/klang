@@ -1244,7 +1244,7 @@ public interface WGPULibrary : Library {
 		slot: Int,
 		buffer: WGPUBuffer?,
 		offset: Long,
-		size: Long,
+		size: Long?,
 	)
 
 	/**
@@ -3054,7 +3054,7 @@ public fun wgpuRenderPassEncoderSetVertexBuffer(
 	slot: Int,
 	buffer: WGPUBuffer?,
 	offset: Long,
-	size: Long,
+	size: Long?,
 ): Unit = libWGPULibrary.wgpuRenderPassEncoderSetVertexBuffer(
 	renderPassEncoder, slot, buffer,
 	offset, size

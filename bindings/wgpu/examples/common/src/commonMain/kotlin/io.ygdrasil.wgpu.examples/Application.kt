@@ -13,6 +13,8 @@ abstract class Application(
 ) : AutoCloseable {
 
 	private lateinit var currentScene: Scene
+	var frame = 0
+		private set
 
 	init {
 		changeScene(availableScenes.first())
@@ -38,6 +40,7 @@ abstract class Application(
 	}
 
 	fun renderFrame() {
+		frame += 1
 		with(currentScene) {
 			try {
 				render()

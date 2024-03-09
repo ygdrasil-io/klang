@@ -11,6 +11,8 @@ actual class RenderPassEncoder(private val handler: WGPURenderPassEncoder) : Aut
 		wgpuRenderPassEncoderSetPipeline(handler, renderPipeline.handler)
 	}
 
+	actual fun draw(vertexCount: GPUSize32) = draw(vertexCount, 0, 0, 0)
+
 	actual fun draw(
 		vertexCount: GPUSize32,
 		instanceCount: GPUSize32,
@@ -18,6 +20,26 @@ actual class RenderPassEncoder(private val handler: WGPURenderPassEncoder) : Aut
 		firstInstance: GPUSize32
 	) {
 		wgpuRenderPassEncoderDraw(handler, vertexCount, instanceCount, firstVertex, firstInstance)
+	}
+
+	actual fun setBindGroup(index: Int, bindGroup: BindGroup) {
+		wgpuRenderPassEncoderSetBindGroup(
+			handler,
+			index,
+			bindGroup.handler,
+			0L.toNativeLong(),
+			null
+		)
+	}
+
+	actual fun setVertexBuffer(slot: Int, buffer: Buffer) {
+		wgpuRenderPassEncoderSetVertexBuffer(
+			handler,
+			slot,
+			buffer.handler,
+			0L,
+			null
+		)
 	}
 
 	override fun close() {

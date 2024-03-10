@@ -8,6 +8,7 @@ import io.ygdrasil.wgpu.examples.AutoClosableContext
 import io.ygdrasil.wgpu.examples.autoClosableContext
 import korlibs.math.geom.Angle
 import korlibs.math.geom.Matrix4
+import korlibs.memory.setArrayLE
 import kotlin.math.PI
 
 class RotatingCubeScene : Application.Scene(), AutoCloseable {
@@ -27,7 +28,7 @@ class RotatingCubeScene : Application.Scene(), AutoCloseable {
 		val dummyTexture = device.createTexture(
 			TextureDescriptor(
 				size = 1 to 1,
-				format = TextureFormat.undefined,
+				format = TextureFormat.depth24plus,
 				usage = TextureUsage.renderattachment.value,
 			)
 		).bind()
@@ -40,9 +41,8 @@ class RotatingCubeScene : Application.Scene(), AutoCloseable {
 				mappedAtCreation = true
 			)
 		)
-		verticesBuffer.getMappedRange(0L, 0L)
-		//FloatArray(verticesBuffer.getMappedRange())
-		//	.set(cubeVertexArray)
+		val test = verticesBuffer.getMappedRange()
+		test.setArrayLE(0, cubeVertexArray)
 
 		verticesBuffer.unmap()
 
@@ -255,7 +255,7 @@ val cubeVertexArray = arrayOf(
 	1, 1, -1, 1, 1, 1, 0, 1, 0, 0,
 	1, -1, -1, 1, 1, 0, 0, 1, 0, 1,
 	-1, 1, -1, 1, 0, 1, 0, 1, 1, 0,
-).map { it.toFloat() }.toTypedArray()
+).let { FloatArray(it.size) { index -> it[index].toFloat() } }
 
 
 private const val vertex = """

@@ -5,6 +5,7 @@ package io.ygdrasil.wgpu.examples
 import io.ygdrasil.wgpu.Adapter
 import io.ygdrasil.wgpu.Device
 import io.ygdrasil.wgpu.RenderingContext
+import io.ygdrasil.wgpu.examples.scenes.basic.RotatingCubeScene
 
 abstract class Application(
 	val renderingContext: RenderingContext,
@@ -13,6 +14,8 @@ abstract class Application(
 ) : AutoCloseable {
 
 	private lateinit var currentScene: Scene
+	private var onError = false
+
 	var frame = 0
 		private set
 
@@ -34,18 +37,22 @@ abstract class Application(
 				initialiaze()
 			} catch (e: Throwable) {
 				e.printStackTrace()
+				onError = true
+				throw e
 			}
 		}
 		currentScene = nextScene
 	}
 
 	fun renderFrame() {
+		if (onError) return
 		frame += 1
 		with(currentScene) {
 			try {
 				render()
 			} catch (e: Throwable) {
 				e.printStackTrace()
+				onError = true
 				throw e
 			}
 		}
@@ -61,6 +68,7 @@ abstract class Application(
 }
 
 val availableScenes = listOf(
+	RotatingCubeScene(),
 	SimpleTriangleScene(),
 	BlueTitlingScene(),
 )

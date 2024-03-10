@@ -7,8 +7,8 @@ import io.ygdrasil.wgpu.internal.jvm.wgpuBufferUnmap
 
 actual class Buffer(protected val handler: WGPUBuffer) : AutoCloseable {
 
-	actual fun getMappedRange(offset: GPUSize64, size: GPUSize64): Int {
-		wgpuBufferGetMappedRange(handler, offset.toNativeLong(), size.toNativeLong())
+	actual fun getMappedRange(offset: GPUSize64?, size: GPUSize64?): Int {
+		wgpuBufferGetMappedRange(handler, offset?.toNativeLong(), size?.toNativeLong())
 		TODO()
 	}
 

@@ -131,8 +131,8 @@ public interface WGPULibrary : Library {
 	 */
 	public fun wgpuBufferGetMappedRange(
 		buffer: WGPUBuffer?,
-		offset: NativeLong,
-		size: NativeLong,
+		offset: NativeLong?,
+		size: NativeLong?,
 	): Pointer?
 
 	/**
@@ -1061,9 +1061,9 @@ public interface WGPULibrary : Library {
 	public fun wgpuRenderPassEncoderDraw(
 		renderPassEncoder: WGPURenderPassEncoder?,
 		vertexCount: Int,
-		instanceCount: Int,
-		firstVertex: Int,
-		firstInstance: Int,
+		instanceCount: Int?,
+		firstVertex: Int?,
+		firstInstance: Int?,
 	)
 
 	/**
@@ -1791,8 +1791,8 @@ public fun wgpuBufferGetMapState(buffer: WGPUBuffer?): Int =
  */
 public fun wgpuBufferGetMappedRange(
 	buffer: WGPUBuffer?,
-	offset: NativeLong,
-	size: NativeLong,
+	offset: NativeLong?,
+	size: NativeLong?,
 ): Pointer? = libWGPULibrary.wgpuBufferGetMappedRange(buffer, offset, size)
 
 /**
@@ -2844,9 +2844,9 @@ public fun wgpuRenderPassEncoderBeginOcclusionQuery(
 public fun wgpuRenderPassEncoderDraw(
 	renderPassEncoder: WGPURenderPassEncoder?,
 	vertexCount: Int,
-	instanceCount: Int,
-	firstVertex: Int,
-	firstInstance: Int,
+	instanceCount: Int?,
+	firstVertex: Int?,
+	firstInstance: Int?,
 ): Unit = libWGPULibrary.wgpuRenderPassEncoderDraw(
 	renderPassEncoder, vertexCount, instanceCount,
 	firstVertex, firstInstance

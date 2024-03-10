@@ -6,7 +6,7 @@ expect class BindGroup : AutoCloseable {
 }
 
 data class BindGroupDescriptor(
-	var layout: PipelineLayoutDescriptor.BindGroupLayout,
+	var layout: BindGroupLayout,
 	var entries: Array<BindGroupEntry>,
 	var label: String? = null
 ) {

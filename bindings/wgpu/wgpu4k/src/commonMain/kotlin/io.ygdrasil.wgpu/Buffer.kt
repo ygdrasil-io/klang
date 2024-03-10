@@ -3,7 +3,7 @@
 package io.ygdrasil.wgpu
 
 expect class Buffer : AutoCloseable {
-	fun getMappedRange(offset: GPUSize64, size: GPUSize64): Int
+	fun getMappedRange(offset: GPUSize64? = null, size: GPUSize64? = null): ByteArray
 	fun unmap()
 }
 

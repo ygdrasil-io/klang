@@ -39,9 +39,10 @@ actual class Device(val handler: GPUDevice) : AutoCloseable {
 		.createTexture(descriptor.convert())
 		.let(::Texture)
 
-	actual fun createBindGroup(descriptor: BindGroupDescriptor): BindGroup = handler
-		.createBindGroup(descriptor.convert())
-		.let(::BindGroup)
+	actual fun createBindGroup(descriptor: BindGroupDescriptor): BindGroup =
+		descriptor.convert()
+			.let { handler.createBindGroup(it) }
+			.let(::BindGroup)
 
 
 	override fun close() {
@@ -49,12 +50,28 @@ actual class Device(val handler: GPUDevice) : AutoCloseable {
 	}
 }
 
-private fun BindGroupDescriptor.convert(): GPUBindGroupDescriptor {
-	TODO("Not yet implemented")
+private fun BindGroupDescriptor.convert(): GPUBindGroupDescriptor = object : GPUBindGroupDescriptor {
+	override var label: String? = this@convert.label ?: undefined
+	override var layout: GPUBindGroupLayout = this@convert.layout.handler
+	override var entries: Array<GPUBindGroupEntry> = this@convert.entries.map { it.convert() }.toTypedArray()
 }
 
-private fun TextureDescriptor.convert(): GPUTextureDescriptor {
-	TODO("Not yet implemented")
+private fun BindGroupDescriptor.BindGroupEntry.convert(): GPUBindGroupEntry = object : GPUBindGroupEntry {
+	override var binding: GPUIndex32 = this@convert.binding
+	override var resource: dynamic = object : GPUBufferBinding {
+		override var buffer: GPUBuffer = this@convert.buffer?.handler ?: error("only buffer supported yet")
+	}
+}
+
+private fun TextureDescriptor.convert(): GPUTextureDescriptor = object : GPUTextureDescriptor {
+	override var label: String? = this@convert.label ?: undefined
+	override var size: dynamic = this@convert.size.toList().toTypedArray()
+	override var mipLevelCount: GPUIntegerCoordinate? = this@convert.mipLevelCount ?: undefined
+	override var sampleCount: GPUSize32? = this@convert.sampleCount ?: undefined
+	override var dimension: String? = this@convert.dimension ?: undefined
+	override var format: String = this@convert.format.name
+	override var usage: GPUTextureUsageFlags = this@convert.usage
+	override var viewFormats: Array<String?>? = this@convert.viewFormats ?: undefined
 }
 
 private fun BufferDescriptor.convert(): GPUBufferDescriptor = object : GPUBufferDescriptor {
@@ -179,7 +196,7 @@ private fun PipelineLayoutDescriptor.convert(): GPUPipelineLayoutDescriptor = ob
 private fun PipelineLayoutDescriptor.BindGroupLayout.convert(): GPUBindGroupLayout =
 	object : GPUBindGroupLayout {
 		override var label: String = this@convert.label
-		override var __brand: String = this@convert.__brand
+		override var __brand: String = this@convert.brand
 	}
 
 private fun CommandEncoderDescriptor.convert(): GPUCommandEncoderDescriptor = object : GPUCommandEncoderDescriptor {

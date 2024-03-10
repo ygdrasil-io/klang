@@ -5,7 +5,7 @@ package io.ygdrasil.wgpu
 expect class PipelineLayout
 
 expect class RenderPipeline : AutoCloseable {
-	fun getBindGroupLayout(index: Int): PipelineLayoutDescriptor.BindGroupLayout
+	fun getBindGroupLayout(index: Int): BindGroupLayout
 }
 
 data class PipelineLayoutDescriptor(
@@ -14,7 +14,7 @@ data class PipelineLayoutDescriptor(
 ) {
 	data class BindGroupLayout(
 		var label: String,
-		var __brand: String
+		var brand: String
 	)
 }
 

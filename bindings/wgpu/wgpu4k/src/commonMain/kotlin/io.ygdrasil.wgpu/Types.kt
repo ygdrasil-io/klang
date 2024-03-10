@@ -12,9 +12,9 @@ typealias GPUFlagsConstant = Number
 
 typealias GPUIndex32 = Int
 
-typealias GPUIntegerCoordinate = Number
+typealias GPUIntegerCoordinate = Int
 
-typealias GPUIntegerCoordinateOut = Number
+typealias GPUIntegerCoordinateOut = Int
 
 typealias GPUMapModeFlags = Number
 

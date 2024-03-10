@@ -11,13 +11,11 @@ actual class RenderPassEncoder(private val handler: WGPURenderPassEncoder) : Aut
 		wgpuRenderPassEncoderSetPipeline(handler, renderPipeline.handler)
 	}
 
-	actual fun draw(vertexCount: GPUSize32) = draw(vertexCount, 0, 0, 0)
-
 	actual fun draw(
 		vertexCount: GPUSize32,
-		instanceCount: GPUSize32,
-		firstVertex: GPUSize32,
-		firstInstance: GPUSize32
+		instanceCount: GPUSize32?,
+		firstVertex: GPUSize32?,
+		firstInstance: GPUSize32?
 	) {
 		wgpuRenderPassEncoderDraw(handler, vertexCount, instanceCount, firstVertex, firstInstance)
 	}

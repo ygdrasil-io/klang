@@ -2,7 +2,6 @@
 
 package io.ygdrasil.wgpu
 
-import io.ygdrasil.wgpu.internal.js.GPUBindGroupLayout
 import io.ygdrasil.wgpu.internal.js.GPUPipelineLayout
 import io.ygdrasil.wgpu.internal.js.GPURenderPipeline
 
@@ -11,15 +10,11 @@ actual class RenderPipeline(internal var handler: GPURenderPipeline) : AutoClose
 
 	actual fun getBindGroupLayout(index: Int) = handler
 		.getBindGroupLayout(index)
-		.convert()
+		.let { BindGroupLayout(it) }
 
 
 	override fun close() {
 		// Nothing to do on js
 	}
 
-}
-
-private fun GPUBindGroupLayout.convert(): PipelineLayoutDescriptor.BindGroupLayout {
-	TODO("Not yet implemented")
 }

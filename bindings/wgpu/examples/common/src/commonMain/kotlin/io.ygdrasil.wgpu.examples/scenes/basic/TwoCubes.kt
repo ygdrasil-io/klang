@@ -6,19 +6,22 @@ import io.ygdrasil.wgpu.*
 import io.ygdrasil.wgpu.examples.Application
 import io.ygdrasil.wgpu.examples.AutoClosableContext
 import io.ygdrasil.wgpu.examples.autoClosableContext
+import io.ygdrasil.wgpu.examples.scenes.basic.RotatingCubeScene.Companion.cubeVertexCount
 import korlibs.math.geom.Angle
 import korlibs.math.geom.Matrix4
-import kotlin.js.JsExport
 import kotlin.math.PI
 
-@JsExport
-class RotatingCubeScene : Application.Scene(), AutoCloseable {
+class TwoCubesScene : Application.Scene(), AutoCloseable {
+
+	val offset = 256L; // uniformBindGroup offset must be 256-byte aligned
 
 	lateinit var renderPipeline: RenderPipeline
-	lateinit var projectionMatrix: Matrix4
+	lateinit var projectionMatrix1: Matrix4
+	lateinit var projectionMatrix2: Matrix4
 	lateinit var renderPassDescriptor: RenderPassDescriptor
 	lateinit var uniformBuffer: Buffer
-	lateinit var uniformBindGroup: BindGroup
+	lateinit var uniformBindGroup1: BindGroup
+	lateinit var uniformBindGroup2: BindGroup
 	lateinit var verticesBuffer: Buffer
 
 	val autoClosableContext = AutoClosableContext()
@@ -36,14 +39,14 @@ class RotatingCubeScene : Application.Scene(), AutoCloseable {
 		// Create a vertex buffer from the cube data.
 		verticesBuffer = device.createBuffer(
 			BufferDescriptor(
-				size = (cubeVertexArray.size * Float.SIZE_BYTES).toLong(),
+				size = (RotatingCubeScene.cubeVertexArray.size * Float.SIZE_BYTES).toLong(),
 				usage = BufferUsage.vertex.value,
 				mappedAtCreation = true
 			)
 		)
 
 		// Util method to use getMappedRange
-		verticesBuffer.map(cubeVertexArray)
+		verticesBuffer.map(RotatingCubeScene.cubeVertexArray)
 		verticesBuffer.unmap()
 
 		renderPipeline = device.createRenderPipeline(
@@ -51,21 +54,21 @@ class RotatingCubeScene : Application.Scene(), AutoCloseable {
 				vertex = RenderPipelineDescriptor.VertexState(
 					module = device.createShaderModule(
 						ShaderModuleDescriptor(
-							code = vertex
+							code = RotatingCubeScene.vertex
 						)
 					).bind(), // bind to autoClosableContext to release it later
 					buffers = arrayOf(
 						RenderPipelineDescriptor.VertexState.VertexBufferLayout(
-							arrayStride = cubeVertexSize,
+							arrayStride = RotatingCubeScene.cubeVertexSize,
 							attributes = arrayOf(
 								RenderPipelineDescriptor.VertexState.VertexBufferLayout.VertexAttribute(
 									shaderLocation = 0,
-									offset = cubePositionOffset,
+									offset = RotatingCubeScene.cubePositionOffset,
 									format = "float32x4"
 								),
 								RenderPipelineDescriptor.VertexState.VertexBufferLayout.VertexAttribute(
 									shaderLocation = 1,
-									offset = cubeUVOffset,
+									offset = RotatingCubeScene.cubeUVOffset,
 									format = "float32x2"
 								)
 							)
@@ -75,7 +78,7 @@ class RotatingCubeScene : Application.Scene(), AutoCloseable {
 				fragment = RenderPipelineDescriptor.FragmentState(
 					module = device.createShaderModule(
 						ShaderModuleDescriptor(
-							code = fragment
+							code = RotatingCubeScene.fragment
 						)
 					).bind(), // bind to autoClosableContext to release it later
 					targets = arrayOf(
@@ -104,7 +107,8 @@ class RotatingCubeScene : Application.Scene(), AutoCloseable {
 			)
 		).bind()
 
-		val uniformBufferSize = 4L * 16L; // 4x4 matrix
+		val matrixSize = 4L * 16L; // 4x4 matrix
+		val uniformBufferSize = offset + matrixSize;
 		uniformBuffer = device.createBuffer(
 			BufferDescriptor(
 				size = uniformBufferSize,
@@ -112,7 +116,7 @@ class RotatingCubeScene : Application.Scene(), AutoCloseable {
 			)
 		).bind()
 
-		uniformBindGroup = device.createBindGroup(
+		uniformBindGroup1 = device.createBindGroup(
 			BindGroupDescriptor(
 				layout = renderPipeline.getBindGroupLayout(0),
 				entries = arrayOf(
@@ -120,6 +124,21 @@ class RotatingCubeScene : Application.Scene(), AutoCloseable {
 						binding = 0,
 						resource = BindGroupDescriptor.BindGroupEntry.BufferBinding(
 							buffer = uniformBuffer
+						)
+					)
+				)
+			)
+		)
+
+		uniformBindGroup2 = device.createBindGroup(
+			BindGroupDescriptor(
+				layout = renderPipeline.getBindGroupLayout(0),
+				entries = arrayOf(
+					BindGroupDescriptor.BindGroupEntry(
+						binding = 0,
+						resource = BindGroupDescriptor.BindGroupEntry.BufferBinding(
+							buffer = uniformBuffer,
+							offset = offset
 						)
 					)
 				)
@@ -146,21 +165,35 @@ class RotatingCubeScene : Application.Scene(), AutoCloseable {
 
 		val aspect = renderingContext.width / renderingContext.height.toDouble()
 		val fox = Angle.fromRadians((2 * PI) / 5)
-		projectionMatrix = Matrix4.perspective(fox, aspect, 1.0, 100.0)
+		projectionMatrix1 = Matrix4.perspective(fox, aspect, 1.0, 100.0)
+			.translated(-2.0, 0.0, -7.0)
+		projectionMatrix2 = Matrix4.perspective(fox, aspect, 1.0, 100.0)
+			.translated(2.0, 0.0, -7.0)
 	}
 
 	override fun Application.render() = autoClosableContext {
 
-		val transformationMatrix = getTransformationMatrix(
+		val transformationMatrix1 = RotatingCubeScene.getTransformationMatrix(
 			frame / 100.0,
-			projectionMatrix
+			projectionMatrix1
+		)
+		val transformationMatrix2 = RotatingCubeScene.getTransformationMatrix(
+			frame / 100.0,
+			projectionMatrix2
 		)
 		device.queue.writeBuffer(
 			uniformBuffer,
 			0,
-			transformationMatrix,
+			transformationMatrix1,
 			0,
-			transformationMatrix.size.toLong()
+			transformationMatrix1.size.toLong()
+		)
+		device.queue.writeBuffer(
+			uniformBuffer,
+			offset,
+			transformationMatrix2,
+			0,
+			transformationMatrix2.size.toLong()
 		)
 
 		renderPassDescriptor.colorAttachments[0].view = renderingContext
@@ -174,11 +207,18 @@ class RotatingCubeScene : Application.Scene(), AutoCloseable {
 		val renderPassEncoder = encoder.beginRenderPass(renderPassDescriptor)
 			.bind()
 		renderPassEncoder.setPipeline(renderPipeline)
-		renderPassEncoder.setBindGroup(0, uniformBindGroup)
+		renderPassEncoder.setBindGroup(0, uniformBindGroup1)
 		renderPassEncoder.setVertexBuffer(0, verticesBuffer)
-		renderPassEncoder.draw(cubeVertexCount)
-		renderPassEncoder.end()
 
+		// Bind the bind group (with the transformation matrix) for
+		// each cube, and draw.
+		renderPassEncoder.setBindGroup(0, uniformBindGroup1);
+		renderPassEncoder.draw(cubeVertexCount);
+
+		renderPassEncoder.setBindGroup(0, uniformBindGroup2);
+		renderPassEncoder.draw(cubeVertexCount);
+
+		renderPassEncoder.end()
 		val commandBuffer = encoder.finish()
 			.bind()
 
@@ -192,110 +232,4 @@ class RotatingCubeScene : Application.Scene(), AutoCloseable {
 		autoClosableContext.close()
 	}
 
-
-	companion object {
-		fun getTransformationMatrix(angle: Double, projectionMatrix: Matrix4): FloatArray {
-			var viewMatrix = Matrix4.IDENTITY
-			viewMatrix = viewMatrix.translated(0, 0, -4)
-
-			viewMatrix = viewMatrix.rotated(
-				Angle.fromRadians(Angle.fromRadians(angle).sine),
-				Angle.fromRadians(Angle.fromRadians(angle).cosine),
-				Angle.fromRadians(0)
-			)
-
-			return (projectionMatrix * viewMatrix).copyToColumns()
-		}
-
-		val cubeVertexSize = 4L * 10L // Byte size of one cube vertex.
-		val cubePositionOffset = 0L
-		val cubeColorOffset = 4 * 4 // Byte offset of cube vertex color attribute.
-		val cubeUVOffset = 4L * 8L
-		val cubeVertexCount = 36
-
-		val cubeVertexArray = arrayOf(
-			// float4 position, float4 color, float2 uv,
-			1, -1, 1, 1, 1, 0, 1, 1, 0, 1,
-			-1, -1, 1, 1, 0, 0, 1, 1, 1, 1,
-			-1, -1, -1, 1, 0, 0, 0, 1, 1, 0,
-			1, -1, -1, 1, 1, 0, 0, 1, 0, 0,
-			1, -1, 1, 1, 1, 0, 1, 1, 0, 1,
-			-1, -1, -1, 1, 0, 0, 0, 1, 1, 0,
-
-			1, 1, 1, 1, 1, 1, 1, 1, 0, 1,
-			1, -1, 1, 1, 1, 0, 1, 1, 1, 1,
-			1, -1, -1, 1, 1, 0, 0, 1, 1, 0,
-			1, 1, -1, 1, 1, 1, 0, 1, 0, 0,
-			1, 1, 1, 1, 1, 1, 1, 1, 0, 1,
-			1, -1, -1, 1, 1, 0, 0, 1, 1, 0,
-
-			-1, 1, 1, 1, 0, 1, 1, 1, 0, 1,
-			1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-			1, 1, -1, 1, 1, 1, 0, 1, 1, 0,
-			-1, 1, -1, 1, 0, 1, 0, 1, 0, 0,
-			-1, 1, 1, 1, 0, 1, 1, 1, 0, 1,
-			1, 1, -1, 1, 1, 1, 0, 1, 1, 0,
-
-			-1, -1, 1, 1, 0, 0, 1, 1, 0, 1,
-			-1, 1, 1, 1, 0, 1, 1, 1, 1, 1,
-			-1, 1, -1, 1, 0, 1, 0, 1, 1, 0,
-			-1, -1, -1, 1, 0, 0, 0, 1, 0, 0,
-			-1, -1, 1, 1, 0, 0, 1, 1, 0, 1,
-			-1, 1, -1, 1, 0, 1, 0, 1, 1, 0,
-
-			1, 1, 1, 1, 1, 1, 1, 1, 0, 1,
-			-1, 1, 1, 1, 0, 1, 1, 1, 1, 1,
-			-1, -1, 1, 1, 0, 0, 1, 1, 1, 0,
-			-1, -1, 1, 1, 0, 0, 1, 1, 1, 0,
-			1, -1, 1, 1, 1, 0, 1, 1, 0, 0,
-			1, 1, 1, 1, 1, 1, 1, 1, 0, 1,
-
-			1, -1, -1, 1, 1, 0, 0, 1, 0, 1,
-			-1, -1, -1, 1, 0, 0, 0, 1, 1, 1,
-			-1, 1, -1, 1, 0, 1, 0, 1, 1, 0,
-			1, 1, -1, 1, 1, 1, 0, 1, 0, 0,
-			1, -1, -1, 1, 1, 0, 0, 1, 0, 1,
-			-1, 1, -1, 1, 0, 1, 0, 1, 1, 0,
-		).let { FloatArray(it.size) { index -> it[index].toFloat() } }
-
-
-		const val vertex = """
-struct Uniforms {
-  modelViewProjectionMatrix : mat4x4<f32>,
 }
-@binding(0) @group(0) var<uniform> uniforms : Uniforms;
-
-struct VertexOutput {
-  @builtin(position) Position : vec4<f32>,
-  @location(0) fragUV : vec2<f32>,
-  @location(1) fragPosition: vec4<f32>,
-}
-
-@vertex
-fn main(
-  @location(0) position : vec4<f32>,
-  @location(1) uv : vec2<f32>
-) -> VertexOutput {
-  var output : VertexOutput;
-  output.Position = uniforms.modelViewProjectionMatrix * position;
-  output.fragUV = uv;
-  output.fragPosition = 0.5 * (position + vec4(1.0, 1.0, 1.0, 1.0));
-  return output;
-}
-
-"""
-
-		const val fragment = """
-	@fragment
-fn main(
-  @location(0) fragUV: vec2<f32>,
-  @location(1) fragPosition: vec4<f32>
-) -> @location(0) vec4<f32> {
-  return fragPosition;
-}
-"""
-	}
-}
-
-
-

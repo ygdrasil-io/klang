@@ -7,6 +7,7 @@ import io.ygdrasil.wgpu.internal.js.GPUCanvasContext
 import io.ygdrasil.wgpu.internal.js.GPUDevice
 import org.w3c.dom.HTMLCanvasElement
 
+@JsExport
 actual class RenderingContext(private val handler: GPUCanvasContext) : AutoCloseable {
 
 	actual val width: Int

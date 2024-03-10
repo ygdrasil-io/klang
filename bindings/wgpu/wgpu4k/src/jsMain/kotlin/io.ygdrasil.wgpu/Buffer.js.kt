@@ -4,6 +4,7 @@ package io.ygdrasil.wgpu
 
 import io.ygdrasil.wgpu.internal.js.GPUBuffer
 
+@JsExport
 actual class Buffer(internal val handler: GPUBuffer) : AutoCloseable {
 
 	init {

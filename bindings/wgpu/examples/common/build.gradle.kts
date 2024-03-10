@@ -8,7 +8,9 @@ plugins {
 
 kotlin {
 	js {
+		binaries.executable()
 		browser()
+		generateTypeScriptDefinitions()
 	}
 	jvm()
 

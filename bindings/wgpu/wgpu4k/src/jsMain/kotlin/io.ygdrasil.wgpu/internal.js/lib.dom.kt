@@ -1598,61 +1598,6 @@ external interface ULongRange {
         set(value) = definedExternally
 }
 
-external interface UnderlyingByteSource {
-    var autoAllocateChunkSize: Number?
-        get() = definedExternally
-        set(value) = definedExternally
-    var cancel: ReadableStreamErrorCallback?
-        get() = definedExternally
-        set(value) = definedExternally
-    var pull: ReadableByteStreamControllerCallback?
-        get() = definedExternally
-        set(value) = definedExternally
-    var start: ReadableByteStreamControllerCallback?
-        get() = definedExternally
-        set(value) = definedExternally
-    var type: String /* "bytes" */
-}
-
-external interface UnderlyingSink<W> {
-    var abort: WritableStreamErrorCallback?
-        get() = definedExternally
-        set(value) = definedExternally
-    var close: WritableStreamDefaultControllerCloseCallback?
-        get() = definedExternally
-        set(value) = definedExternally
-    var start: WritableStreamDefaultControllerStartCallback?
-        get() = definedExternally
-        set(value) = definedExternally
-    var type: Any?
-        get() = definedExternally
-        set(value) = definedExternally
-    var write: WritableStreamDefaultControllerWriteCallback<W>?
-        get() = definedExternally
-        set(value) = definedExternally
-}
-
-external interface UnderlyingSource<R> {
-    var cancel: ReadableStreamErrorCallback?
-        get() = definedExternally
-        set(value) = definedExternally
-    var pull: ReadableStreamDefaultControllerCallback<R>?
-        get() = definedExternally
-        set(value) = definedExternally
-    var start: ReadableStreamDefaultControllerCallback<R>?
-        get() = definedExternally
-        set(value) = definedExternally
-    var type: Any?
-        get() = definedExternally
-        set(value) = definedExternally
-}
-
-external interface VRDisplayEventInit : EventInit {
-    var display: VRDisplay
-    var reason: String? /* "mounted" | "navigation" | "requested" | "unmounted" */
-        get() = definedExternally
-        set(value) = definedExternally
-}
 
 external interface VRLayer {
     var leftBounds: dynamic /* Array<Number>? | Float32Array? */
@@ -5535,64 +5480,6 @@ external interface TransitionEvent : Event {
     var elapsedTime: Number
     var propertyName: String
     var pseudoElement: String
-}
-
-external interface VRDisplay : EventTarget {
-    fun requestPresent(layers: Iterable<VRLayer>): Promise<Unit>
-    var capabilities: VRDisplayCapabilities
-    var depthFar: Number
-    var depthNear: Number
-    var displayId: Number
-    var displayName: String
-    var isConnected: Boolean
-    var isPresenting: Boolean
-    var stageParameters: VRStageParameters?
-    fun cancelAnimationFrame(handle: Number)
-    fun exitPresent(): Promise<Unit>
-    fun getEyeParameters(whichEye: String): VREyeParameters
-    fun getFrameData(frameData: VRFrameData): Boolean
-    fun getLayers(): Array<VRLayer>
-    fun getPose(): VRPose
-    fun requestAnimationFrame(callback: FrameRequestCallback): Number
-    fun requestPresent(layers: Array<VRLayer>): Promise<Unit>
-    fun resetPose()
-    fun submitFrame(pose: VRPose = definedExternally)
-}
-
-external interface VRDisplayCapabilities {
-    var canPresent: Boolean
-    var hasExternalDisplay: Boolean
-    var hasOrientation: Boolean
-    var hasPosition: Boolean
-    var maxLayers: Number
-}
-
-external interface VRDisplayEvent : Event {
-    var display: VRDisplay
-    var reason: String /* "mounted" | "navigation" | "requested" | "unmounted" */
-}
-
-external interface VREyeParameters {
-    var fieldOfView: VRFieldOfView
-    var offset: Float32Array
-    var renderHeight: Number
-    var renderWidth: Number
-}
-
-external interface VRFieldOfView {
-    var downDegrees: Number
-    var leftDegrees: Number
-    var rightDegrees: Number
-    var upDegrees: Number
-}
-
-external interface VRFrameData {
-    var leftProjectionMatrix: Float32Array
-    var leftViewMatrix: Float32Array
-    var pose: VRPose
-    var rightProjectionMatrix: Float32Array
-    var rightViewMatrix: Float32Array
-    var timestamp: Number
 }
 
 external interface VRPose {

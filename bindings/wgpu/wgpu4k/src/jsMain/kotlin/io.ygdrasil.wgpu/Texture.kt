@@ -5,6 +5,7 @@ package io.ygdrasil.wgpu
 import io.ygdrasil.wgpu.internal.js.GPUTexture
 import io.ygdrasil.wgpu.internal.js.GPUTextureViewDescriptor
 
+@JsExport
 actual class Texture(private val handler: GPUTexture) : AutoCloseable {
 	override fun close() {
 		// nothing to do

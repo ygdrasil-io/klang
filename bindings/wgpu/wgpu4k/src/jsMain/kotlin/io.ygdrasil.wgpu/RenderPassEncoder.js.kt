@@ -4,6 +4,7 @@ package io.ygdrasil.wgpu
 
 import io.ygdrasil.wgpu.internal.js.GPURenderPassEncoder
 
+@JsExport
 actual class RenderPassEncoder(private val handler: GPURenderPassEncoder) : AutoCloseable {
 
 	actual fun end() {

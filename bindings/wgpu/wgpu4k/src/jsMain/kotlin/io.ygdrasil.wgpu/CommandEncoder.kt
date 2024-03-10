@@ -27,7 +27,8 @@ private fun RenderPassDescriptor.convert(): GPURenderPassDescriptor = object : G
 	/*
 	override var occlusionQuerySet: GPUQuerySet?
 	override var timestampWrites: GPURenderPassTimestampWrites?
-	override var maxDrawCount: GPUSize64?*/
+	*/
+	override var maxDrawCount: GPUSize64? = this@convert.maxDrawCount ?: undefined
 }
 
 private fun RenderPassDescriptor.RenderPassDepthStencilAttachment.convert(): GPURenderPassDepthStencilAttachment =

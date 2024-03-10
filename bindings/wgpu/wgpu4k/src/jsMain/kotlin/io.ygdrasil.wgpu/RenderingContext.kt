@@ -50,6 +50,7 @@ actual class RenderingContext(private val handler: GPUCanvasContext) : AutoClose
 
 fun HTMLCanvasElement.getRenderingContext() = (getContext("webgpu") as? GPUCanvasContext)?.let { RenderingContext(it) }
 
+@JsExport
 data class CanvasConfiguration(
 	var device: Device,
 	var format: TextureFormat? = null,

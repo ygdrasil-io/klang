@@ -8,7 +8,7 @@ import io.ygdrasil.wgpu.examples.AutoClosableContext
 import io.ygdrasil.wgpu.examples.autoClosableContext
 import korlibs.math.geom.Angle
 import korlibs.math.geom.Matrix4
-import korlibs.memory.setArrayLE
+import korlibs.memory.setArrayBE
 import kotlin.js.JsExport
 import kotlin.math.PI
 
@@ -43,7 +43,7 @@ class RotatingCubeScene : Application.Scene(), AutoCloseable {
 			)
 		)
 		val test = verticesBuffer.getMappedRange()
-		test.setArrayLE(0, cubeVertexArray)
+		test.setArrayBE(0, cubeVertexArray)
 
 		verticesBuffer.unmap()
 

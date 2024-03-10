@@ -48,6 +48,7 @@ abstract class Application(
 
 	fun renderFrame() {
 		if (onError) return
+		println("render")
 		frame += 1
 		with(currentScene) {
 			try {

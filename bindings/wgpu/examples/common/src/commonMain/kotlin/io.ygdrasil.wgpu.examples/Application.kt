@@ -6,7 +6,9 @@ import io.ygdrasil.wgpu.Adapter
 import io.ygdrasil.wgpu.Device
 import io.ygdrasil.wgpu.RenderingContext
 import io.ygdrasil.wgpu.examples.scenes.basic.RotatingCubeScene
+import kotlin.js.JsExport
 
+@JsExport
 abstract class Application(
 	val renderingContext: RenderingContext,
 	val device: Device,
@@ -64,7 +66,7 @@ abstract class Application(
 		adapter.close()
 	}
 
-	abstract suspend fun run()
+	abstract fun run()
 }
 
 val availableScenes = listOf(

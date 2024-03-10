@@ -12,6 +12,7 @@ import org.w3c.xhr.ProgressEvent
 import kotlin.js.Date
 import kotlin.js.Promise
 
+/*
 external interface Algorithm {
     var name: String
 }
@@ -2298,36 +2299,7 @@ external interface CryptoKey {
 
 external interface CustomEvent__0 : CustomEvent
 
-external interface DOMException {
-    var code: Number
-    var message: String
-    var name: String
-    var ABORT_ERR: Number
-    var DATA_CLONE_ERR: Number
-    var DOMSTRING_SIZE_ERR: Number
-    var HIERARCHY_REQUEST_ERR: Number
-    var INDEX_SIZE_ERR: Number
-    var INUSE_ATTRIBUTE_ERR: Number
-    var INVALID_ACCESS_ERR: Number
-    var INVALID_CHARACTER_ERR: Number
-    var INVALID_MODIFICATION_ERR: Number
-    var INVALID_NODE_TYPE_ERR: Number
-    var INVALID_STATE_ERR: Number
-    var NAMESPACE_ERR: Number
-    var NETWORK_ERR: Number
-    var NOT_FOUND_ERR: Number
-    var NOT_SUPPORTED_ERR: Number
-    var NO_DATA_ALLOWED_ERR: Number
-    var NO_MODIFICATION_ALLOWED_ERR: Number
-    var QUOTA_EXCEEDED_ERR: Number
-    var SECURITY_ERR: Number
-    var SYNTAX_ERR: Number
-    var TIMEOUT_ERR: Number
-    var TYPE_MISMATCH_ERR: Number
-    var URL_MISMATCH_ERR: Number
-    var VALIDATION_ERR: Number
-    var WRONG_DOCUMENT_ERR: Number
-}
+
 
 external interface DOML2DeprecatedColorProperty {
     var color: String
@@ -5982,4 +5954,35 @@ typealias GLint64 = Number
 
 typealias GLuint64 = Number
 
-typealias WindowProxy = Window
+typealias WindowProxy = Window*/
+
+external interface DOMException {
+	var code: Number
+	var message: String
+	var name: String
+	var ABORT_ERR: Number
+	var DATA_CLONE_ERR: Number
+	var DOMSTRING_SIZE_ERR: Number
+	var HIERARCHY_REQUEST_ERR: Number
+	var INDEX_SIZE_ERR: Number
+	var INUSE_ATTRIBUTE_ERR: Number
+	var INVALID_ACCESS_ERR: Number
+	var INVALID_CHARACTER_ERR: Number
+	var INVALID_MODIFICATION_ERR: Number
+	var INVALID_NODE_TYPE_ERR: Number
+	var INVALID_STATE_ERR: Number
+	var NAMESPACE_ERR: Number
+	var NETWORK_ERR: Number
+	var NOT_FOUND_ERR: Number
+	var NOT_SUPPORTED_ERR: Number
+	var NO_DATA_ALLOWED_ERR: Number
+	var NO_MODIFICATION_ALLOWED_ERR: Number
+	var QUOTA_EXCEEDED_ERR: Number
+	var SECURITY_ERR: Number
+	var SYNTAX_ERR: Number
+	var TIMEOUT_ERR: Number
+	var TYPE_MISMATCH_ERR: Number
+	var URL_MISMATCH_ERR: Number
+	var VALIDATION_ERR: Number
+	var WRONG_DOCUMENT_ERR: Number
+}

@@ -9,12 +9,13 @@ import io.ygdrasil.wgpu.examples.autoClosableContext
 import korlibs.math.geom.Angle
 import korlibs.math.geom.Matrix4
 import korlibs.memory.setArrayLE
+import kotlin.js.JsExport
 import kotlin.math.PI
 
+@JsExport
 class RotatingCubeScene : Application.Scene(), AutoCloseable {
 
 	lateinit var renderPipeline: RenderPipeline
-	lateinit var modelViewProjectionMatrix: Matrix4
 	lateinit var projectionMatrix: Matrix4
 	lateinit var renderPassDescriptor: RenderPassDescriptor
 	lateinit var uniformBuffer: Buffer
@@ -149,7 +150,10 @@ class RotatingCubeScene : Application.Scene(), AutoCloseable {
 
 	override fun Application.render() = autoClosableContext {
 
-		val transformationMatrix = getTransformationMatrix()
+		val transformationMatrix = getTransformationMatrix(
+			frame / 1000.0,
+			projectionMatrix
+		)
 		device.queue.writeBuffer(
 			uniformBuffer,
 			0,
@@ -187,76 +191,74 @@ class RotatingCubeScene : Application.Scene(), AutoCloseable {
 		autoClosableContext.close()
 	}
 
-	fun Application.getTransformationMatrix(): FloatArray {
-		var viewMatrix = Matrix4.IDENTITY
-		viewMatrix = viewMatrix.translated(0, 0, -4)
 
-		viewMatrix = viewMatrix.rotated(
-			Angle.fromRadians(Angle.fromDegrees(frame).sine),
-			Angle.fromRadians(Angle.fromDegrees(frame).cosine),
-			Angle.fromRadians(0)
-		)
+	companion object {
+		fun getTransformationMatrix(angle: Double, projectionMatrix: Matrix4): FloatArray {
+			var viewMatrix = Matrix4.IDENTITY
+			viewMatrix = viewMatrix.translated(0, 0, -4)
 
-		modelViewProjectionMatrix = projectionMatrix * viewMatrix
+			viewMatrix = viewMatrix.rotated(
+				Angle.fromRadians(Angle.fromRadians(angle).sine),
+				Angle.fromRadians(Angle.fromRadians(angle).cosine),
+				Angle.fromRadians(0)
+			)
 
+			return (projectionMatrix * viewMatrix).copyToColumns()
+		}
 
-		return modelViewProjectionMatrix.copyToColumns()
-	}
-}
+		val cubeVertexSize = 4L * 10L // Byte size of one cube vertex.
+		val cubePositionOffset = 0L
+		val cubeColorOffset = 4 * 4 // Byte offset of cube vertex color attribute.
+		val cubeUVOffset = 4L * 8L
+		val cubeVertexCount = 36
 
-val cubeVertexSize = 4L * 10L // Byte size of one cube vertex.
-val cubePositionOffset = 0L
-val cubeColorOffset = 4 * 4 // Byte offset of cube vertex color attribute.
-val cubeUVOffset = 4L * 8L
-val cubeVertexCount = 36
+		val cubeVertexArray = arrayOf(
+			// float4 position, float4 color, float2 uv,
+			1, -1, 1, 1, 1, 0, 1, 1, 0, 1,
+			-1, -1, 1, 1, 0, 0, 1, 1, 1, 1,
+			-1, -1, -1, 1, 0, 0, 0, 1, 1, 0,
+			1, -1, -1, 1, 1, 0, 0, 1, 0, 0,
+			1, -1, 1, 1, 1, 0, 1, 1, 0, 1,
+			-1, -1, -1, 1, 0, 0, 0, 1, 1, 0,
 
-val cubeVertexArray = arrayOf(
-	// float4 position, float4 color, float2 uv,
-	1, -1, 1, 1, 1, 0, 1, 1, 0, 1,
-	-1, -1, 1, 1, 0, 0, 1, 1, 1, 1,
-	-1, -1, -1, 1, 0, 0, 0, 1, 1, 0,
-	1, -1, -1, 1, 1, 0, 0, 1, 0, 0,
-	1, -1, 1, 1, 1, 0, 1, 1, 0, 1,
-	-1, -1, -1, 1, 0, 0, 0, 1, 1, 0,
+			1, 1, 1, 1, 1, 1, 1, 1, 0, 1,
+			1, -1, 1, 1, 1, 0, 1, 1, 1, 1,
+			1, -1, -1, 1, 1, 0, 0, 1, 1, 0,
+			1, 1, -1, 1, 1, 1, 0, 1, 0, 0,
+			1, 1, 1, 1, 1, 1, 1, 1, 0, 1,
+			1, -1, -1, 1, 1, 0, 0, 1, 1, 0,
 
-	1, 1, 1, 1, 1, 1, 1, 1, 0, 1,
-	1, -1, 1, 1, 1, 0, 1, 1, 1, 1,
-	1, -1, -1, 1, 1, 0, 0, 1, 1, 0,
-	1, 1, -1, 1, 1, 1, 0, 1, 0, 0,
-	1, 1, 1, 1, 1, 1, 1, 1, 0, 1,
-	1, -1, -1, 1, 1, 0, 0, 1, 1, 0,
+			-1, 1, 1, 1, 0, 1, 1, 1, 0, 1,
+			1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+			1, 1, -1, 1, 1, 1, 0, 1, 1, 0,
+			-1, 1, -1, 1, 0, 1, 0, 1, 0, 0,
+			-1, 1, 1, 1, 0, 1, 1, 1, 0, 1,
+			1, 1, -1, 1, 1, 1, 0, 1, 1, 0,
 
-	-1, 1, 1, 1, 0, 1, 1, 1, 0, 1,
-	1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-	1, 1, -1, 1, 1, 1, 0, 1, 1, 0,
-	-1, 1, -1, 1, 0, 1, 0, 1, 0, 0,
-	-1, 1, 1, 1, 0, 1, 1, 1, 0, 1,
-	1, 1, -1, 1, 1, 1, 0, 1, 1, 0,
+			-1, -1, 1, 1, 0, 0, 1, 1, 0, 1,
+			-1, 1, 1, 1, 0, 1, 1, 1, 1, 1,
+			-1, 1, -1, 1, 0, 1, 0, 1, 1, 0,
+			-1, -1, -1, 1, 0, 0, 0, 1, 0, 0,
+			-1, -1, 1, 1, 0, 0, 1, 1, 0, 1,
+			-1, 1, -1, 1, 0, 1, 0, 1, 1, 0,
 
-	-1, -1, 1, 1, 0, 0, 1, 1, 0, 1,
-	-1, 1, 1, 1, 0, 1, 1, 1, 1, 1,
-	-1, 1, -1, 1, 0, 1, 0, 1, 1, 0,
-	-1, -1, -1, 1, 0, 0, 0, 1, 0, 0,
-	-1, -1, 1, 1, 0, 0, 1, 1, 0, 1,
-	-1, 1, -1, 1, 0, 1, 0, 1, 1, 0,
+			1, 1, 1, 1, 1, 1, 1, 1, 0, 1,
+			-1, 1, 1, 1, 0, 1, 1, 1, 1, 1,
+			-1, -1, 1, 1, 0, 0, 1, 1, 1, 0,
+			-1, -1, 1, 1, 0, 0, 1, 1, 1, 0,
+			1, -1, 1, 1, 1, 0, 1, 1, 0, 0,
+			1, 1, 1, 1, 1, 1, 1, 1, 0, 1,
 
-	1, 1, 1, 1, 1, 1, 1, 1, 0, 1,
-	-1, 1, 1, 1, 0, 1, 1, 1, 1, 1,
-	-1, -1, 1, 1, 0, 0, 1, 1, 1, 0,
-	-1, -1, 1, 1, 0, 0, 1, 1, 1, 0,
-	1, -1, 1, 1, 1, 0, 1, 1, 0, 0,
-	1, 1, 1, 1, 1, 1, 1, 1, 0, 1,
-
-	1, -1, -1, 1, 1, 0, 0, 1, 0, 1,
-	-1, -1, -1, 1, 0, 0, 0, 1, 1, 1,
-	-1, 1, -1, 1, 0, 1, 0, 1, 1, 0,
-	1, 1, -1, 1, 1, 1, 0, 1, 0, 0,
-	1, -1, -1, 1, 1, 0, 0, 1, 0, 1,
-	-1, 1, -1, 1, 0, 1, 0, 1, 1, 0,
-).let { FloatArray(it.size) { index -> it[index].toFloat() } }
+			1, -1, -1, 1, 1, 0, 0, 1, 0, 1,
+			-1, -1, -1, 1, 0, 0, 0, 1, 1, 1,
+			-1, 1, -1, 1, 0, 1, 0, 1, 1, 0,
+			1, 1, -1, 1, 1, 1, 0, 1, 0, 0,
+			1, -1, -1, 1, 1, 0, 0, 1, 0, 1,
+			-1, 1, -1, 1, 0, 1, 0, 1, 1, 0,
+		).let { FloatArray(it.size) { index -> it[index].toFloat() } }
 
 
-private const val vertex = """
+		private const val vertex = """
 struct Uniforms {
   modelViewProjectionMatrix : mat4x4<f32>,
 }
@@ -282,7 +284,7 @@ fn main(
 
 """
 
-private const val fragment = """
+		private const val fragment = """
 	@fragment
 fn main(
   @location(0) fragUV: vec2<f32>,
@@ -291,3 +293,8 @@ fn main(
   return fragPosition;
 }
 """
+	}
+}
+
+
+

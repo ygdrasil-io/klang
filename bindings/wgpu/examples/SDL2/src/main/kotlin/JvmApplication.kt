@@ -35,7 +35,7 @@ suspend fun jvmApplication() = (WGPU.createInstance() ?: error("fail to wgpu ins
 		device,
 		adapter
 	) {
-		override suspend fun run() {
+		override fun run() {
 			while (true) {
 				renderFrame()
 				pollEvent()

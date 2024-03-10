@@ -30,7 +30,7 @@ fun jsApplication() = MainScope().launch {
 		device,
 		adapter
 	) {
-		override suspend fun run() {
+		override fun run() {
 			// Schedule main loop to run repeatedly
 			setInterval({
 				renderFrame()

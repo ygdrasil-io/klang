@@ -130,7 +130,7 @@ class RotatingCubeScene : Application.Scene(), AutoCloseable {
 					view = dummyTexture.createView().bind(), // Assigned later
 					loadOp = "clear",
 					clearValue = arrayOf(0.5, 0.5, 0.5, 1.0),
-					storeOp = "store"
+					storeOp = "store",
 				)
 			),
 			depthStencilAttachment = RenderPassDescriptor.RenderPassDepthStencilAttachment(
@@ -163,12 +163,10 @@ class RotatingCubeScene : Application.Scene(), AutoCloseable {
 			.bind()
 			.createView()
 
-		// Clear the canvas with a render pass
 		val encoder = device.createCommandEncoder()
 			.bind()
 
-		val renderPassEncoder = encoder
-			.beginRenderPass(renderPassDescriptor)
+		val renderPassEncoder = encoder.beginRenderPass(renderPassDescriptor)
 			.bind()
 		renderPassEncoder.setPipeline(renderPipeline)
 		renderPassEncoder.setBindGroup(0, uniformBindGroup)

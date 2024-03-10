@@ -8,7 +8,6 @@ import io.ygdrasil.wgpu.examples.AutoClosableContext
 import io.ygdrasil.wgpu.examples.autoClosableContext
 import korlibs.math.geom.Angle
 import korlibs.math.geom.Matrix4
-import korlibs.memory.setArrayBE
 import kotlin.js.JsExport
 import kotlin.math.PI
 
@@ -42,9 +41,9 @@ class RotatingCubeScene : Application.Scene(), AutoCloseable {
 				mappedAtCreation = true
 			)
 		)
-		val test = verticesBuffer.getMappedRange()
-		test.setArrayBE(0, cubeVertexArray)
 
+		// Util method to use getMappedRange
+		verticesBuffer.map(cubeVertexArray)
 		verticesBuffer.unmap()
 
 		renderPipeline = device.createRenderPipeline(
@@ -151,7 +150,7 @@ class RotatingCubeScene : Application.Scene(), AutoCloseable {
 	override fun Application.render() = autoClosableContext {
 
 		val transformationMatrix = getTransformationMatrix(
-			frame / 1000.0,
+			frame / 100.0,
 			projectionMatrix
 		)
 		device.queue.writeBuffer(

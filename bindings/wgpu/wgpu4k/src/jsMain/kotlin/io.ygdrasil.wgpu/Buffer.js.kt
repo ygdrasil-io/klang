@@ -3,6 +3,7 @@
 package io.ygdrasil.wgpu
 
 import io.ygdrasil.wgpu.internal.js.GPUBuffer
+import org.khronos.webgl.Float32Array
 
 @JsExport
 actual class Buffer(internal val handler: GPUBuffer) : AutoCloseable {
@@ -21,6 +22,11 @@ actual class Buffer(internal val handler: GPUBuffer) : AutoCloseable {
 
 	actual fun unmap() {
 		handler.unmap()
+	}
+
+	actual fun map(buffer: FloatArray) {
+		Float32Array(handler.getMappedRange())
+			.set(buffer.toTypedArray(), 0)
 	}
 
 	override fun close() {

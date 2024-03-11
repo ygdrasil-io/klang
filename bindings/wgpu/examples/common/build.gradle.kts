@@ -21,6 +21,7 @@ kotlin {
 				api(project(":wgpu4k"))
 				api(libs.coroutines)
 				api("com.soywiz.korge:korge-foundation:5.4.0")
+				implementation("com.squareup.okio:okio:3.8.0")
 
 			}
 		}

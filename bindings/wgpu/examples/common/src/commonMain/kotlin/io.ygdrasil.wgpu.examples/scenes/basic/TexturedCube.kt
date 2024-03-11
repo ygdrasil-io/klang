@@ -115,8 +115,11 @@ class TexturedCubeScene : Application.Scene(), AutoCloseable {
 			)
 		).bind()
 
+
+		// Fetch the image and upload it into a GPUTexture.
+
 		/*
-		 // Fetch the image and upload it into a GPUTexture.
+
 let cubeTexture: GPUTexture;
 {
     const response = await fetch('../../assets/img/Di-3d.png');

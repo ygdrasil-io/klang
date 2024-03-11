@@ -13,7 +13,7 @@ data class BindGroupDescriptor(
 
 	data class BindGroupEntry(
 		var binding: GPUIndex32,
-		var resource: Resource  //TODO support GPUSampler | GPUTextureView |  GPUExternalTexture
+		var resource: Resource  //TODO support GPUExternalTexture
 	) {
 		sealed interface Resource
 		data class BufferBinding(

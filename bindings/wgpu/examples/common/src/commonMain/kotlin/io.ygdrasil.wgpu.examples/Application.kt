@@ -6,6 +6,7 @@ import io.ygdrasil.wgpu.Adapter
 import io.ygdrasil.wgpu.Device
 import io.ygdrasil.wgpu.RenderingContext
 import io.ygdrasil.wgpu.examples.scenes.basic.RotatingCubeScene
+import io.ygdrasil.wgpu.examples.scenes.basic.TexturedCubeScene
 import io.ygdrasil.wgpu.examples.scenes.basic.TwoCubesScene
 import kotlin.js.JsExport
 
@@ -71,6 +72,7 @@ abstract class Application(
 }
 
 val availableScenes = listOf(
+	TexturedCubeScene(),
 	TwoCubesScene(),
 	RotatingCubeScene(),
 	SimpleTriangleScene(),

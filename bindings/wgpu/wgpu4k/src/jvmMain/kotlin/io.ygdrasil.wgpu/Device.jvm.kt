@@ -42,10 +42,19 @@ actual class Device(internal val handler: WGPUDeviceImpl) : AutoCloseable {
 			.let { wgpuDeviceCreateTexture(handler, it) }
 			?.let(::Texture) ?: error("fail to create texture")
 
+	actual fun createSampler(descriptor: SamplerDescriptor): Sampler =
+		descriptor.convert()
+			.let { wgpuDeviceCreateSampler(handler, it) }
+			?.let(::Sampler) ?: error("fail to create texture")
+
 	override fun close() {
 		wgpuDeviceRelease(handler)
 	}
 
+}
+
+private fun SamplerDescriptor.convert(): WGPUSamplerDescriptor? {
+	TODO()
 }
 
 private fun TextureDescriptor.convert(): WGPUTextureDescriptor {

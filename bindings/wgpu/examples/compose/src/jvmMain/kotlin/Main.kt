@@ -138,10 +138,10 @@ suspend fun runApp(window: ComposeWindow) {
 			device,
 			adapter
 		) {
-			override suspend fun run() {
+			override fun run() {
 				renderFrame()
-				delay(UPDATE_INTERVAL)
 				applicationScope.launch() {
+					delay(UPDATE_INTERVAL)
 					run()
 				}
 			}

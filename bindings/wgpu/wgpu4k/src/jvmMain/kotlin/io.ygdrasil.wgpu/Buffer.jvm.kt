@@ -16,6 +16,10 @@ actual class Buffer(internal val handler: WGPUBuffer) : AutoCloseable {
 		wgpuBufferUnmap(handler)
 	}
 
+	actual fun map(buffer: FloatArray) {
+		TODO()
+	}
+
 	override fun close() {
 		wgpuBufferRelease(handler)
 	}

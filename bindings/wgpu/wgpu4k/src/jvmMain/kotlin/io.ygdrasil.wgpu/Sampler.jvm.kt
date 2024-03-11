@@ -1,6 +1,8 @@
 package io.ygdrasil.wgpu
 
-actual class Sampler : AutoCloseable {
+import io.ygdrasil.wgpu.internal.jvm.WGPUSampler
+
+actual class Sampler(wgpuDeviceCreateSampler: WGPUSampler?) : AutoCloseable {
 	override fun close() {
 		TODO("Not yet implemented")
 	}

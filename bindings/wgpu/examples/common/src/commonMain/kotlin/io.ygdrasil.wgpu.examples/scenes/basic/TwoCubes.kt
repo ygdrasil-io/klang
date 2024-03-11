@@ -11,6 +11,8 @@ import io.ygdrasil.wgpu.examples.scenes.mesh.Cube.cubeUVOffset
 import io.ygdrasil.wgpu.examples.scenes.mesh.Cube.cubeVertexArray
 import io.ygdrasil.wgpu.examples.scenes.mesh.Cube.cubeVertexCount
 import io.ygdrasil.wgpu.examples.scenes.mesh.Cube.cubeVertexSize
+import io.ygdrasil.wgpu.examples.scenes.shader.basicVertexShader
+import io.ygdrasil.wgpu.examples.scenes.shader.fragmentVertexPositionColorShader
 import korlibs.math.geom.Angle
 import korlibs.math.geom.Matrix4
 import kotlin.js.JsExport
@@ -60,7 +62,7 @@ class TwoCubesScene : Application.Scene(), AutoCloseable {
 				vertex = RenderPipelineDescriptor.VertexState(
 					module = device.createShaderModule(
 						ShaderModuleDescriptor(
-							code = RotatingCubeScene.vertex
+							code = basicVertexShader
 						)
 					).bind(), // bind to autoClosableContext to release it later
 					buffers = arrayOf(
@@ -84,7 +86,7 @@ class TwoCubesScene : Application.Scene(), AutoCloseable {
 				fragment = RenderPipelineDescriptor.FragmentState(
 					module = device.createShaderModule(
 						ShaderModuleDescriptor(
-							code = RotatingCubeScene.fragment
+							code = fragmentVertexPositionColorShader
 						)
 					).bind(), // bind to autoClosableContext to release it later
 					targets = arrayOf(
@@ -179,11 +181,11 @@ class TwoCubesScene : Application.Scene(), AutoCloseable {
 
 	override fun Application.render() = autoClosableContext {
 
-		val transformationMatrix1 = RotatingCubeScene.getTransformationMatrix(
+		val transformationMatrix1 = getTransformationMatrix(
 			frame / 100.0,
 			projectionMatrix1
 		)
-		val transformationMatrix2 = RotatingCubeScene.getTransformationMatrix(
+		val transformationMatrix2 = getTransformationMatrix(
 			frame / 100.0,
 			projectionMatrix2
 		)
@@ -238,4 +240,16 @@ class TwoCubesScene : Application.Scene(), AutoCloseable {
 		autoClosableContext.close()
 	}
 
+}
+
+private fun getTransformationMatrix(angle: Double, projectionMatrix: Matrix4): FloatArray {
+	var viewMatrix = Matrix4.IDENTITY
+
+	viewMatrix = viewMatrix.rotated(
+		Angle.fromRadians(Angle.fromRadians(angle).sine),
+		Angle.fromRadians(Angle.fromRadians(angle).cosine),
+		Angle.fromRadians(0)
+	)
+
+	return (projectionMatrix * viewMatrix).copyToColumns()
 }

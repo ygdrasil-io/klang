@@ -11,6 +11,8 @@ import io.ygdrasil.wgpu.examples.scenes.mesh.Cube.cubeUVOffset
 import io.ygdrasil.wgpu.examples.scenes.mesh.Cube.cubeVertexArray
 import io.ygdrasil.wgpu.examples.scenes.mesh.Cube.cubeVertexCount
 import io.ygdrasil.wgpu.examples.scenes.mesh.Cube.cubeVertexSize
+import io.ygdrasil.wgpu.examples.scenes.shader.basicVertexShader
+import io.ygdrasil.wgpu.examples.scenes.shader.fragmentVertexPositionColorShader
 import korlibs.math.geom.Angle
 import korlibs.math.geom.Matrix4
 import kotlin.js.JsExport
@@ -56,7 +58,7 @@ class RotatingCubeScene : Application.Scene(), AutoCloseable {
 				vertex = RenderPipelineDescriptor.VertexState(
 					module = device.createShaderModule(
 						ShaderModuleDescriptor(
-							code = vertex
+							code = basicVertexShader
 						)
 					).bind(), // bind to autoClosableContext to release it later
 					buffers = arrayOf(
@@ -80,7 +82,7 @@ class RotatingCubeScene : Application.Scene(), AutoCloseable {
 				fragment = RenderPipelineDescriptor.FragmentState(
 					module = device.createShaderModule(
 						ShaderModuleDescriptor(
-							code = fragment
+							code = fragmentVertexPositionColorShader
 						)
 					).bind(), // bind to autoClosableContext to release it later
 					targets = arrayOf(
@@ -197,61 +199,18 @@ class RotatingCubeScene : Application.Scene(), AutoCloseable {
 		autoClosableContext.close()
 	}
 
-
-	companion object {
-		fun getTransformationMatrix(angle: Double, projectionMatrix: Matrix4): FloatArray {
-			var viewMatrix = Matrix4.IDENTITY
-			viewMatrix = viewMatrix.translated(0, 0, -4)
-
-			viewMatrix = viewMatrix.rotated(
-				Angle.fromRadians(Angle.fromRadians(angle).sine),
-				Angle.fromRadians(Angle.fromRadians(angle).cosine),
-				Angle.fromRadians(0)
-			)
-
-			return (projectionMatrix * viewMatrix).copyToColumns()
-		}
-
-
-
-
-		const val vertex = """
-struct Uniforms {
-  modelViewProjectionMatrix : mat4x4<f32>,
-}
-@binding(0) @group(0) var<uniform> uniforms : Uniforms;
-
-struct VertexOutput {
-  @builtin(position) Position : vec4<f32>,
-  @location(0) fragUV : vec2<f32>,
-  @location(1) fragPosition: vec4<f32>,
-}
-
-@vertex
-fn main(
-  @location(0) position : vec4<f32>,
-  @location(1) uv : vec2<f32>
-) -> VertexOutput {
-  var output : VertexOutput;
-  output.Position = uniforms.modelViewProjectionMatrix * position;
-  output.fragUV = uv;
-  output.fragPosition = 0.5 * (position + vec4(1.0, 1.0, 1.0, 1.0));
-  return output;
-}
-
-"""
-
-		const val fragment = """
-	@fragment
-fn main(
-  @location(0) fragUV: vec2<f32>,
-  @location(1) fragPosition: vec4<f32>
-) -> @location(0) vec4<f32> {
-  return fragPosition;
-}
-"""
-	}
 }
 
 
+private fun getTransformationMatrix(angle: Double, projectionMatrix: Matrix4): FloatArray {
+	var viewMatrix = Matrix4.IDENTITY
+	viewMatrix = viewMatrix.translated(0, 0, -4)
 
+	viewMatrix = viewMatrix.rotated(
+		Angle.fromRadians(Angle.fromRadians(angle).sine),
+		Angle.fromRadians(Angle.fromRadians(angle).cosine),
+		Angle.fromRadians(0)
+	)
+
+	return (projectionMatrix * viewMatrix).copyToColumns()
+}

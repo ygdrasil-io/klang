@@ -970,7 +970,11 @@ external interface GPUQueue : GPUObjectBase {
 
     /*fun writeTexture(destination: GPUImageCopyTexture, data: SharedArrayBuffer, dataLayout: GPUImageDataLayout, size: Iterable<GPUIntegerCoordinate>): Nothing?
     fun writeTexture(destination: GPUImageCopyTexture, data: SharedArrayBuffer, dataLayout: GPUImageDataLayout, size: GPUExtent3DDictStrict): Nothing?*/
-    fun copyExternalImageToTexture(source: GPUImageCopyExternalImage, destination: GPUImageCopyTextureTagged, copySize: Iterable<GPUIntegerCoordinate>): Nothing?
+	fun copyExternalImageToTexture(
+		source: GPUImageCopyExternalImage,
+		destination: GPUImageCopyTextureTagged,
+		copySize: Array<GPUIntegerCoordinate>
+	): Nothing?
     fun copyExternalImageToTexture(source: GPUImageCopyExternalImage, destination: GPUImageCopyTextureTagged, copySize: GPUExtent3DDictStrict): Nothing?
 
     companion object {

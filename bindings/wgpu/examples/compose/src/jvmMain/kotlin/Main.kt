@@ -136,7 +136,8 @@ suspend fun runApp(window: ComposeWindow) {
 		val application = object : Application(
 			renderingContext,
 			device,
-			adapter
+			adapter,
+			assetManager
 		) {
 			override fun run() {
 				renderFrame()

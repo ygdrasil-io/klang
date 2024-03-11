@@ -42,3 +42,6 @@ actual class Queue(internal val handler: WGPUQueue) {
 
 }
 
+actual class ImageBitmapHolder : DrawableHolder
+
+actual sealed interface DrawableHolder

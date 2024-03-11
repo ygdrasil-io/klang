@@ -1177,6 +1177,8 @@ public enum class TextureUsage(
 	}
 }
 
+public infix fun Int.or(other: TextureUsage): Int = this or other.value
+
 public enum class NativeSType(
 	public val `value`: Int,
 ) {

@@ -117,29 +117,21 @@ class TexturedCubeScene : Application.Scene(), AutoCloseable {
 
 
 		// Fetch the image and upload it into a GPUTexture.
+		val imageBitmapWidth = 512
+		val imageBitmapHeight = 512
+		val cubeTexture = device.createTexture(
+			TextureDescriptor(
+				size = imageBitmapWidth to imageBitmapHeight,
+				format = TextureFormat.rgba8unorm,
+				usage = TextureUsage.texturebinding or TextureUsage.copydst or TextureUsage.renderattachment,
+			)
+		)
 
-		/*
-
-let cubeTexture: GPUTexture;
-{
-    const response = await fetch('../../assets/img/Di-3d.png');
-    const imageBitmap = await createImageBitmap(await response.blob());
-
-    cubeTexture = device.createTexture({
-        size: [imageBitmap.width, imageBitmap.height, 1],
-        format: 'rgba8unorm',
-        usage:
-            GPUTextureUsage.TEXTURE_BINDING |
-            GPUTextureUsage.COPY_DST |
-            GPUTextureUsage.RENDER_ATTACHMENT,
-    });
-    device.queue.copyExternalImageToTexture(
-        {source: imageBitmap},
-        {texture: cubeTexture},
-        [imageBitmap.width, imageBitmap.height]
-    );
-}
-		 */
+		device.queue.copyExternalImageToTexture(
+			ImageCopyExternalImage(source = Di3d),
+			ImageCopyTextureTagged(texture = cubeTexture),
+			imageBitmapWidth to imageBitmapHeight
+		)
 
 		// Create a sampler with linear filtering for smooth interpolation.
 		val sampler = device.createSampler(
@@ -165,12 +157,12 @@ let cubeTexture: GPUTexture;
 							sampler = sampler
 						)
 					),
-					/*
-					{
-						binding: 2,
-						resource: cubeTexture.createView(),
-					},
-					 */
+					BindGroupDescriptor.BindGroupEntry(
+						binding = 2,
+						resource = BindGroupDescriptor.BindGroupEntry.TextureViewBinding(
+							view = cubeTexture.createView()
+						)
+					)
 				)
 			)
 		)

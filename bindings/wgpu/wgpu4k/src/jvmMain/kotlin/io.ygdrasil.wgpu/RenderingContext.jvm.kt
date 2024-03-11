@@ -4,7 +4,7 @@ import io.ygdrasil.wgpu.internal.jvm.*
 
 actual class RenderingContext(
 	internal val handler: WGPUSurface,
-	private val sizeProvider: () -> Pair<Int, Int>
+	private val sizeProvider: () ->
 ) : AutoCloseable {
 
 	private val surfaceCapabilities = WGPUSurfaceCapabilities()

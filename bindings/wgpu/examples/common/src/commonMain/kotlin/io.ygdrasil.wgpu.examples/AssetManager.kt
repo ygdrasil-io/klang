@@ -1,7 +1,10 @@
 package io.ygdrasil.wgpu.examples
 
+import io.ygdrasil.wgpu.ImageBitmapHolder
 
-expect object AssetManager {
 
-	suspend fun getResource(path: String): ByteArray
+interface AssetManager {
+
+	val Di3d: ImageBitmapHolder
+
 }

@@ -1,7 +1,11 @@
 package io.ygdrasil.wgpu
 
+import io.ygdrasil.wgpu.internal.js.GPUImageCopyExternalImage
+import io.ygdrasil.wgpu.internal.js.GPUImageCopyTextureTagged
 import io.ygdrasil.wgpu.internal.js.GPUQueue
+import io.ygdrasil.wgpu.internal.js.GPUTexture
 import org.khronos.webgl.Float32Array
+import org.w3c.dom.ImageBitmap
 
 @JsExport
 actual class Queue(private val handler: GPUQueue) {
@@ -24,4 +28,41 @@ actual class Queue(private val handler: GPUQueue) {
 			size
 		)
 	}
+
+	actual fun copyExternalImageToTexture(
+		source: ImageCopyExternalImage,
+		destination: ImageCopyTextureTagged,
+		copySize: GPUIntegerCoordinates
+	) {
+		handler.copyExternalImageToTexture(
+			source.convert(),
+			destination.convert(),
+			copySize.toList().toTypedArray()
+		)
+	}
 }
+
+private fun ImageCopyTextureTagged.convert(): GPUImageCopyTextureTagged = object : GPUImageCopyTextureTagged {
+	override var texture: GPUTexture = this@convert.texture.handler
+	override var mipLevel: GPUIntegerCoordinate? = this@convert.mipLevel ?: undefined
+	override var origin: dynamic = this@convert.origin ?: undefined
+	override var aspect: String? = this@convert.aspect ?: undefined
+	override var colorSpace: Any? = this@convert.colorSpace ?: undefined
+	override var premultipliedAlpha: Boolean? = this@convert.premultipliedAlpha ?: undefined
+}
+
+private fun ImageCopyExternalImage.convert(): GPUImageCopyExternalImage = object : GPUImageCopyExternalImage {
+	override var source: dynamic = this@convert.source.convert()
+	override var origin: dynamic = this@convert.origin ?: undefined
+	override var flipY: Boolean? = this@convert.flipY ?: undefined
+}
+
+private fun DrawableHolder.convert(): dynamic = let { holder ->
+	when (holder) {
+		is ImageBitmapHolder -> holder.handler
+		else -> error("unreachable statement")
+	}
+}
+
+actual class ImageBitmapHolder(internal val handler: ImageBitmap) : DrawableHolder
+actual sealed interface DrawableHolder

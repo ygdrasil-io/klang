@@ -3,10 +3,12 @@
 package io.ygdrasil.wgpu.examples
 
 import io.ygdrasil.wgpu.CanvasConfiguration
+import io.ygdrasil.wgpu.ImageBitmapHolder
 import io.ygdrasil.wgpu.getRenderingContext
 import io.ygdrasil.wgpu.requestAdapter
 import kotlinx.browser.window
 import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.await
 import kotlinx.coroutines.promise
 import org.w3c.dom.HTMLCanvasElement
 import kotlin.js.Promise
@@ -19,6 +21,8 @@ val UPDATE_INTERVAL = (1000.0 / 60.0).toInt()
 @JsExport
 fun jsApplication(canvas: HTMLCanvasElement): Promise<Application> {
 	return MainScope().promise {
+
+		val assetManager = getAssetManager()
 
 		val devicePixelRatio = window.devicePixelRatio
 		canvas.width = (canvas.clientWidth * devicePixelRatio).toInt()
@@ -38,7 +42,8 @@ fun jsApplication(canvas: HTMLCanvasElement): Promise<Application> {
 		object : Application(
 			renderingContext,
 			device,
-			adapter
+			adapter,
+			assetManager
 		) {
 			override fun run() {
 				// Schedule main loop to run repeatedly
@@ -49,4 +54,20 @@ fun jsApplication(canvas: HTMLCanvasElement): Promise<Application> {
 		}
 	}
 
+}
+
+suspend fun getAssetManager(): AssetManager {
+	val Di3d: ImageBitmapHolder = getImage("./assets/img/Di-3d.png")
+	println(Di3d)
+	return object : AssetManager {
+		override val Di3d: ImageBitmapHolder = Di3d
+
+	}
+}
+
+private suspend fun getImage(url: String): ImageBitmapHolder {
+	return window.fetch(url).await()
+		.blob().await()
+		.let { window.createImageBitmap(it) }.await()
+		.let { ImageBitmapHolder(it) }
 }

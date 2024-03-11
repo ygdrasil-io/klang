@@ -14,8 +14,9 @@ import kotlin.js.JsExport
 abstract class Application(
 	val renderingContext: RenderingContext,
 	val device: Device,
-	val adapter: Adapter
-) : AutoCloseable {
+	val adapter: Adapter,
+	assetManager: AssetManager
+) : AutoCloseable, AssetManager by assetManager {
 
 	private lateinit var currentScene: Scene
 	private var onError = false

@@ -7,10 +7,9 @@ expect class Texture: AutoCloseable {
 	fun createView(descriptor: TextureViewDescriptor? = null): TextureView
 }
 
-
 data class TextureDescriptor(
 	// TODO should we support GPUExtent3DDictStrict ?
-	var size: Pair<Int, Int>,
+	var size: GPUIntegerCoordinates,
 	var format: TextureFormat,
 	var usage: GPUTextureUsageFlags,
 	/* Iterable<GPUIntegerCoordinate> | GPUExtent3DDictStrict */

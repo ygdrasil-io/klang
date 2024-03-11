@@ -14,6 +14,8 @@ typealias GPUIndex32 = Int
 
 typealias GPUIntegerCoordinate = Int
 
+typealias GPUIntegerCoordinates = Pair<GPUIntegerCoordinate, GPUIntegerCoordinate>
+
 typealias GPUIntegerCoordinateOut = Int
 
 typealias GPUMapModeFlags = Number

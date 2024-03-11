@@ -33,7 +33,8 @@ suspend fun jvmApplication() = (WGPU.createInstance() ?: error("fail to wgpu ins
 	val application = object : Application(
 		renderingContext,
 		device,
-		adapter
+		adapter,
+		assetManager
 	) {
 		override fun run() {
 			while (true) {

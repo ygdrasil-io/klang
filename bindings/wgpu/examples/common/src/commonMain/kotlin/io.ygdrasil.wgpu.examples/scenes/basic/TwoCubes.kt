@@ -9,8 +9,10 @@ import io.ygdrasil.wgpu.examples.autoClosableContext
 import io.ygdrasil.wgpu.examples.scenes.basic.RotatingCubeScene.Companion.cubeVertexCount
 import korlibs.math.geom.Angle
 import korlibs.math.geom.Matrix4
+import kotlin.js.JsExport
 import kotlin.math.PI
 
+@JsExport
 class TwoCubesScene : Application.Scene(), AutoCloseable {
 
 	val offset = 256L; // uniformBindGroup offset must be 256-byte aligned

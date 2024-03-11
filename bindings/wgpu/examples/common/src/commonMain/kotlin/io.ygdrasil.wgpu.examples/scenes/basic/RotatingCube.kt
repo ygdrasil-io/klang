@@ -6,6 +6,11 @@ import io.ygdrasil.wgpu.*
 import io.ygdrasil.wgpu.examples.Application
 import io.ygdrasil.wgpu.examples.AutoClosableContext
 import io.ygdrasil.wgpu.examples.autoClosableContext
+import io.ygdrasil.wgpu.examples.scenes.mesh.Cube.cubePositionOffset
+import io.ygdrasil.wgpu.examples.scenes.mesh.Cube.cubeUVOffset
+import io.ygdrasil.wgpu.examples.scenes.mesh.Cube.cubeVertexArray
+import io.ygdrasil.wgpu.examples.scenes.mesh.Cube.cubeVertexCount
+import io.ygdrasil.wgpu.examples.scenes.mesh.Cube.cubeVertexSize
 import korlibs.math.geom.Angle
 import korlibs.math.geom.Matrix4
 import kotlin.js.JsExport
@@ -207,56 +212,7 @@ class RotatingCubeScene : Application.Scene(), AutoCloseable {
 			return (projectionMatrix * viewMatrix).copyToColumns()
 		}
 
-		val cubeVertexSize = 4L * 10L // Byte size of one cube vertex.
-		val cubePositionOffset = 0L
-		val cubeColorOffset = 4 * 4 // Byte offset of cube vertex color attribute.
-		val cubeUVOffset = 4L * 8L
-		val cubeVertexCount = 36
 
-		val cubeVertexArray = arrayOf(
-			// float4 position, float4 color, float2 uv,
-			1, -1, 1, 1, 1, 0, 1, 1, 0, 1,
-			-1, -1, 1, 1, 0, 0, 1, 1, 1, 1,
-			-1, -1, -1, 1, 0, 0, 0, 1, 1, 0,
-			1, -1, -1, 1, 1, 0, 0, 1, 0, 0,
-			1, -1, 1, 1, 1, 0, 1, 1, 0, 1,
-			-1, -1, -1, 1, 0, 0, 0, 1, 1, 0,
-
-			1, 1, 1, 1, 1, 1, 1, 1, 0, 1,
-			1, -1, 1, 1, 1, 0, 1, 1, 1, 1,
-			1, -1, -1, 1, 1, 0, 0, 1, 1, 0,
-			1, 1, -1, 1, 1, 1, 0, 1, 0, 0,
-			1, 1, 1, 1, 1, 1, 1, 1, 0, 1,
-			1, -1, -1, 1, 1, 0, 0, 1, 1, 0,
-
-			-1, 1, 1, 1, 0, 1, 1, 1, 0, 1,
-			1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-			1, 1, -1, 1, 1, 1, 0, 1, 1, 0,
-			-1, 1, -1, 1, 0, 1, 0, 1, 0, 0,
-			-1, 1, 1, 1, 0, 1, 1, 1, 0, 1,
-			1, 1, -1, 1, 1, 1, 0, 1, 1, 0,
-
-			-1, -1, 1, 1, 0, 0, 1, 1, 0, 1,
-			-1, 1, 1, 1, 0, 1, 1, 1, 1, 1,
-			-1, 1, -1, 1, 0, 1, 0, 1, 1, 0,
-			-1, -1, -1, 1, 0, 0, 0, 1, 0, 0,
-			-1, -1, 1, 1, 0, 0, 1, 1, 0, 1,
-			-1, 1, -1, 1, 0, 1, 0, 1, 1, 0,
-
-			1, 1, 1, 1, 1, 1, 1, 1, 0, 1,
-			-1, 1, 1, 1, 0, 1, 1, 1, 1, 1,
-			-1, -1, 1, 1, 0, 0, 1, 1, 1, 0,
-			-1, -1, 1, 1, 0, 0, 1, 1, 1, 0,
-			1, -1, 1, 1, 1, 0, 1, 1, 0, 0,
-			1, 1, 1, 1, 1, 1, 1, 1, 0, 1,
-
-			1, -1, -1, 1, 1, 0, 0, 1, 0, 1,
-			-1, -1, -1, 1, 0, 0, 0, 1, 1, 1,
-			-1, 1, -1, 1, 0, 1, 0, 1, 1, 0,
-			1, 1, -1, 1, 1, 1, 0, 1, 0, 0,
-			1, -1, -1, 1, 1, 0, 0, 1, 0, 1,
-			-1, 1, -1, 1, 0, 1, 0, 1, 1, 0,
-		).let { FloatArray(it.size) { index -> it[index].toFloat() } }
 
 
 		const val vertex = """

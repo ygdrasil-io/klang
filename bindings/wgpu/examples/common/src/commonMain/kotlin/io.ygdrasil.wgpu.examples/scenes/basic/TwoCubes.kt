@@ -6,7 +6,11 @@ import io.ygdrasil.wgpu.*
 import io.ygdrasil.wgpu.examples.Application
 import io.ygdrasil.wgpu.examples.AutoClosableContext
 import io.ygdrasil.wgpu.examples.autoClosableContext
-import io.ygdrasil.wgpu.examples.scenes.basic.RotatingCubeScene.Companion.cubeVertexCount
+import io.ygdrasil.wgpu.examples.scenes.mesh.Cube.cubePositionOffset
+import io.ygdrasil.wgpu.examples.scenes.mesh.Cube.cubeUVOffset
+import io.ygdrasil.wgpu.examples.scenes.mesh.Cube.cubeVertexArray
+import io.ygdrasil.wgpu.examples.scenes.mesh.Cube.cubeVertexCount
+import io.ygdrasil.wgpu.examples.scenes.mesh.Cube.cubeVertexSize
 import korlibs.math.geom.Angle
 import korlibs.math.geom.Matrix4
 import kotlin.js.JsExport
@@ -41,14 +45,14 @@ class TwoCubesScene : Application.Scene(), AutoCloseable {
 		// Create a vertex buffer from the cube data.
 		verticesBuffer = device.createBuffer(
 			BufferDescriptor(
-				size = (RotatingCubeScene.cubeVertexArray.size * Float.SIZE_BYTES).toLong(),
+				size = (cubeVertexArray.size * Float.SIZE_BYTES).toLong(),
 				usage = BufferUsage.vertex.value,
 				mappedAtCreation = true
 			)
 		)
 
 		// Util method to use getMappedRange
-		verticesBuffer.map(RotatingCubeScene.cubeVertexArray)
+		verticesBuffer.map(cubeVertexArray)
 		verticesBuffer.unmap()
 
 		renderPipeline = device.createRenderPipeline(
@@ -61,16 +65,16 @@ class TwoCubesScene : Application.Scene(), AutoCloseable {
 					).bind(), // bind to autoClosableContext to release it later
 					buffers = arrayOf(
 						RenderPipelineDescriptor.VertexState.VertexBufferLayout(
-							arrayStride = RotatingCubeScene.cubeVertexSize,
+							arrayStride = cubeVertexSize,
 							attributes = arrayOf(
 								RenderPipelineDescriptor.VertexState.VertexBufferLayout.VertexAttribute(
 									shaderLocation = 0,
-									offset = RotatingCubeScene.cubePositionOffset,
+									offset = cubePositionOffset,
 									format = "float32x4"
 								),
 								RenderPipelineDescriptor.VertexState.VertexBufferLayout.VertexAttribute(
 									shaderLocation = 1,
-									offset = RotatingCubeScene.cubeUVOffset,
+									offset = cubeUVOffset,
 									format = "float32x2"
 								)
 							)

@@ -11,8 +11,8 @@ import io.ygdrasil.wgpu.examples.scenes.mesh.Cube.cubeUVOffset
 import io.ygdrasil.wgpu.examples.scenes.mesh.Cube.cubeVertexArray
 import io.ygdrasil.wgpu.examples.scenes.mesh.Cube.cubeVertexCount
 import io.ygdrasil.wgpu.examples.scenes.mesh.Cube.cubeVertexSize
-import io.ygdrasil.wgpu.examples.scenes.shader.basicVertexShader
 import io.ygdrasil.wgpu.examples.scenes.shader.fragmentVertexPositionColorShader
+import io.ygdrasil.wgpu.examples.scenes.shader.vertex.basicVertexShader
 import korlibs.math.geom.Angle
 import korlibs.math.geom.Matrix4
 import kotlin.js.JsExport

@@ -5,6 +5,7 @@ package io.ygdrasil.wgpu.examples
 import io.ygdrasil.wgpu.Adapter
 import io.ygdrasil.wgpu.Device
 import io.ygdrasil.wgpu.RenderingContext
+import io.ygdrasil.wgpu.examples.scenes.basic.InstancedCubeScene
 import io.ygdrasil.wgpu.examples.scenes.basic.RotatingCubeScene
 import io.ygdrasil.wgpu.examples.scenes.basic.TexturedCubeScene
 import io.ygdrasil.wgpu.examples.scenes.basic.TwoCubesScene
@@ -73,6 +74,7 @@ abstract class Application(
 }
 
 val availableScenes = listOf(
+	InstancedCubeScene(),
 	TexturedCubeScene(),
 	TwoCubesScene(),
 	RotatingCubeScene(),

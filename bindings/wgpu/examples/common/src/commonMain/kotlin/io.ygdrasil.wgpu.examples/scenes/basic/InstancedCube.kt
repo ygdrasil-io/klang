@@ -7,15 +7,18 @@ import io.ygdrasil.wgpu.examples.Application
 import io.ygdrasil.wgpu.examples.AutoClosableContext
 import io.ygdrasil.wgpu.examples.autoClosableContext
 import io.ygdrasil.wgpu.examples.scenes.mesh.Cube
-import io.ygdrasil.wgpu.examples.scenes.shader.fragmentSampleTextureMixColorShader
-import io.ygdrasil.wgpu.examples.scenes.shader.vertex.basicVertexShader
+import io.ygdrasil.wgpu.examples.scenes.shader.fragmentVertexPositionColorShader
+import io.ygdrasil.wgpu.examples.scenes.shader.vertex.instancedShader
 import korlibs.math.geom.Angle
 import korlibs.math.geom.Matrix4
-import kotlin.js.JsExport
 import kotlin.math.PI
 
-@JsExport
-class TexturedCubeScene : Application.Scene(), AutoCloseable {
+val xCount = 4
+val yCount = 4
+val numInstances = xCount * yCount
+
+class InstancedCubeScene() : Application.Scene(), AutoCloseable {
+
 
 	lateinit var renderPipeline: RenderPipeline
 	lateinit var projectionMatrix: Matrix4
@@ -54,7 +57,7 @@ class TexturedCubeScene : Application.Scene(), AutoCloseable {
 				vertex = RenderPipelineDescriptor.VertexState(
 					module = device.createShaderModule(
 						ShaderModuleDescriptor(
-							code = basicVertexShader
+							code = instancedShader
 						)
 					).bind(), // bind to autoClosableContext to release it later
 					buffers = arrayOf(
@@ -78,7 +81,7 @@ class TexturedCubeScene : Application.Scene(), AutoCloseable {
 				fragment = RenderPipelineDescriptor.FragmentState(
 					module = device.createShaderModule(
 						ShaderModuleDescriptor(
-							code = fragmentSampleTextureMixColorShader
+							code = fragmentVertexPositionColorShader
 						)
 					).bind(), // bind to autoClosableContext to release it later
 					targets = arrayOf(
@@ -107,39 +110,13 @@ class TexturedCubeScene : Application.Scene(), AutoCloseable {
 			)
 		).bind()
 
-		val uniformBufferSize = 4L * 16L; // 4x4 matrix
+		val uniformBufferSize = numInstances * 4L * 16L; // 4x4 matrix
 		uniformBuffer = device.createBuffer(
 			BufferDescriptor(
 				size = uniformBufferSize,
 				usage = BufferUsage.uniform or BufferUsage.copydst
 			)
 		).bind()
-
-
-		// Fetch the image and upload it into a GPUTexture.
-		val imageBitmapWidth = 512
-		val imageBitmapHeight = 512
-		val cubeTexture = device.createTexture(
-			TextureDescriptor(
-				size = imageBitmapWidth to imageBitmapHeight,
-				format = TextureFormat.rgba8unorm,
-				usage = TextureUsage.texturebinding or TextureUsage.copydst or TextureUsage.renderattachment,
-			)
-		)
-
-		device.queue.copyExternalImageToTexture(
-			ImageCopyExternalImage(source = Di3d),
-			ImageCopyTextureTagged(texture = cubeTexture),
-			imageBitmapWidth to imageBitmapHeight
-		)
-
-		// Create a sampler with linear filtering for smooth interpolation.
-		val sampler = device.createSampler(
-			SamplerDescriptor(
-				magFilter = "linear",
-				minFilter = "linear",
-			)
-		)
 
 		uniformBindGroup = device.createBindGroup(
 			BindGroupDescriptor(
@@ -149,18 +126,6 @@ class TexturedCubeScene : Application.Scene(), AutoCloseable {
 						binding = 0,
 						resource = BindGroupDescriptor.BindGroupEntry.BufferBinding(
 							buffer = uniformBuffer
-						)
-					),
-					BindGroupDescriptor.BindGroupEntry(
-						binding = 1,
-						resource = BindGroupDescriptor.BindGroupEntry.SamplerBinding(
-							sampler = sampler
-						)
-					),
-					BindGroupDescriptor.BindGroupEntry(
-						binding = 2,
-						resource = BindGroupDescriptor.BindGroupEntry.TextureViewBinding(
-							view = cubeTexture.createView()
 						)
 					)
 				)
@@ -217,7 +182,7 @@ class TexturedCubeScene : Application.Scene(), AutoCloseable {
 		renderPassEncoder.setPipeline(renderPipeline)
 		renderPassEncoder.setBindGroup(0, uniformBindGroup)
 		renderPassEncoder.setVertexBuffer(0, verticesBuffer)
-		renderPassEncoder.draw(Cube.cubeVertexCount)
+		renderPassEncoder.draw(Cube.cubeVertexCount, numInstances)
 		renderPassEncoder.end()
 
 		val commandBuffer = encoder.finish()
@@ -232,9 +197,7 @@ class TexturedCubeScene : Application.Scene(), AutoCloseable {
 	override fun close() {
 		autoClosableContext.close()
 	}
-
 }
-
 
 private fun getTransformationMatrix(angle: Double, projectionMatrix: Matrix4): FloatArray {
 	var viewMatrix = Matrix4.IDENTITY

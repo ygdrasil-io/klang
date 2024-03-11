@@ -1,4 +1,4 @@
-package io.ygdrasil.wgpu.examples.scenes.shader
+package io.ygdrasil.wgpu.examples.scenes.shader.vertex
 
 const val basicVertexShader = """
 struct Uniforms {

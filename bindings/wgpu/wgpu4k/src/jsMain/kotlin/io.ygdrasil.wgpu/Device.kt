@@ -45,10 +45,28 @@ actual class Device(val handler: GPUDevice) : AutoCloseable {
 			.let { handler.createBindGroup(it) }
 			.let(::BindGroup)
 
+	actual fun createSampler(descriptor: SamplerDescriptor): Sampler =
+		descriptor.convert()
+			.let { handler.createSampler(it) }
+			.let(::Sampler)
 
 	override fun close() {
 		// Nothing on JS
 	}
+}
+
+private fun SamplerDescriptor.convert(): GPUSamplerDescriptor = object : GPUSamplerDescriptor {
+	override var label: String? = this@convert.label ?: undefined
+	override var addressModeU: String? = this@convert.addressModeU ?: undefined
+	override var addressModeV: String? = this@convert.addressModeV ?: undefined
+	override var addressModeW: String? = this@convert.addressModeW ?: undefined
+	override var magFilter: String? = this@convert.magFilter ?: undefined
+	override var minFilter: String? = this@convert.minFilter ?: undefined
+	override var mipmapFilter: String? = this@convert.mipmapFilter ?: undefined
+	override var lodMinClamp: Number? = this@convert.lodMinClamp ?: undefined
+	override var lodMaxClamp: Number? = this@convert.lodMaxClamp ?: undefined
+	override var compare: String? = this@convert.compare ?: undefined
+	override var maxAnisotropy: Number? = this@convert.maxAnisotropy ?: undefined
 }
 
 private fun BindGroupDescriptor.convert(): GPUBindGroupDescriptor = object : GPUBindGroupDescriptor {
@@ -66,6 +84,8 @@ private fun BindGroupDescriptor.BindGroupEntry.convert(): GPUBindGroupEntry = ob
 				override var offset: GPUSize64? = it.offset ?: undefined
 				override var size: GPUSize64? = it.size ?: undefined
 			}
+			is BindGroupDescriptor.BindGroupEntry.SamplerBinding -> it.sampler
+			is BindGroupDescriptor.BindGroupEntry.TextureViewBinding -> it.view
 		}
 	}
 

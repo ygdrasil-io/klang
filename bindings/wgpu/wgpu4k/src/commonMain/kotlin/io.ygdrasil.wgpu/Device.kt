@@ -18,6 +18,8 @@ expect class Device: AutoCloseable {
 	fun createTexture(descriptor: TextureDescriptor): Texture
 
 	fun createBindGroup(descriptor: BindGroupDescriptor): BindGroup
+
+	fun createSampler(descriptor: SamplerDescriptor = SamplerDescriptor()): Sampler
 }
 
 // TODO

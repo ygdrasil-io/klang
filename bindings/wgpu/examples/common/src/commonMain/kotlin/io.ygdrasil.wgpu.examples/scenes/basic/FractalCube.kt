@@ -11,7 +11,7 @@ import io.ygdrasil.wgpu.examples.scenes.mesh.Cube.cubeUVOffset
 import io.ygdrasil.wgpu.examples.scenes.mesh.Cube.cubeVertexArray
 import io.ygdrasil.wgpu.examples.scenes.mesh.Cube.cubeVertexCount
 import io.ygdrasil.wgpu.examples.scenes.mesh.Cube.cubeVertexSize
-import io.ygdrasil.wgpu.examples.scenes.shader.fragmentVertexPositionColorShader
+import io.ygdrasil.wgpu.examples.scenes.shader.fragment.sampleSelfShader
 import io.ygdrasil.wgpu.examples.scenes.shader.vertex.basicVertexShader
 import korlibs.math.geom.Angle
 import korlibs.math.geom.Matrix4
@@ -19,22 +19,31 @@ import kotlin.js.JsExport
 import kotlin.math.PI
 
 @JsExport
-class TwoCubesScene : Application.Scene(), AutoCloseable {
-
-	val offset = 256L; // uniformBindGroup offset must be 256-byte aligned
+class FractalCubeScene : Application.Scene(), AutoCloseable {
 
 	lateinit var renderPipeline: RenderPipeline
-	lateinit var projectionMatrix1: Matrix4
-	lateinit var projectionMatrix2: Matrix4
+	lateinit var projectionMatrix: Matrix4
 	lateinit var renderPassDescriptor: RenderPassDescriptor
 	lateinit var uniformBuffer: Buffer
-	lateinit var uniformBindGroup1: BindGroup
-	lateinit var uniformBindGroup2: BindGroup
+	lateinit var uniformBindGroup: BindGroup
 	lateinit var verticesBuffer: Buffer
+	lateinit var cubeTexture: Texture
 
 	val autoClosableContext = AutoClosableContext()
 
 	override fun Application.initialiaze() = with(autoClosableContext) {
+
+		renderingContext.configure(
+			CanvasConfiguration(
+				device,
+				format = renderingContext.textureFormat,
+
+				// Specify we want both RENDER_ATTACHMENT and COPY_SRC since we
+				// will copy out of the swapchain texture.
+				usage = TextureUsage.renderattachment or TextureUsage.copysrc,
+				alphaMode = "premultiplied"
+			)
+		)
 
 		// Create a vertex buffer from the cube data.
 		verticesBuffer = device.createBuffer(
@@ -78,7 +87,7 @@ class TwoCubesScene : Application.Scene(), AutoCloseable {
 				fragment = RenderPipelineDescriptor.FragmentState(
 					module = device.createShaderModule(
 						ShaderModuleDescriptor(
-							code = fragmentVertexPositionColorShader
+							code = sampleSelfShader
 						)
 					).bind(), // bind to autoClosableContext to release it later
 					targets = arrayOf(
@@ -107,8 +116,7 @@ class TwoCubesScene : Application.Scene(), AutoCloseable {
 			)
 		).bind()
 
-		val matrixSize = 4L * 16L; // 4x4 matrix
-		val uniformBufferSize = offset + matrixSize;
+		val uniformBufferSize = 4L * 16L; // 4x4 matrix
 		uniformBuffer = device.createBuffer(
 			BufferDescriptor(
 				size = uniformBufferSize,
@@ -116,7 +124,26 @@ class TwoCubesScene : Application.Scene(), AutoCloseable {
 			)
 		).bind()
 
-		uniformBindGroup1 = device.createBindGroup(
+		// We will copy the frame's rendering results into this texture and
+		// sample it on the next frame.
+		cubeTexture = device.createTexture(
+			TextureDescriptor(
+				size = renderingContext.width to renderingContext.height,
+				format = renderingContext.textureFormat,
+				usage = TextureUsage.texturebinding or TextureUsage.copydst,
+			)
+		)
+
+		// Create a sampler with linear filtering for smooth interpolation.
+		val sampler = device.createSampler(
+			SamplerDescriptor(
+				magFilter = "linear",
+				minFilter = "linear",
+			)
+		)
+
+
+		uniformBindGroup = device.createBindGroup(
 			BindGroupDescriptor(
 				layout = renderPipeline.getBindGroupLayout(0),
 				entries = arrayOf(
@@ -125,20 +152,17 @@ class TwoCubesScene : Application.Scene(), AutoCloseable {
 						resource = BindGroupDescriptor.BindGroupEntry.BufferBinding(
 							buffer = uniformBuffer
 						)
-					)
-				)
-			)
-		)
-
-		uniformBindGroup2 = device.createBindGroup(
-			BindGroupDescriptor(
-				layout = renderPipeline.getBindGroupLayout(0),
-				entries = arrayOf(
+					),
 					BindGroupDescriptor.BindGroupEntry(
-						binding = 0,
-						resource = BindGroupDescriptor.BindGroupEntry.BufferBinding(
-							buffer = uniformBuffer,
-							offset = offset
+						binding = 1,
+						resource = BindGroupDescriptor.BindGroupEntry.SamplerBinding(
+							sampler = sampler
+						)
+					),
+					BindGroupDescriptor.BindGroupEntry(
+						binding = 2,
+						resource = BindGroupDescriptor.BindGroupEntry.TextureViewBinding(
+							view = cubeTexture.createView()
 						)
 					)
 				)
@@ -165,39 +189,26 @@ class TwoCubesScene : Application.Scene(), AutoCloseable {
 
 		val aspect = renderingContext.width / renderingContext.height.toDouble()
 		val fox = Angle.fromRadians((2 * PI) / 5)
-		projectionMatrix1 = Matrix4.perspective(fox, aspect, 1.0, 100.0)
-			.translated(-2.0, 0.0, -7.0)
-		projectionMatrix2 = Matrix4.perspective(fox, aspect, 1.0, 100.0)
-			.translated(2.0, 0.0, -7.0)
+		projectionMatrix = Matrix4.perspective(fox, aspect, 1.0, 100.0)
 	}
 
 	override fun Application.render() = autoClosableContext {
 
-		val transformationMatrix1 = getTransformationMatrix(
+		val transformationMatrix = getTransformationMatrix(
 			frame / 100.0,
-			projectionMatrix1
-		)
-		val transformationMatrix2 = getTransformationMatrix(
-			frame / 100.0,
-			projectionMatrix2
+			projectionMatrix
 		)
 		device.queue.writeBuffer(
 			uniformBuffer,
 			0,
-			transformationMatrix1,
+			transformationMatrix,
 			0,
-			transformationMatrix1.size.toLong()
-		)
-		device.queue.writeBuffer(
-			uniformBuffer,
-			offset,
-			transformationMatrix2,
-			0,
-			transformationMatrix2.size.toLong()
+			transformationMatrix.size.toLong()
 		)
 
-		renderPassDescriptor.colorAttachments[0].view = renderingContext
-			.getCurrentTexture()
+		val swapChainTexture = renderingContext.getCurrentTexture()
+
+		renderPassDescriptor.colorAttachments[0].view = swapChainTexture
 			.bind()
 			.createView()
 
@@ -207,18 +218,17 @@ class TwoCubesScene : Application.Scene(), AutoCloseable {
 		val renderPassEncoder = encoder.beginRenderPass(renderPassDescriptor)
 			.bind()
 		renderPassEncoder.setPipeline(renderPipeline)
-		renderPassEncoder.setBindGroup(0, uniformBindGroup1)
+		renderPassEncoder.setBindGroup(0, uniformBindGroup)
 		renderPassEncoder.setVertexBuffer(0, verticesBuffer)
-
-		// Bind the bind group (with the transformation matrix) for
-		// each cube, and draw.
-		renderPassEncoder.setBindGroup(0, uniformBindGroup1);
-		renderPassEncoder.draw(cubeVertexCount);
-
-		renderPassEncoder.setBindGroup(0, uniformBindGroup2);
-		renderPassEncoder.draw(cubeVertexCount);
-
+		renderPassEncoder.draw(cubeVertexCount)
 		renderPassEncoder.end()
+
+		encoder.copyTextureToTexture(
+			ImageCopyTexture(texture = swapChainTexture),
+			ImageCopyTexture(texture = cubeTexture),
+			renderingContext.width to renderingContext.height
+		)
+
 		val commandBuffer = encoder.finish()
 			.bind()
 
@@ -234,8 +244,10 @@ class TwoCubesScene : Application.Scene(), AutoCloseable {
 
 }
 
+
 private fun getTransformationMatrix(angle: Double, projectionMatrix: Matrix4): FloatArray {
 	var viewMatrix = Matrix4.IDENTITY
+	viewMatrix = viewMatrix.translated(0, 0, -4)
 
 	viewMatrix = viewMatrix.rotated(
 		Angle.fromRadians(Angle.fromRadians(angle).sine),

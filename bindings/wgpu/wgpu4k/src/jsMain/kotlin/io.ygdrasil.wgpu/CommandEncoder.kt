@@ -14,10 +14,26 @@ actual class CommandEncoder(private val handler: GPUCommandEncoder) : AutoClosea
 		return CommandBuffer(handler.finish())
 	}
 
+	actual fun copyTextureToTexture(
+		source: ImageCopyTexture,
+		destination: ImageCopyTexture,
+		copySize: GPUIntegerCoordinates
+	) {
+		handler.copyTextureToTexture(source.convert(), destination.convert(), copySize.toList().toTypedArray())
+	}
+
 	override fun close() {
 		// Nothing to do
 	}
 }
+
+private fun ImageCopyTexture.convert(): GPUImageCopyTexture = object : GPUImageCopyTexture {
+	override var texture: GPUTexture = this@convert.texture.handler
+	override var mipLevel: GPUIntegerCoordinate? = this@convert.mipLevel ?: undefined
+	override var origin: dynamic = this@convert.origin?.toList()?.toTypedArray() ?: undefined
+	override var aspect: String? = this@convert.aspect ?: undefined
+}
+
 
 private fun RenderPassDescriptor.convert(): GPURenderPassDescriptor = object : GPURenderPassDescriptor {
 	override var colorAttachments: Array<GPURenderPassColorAttachment> =
@@ -25,6 +41,7 @@ private fun RenderPassDescriptor.convert(): GPURenderPassDescriptor = object : G
 	override var label: String? = this@convert.label ?: undefined
 	override var depthStencilAttachment: GPURenderPassDepthStencilAttachment? =
 		this@convert.depthStencilAttachment?.convert() ?: undefined
+
 	/*
 	override var occlusionQuerySet: GPUQuerySet?
 	override var timestampWrites: GPURenderPassTimestampWrites?

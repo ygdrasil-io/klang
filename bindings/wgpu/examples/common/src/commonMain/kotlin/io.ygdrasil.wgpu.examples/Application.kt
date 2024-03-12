@@ -2,13 +2,8 @@
 
 package io.ygdrasil.wgpu.examples
 
-import io.ygdrasil.wgpu.Adapter
-import io.ygdrasil.wgpu.Device
-import io.ygdrasil.wgpu.RenderingContext
-import io.ygdrasil.wgpu.examples.scenes.basic.InstancedCubeScene
-import io.ygdrasil.wgpu.examples.scenes.basic.RotatingCubeScene
-import io.ygdrasil.wgpu.examples.scenes.basic.TexturedCubeScene
-import io.ygdrasil.wgpu.examples.scenes.basic.TwoCubesScene
+import io.ygdrasil.wgpu.*
+import io.ygdrasil.wgpu.examples.scenes.basic.*
 import kotlin.js.JsExport
 
 @JsExport
@@ -21,6 +16,17 @@ abstract class Application(
 
 	private lateinit var currentScene: Scene
 	private var onError = false
+
+	val dummyTexture by lazy {
+		device.createTexture(
+			TextureDescriptor(
+				size = 1 to 1,
+				format = TextureFormat.depth24plus,
+				usage = TextureUsage.renderattachment.value,
+			)
+		)
+	}
+
 
 	var frame = 0
 		private set
@@ -74,6 +80,7 @@ abstract class Application(
 }
 
 val availableScenes = listOf(
+	FractalCubeScene(),
 	InstancedCubeScene(),
 	TexturedCubeScene(),
 	TwoCubesScene(),

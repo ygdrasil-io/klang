@@ -34,7 +34,7 @@ actual class RenderingContext(private val handler: GPUCanvasContext) : AutoClose
 		// Nothing to do on js
 	}
 
-	fun configure(canvasConfiguration: CanvasConfiguration) {
+	actual fun configure(canvasConfiguration: CanvasConfiguration) {
 		handler.configure(canvasConfiguration.convert())
 	}
 
@@ -50,12 +50,3 @@ actual class RenderingContext(private val handler: GPUCanvasContext) : AutoClose
 
 fun HTMLCanvasElement.getRenderingContext() = (getContext("webgpu") as? GPUCanvasContext)?.let { RenderingContext(it) }
 
-@JsExport
-data class CanvasConfiguration(
-	var device: Device,
-	var format: TextureFormat? = null,
-	var usage: GPUTextureUsageFlags? = null,
-	var viewFormats: Array<String?>? = null,
-	var colorSpace: Any? = null,
-	var alphaMode: String? = null
-)

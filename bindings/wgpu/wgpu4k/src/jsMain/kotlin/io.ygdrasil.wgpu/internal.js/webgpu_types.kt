@@ -777,11 +777,19 @@ external interface GPUCommandEncoder : GPUObjectBase, GPUCommandsMixin, GPUDebug
     fun beginRenderPass(descriptor: GPURenderPassDescriptor): GPURenderPassEncoder
     fun beginComputePass(descriptor: GPUComputePassDescriptor = definedExternally): GPUComputePassEncoder
     fun copyBufferToBuffer(source: GPUBuffer, sourceOffset: GPUSize64, destination: GPUBuffer, destinationOffset: GPUSize64, size: GPUSize64): Nothing?
-    fun copyBufferToTexture(source: GPUImageCopyBuffer, destination: GPUImageCopyTexture, copySize: Iterable<GPUIntegerCoordinate>): Nothing?
+	fun copyBufferToTexture(
+		source: GPUImageCopyBuffer,
+		destination: GPUImageCopyTexture,
+		copySize: Array<GPUIntegerCoordinate>
+	): Nothing?
     fun copyBufferToTexture(source: GPUImageCopyBuffer, destination: GPUImageCopyTexture, copySize: GPUExtent3DDictStrict): Nothing?
     fun copyTextureToBuffer(source: GPUImageCopyTexture, destination: GPUImageCopyBuffer, copySize: Iterable<GPUIntegerCoordinate>): Nothing?
     fun copyTextureToBuffer(source: GPUImageCopyTexture, destination: GPUImageCopyBuffer, copySize: GPUExtent3DDictStrict): Nothing?
-    fun copyTextureToTexture(source: GPUImageCopyTexture, destination: GPUImageCopyTexture, copySize: Iterable<GPUIntegerCoordinate>): Nothing?
+	fun copyTextureToTexture(
+		source: GPUImageCopyTexture,
+		destination: GPUImageCopyTexture,
+		copySize: Array<GPUIntegerCoordinate>
+	): Nothing?
     fun copyTextureToTexture(source: GPUImageCopyTexture, destination: GPUImageCopyTexture, copySize: GPUExtent3DDictStrict): Nothing?
     fun clearBuffer(buffer: GPUBuffer, offset: GPUSize64 = definedExternally, size: GPUSize64 = definedExternally): Nothing?
     fun resolveQuerySet(querySet: GPUQuerySet, firstQuery: GPUSize32, queryCount: GPUSize32, destination: GPUBuffer, destinationOffset: GPUSize64): Nothing?

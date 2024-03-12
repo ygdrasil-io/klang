@@ -28,14 +28,6 @@ class TexturedCubeScene : Application.Scene(), AutoCloseable {
 
 	override fun Application.initialiaze() = with(autoClosableContext) {
 
-		val dummyTexture = device.createTexture(
-			TextureDescriptor(
-				size = 1 to 1,
-				format = TextureFormat.depth24plus,
-				usage = TextureUsage.renderattachment.value,
-			)
-		).bind()
-
 		// Create a vertex buffer from the cube data.
 		verticesBuffer = device.createBuffer(
 			BufferDescriptor(

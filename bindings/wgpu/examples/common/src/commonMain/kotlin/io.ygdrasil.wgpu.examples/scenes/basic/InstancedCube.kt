@@ -26,6 +26,7 @@ class InstancedCubeScene() : Application.Scene(), AutoCloseable {
 	lateinit var uniformBuffer: Buffer
 	lateinit var uniformBindGroup: BindGroup
 	lateinit var verticesBuffer: Buffer
+	val modelMatrices = Array<Matrix4?>(numInstances) { null }
 
 	val autoClosableContext = AutoClosableContext()
 
@@ -153,13 +154,27 @@ class InstancedCubeScene() : Application.Scene(), AutoCloseable {
 		val aspect = renderingContext.width / renderingContext.height.toDouble()
 		val fox = Angle.fromRadians((2 * PI) / 5)
 		projectionMatrix = Matrix4.perspective(fox, aspect, 1.0, 100.0)
+
+		val step = 4.0
+		var m = 0
+		(0 until xCount).forEach { x ->
+			(0 until yCount).forEach { y ->
+				modelMatrices[m] = projectionMatrix
+					.translated(
+						step * (x - xCount / 2 + 0.5),
+						step * (y - yCount / 2 + 0.5),
+						-12.0
+					)
+				m += 1
+			}
+		}
 	}
 
 	override fun Application.render() = autoClosableContext {
 
 		val transformationMatrix = getTransformationMatrix(
 			frame / 100.0,
-			projectionMatrix
+			modelMatrices
 		)
 		device.queue.writeBuffer(
 			uniformBuffer,
@@ -199,15 +214,21 @@ class InstancedCubeScene() : Application.Scene(), AutoCloseable {
 	}
 }
 
-private fun getTransformationMatrix(angle: Double, projectionMatrix: Matrix4): FloatArray {
-	var viewMatrix = Matrix4.IDENTITY
-	viewMatrix = viewMatrix.translated(0, 0, -4)
+private fun getTransformationMatrix(angle: Double, modelMatrices: Array<Matrix4?>): FloatArray {
+	val uniform = mutableListOf<FloatArray>()
 
-	viewMatrix = viewMatrix.rotated(
-		Angle.fromRadians(Angle.fromRadians(angle).sine),
-		Angle.fromRadians(Angle.fromRadians(angle).cosine),
-		Angle.fromRadians(0)
-	)
+	var m = 0
+	(0 until xCount).forEach { x ->
+		(0 until yCount).forEach { y ->
+			modelMatrices[m]!!.rotated(
+				Angle.fromRadians(Angle.fromRadians((x + 0.5) * angle).sine),
+				Angle.fromRadians(Angle.fromRadians((x + 0.5) * angle).cosine),
+				Angle.fromRadians(0)
+			).copyToColumns()
+				.let { uniform.add(it) }
+			m += 1
+		}
+	}
 
-	return (projectionMatrix * viewMatrix).copyToColumns()
+	return uniform.flatMap { it.asList() }.toFloatArray()
 }

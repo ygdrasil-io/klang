@@ -32,5 +32,5 @@ data class CanvasConfiguration(
 	var usage: GPUTextureUsageFlags? = null,
 	var viewFormats: Array<String?>? = null,
 	var colorSpace: Any? = null,
-	var alphaMode: String? = null
+	var alphaMode: CompositeAlphaMode? = null
 )

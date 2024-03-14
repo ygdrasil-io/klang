@@ -31,7 +31,7 @@ private fun ImageCopyTexture.convert(): GPUImageCopyTexture = object : GPUImageC
 	override var texture: GPUTexture = this@convert.texture.handler
 	override var mipLevel: GPUIntegerCoordinate? = this@convert.mipLevel ?: undefined
 	override var origin: dynamic = this@convert.origin?.toList()?.toTypedArray() ?: undefined
-	override var aspect: String? = this@convert.aspect ?: undefined
+	override var aspect: String? = this@convert.aspect?.stringValue ?: undefined
 }
 
 

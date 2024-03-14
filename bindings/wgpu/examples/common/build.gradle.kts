@@ -23,7 +23,6 @@ kotlin {
 		val jvmMain by getting {
 			dependencies {
 				api(project(":librococoa"))
-
 			}
 		}
 	}

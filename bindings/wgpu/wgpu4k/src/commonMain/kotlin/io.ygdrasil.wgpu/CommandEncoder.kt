@@ -19,5 +19,5 @@ data class ImageCopyTexture(
 	var texture: Texture,
 	var mipLevel: GPUIntegerCoordinate? = null,
 	var origin: GPUIntegerCoordinates? = null,
-	var aspect: String? = null,
+	var aspect: TextureAspect? = null,
 )

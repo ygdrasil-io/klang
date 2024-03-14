@@ -6,7 +6,7 @@ import io.ygdrasil.wgpu.internal.jvm.wgpuTextureCreateView
 import io.ygdrasil.wgpu.internal.jvm.wgpuTextureRelease
 
 
-actual class Texture(private val handler: WGPUTexture) : AutoCloseable {
+actual class Texture(internal val handler: WGPUTexture) : AutoCloseable {
 	actual fun createView(descriptor: TextureViewDescriptor?): TextureView {
 		return TextureView(
 			wgpuTextureCreateView(handler, descriptor?.convert())

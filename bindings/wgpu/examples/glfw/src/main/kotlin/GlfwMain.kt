@@ -1,11 +1,13 @@
+package io.ygdrasil.wgpu.examples
+
 import com.sun.jna.Pointer
+import darwin.CAMetalLayer
 import darwin.NSWindow
+import io.ygdrasil.wgpu.CanvasConfiguration
+import io.ygdrasil.wgpu.ImageBitmapHolder
 import io.ygdrasil.wgpu.RenderingContext
 import io.ygdrasil.wgpu.WGPU
 import io.ygdrasil.wgpu.WGPU.Companion.createInstance
-import io.ygdrasil.wgpu.examples.Application
-import io.ygdrasil.wgpu.examples.Os
-import io.ygdrasil.wgpu.examples.Platform
 import io.ygdrasil.wgpu.internal.jvm.WGPUSurface
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.glfw.GLFWNativeCocoa.glfwGetCocoaWindow
@@ -48,9 +50,32 @@ suspend fun main() {
 		?: error("fail to get device")
 
 	renderingContext.computeSurfaceCapabilities(adapter)
-	renderingContext.configure(device)
+	renderingContext.configure(CanvasConfiguration(device))
 
-	val application = object : Application() {
+	val assetManager = object : AssetManager {
+		override val Di3d: ImageBitmapHolder
+			get() = TODO("Not yet implemented")
+		override val cubemapPosx: ImageBitmapHolder
+			get() = TODO("Not yet implemented")
+		override val cubemapNegx: ImageBitmapHolder
+			get() = TODO("Not yet implemented")
+		override val cubemapPosy: ImageBitmapHolder
+			get() = TODO("Not yet implemented")
+		override val cubemapNegy: ImageBitmapHolder
+			get() = TODO("Not yet implemented")
+		override val cubemapPosz: ImageBitmapHolder
+			get() = TODO("Not yet implemented")
+		override val cubemapNegz: ImageBitmapHolder
+			get() = TODO("Not yet implemented")
+
+	}
+
+	val application = object : Application(
+		renderingContext,
+		device,
+		adapter,
+		assetManager
+	) {
 
 		override fun run() {
 			TODO("Not yet implemented")
@@ -94,14 +119,12 @@ fun WGPU.getSurface(window: Long): WGPUSurface = when (Platform.os) {
 	Os.MacOs -> {
 		val nsWindowPtr = glfwGetCocoaWindow(window)
 		val nswindow = Rococoa.wrap(ID.fromLong(nsWindowPtr), NSWindow::class.java)
-		val layer = nswindow.contentView()?.layer() ?: error("fail to get layer")
+		nswindow.contentView()?.setWantsLayer(true)
+		val layer = CAMetalLayer.layer()
+		nswindow.contentView()?.setLayer(layer.id().toLong().toPointer())
 		getSurfaceFromMetalLayer(Pointer(layer.id().toLong())) ?: error("fail to get surface on MacOs")
 	}
 }
 
-private fun glfwGetWindowContentScale(window: Long): Float {
-	val array = FloatArray(1)
-	glfwGetWindowContentScale(window, array, FloatArray(1))
-	return array[0]
-}
+private fun Long.toPointer(): Pointer = Pointer(this)
 

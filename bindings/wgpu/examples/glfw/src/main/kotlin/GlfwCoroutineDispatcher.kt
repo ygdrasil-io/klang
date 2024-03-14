@@ -1,3 +1,5 @@
+package io.ygdrasil.wgpu.examples
+
 import kotlinx.coroutines.CoroutineDispatcher
 import org.lwjgl.glfw.GLFW
 import kotlin.coroutines.CoroutineContext

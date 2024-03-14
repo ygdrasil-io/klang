@@ -4,7 +4,7 @@ import io.ygdrasil.wgpu.internal.jvm.*
 
 actual class RenderingContext(
 	internal val handler: WGPUSurface,
-	private val sizeProvider: () ->
+	private val sizeProvider: () -> Pair<Int, Int>
 ) : AutoCloseable {
 
 	private val surfaceCapabilities = WGPUSurfaceCapabilities()
@@ -29,30 +29,28 @@ actual class RenderingContext(
 		wgpuSurfacePresent(handler)
 	}
 
-	override fun close() {
-		wgpuSurfaceRelease(handler)
-	}
-
 	fun computeSurfaceCapabilities(adapter: Adapter) {
 		wgpuSurfaceGetCapabilities(handler, adapter.handler, surfaceCapabilities)
 	}
 
-	fun configure(device: Device) {
+	actual fun configure(canvasConfiguration: CanvasConfiguration) {
 
-			if (surfaceCapabilities.formats == null) error("call computeSurfaceCapabilities(adapter: Adapter) before configure")
+		if (surfaceCapabilities.formats == null) error("call computeSurfaceCapabilities(adapter: Adapter) before configure")
 
-			val config = WGPUSurfaceConfiguration().also {
-				it.device = device.handler ?: error("")
-				it.usage = WGPUTextureUsage.WGPUTextureUsage_RenderAttachment.value
-				it.format = textureFormat.value
-				it.presentMode = WGPUPresentMode.WGPUPresentMode_Fifo.value
-				it.alphaMode = surfaceCapabilities.alphaModes?.getInt(0) ?: error("")
-				it.width = width
-				it.height = height
-			}
+		wgpuSurfaceConfigure(handler, canvasConfiguration.convert())
+	}
 
-			wgpuSurfaceConfigure(handler, config)
+	override fun close() {
+		wgpuSurfaceRelease(handler)
+	}
 
-		}
-
+	private fun CanvasConfiguration.convert(): WGPUSurfaceConfiguration = WGPUSurfaceConfiguration().also {
+		it.device = device.handler
+		it.usage = usage ?: WGPUTextureUsage.WGPUTextureUsage_RenderAttachment.value
+		it.format = format?.value ?: textureFormat.value
+		it.presentMode = WGPUPresentMode.WGPUPresentMode_Fifo.value
+		it.alphaMode = alphaMode?.value ?: surfaceCapabilities.alphaModes?.getInt(0) ?: error("")
+		it.width = width
+		it.height = height
+	}
 }

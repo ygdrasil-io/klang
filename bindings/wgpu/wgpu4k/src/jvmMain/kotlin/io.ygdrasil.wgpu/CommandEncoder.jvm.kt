@@ -18,10 +18,41 @@ actual class CommandEncoder(internal val handler: WGPUCommandEncoder) : AutoClos
 		)
 	}
 
+	actual fun copyTextureToTexture(
+		source: ImageCopyTexture,
+		destination: ImageCopyTexture,
+		copySize: GPUIntegerCoordinates
+	) {
+		wgpuCommandEncoderCopyTextureToTexture(
+			handler,
+			source.convert(),
+			destination.convert(),
+			copySize.convert()
+		)
+	}
+
 	override fun close() {
 		wgpuCommandEncoderRelease(handler)
 	}
 
+}
+
+private fun Pair<Int, Int>.convert(): WGPUExtent3D = WGPUExtent3D().also {
+	it.height = first
+	it.width = second
+}
+
+private fun ImageCopyTexture.convert(): WGPUImageCopyTexture = WGPUImageCopyTexture().also {
+
+	it.texture = texture.handler
+	it.mipLevel = mipLevel
+	it.origin = origin?.let { (x, y) ->
+		WGPUOrigin3D().also {
+			it.x = x
+			it.y = y
+		}
+	}
+	it.aspect = aspect?.value
 }
 
 private fun RenderPassDescriptor.convert(): WGPURenderPassDescriptor = WGPURenderPassDescriptor().also {

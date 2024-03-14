@@ -830,13 +830,13 @@ public open class WGPUExtent3D : Structure {
 	 * mapped from uint32_t
 	 */
 	@JvmField
-	public var height: Int = 0
+	public var height: Int? = null
 
 	/**
 	 * mapped from uint32_t
 	 */
 	@JvmField
-	public var depthOrArrayLayers: Int = 0
+	public var depthOrArrayLayers: Int? = null
 
 	public constructor(pointer: Pointer?) : super(pointer)
 
@@ -2889,19 +2889,19 @@ public open class WGPUImageCopyTexture : Structure {
 	 * mapped from uint32_t
 	 */
 	@JvmField
-	public var mipLevel: Int = 0
+	public var mipLevel: Int? = null
 
 	/**
 	 * mapped from WGPUOrigin3D
 	 */
 	@JvmField
-	public var origin: WGPUOrigin3D = WGPUOrigin3D()
+	public var origin: WGPUOrigin3D? = null
 
 	/**
 	 * mapped from WGPUTextureAspect
 	 */
 	@JvmField
-	public var aspect: Int = 0
+	public var aspect: Int? = null
 
 	public constructor(pointer: Pointer?) : super(pointer)
 

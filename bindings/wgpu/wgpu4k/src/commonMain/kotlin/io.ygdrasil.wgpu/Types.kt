@@ -40,7 +40,7 @@ typealias GPUSize64Out = Number
 
 typealias GPUStencilValue = Int
 
-typealias GPUTextureUsageFlags = Number
+typealias GPUTextureUsageFlags = Int
 
 @JsExport
 data class GPUExtent3DDictStrict(

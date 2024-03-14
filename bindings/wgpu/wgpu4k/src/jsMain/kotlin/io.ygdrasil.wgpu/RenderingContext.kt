@@ -44,7 +44,7 @@ actual class RenderingContext(private val handler: GPUCanvasContext) : AutoClose
 		override var usage: GPUTextureUsageFlags? = this@convert.usage ?: undefined
 		override var viewFormats: Array<String?>? = this@convert.viewFormats ?: undefined
 		override var colorSpace: Any? = this@convert.colorSpace ?: undefined
-		override var alphaMode: String? = this@convert.alphaMode ?: undefined
+		override var alphaMode: String? = this@convert.alphaMode?.name ?: undefined
 	}
 }
 

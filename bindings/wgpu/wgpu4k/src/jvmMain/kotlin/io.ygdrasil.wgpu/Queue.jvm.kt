@@ -3,9 +3,7 @@ package io.ygdrasil.wgpu
 import com.sun.jna.Memory
 import com.sun.jna.NativeLong
 import com.sun.jna.Pointer
-import io.ygdrasil.wgpu.internal.jvm.WGPUQueue
-import io.ygdrasil.wgpu.internal.jvm.wgpuQueueSubmit
-import io.ygdrasil.wgpu.internal.jvm.wgpuQueueWriteBuffer
+import io.ygdrasil.wgpu.internal.jvm.*
 
 actual class Queue(internal val handler: WGPUQueue) {
 
@@ -33,6 +31,22 @@ actual class Queue(internal val handler: WGPUQueue) {
 		)
 	}
 
+	actual fun copyExternalImageToTexture(
+		source: ImageCopyExternalImage,
+		destination: ImageCopyTextureTagged,
+		copySize: GPUIntegerCoordinates
+	) {
+		wgpuQueueWriteTexture(
+			handler,
+			destination.convert(),
+			null,
+			NativeLong(0),
+			null,
+			null
+		) //TODO
+	}
+
+
 	private fun FloatArray.toBuffer(dataOffset: GPUSize64): Pointer? {
 		//Multiply by 4 because of 4 bytes per float
 		return Memory(size * 4L).apply {
@@ -42,6 +56,16 @@ actual class Queue(internal val handler: WGPUQueue) {
 
 }
 
-actual class ImageBitmapHolder : DrawableHolder
+private fun ImageCopyTextureTagged.convert(): WGPUImageCopyTexture = WGPUImageCopyTexture().also {
+	TODO("Not yet implemented")
+}
+
+
+actual class ImageBitmapHolder(val data: Any) : DrawableHolder {
+	actual val width: Int
+		get() = TODO("Not yet implemented")
+	actual val height: Int
+		get() = TODO("Not yet implemented")
+}
 
 actual sealed interface DrawableHolder

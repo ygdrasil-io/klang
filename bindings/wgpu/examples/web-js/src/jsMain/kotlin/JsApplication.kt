@@ -2,10 +2,7 @@
 
 package io.ygdrasil.wgpu.examples
 
-import io.ygdrasil.wgpu.CanvasConfiguration
-import io.ygdrasil.wgpu.ImageBitmapHolder
-import io.ygdrasil.wgpu.getRenderingContext
-import io.ygdrasil.wgpu.requestAdapter
+import io.ygdrasil.wgpu.*
 import kotlinx.browser.window
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.await
@@ -35,7 +32,7 @@ fun jsApplication(canvas: HTMLCanvasElement): Promise<Application> {
 		renderingContext.configure(
 			CanvasConfiguration(
 				device = device,
-				alphaMode = "premultiplied"
+				alphaMode = CompositeAlphaMode.premultiplied
 			)
 		)
 

@@ -261,7 +261,6 @@ public enum class CompositeAlphaMode(
 	premultiplied(2),
 	unpremultiplied(3),
 	inherit(4),
-	force32(2_147_483_647),
 	;
 
 	public infix fun or(other: Int): Int = value or other
@@ -1029,7 +1028,6 @@ public enum class VertexFormat(
 	sint32x2(28),
 	sint32x3(29),
 	sint32x4(30),
-	force32(2_147_483_647),
 	;
 
 	public infix fun or(other: Int): Int = value or other

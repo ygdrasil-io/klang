@@ -2,7 +2,9 @@
 
 package io.ygdrasil.wgpu.examples
 
-import io.ygdrasil.wgpu.*
+import io.ygdrasil.wgpu.ImageBitmapHolder
+import io.ygdrasil.wgpu.getRenderingContext
+import io.ygdrasil.wgpu.requestAdapter
 import kotlinx.browser.window
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.await
@@ -29,12 +31,7 @@ fun jsApplication(canvas: HTMLCanvasElement): Promise<Application> {
 		val device = adapter.requestDevice() ?: error("No appropriate Device found.")
 		val renderingContext = canvas.getRenderingContext() ?: error("fail to get context")
 
-		renderingContext.configure(
-			CanvasConfiguration(
-				device = device,
-				alphaMode = CompositeAlphaMode.premultiplied
-			)
-		)
+
 
 		object : Application(
 			renderingContext,

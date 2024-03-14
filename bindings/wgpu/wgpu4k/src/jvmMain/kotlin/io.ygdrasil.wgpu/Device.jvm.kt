@@ -71,14 +71,26 @@ private fun BufferDescriptor.convert(): WGPUBufferDescriptor = WGPUBufferDescrip
 	it.mappedAtCreation = mappedAtCreation?.toInt()
 }
 
-private fun RenderPipelineDescriptor.VertexState.VertexBufferLayout.convert(): WGPUVertexBufferLayout.ByReference {
-	TODO("Not yet implemented")
+private fun RenderPipelineDescriptor.VertexState.VertexBufferLayout.convert(): WGPUVertexBufferLayout.ByReference =
+	WGPUVertexBufferLayout.ByReference().also {
+		it.arrayStride = arrayStride
+		it.attributeCount = attributes.size.toNativeLong()
+		it.attributes = attributes.map { it.convert() }.toTypedArray()
+		it.stepMode = stepMode?.value
+
+	}
+
+private fun RenderPipelineDescriptor.VertexState.VertexBufferLayout.VertexAttribute.convert(): WGPUVertexAttribute.ByReference =
+	WGPUVertexAttribute.ByReference().also {
+		it.format = format.value
+		it.offset = offset
+		it.shaderLocation = shaderLocation
 }
 
 private fun RenderPipelineDescriptor.convert(): WGPURenderPipelineDescriptor = WGPURenderPipelineDescriptor().also {
 	it.vertex = WGPUVertexState().also { wGPUVertexState ->
 		wGPUVertexState.module = vertex.module.handler
-		wGPUVertexState.entryPoint = vertex.entryPoint
+		wGPUVertexState.entryPoint = vertex.entryPoint ?: "main"
 		wGPUVertexState.bufferCount = (vertex.buffers?.size ?: 0).toLong().let { NativeLong(it) }
 		wGPUVertexState.buffers = if (wGPUVertexState.bufferCount.toLong() == 0L) {
 			arrayOf(WGPUVertexBufferLayout.ByReference())

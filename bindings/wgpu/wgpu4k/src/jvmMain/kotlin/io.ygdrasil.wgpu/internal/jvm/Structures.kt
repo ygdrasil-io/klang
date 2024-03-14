@@ -3203,7 +3203,7 @@ public open class WGPUVertexBufferLayout : Structure {
 	 * mapped from WGPUVertexStepMode
 	 */
 	@JvmField
-	public var stepMode: Int = 0
+	public var stepMode: Int? = null
 
 	/**
 	 * mapped from size_t
@@ -3216,7 +3216,7 @@ public open class WGPUVertexBufferLayout : Structure {
 	 * Declared([i4(format)x4j8(offset)i4(shaderLocation)x4](WGPUVertexAttribute)))*
 	 */
 	@JvmField
-	public var attributes: Pointer? = null
+	public var attributes: Array<WGPUVertexAttribute.ByReference>? = arrayOf(WGPUVertexAttribute.ByReference())
 
 	public constructor(pointer: Pointer?) : super(pointer)
 

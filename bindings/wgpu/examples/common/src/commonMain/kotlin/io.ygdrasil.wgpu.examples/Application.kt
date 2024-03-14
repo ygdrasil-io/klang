@@ -47,6 +47,7 @@ abstract class Application(
 	fun changeScene(nextScene: Scene) {
 		with(nextScene) {
 			try {
+				configureRenderingContext()
 				initialiaze()
 			} catch (e: Throwable) {
 				e.printStackTrace()
@@ -80,11 +81,16 @@ abstract class Application(
 	abstract fun run()
 
 	fun configureRenderingContext() {
-		TODO("Not yet implemented")
+		renderingContext.configure(
+			CanvasConfiguration(
+				device = device
+			)
+		)
 	}
 }
 
 val availableScenes = listOf(
+	BlueTitlingScene(),
 	CubemapScene(),
 	FractalCubeScene(),
 	InstancedCubeScene(),
@@ -92,5 +98,4 @@ val availableScenes = listOf(
 	TwoCubesScene(),
 	RotatingCubeScene(),
 	SimpleTriangleScene(),
-	BlueTitlingScene(),
 )

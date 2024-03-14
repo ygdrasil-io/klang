@@ -3,12 +3,12 @@ package io.ygdrasil.wgpu.examples
 import com.sun.jna.Pointer
 import darwin.CAMetalLayer
 import darwin.NSWindow
-import io.ygdrasil.wgpu.CanvasConfiguration
 import io.ygdrasil.wgpu.ImageBitmapHolder
 import io.ygdrasil.wgpu.RenderingContext
 import io.ygdrasil.wgpu.WGPU
 import io.ygdrasil.wgpu.WGPU.Companion.createInstance
 import io.ygdrasil.wgpu.internal.jvm.WGPUSurface
+import kotlinx.coroutines.Dispatchers
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.glfw.GLFWNativeCocoa.glfwGetCocoaWindow
 import org.lwjgl.system.MemoryUtil.NULL
@@ -50,7 +50,6 @@ suspend fun main() {
 		?: error("fail to get device")
 
 	renderingContext.computeSurfaceCapabilities(adapter)
-	renderingContext.configure(CanvasConfiguration(device))
 
 	val assetManager = object : AssetManager {
 		override val Di3d: ImageBitmapHolder
@@ -78,7 +77,10 @@ suspend fun main() {
 	) {
 
 		override fun run() {
-			TODO("Not yet implemented")
+			glfwDispatcher.dispatch(Dispatchers.Main) {
+				renderFrame()
+				run()
+			}
 		}
 
 	}
@@ -99,6 +101,29 @@ suspend fun main() {
 		glfwSwapInterval(0)
 		render()
 		glfwSwapInterval(1)
+	}
+
+	glfwSetKeyCallback(windowHandle) { _, key, scancode, action, mods ->
+
+		if ((key == GLFW_KEY_PAGE_UP || key == GLFW_KEY_PAGE_DOWN) && action == GLFW_PRESS) {
+			val currentIndex = availableScenes.indexOf(application.currentScene)
+			val index = if (key == GLFW_KEY_PAGE_UP) {
+				currentIndex - 1
+			} else {
+				currentIndex + 1
+			}.let {
+				when (it) {
+					availableScenes.size -> 0
+					-1 -> availableScenes.size - 1
+					else -> it
+				}
+			}
+
+
+			glfwDispatcher.dispatch(Dispatchers.Main) {
+				application.changeScene(availableScenes[index])
+			}
+		}
 	}
 
 

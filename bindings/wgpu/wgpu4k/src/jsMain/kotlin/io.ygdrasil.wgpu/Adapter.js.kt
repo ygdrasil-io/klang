@@ -13,18 +13,18 @@ suspend fun requestAdapter(options: GPURequestAdapterOptions? = null): Adapter? 
 		return null
 	}
 
-	return navigator.gpu.requestAdapter().await()?.let{
+	return navigator.gpu.requestAdapter().await()?.let {
 		Adapter(it)
 	}
 }
 
-actual class Adapter(val handler: GPUAdapter): AutoCloseable {
+actual class Adapter(val handler: GPUAdapter) : AutoCloseable {
 	override fun close() {
 		// Nothing to do on JS
 	}
 
 	actual suspend fun requestDevice(): Device? {
-		return handler.requestDevice().await()?.let{
+		return handler.requestDevice().await()?.let {
 			Device(it)
 		}
 	}

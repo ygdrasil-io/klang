@@ -56,12 +56,12 @@ class TexturedCubeScene : Application.Scene(), AutoCloseable {
 								RenderPipelineDescriptor.VertexState.VertexBufferLayout.VertexAttribute(
 									shaderLocation = 0,
 									offset = Cube.cubePositionOffset,
-									format = "float32x4"
+									format = VertexFormat.float32x4
 								),
 								RenderPipelineDescriptor.VertexState.VertexBufferLayout.VertexAttribute(
 									shaderLocation = 1,
 									offset = Cube.cubeUVOffset,
-									format = "float32x2"
+									format = VertexFormat.float32x2
 								)
 							)
 						)

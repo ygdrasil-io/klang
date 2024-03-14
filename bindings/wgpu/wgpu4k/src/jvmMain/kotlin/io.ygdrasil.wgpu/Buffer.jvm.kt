@@ -17,7 +17,8 @@ actual class Buffer(internal val handler: WGPUBuffer) : AutoCloseable {
 	}
 
 	actual fun map(buffer: FloatArray) {
-		TODO()
+		(wgpuBufferGetMappedRange(handler, null, null) ?: error("fail to get mapped range"))
+			.write(0L, buffer, 0, buffer.size)
 	}
 
 	override fun close() {

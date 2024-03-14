@@ -64,12 +64,12 @@ class TwoCubesScene : Application.Scene(), AutoCloseable {
 								RenderPipelineDescriptor.VertexState.VertexBufferLayout.VertexAttribute(
 									shaderLocation = 0,
 									offset = cubePositionOffset,
-									format = "float32x4"
+									format = VertexFormat.float32x4
 								),
 								RenderPipelineDescriptor.VertexState.VertexBufferLayout.VertexAttribute(
 									shaderLocation = 1,
 									offset = cubeUVOffset,
-									format = "float32x2"
+									format = VertexFormat.float32x2
 								)
 							)
 						)

@@ -47,5 +47,4 @@ application {
 	mainClass.set("io.ygdrasil.wgpu.examples.GlfwMainKt")
 	applicationDefaultJvmArgs += "-XstartOnFirstThread"
 	applicationDefaultJvmArgs += "--add-opens=java.base/java.lang=ALL-UNNAMED"
-	applicationDefaultJvmArgs += "-DRUST_BACKTRACE=1"
 }

@@ -7,7 +7,10 @@ import io.ygdrasil.wgpu.ImageBitmapHolder
 import io.ygdrasil.wgpu.RenderingContext
 import io.ygdrasil.wgpu.WGPU
 import io.ygdrasil.wgpu.WGPU.Companion.createInstance
+import io.ygdrasil.wgpu.internal.jvm.WGPULogCallback
 import io.ygdrasil.wgpu.internal.jvm.WGPUSurface
+import io.ygdrasil.wgpu.internal.jvm.wgpuSetLogCallback
+import io.ygdrasil.wgpu.internal.jvm.wgpuSetLogLevel
 import kotlinx.coroutines.Dispatchers
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.glfw.GLFWNativeCocoa.glfwGetCocoaWindow
@@ -16,7 +19,18 @@ import org.rococoa.ID
 import org.rococoa.Rococoa
 import kotlin.system.exitProcess
 
+val callback = object : WGPULogCallback {
+	override fun invoke(level: Int, message: String, param3: Pointer?) {
+		println("{$level} $message")
+	}
+
+
+}
+
 suspend fun main() {
+	wgpuSetLogLevel(4)
+	wgpuSetLogCallback(callback, null)
+
 	var width = 640
 	var height = 480
 

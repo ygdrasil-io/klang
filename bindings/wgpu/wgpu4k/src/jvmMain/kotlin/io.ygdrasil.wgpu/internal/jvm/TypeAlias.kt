@@ -1152,8 +1152,8 @@ public typealias WGPUSubmissionIndex = NativeLong
 
 public interface WGPULogCallback : Callback {
 	public operator fun invoke(
-		param1: Unit,
-		param2: Byte,
-		param3: Unit,
+		level: Int,
+		message: String,
+		param3: Pointer?,
 	)
 }

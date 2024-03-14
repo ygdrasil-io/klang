@@ -14,13 +14,14 @@ abstract class Application(
 	assetManager: AssetManager
 ) : AutoCloseable, AssetManager by assetManager {
 
-	private lateinit var currentScene: Scene
+	lateinit var currentScene: Scene
+		private set
 	private var onError = false
 
 	val dummyTexture by lazy {
 		device.createTexture(
 			TextureDescriptor(
-				size = 1 to 1,
+				size = GPUExtent3DDictStrict(1, 1),
 				format = TextureFormat.depth24plus,
 				usage = TextureUsage.renderattachment.value,
 			)
@@ -80,6 +81,7 @@ abstract class Application(
 }
 
 val availableScenes = listOf(
+	CubemapScene(),
 	FractalCubeScene(),
 	InstancedCubeScene(),
 	TexturedCubeScene(),

@@ -51,17 +51,52 @@ fun jsApplication(canvas: HTMLCanvasElement): Promise<Application> {
 					renderFrame()
 				}, UPDATE_INTERVAL);
 			}
+		}.also { application ->
+			window.onkeydown = { event ->
+				if (event.keyCode == 33 || event.keyCode == 34) {
+					val currentIndex = availableScenes.indexOf(application.currentScene)
+					val index = if (event.keyCode == 33) {
+						currentIndex - 1
+					} else {
+						currentIndex + 1
+					}.let {
+						when (it) {
+							availableScenes.size -> 0
+							-1 -> availableScenes.size - 1
+							else -> it
+						}
+					}
+
+
+					application.changeScene(availableScenes[index])
+				}
+
+
+			}
 		}
+
+
 	}
 
 }
 
 suspend fun getAssetManager(): AssetManager {
 	val Di3d: ImageBitmapHolder = getImage("./assets/img/Di-3d.png")
-	println(Di3d)
+	val cubemapPosx = getImage("./assets/img/cubemap/posx.jpg")
+	val cubemapNegx = getImage("./assets/img/cubemap/negx.jpg")
+	val cubemapPosy = getImage("./assets/img/cubemap/posy.jpg")
+	val cubemapNegy = getImage("./assets/img/cubemap/negy.jpg")
+	val cubemapPosz = getImage("./assets/img/cubemap/posz.jpg")
+	val cubemapNegz = getImage("./assets/img/cubemap/negz.jpg")
+
 	return object : AssetManager {
 		override val Di3d: ImageBitmapHolder = Di3d
-
+		override val cubemapPosx: ImageBitmapHolder = cubemapPosx
+		override val cubemapNegx: ImageBitmapHolder = cubemapNegx
+		override val cubemapPosy: ImageBitmapHolder = cubemapPosy
+		override val cubemapNegy: ImageBitmapHolder = cubemapNegy
+		override val cubemapPosz: ImageBitmapHolder = cubemapPosz
+		override val cubemapNegz: ImageBitmapHolder = cubemapNegz
 	}
 }
 

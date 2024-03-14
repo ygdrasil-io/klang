@@ -110,7 +110,7 @@ class FractalCubeScene : Application.Scene(), AutoCloseable {
 
 		val depthTexture = device.createTexture(
 			TextureDescriptor(
-				size = renderingContext.width to renderingContext.height,
+				size = GPUExtent3DDictStrict(renderingContext.width, renderingContext.height),
 				format = TextureFormat.depth24plus,
 				usage = TextureUsage.renderattachment.value,
 			)
@@ -128,7 +128,7 @@ class FractalCubeScene : Application.Scene(), AutoCloseable {
 		// sample it on the next frame.
 		cubeTexture = device.createTexture(
 			TextureDescriptor(
-				size = renderingContext.width to renderingContext.height,
+				size = GPUExtent3DDictStrict(renderingContext.width, renderingContext.height),
 				format = renderingContext.textureFormat,
 				usage = TextureUsage.texturebinding or TextureUsage.copydst,
 			)

@@ -93,7 +93,7 @@ class TexturedCubeScene : Application.Scene(), AutoCloseable {
 
 		val depthTexture = device.createTexture(
 			TextureDescriptor(
-				size = renderingContext.width to renderingContext.height,
+				size = GPUExtent3DDictStrict(renderingContext.width, renderingContext.height),
 				format = TextureFormat.depth24plus,
 				usage = TextureUsage.renderattachment.value,
 			)
@@ -113,7 +113,7 @@ class TexturedCubeScene : Application.Scene(), AutoCloseable {
 		val imageBitmapHeight = 512
 		val cubeTexture = device.createTexture(
 			TextureDescriptor(
-				size = imageBitmapWidth to imageBitmapHeight,
+				size = GPUExtent3DDictStrict(imageBitmapWidth, imageBitmapHeight),
 				format = TextureFormat.rgba8unorm,
 				usage = TextureUsage.texturebinding or TextureUsage.copydst or TextureUsage.renderattachment,
 			)

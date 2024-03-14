@@ -15,7 +15,10 @@ expect class Queue {
 }
 
 expect sealed interface DrawableHolder
-expect class ImageBitmapHolder : DrawableHolder
+expect class ImageBitmapHolder : DrawableHolder {
+	val width: Int
+	val height: Int
+}
 
 data class ImageCopyExternalImage(
 	var source: DrawableHolder,
@@ -31,7 +34,7 @@ data class ImageCopyTextureTagged(
 	var premultipliedAlpha: Boolean? = null,
 	var texture: Texture,
 	var mipLevel: GPUIntegerCoordinate? = null,
-	var origin: GPUIntegerCoordinates? = null,
+	var origin: GPUExtent3DDictStrict? = null,
 	/* Iterable<GPUIntegerCoordinate>? | GPUOrigin3DDict? */
 	var aspect: String? = null,
 	/* "all" | "stencil-only" | "depth-only" */

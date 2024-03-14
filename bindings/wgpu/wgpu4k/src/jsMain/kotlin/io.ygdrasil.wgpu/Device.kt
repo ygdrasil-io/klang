@@ -93,7 +93,7 @@ private fun BindGroupDescriptor.BindGroupEntry.convert(): GPUBindGroupEntry = ob
 
 private fun TextureDescriptor.convert(): GPUTextureDescriptor = object : GPUTextureDescriptor {
 	override var label: String? = this@convert.label ?: undefined
-	override var size: dynamic = this@convert.size.toList().toTypedArray()
+	override var size: dynamic = this@convert.size.setJsCompliant()
 	override var mipLevelCount: GPUIntegerCoordinate? = this@convert.mipLevelCount ?: undefined
 	override var sampleCount: GPUSize32? = this@convert.sampleCount ?: undefined
 	override var dimension: String? = this@convert.dimension ?: undefined

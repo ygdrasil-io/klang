@@ -45,7 +45,7 @@ actual class Queue(private val handler: GPUQueue) {
 private fun ImageCopyTextureTagged.convert(): GPUImageCopyTextureTagged = object : GPUImageCopyTextureTagged {
 	override var texture: GPUTexture = this@convert.texture.handler
 	override var mipLevel: GPUIntegerCoordinate? = this@convert.mipLevel ?: undefined
-	override var origin: dynamic = this@convert.origin ?: undefined
+	override var origin: dynamic = this@convert.origin?.setJsCompliant() ?: undefined
 	override var aspect: String? = this@convert.aspect ?: undefined
 	override var colorSpace: Any? = this@convert.colorSpace ?: undefined
 	override var premultipliedAlpha: Boolean? = this@convert.premultipliedAlpha ?: undefined
@@ -64,5 +64,11 @@ private fun DrawableHolder.convert(): dynamic = let { holder ->
 	}
 }
 
-actual class ImageBitmapHolder(internal val handler: ImageBitmap) : DrawableHolder
+actual class ImageBitmapHolder(internal val handler: ImageBitmap) : DrawableHolder {
+	actual val width: Int
+		get() = handler.width
+	actual val height: Int
+		get() = handler.height
+
+}
 actual sealed interface DrawableHolder

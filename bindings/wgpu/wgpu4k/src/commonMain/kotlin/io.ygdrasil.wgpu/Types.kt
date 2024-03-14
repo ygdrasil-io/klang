@@ -1,5 +1,7 @@
 package io.ygdrasil.wgpu
 
+import kotlin.js.JsExport
+
 typealias GPUBufferDynamicOffset = Number
 
 typealias GPUBufferUsageFlags = Int
@@ -39,3 +41,10 @@ typealias GPUSize64Out = Number
 typealias GPUStencilValue = Int
 
 typealias GPUTextureUsageFlags = Number
+
+@JsExport
+data class GPUExtent3DDictStrict(
+	var width: Int,
+	var height: Int? = null,
+	var depthOrArrayLayers: Int? = null
+)

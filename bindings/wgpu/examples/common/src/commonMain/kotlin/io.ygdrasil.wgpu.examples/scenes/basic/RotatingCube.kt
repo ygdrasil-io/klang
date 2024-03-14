@@ -97,7 +97,7 @@ class RotatingCubeScene : Application.Scene(), AutoCloseable {
 
 		val depthTexture = device.createTexture(
 			TextureDescriptor(
-				size = renderingContext.width to renderingContext.height,
+				size = GPUExtent3DDictStrict(renderingContext.width, renderingContext.height),
 				format = TextureFormat.depth24plus,
 				usage = TextureUsage.renderattachment.value,
 			)

@@ -8,8 +8,7 @@ expect class Texture: AutoCloseable {
 }
 
 data class TextureDescriptor(
-	// TODO should we support GPUExtent3DDictStrict ?
-	var size: GPUIntegerCoordinates,
+	var size: GPUExtent3DDictStrict,
 	var format: TextureFormat,
 	var usage: GPUTextureUsageFlags,
 	/* Iterable<GPUIntegerCoordinate> | GPUExtent3DDictStrict */

@@ -1,4 +1,4 @@
-package io.ygdrasil.wgpu.examples.scenes.shader.vertex
+package io.ygdrasil.wgpu.examples.scenes.shader.fragment
 
 const val sampleCubemapShader = """
 @group(0) @binding(1) var mySampler: sampler;

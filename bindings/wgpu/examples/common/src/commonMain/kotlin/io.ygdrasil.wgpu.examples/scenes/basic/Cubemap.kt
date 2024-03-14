@@ -11,8 +11,8 @@ import io.ygdrasil.wgpu.examples.scenes.mesh.Cube.cubeUVOffset
 import io.ygdrasil.wgpu.examples.scenes.mesh.Cube.cubeVertexArray
 import io.ygdrasil.wgpu.examples.scenes.mesh.Cube.cubeVertexCount
 import io.ygdrasil.wgpu.examples.scenes.mesh.Cube.cubeVertexSize
+import io.ygdrasil.wgpu.examples.scenes.shader.fragment.sampleCubemapShader
 import io.ygdrasil.wgpu.examples.scenes.shader.vertex.basicVertexShader
-import io.ygdrasil.wgpu.examples.scenes.shader.vertex.sampleCubemapShader
 import korlibs.math.geom.Angle
 import korlibs.math.geom.Matrix4
 import kotlin.js.JsExport
@@ -27,6 +27,8 @@ class CubemapScene : Application.Scene(), AutoCloseable {
 	lateinit var uniformBuffer: Buffer
 	lateinit var uniformBindGroup: BindGroup
 	lateinit var verticesBuffer: Buffer
+
+	val modelMatrix = Matrix4.scale(1000, 1000, 1000)
 
 	val autoClosableContext = AutoClosableContext()
 
@@ -85,7 +87,7 @@ class CubemapScene : Application.Scene(), AutoCloseable {
 				),
 				primitive = RenderPipelineDescriptor.PrimitiveState(
 					topology = PrimitiveTopology.trianglelist,
-					cullMode = CullMode.back
+					cullMode = CullMode.none
 				),
 				depthStencil = RenderPipelineDescriptor.DepthStencilState(
 					depthWriteEnabled = true,
@@ -97,11 +99,41 @@ class CubemapScene : Application.Scene(), AutoCloseable {
 
 		val depthTexture = device.createTexture(
 			TextureDescriptor(
-				size = renderingContext.width to renderingContext.height,
+				size = GPUExtent3DDictStrict(renderingContext.width, renderingContext.height),
 				format = TextureFormat.depth24plus,
 				usage = TextureUsage.renderattachment.value,
 			)
 		).bind()
+
+		val imageBitmaps = listOf(
+			cubemapPosx,
+			cubemapNegx,
+			cubemapPosy,
+			cubemapNegy,
+			cubemapPosz,
+			cubemapNegz,
+		)
+
+		val cubemapTexture = device.createTexture(
+			TextureDescriptor(
+				dimension = "2d",
+				// Create a 2d array texture.
+				// Assume each image has the same size.
+				size = GPUExtent3DDictStrict(imageBitmaps[0].width, imageBitmaps[0].height, 6),
+				format = TextureFormat.rgba8unorm,
+				usage = TextureUsage.texturebinding or TextureUsage.copydst or TextureUsage.renderattachment,
+			)
+		).bind()
+
+
+		imageBitmaps.forEachIndexed { index, imageBitmap ->
+			device.queue.copyExternalImageToTexture(
+				ImageCopyExternalImage(source = imageBitmap),
+				ImageCopyTextureTagged(texture = cubemapTexture, origin = GPUExtent3DDictStrict(0, 0, index)),
+				imageBitmap.width to imageBitmap.height
+			)
+		}
+
 
 		val uniformBufferSize = 4L * 16L; // 4x4 matrix
 		uniformBuffer = device.createBuffer(
@@ -111,6 +143,14 @@ class CubemapScene : Application.Scene(), AutoCloseable {
 			)
 		).bind()
 
+		val sampler = device.createSampler(
+			SamplerDescriptor(
+				magFilter = "linear",
+				minFilter = "linear",
+			)
+		).bind()
+
+
 		uniformBindGroup = device.createBindGroup(
 			BindGroupDescriptor(
 				layout = renderPipeline.getBindGroupLayout(0),
@@ -118,7 +158,25 @@ class CubemapScene : Application.Scene(), AutoCloseable {
 					BindGroupDescriptor.BindGroupEntry(
 						binding = 0,
 						resource = BindGroupDescriptor.BindGroupEntry.BufferBinding(
-							buffer = uniformBuffer
+							buffer = uniformBuffer,
+							offset = 0,
+							size = uniformBufferSize
+						)
+					),
+					BindGroupDescriptor.BindGroupEntry(
+						binding = 1,
+						resource = BindGroupDescriptor.BindGroupEntry.SamplerBinding(
+							sampler = sampler
+						)
+					),
+					BindGroupDescriptor.BindGroupEntry(
+						binding = 2,
+						resource = BindGroupDescriptor.BindGroupEntry.TextureViewBinding(
+							view = cubemapTexture.createView(
+								TextureViewDescriptor(
+									dimension = "cube"
+								)
+							)
 						)
 					)
 				)
@@ -145,7 +203,8 @@ class CubemapScene : Application.Scene(), AutoCloseable {
 
 		val aspect = renderingContext.width / renderingContext.height.toDouble()
 		val fox = Angle.fromRadians((2 * PI) / 5)
-		projectionMatrix = Matrix4.perspective(fox, aspect, 1.0, 100.0)
+		projectionMatrix = Matrix4.perspective(fox, aspect, 1.0, 3000.0)
+
 	}
 
 	override fun Application.render() = autoClosableContext {
@@ -191,18 +250,21 @@ class CubemapScene : Application.Scene(), AutoCloseable {
 		autoClosableContext.close()
 	}
 
+	private fun getTransformationMatrix(angle: Double, projectionMatrix: Matrix4): FloatArray {
+
+		var viewMatrix = Matrix4.IDENTITY
+		viewMatrix *= Matrix4.rotation(
+			angle = Angle.fromRadians((PI / 10) * Angle.fromRadians(angle).sine),
+			x = 1, y = 0, z = 0
+		)
+		viewMatrix *= Matrix4.rotation(
+			angle = Angle.fromRadians(angle * 0.2),
+			x = 0, y = 1, z = 0
+		)
+		val modelViewProjectionMatrix = viewMatrix * modelMatrix
+
+		return (projectionMatrix * modelViewProjectionMatrix).copyToColumns()
+	}
 }
 
 
-private fun getTransformationMatrix(angle: Double, projectionMatrix: Matrix4): FloatArray {
-	var viewMatrix = Matrix4.IDENTITY
-	viewMatrix = viewMatrix.translated(0, 0, -4)
-
-	viewMatrix = viewMatrix.rotated(
-		Angle.fromRadians(Angle.fromRadians(angle).sine),
-		Angle.fromRadians(Angle.fromRadians(angle).cosine),
-		Angle.fromRadians(0)
-	)
-
-	return (projectionMatrix * viewMatrix).copyToColumns()
-}

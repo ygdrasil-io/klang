@@ -141,7 +141,7 @@ private fun RenderPipelineDescriptor.VertexState.VertexBufferLayout.convert(): G
 
 private fun RenderPipelineDescriptor.VertexState.VertexBufferLayout.VertexAttribute.convert(): GPUVertexAttribute =
 	object : GPUVertexAttribute {
-		override var format: String = this@convert.format
+		override var format: String = this@convert.format.name
 		override var offset: GPUSize64 = this@convert.offset
 		override var shaderLocation: GPUIndex32 = this@convert.shaderLocation
 	}

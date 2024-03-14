@@ -13,14 +13,12 @@ class WGPU(private val handler: WGPUInstance) : AutoCloseable {
 
 	suspend fun requestAdapter(
 		renderingContext: RenderingContext,
-		powerPreference: WGPUPowerPreference = WGPUPowerPreference.WGPUPowerPreference_Undefined,
-		backendType: WGPUBackendType = WGPUBackendType.WGPUBackendType_Metal
+		powerPreference: WGPUPowerPreference = WGPUPowerPreference.WGPUPowerPreference_Undefined
 	): Adapter? {
 
 		val options = WGPURequestAdapterOptions().also {
 			it.compatibleSurface = renderingContext.handler
 			it.powerPreference = powerPreference.value
-			it.backendType = backendType.value
 		}
 
 		val adapterState = MutableStateFlow<WGPUAdapterImpl?>(null)

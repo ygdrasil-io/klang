@@ -1602,7 +1602,7 @@ public open class WGPURequestAdapterOptions : Structure {
 	 * mapped from WGPUBackendType
 	 */
 	@JvmField
-	public var backendType: Int = 0
+	public var backendType: Int? = null
 
 	/**
 	 * mapped from WGPUBool
@@ -3520,7 +3520,7 @@ public open class WGPUVertexState : Structure {
 	 * Declared([a8(nextInChain):[*:b1]a8(key):[*:b1]d8(value)](WGPUConstantEntry)))*
 	 */
 	@JvmField
-	public var constants: Pointer? = null
+	public var constants: Array<WGPUConstantEntry.ByReference>? = arrayOf(WGPUConstantEntry.ByReference())
 
 	/**
 	 * mapped from size_t

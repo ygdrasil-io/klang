@@ -1,5 +1,6 @@
 package io.ygdrasil.wgpu
 
+import com.sun.jna.NativeLong
 import io.ygdrasil.wgpu.internal.jvm.WGPUBuffer
 import io.ygdrasil.wgpu.internal.jvm.wgpuBufferGetMappedRange
 import io.ygdrasil.wgpu.internal.jvm.wgpuBufferRelease
@@ -17,7 +18,8 @@ actual class Buffer(internal val handler: WGPUBuffer) : AutoCloseable {
 	}
 
 	actual fun map(buffer: FloatArray) {
-		(wgpuBufferGetMappedRange(handler, null, null) ?: error("fail to get mapped range"))
+		(wgpuBufferGetMappedRange(handler, NativeLong(0), (buffer.size * Float.SIZE_BYTES).toNativeLong())
+			?: error("fail to get mapped range"))
 			.write(0L, buffer, 0, buffer.size)
 	}
 

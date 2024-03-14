@@ -15,9 +15,11 @@ import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
 import com.sun.jna.Pointer
 import darwin.NSWindow
+import io.ygdrasil.wgpu.ImageBitmapHolder
 import io.ygdrasil.wgpu.RenderingContext
 import io.ygdrasil.wgpu.WGPU
 import io.ygdrasil.wgpu.examples.Application
+import io.ygdrasil.wgpu.examples.AssetManager
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.filterNotNull
@@ -131,7 +133,24 @@ suspend fun runApp(window: ComposeWindow) {
 			?: error("fail to get device")
 
 		renderingContext.computeSurfaceCapabilities(adapter)
-		renderingContext.configure(device)
+
+		val assetManager = object : AssetManager {
+			override val Di3d: ImageBitmapHolder
+				get() = TODO("Not yet implemented")
+			override val cubemapPosx: ImageBitmapHolder
+				get() = TODO("Not yet implemented")
+			override val cubemapNegx: ImageBitmapHolder
+				get() = TODO("Not yet implemented")
+			override val cubemapPosy: ImageBitmapHolder
+				get() = TODO("Not yet implemented")
+			override val cubemapNegy: ImageBitmapHolder
+				get() = TODO("Not yet implemented")
+			override val cubemapPosz: ImageBitmapHolder
+				get() = TODO("Not yet implemented")
+			override val cubemapNegz: ImageBitmapHolder
+				get() = TODO("Not yet implemented")
+
+		}
 
 		val application = object : Application(
 			renderingContext,

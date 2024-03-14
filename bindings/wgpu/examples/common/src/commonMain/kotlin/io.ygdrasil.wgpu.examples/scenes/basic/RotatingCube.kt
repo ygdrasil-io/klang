@@ -6,11 +6,8 @@ import io.ygdrasil.wgpu.*
 import io.ygdrasil.wgpu.examples.Application
 import io.ygdrasil.wgpu.examples.AutoClosableContext
 import io.ygdrasil.wgpu.examples.autoClosableContext
-import io.ygdrasil.wgpu.examples.scenes.mesh.Cube.cubePositionOffset
-import io.ygdrasil.wgpu.examples.scenes.mesh.Cube.cubeUVOffset
 import io.ygdrasil.wgpu.examples.scenes.mesh.Cube.cubeVertexArray
 import io.ygdrasil.wgpu.examples.scenes.mesh.Cube.cubeVertexCount
-import io.ygdrasil.wgpu.examples.scenes.mesh.Cube.cubeVertexSize
 import io.ygdrasil.wgpu.examples.scenes.shader.fragmentVertexPositionColorShader
 import io.ygdrasil.wgpu.examples.scenes.shader.vertex.basicVertexShader
 import korlibs.math.geom.Angle
@@ -53,7 +50,7 @@ class RotatingCubeScene : Application.Scene(), AutoCloseable {
 							code = basicVertexShader
 						)
 					).bind(), // bind to autoClosableContext to release it later
-					buffers = arrayOf(
+					/*buffers = arrayOf(
 						RenderPipelineDescriptor.VertexState.VertexBufferLayout(
 							arrayStride = cubeVertexSize,
 							attributes = arrayOf(
@@ -69,7 +66,7 @@ class RotatingCubeScene : Application.Scene(), AutoCloseable {
 								)
 							)
 						)
-					)
+					)*/
 				),
 				fragment = RenderPipelineDescriptor.FragmentState(
 					module = device.createShaderModule(

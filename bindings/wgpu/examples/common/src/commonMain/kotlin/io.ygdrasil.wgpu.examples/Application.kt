@@ -90,12 +90,14 @@ abstract class Application(
 }
 
 val availableScenes = listOf(
+	RotatingCubeScene(),
+
+
 	BlueTitlingScene(),
 	CubemapScene(),
 	FractalCubeScene(),
 	InstancedCubeScene(),
 	TexturedCubeScene(),
 	TwoCubesScene(),
-	RotatingCubeScene(),
 	SimpleTriangleScene(),
 )

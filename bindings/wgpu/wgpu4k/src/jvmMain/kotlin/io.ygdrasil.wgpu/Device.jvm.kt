@@ -91,7 +91,7 @@ private fun RenderPipelineDescriptor.convert(): WGPURenderPipelineDescriptor = W
 	it.vertex = WGPUVertexState().also { wGPUVertexState ->
 		wGPUVertexState.module = vertex.module.handler
 		wGPUVertexState.entryPoint = vertex.entryPoint ?: "main"
-		wGPUVertexState.bufferCount = (vertex.buffers?.size ?: 0).toLong().let { NativeLong(it) }
+		wGPUVertexState.bufferCount = (vertex.buffers?.size ?: 0).toNativeLong()
 		wGPUVertexState.buffers = if (wGPUVertexState.bufferCount.toLong() == 0L) {
 			arrayOf(WGPUVertexBufferLayout.ByReference())
 		} else {
@@ -125,7 +125,7 @@ private fun RenderPipelineDescriptor.convert(): WGPURenderPipelineDescriptor = W
 private fun RenderPipelineDescriptor.FragmentState.convert(): WGPUFragmentState.ByReference =
 	WGPUFragmentState.ByReference().also {
 		it.module = module.handler
-		it.entryPoint = entryPoint
+		it.entryPoint = entryPoint ?: "main"
 		it.targetCount = targets.filterNotNull().size.toLong().let { NativeLong(it) }
 		it.targets = targets.filterNotNull().map { it.convert() }.toTypedArray()
 	}
@@ -137,7 +137,7 @@ private fun RenderPipelineDescriptor.FragmentState.ColorTargetState.convert(): W
 		it.writeMask = writeMask?.value
 	}
 
-private fun RenderPipelineDescriptor.FragmentState.ColorTargetState.BlendState?.convert(): Pointer? {
+private fun RenderPipelineDescriptor.FragmentState.ColorTargetState.BlendState.convert(): Pointer? {
 	TODO("Not yet implemented")
 }
 

@@ -1,7 +1,3 @@
-@file:OptIn(ExperimentalWasmDsl::class)
-
-import org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl
-
 plugins {
 	alias(libs.plugins.kotlinMultiplatform)
 }
@@ -21,7 +17,12 @@ kotlin {
 				api(project(":wgpu4k"))
 				api(libs.coroutines)
 				api("com.soywiz.korge:korge-foundation:5.4.0")
-				implementation("com.squareup.okio:okio:3.8.0")
+			}
+		}
+
+		val jvmMain by getting {
+			dependencies {
+				api(project(":librococoa"))
 
 			}
 		}

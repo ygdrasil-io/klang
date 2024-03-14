@@ -78,6 +78,10 @@ abstract class Application(
 	}
 
 	abstract fun run()
+
+	fun configureRenderingContext() {
+		TODO("Not yet implemented")
+	}
 }
 
 val availableScenes = listOf(

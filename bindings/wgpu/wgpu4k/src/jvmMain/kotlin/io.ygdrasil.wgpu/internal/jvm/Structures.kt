@@ -3140,7 +3140,7 @@ public open class WGPUTextureDescriptor : Structure {
 	 * mapped from WGPUTextureDimension
 	 */
 	@JvmField
-	public var dimension: Int = 0
+	public var dimension: Int? = null
 
 	/**
 	 * mapped from WGPUExtent3D
@@ -3158,13 +3158,13 @@ public open class WGPUTextureDescriptor : Structure {
 	 * mapped from uint32_t
 	 */
 	@JvmField
-	public var mipLevelCount: Int = 0
+	public var mipLevelCount: Int? = null
 
 	/**
 	 * mapped from uint32_t
 	 */
 	@JvmField
-	public var sampleCount: Int = 0
+	public var sampleCount: Int? = null
 
 	/**
 	 * mapped from size_t

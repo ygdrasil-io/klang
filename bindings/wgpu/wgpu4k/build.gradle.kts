@@ -17,6 +17,7 @@ buildscript {
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
+	alias(libs.plugins.kotest)
 	alias(libs.plugins.klang)
 }
 
@@ -25,7 +26,7 @@ kotlin {
 		binaries.executable()
 		browser()
 		nodejs()
-		generateTypeScriptDefinitions()
+		//generateTypeScriptDefinitions()
 	}
 	jvm()
 
@@ -49,12 +50,14 @@ kotlin {
 				api(libs.jna)
 				api("$group:sdl2-4k:$version")
 				api("$group:sdl2-binaries:$version")
+				implementation("dev.krud:shapeshift:0.8.0")
 			}
 		}
 
         val commonMain by getting {
             dependencies {
 				implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0")
+				implementation(kotlin("reflect"))
             }
         }
         val commonTest by getting {
@@ -62,6 +65,13 @@ kotlin {
 				implementation(libs.bundles.kotest)
             }
         }
+
+		val jvmTest by getting {
+			dependencies {
+				implementation("org.opentest4j:opentest4j:1.3.0")
+			}
+
+		}
     }
 }
 

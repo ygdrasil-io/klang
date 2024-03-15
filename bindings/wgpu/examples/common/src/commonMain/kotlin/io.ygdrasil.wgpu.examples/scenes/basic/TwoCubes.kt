@@ -122,7 +122,7 @@ class TwoCubesScene : Application.Scene(), AutoCloseable {
 				entries = arrayOf(
 					BindGroupDescriptor.BindGroupEntry(
 						binding = 0,
-						resource = BindGroupDescriptor.BindGroupEntry.BufferBinding(
+						resource = BindGroupDescriptor.BufferBinding(
 							buffer = uniformBuffer
 						)
 					)
@@ -136,7 +136,7 @@ class TwoCubesScene : Application.Scene(), AutoCloseable {
 				entries = arrayOf(
 					BindGroupDescriptor.BindGroupEntry(
 						binding = 0,
-						resource = BindGroupDescriptor.BindGroupEntry.BufferBinding(
+						resource = BindGroupDescriptor.BufferBinding(
 							buffer = uniformBuffer,
 							offset = offset
 						)

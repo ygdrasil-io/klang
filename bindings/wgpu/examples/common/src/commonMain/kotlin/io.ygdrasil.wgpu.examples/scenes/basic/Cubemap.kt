@@ -116,7 +116,7 @@ class CubemapScene : Application.Scene(), AutoCloseable {
 
 		val cubemapTexture = device.createTexture(
 			TextureDescriptor(
-				dimension = "2d",
+				dimension = TextureDimension._2d,
 				// Create a 2d array texture.
 				// Assume each image has the same size.
 				size = GPUExtent3DDictStrict(imageBitmaps[0].width, imageBitmaps[0].height, 6),
@@ -157,7 +157,7 @@ class CubemapScene : Application.Scene(), AutoCloseable {
 				entries = arrayOf(
 					BindGroupDescriptor.BindGroupEntry(
 						binding = 0,
-						resource = BindGroupDescriptor.BindGroupEntry.BufferBinding(
+						resource = BindGroupDescriptor.BufferBinding(
 							buffer = uniformBuffer,
 							offset = 0,
 							size = uniformBufferSize
@@ -165,13 +165,13 @@ class CubemapScene : Application.Scene(), AutoCloseable {
 					),
 					BindGroupDescriptor.BindGroupEntry(
 						binding = 1,
-						resource = BindGroupDescriptor.BindGroupEntry.SamplerBinding(
+						resource = BindGroupDescriptor.SamplerBinding(
 							sampler = sampler
 						)
 					),
 					BindGroupDescriptor.BindGroupEntry(
 						binding = 2,
-						resource = BindGroupDescriptor.BindGroupEntry.TextureViewBinding(
+						resource = BindGroupDescriptor.TextureViewBinding(
 							view = cubemapTexture.createView(
 								TextureViewDescriptor(
 									dimension = "cube"

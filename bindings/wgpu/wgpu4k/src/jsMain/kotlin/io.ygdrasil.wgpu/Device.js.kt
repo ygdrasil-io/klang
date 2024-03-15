@@ -79,13 +79,14 @@ private fun BindGroupDescriptor.BindGroupEntry.convert(): GPUBindGroupEntry = ob
 	override var binding: GPUIndex32 = this@convert.binding
 	override var resource: dynamic = this@convert.resource.let {
 		when (it) {
-			is BindGroupDescriptor.BindGroupEntry.SamplerBinding -> it.sampler.handler
-			is BindGroupDescriptor.BindGroupEntry.BufferBinding -> object : GPUBufferBinding {
+			is SamplerBinding -> it.sampler.handler
+			is BufferBinding -> object : GPUBufferBinding {
 				override var buffer: GPUBuffer = it.buffer.handler
 				override var offset: GPUSize64? = it.offset ?: undefined
 				override var size: GPUSize64? = it.size ?: undefined
 			}
-			is BindGroupDescriptor.BindGroupEntry.TextureViewBinding -> it.view.handler
+
+			is TextureViewBinding -> it.view.handler
 		}
 	}
 
@@ -96,7 +97,7 @@ private fun TextureDescriptor.convert(): GPUTextureDescriptor = object : GPUText
 	override var size: dynamic = this@convert.size.setJsCompliant()
 	override var mipLevelCount: GPUIntegerCoordinate? = this@convert.mipLevelCount ?: undefined
 	override var sampleCount: GPUSize32? = this@convert.sampleCount ?: undefined
-	override var dimension: String? = this@convert.dimension ?: undefined
+	override var dimension: String? = this@convert.dimension?.stringValue ?: undefined
 	override var format: String = this@convert.format.name
 	override var usage: GPUTextureUsageFlags = this@convert.usage
 	override var viewFormats: Array<String?>? = this@convert.viewFormats ?: undefined

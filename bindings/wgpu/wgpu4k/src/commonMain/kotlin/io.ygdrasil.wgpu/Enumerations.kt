@@ -1,5 +1,9 @@
 package io.ygdrasil.wgpu
 
+interface EnumerationWithValue {
+	public val value: Int
+}
+
 public enum class AdapterType(
 	public val `value`: Int,
 ) {
@@ -812,11 +816,11 @@ public enum class TextureAspect(
 
 public enum class TextureDimension(
 	public val `value`: Int,
+	public val stringValue: String
 ) {
-	`_1d`(0),
-	`_2d`(1),
-	`_3d`(2),
-	force32(2_147_483_647),
+	`_1d`(0, "1d"),
+	`_2d`(1, "2d"),
+	`_3d`(2, "3d"),
 	;
 
 	public infix fun or(other: Int): Int = value or other
@@ -831,8 +835,8 @@ public enum class TextureDimension(
 }
 
 public enum class TextureFormat(
-	public val `value`: Int,
-) {
+	public override val value: Int,
+) : EnumerationWithValue {
 	undefined(0),
 	r8unorm(1),
 	r8snorm(2),

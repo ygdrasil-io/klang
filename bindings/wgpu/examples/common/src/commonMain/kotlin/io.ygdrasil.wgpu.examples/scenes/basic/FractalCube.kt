@@ -149,19 +149,19 @@ class FractalCubeScene : Application.Scene(), AutoCloseable {
 				entries = arrayOf(
 					BindGroupDescriptor.BindGroupEntry(
 						binding = 0,
-						resource = BindGroupDescriptor.BindGroupEntry.BufferBinding(
+						resource = BindGroupDescriptor.BufferBinding(
 							buffer = uniformBuffer
 						)
 					),
 					BindGroupDescriptor.BindGroupEntry(
 						binding = 1,
-						resource = BindGroupDescriptor.BindGroupEntry.SamplerBinding(
+						resource = BindGroupDescriptor.SamplerBinding(
 							sampler = sampler
 						)
 					),
 					BindGroupDescriptor.BindGroupEntry(
 						binding = 2,
-						resource = BindGroupDescriptor.BindGroupEntry.TextureViewBinding(
+						resource = BindGroupDescriptor.TextureViewBinding(
 							view = cubeTexture.createView()
 						)
 					)

@@ -1,4 +1,0 @@
-package libangle
-
-class Library {
-}

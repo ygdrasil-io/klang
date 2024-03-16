@@ -25,7 +25,7 @@ class MetalItTest : FreeSpec({
 			declarations
 				.asSequence()
 				.filterIsInstance<NameableDeclaration>()
-				.filter { it.name.startsWith("NS") }
+				.filter { it.name.value.startsWith("NS") }
 				.forEach { println(it) }
 		}
 

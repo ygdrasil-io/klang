@@ -1,3 +1,6 @@
+import io.ygdrasil.ParsingMethod
+import klang.domain.FunctionPointerType
+import klang.domain.ResolvedTypeRef
 import klang.domain.typeOf
 import klang.domain.unchecked
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
@@ -16,7 +19,7 @@ buildscript {
 }
 
 plugins {
-	kotlin("jvm") version "1.9.10"
+	kotlin("jvm")
 	alias(libs.plugins.klang)
 }
 
@@ -50,16 +53,41 @@ sourceSets.main {
 	java.srcDirs(buildDir)
 }
 
-val headerUrl = URL("https://github.com/gfx-rs/wgpu-native/releases/download/v0.18.1.2/wgpu-macos-x86_64-release.zip")
+val headerUrl = URL("https://github.com/gfx-rs/wgpu-native/releases/download/${libs.versions.wgpu.get()}/wgpu-macos-x86_64-release.zip")
 
 klang {
+
+	parsingMethod = ParsingMethod.Libclang
+
 	download(headerUrl)
 		.let(::unpack)
 		.let {
 			parse(fileToParse = "wgpu.h", at = it) {
-
+				// Hardfixes until Callback are fixed
+				(findTypeAliasByName("WGPURequestDeviceCallback") ?: error("WGPURequestAdapterCallback should exist"))
+					.let { callback ->
+						(((callback.typeRef as? ResolvedTypeRef)?.type as? FunctionPointerType) ?: error("should be resolved"))
+							.let { function ->
+								val arguments = function.arguments.toMutableList()
+								arguments[0] = typeOf("int").unchecked()
+								arguments[2] = typeOf("char *").unchecked()
+								arguments[3] = typeOf("void *").unchecked()
+								function.arguments = arguments.toList()
+							}
+					}
+				(findTypeAliasByName("WGPURequestAdapterCallback") ?: error("WGPURequestAdapterCallback should exist"))
+					.let { callback ->
+						(((callback.typeRef as? ResolvedTypeRef)?.type as? FunctionPointerType) ?: error("should be resolved"))
+							.let { function ->
+								val arguments = function.arguments.toMutableList()
+								arguments[0] = typeOf("int").unchecked()
+								arguments[2] = typeOf("char *").unchecked()
+								arguments[3] = typeOf("void *").unchecked()
+								function.arguments = arguments.toList()
+							}
+					}
 			}
 		}
 
-	generateBinding("libwgpu", "wgpu")
+	generateBinding("libwgpu", "WGPU")
 }

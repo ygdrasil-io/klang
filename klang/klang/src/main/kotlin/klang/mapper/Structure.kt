@@ -3,7 +3,7 @@ package klang.mapper
 import com.squareup.kotlinpoet.*
 import klang.domain.*
 
-internal fun NativeStructure.toSpec(packageName: String) = ClassName("", name)
+internal fun NativeStructure.toSpec(packageName: String) = ClassName("", name.value)
 	.let { structureClass ->
 		generateFunctionPointerTypeInterface(packageName) + when {
 			fields.isEmpty() -> toSpecWithNoAttributes(structureClass)
@@ -13,7 +13,10 @@ internal fun NativeStructure.toSpec(packageName: String) = ClassName("", name)
 	}
 
 private fun NativeStructure.generateFunctionPointerTypeInterface(packageName: String) = fields
-	.mapNotNull { it.toFunctionPointerTypeInterface(packageName, name) }
+	//TODO support SubStructureField
+	.filterIsInstance<TypeRefField>()
+	.map { it.name to it.type }
+	.mapNotNull { it.toFunctionPointerTypeInterface(packageName, name.value) }
 
 private fun Pair<String, TypeRef>.toFunctionPointerTypeInterface(packageName: String, structureName: String) =
 	let { (fieldName, typeRef) ->
@@ -52,7 +55,11 @@ private fun NativeStructure.toUnionSpec(packageName: String, structureClass: Cla
 				.build()
 		)
 		.apply {
-			fields.forEach { (name, typeRef) ->
+			fields
+				//TODO support SubStructureField
+				.filterIsInstance<TypeRefField>()
+				.map { it.name to it.type }
+				.forEach { (name, typeRef) ->
 				addProperty(
 					propertySpec(name, typeRef, packageName)
 				)
@@ -72,7 +79,13 @@ private fun NativeStructure.toSpecWithAttributes(packageName: String, structureC
 	TypeSpec.classBuilder(structureClass)
 		.addAnnotation(
 			AnnotationSpec.builder(jnaFieldOrder)
-				.addMember(fields.joinToString(", ") { "\"${it.first}\"" })
+				.addMember(
+					fields
+						//TODO support SubStructureField
+						.filterIsInstance<TypeRefField>()
+						.map { it.name to it.type }
+						.joinToString(", ") { "\"${it.first}\"" }
+				)
 				.build()
 		)
 		.addModifiers(KModifier.OPEN)
@@ -90,7 +103,11 @@ private fun NativeStructure.toSpecWithAttributes(packageName: String, structureC
 				.build()
 		)
 		.apply {
-			fields.forEach { (name, typeRef) ->
+			fields
+				//TODO support SubStructureField
+				.filterIsInstance<TypeRefField>()
+				.map { it.name to it.type }
+				.forEach { (name, typeRef) ->
 				addProperty(
 					propertySpec(name, typeRef, packageName)
 				)
@@ -151,15 +168,18 @@ private fun ResolvedTypeRef.toPropertySpec(
 	val rootType = type.rootType()
 
 	val type = when {
-		rootType is NativeStructure -> toType(packageName)
+		rootType is NativeStructure -> toType(packageName, fromStructure = true)
 		// If FunctionPointerType generate an interface or use the one defined by the typealias
 		rootType is FunctionPointerType -> when (type) {
-			is NativeTypeAlias -> ClassName(packageName, type.name)
+			is NativeTypeAlias -> ClassName(packageName, type.name.value)
 			else -> ClassName(packageName, generateNativePointerName(nativeStructure, name))
 		}.copy(nullable = true)
 
-		rootType is StringType -> toType(packageName)
-		rootType is PrimitiveType && isPointer.not() -> toType(packageName)
+		rootType is StringType -> toType(packageName).copy(nullable = true)
+		rootType is PrimitiveType && isPointer.not() -> when {
+			isArray && type is NativeTypeAlias && rootType is FixeSizeType -> ClassName(packageName, "${type.name}${'$'}Array")
+			else -> toType(packageName)
+		}
 		rootType is NativeEnumeration && isPointer.not() -> when (rootType.type) {
 			is ResolvedTypeRef -> rootType.type.toType(packageName)
 			else -> null
@@ -170,13 +190,14 @@ private fun ResolvedTypeRef.toPropertySpec(
 
 	val defaultValue = when {
 		rootType is NativeStructure -> when {
-			isPointer -> "${rootType.name}()"
+			isPointer -> "null"
 			else -> "${rootType.name}()"
 		}
-		rootType is StringType -> "\"\""
+		rootType is StringType -> "null"
 		isPointer -> "null"
 		rootType is FixeSizeType -> when {
 			isArray ->  when {
+				this.type is NativeTypeAlias -> "`${this.type.name}${'$'}Array`(${arraySize ?: 0})"
 				rootType.isFloating && rootType.size == 32 -> "FloatArray(${arraySize ?: 0})"
 				rootType.isFloating && rootType.size == 64 -> "DoubleArray(${arraySize ?: 0})"
 				rootType.size == 8 -> "ByteArray(${arraySize ?: 0})"
@@ -211,7 +232,7 @@ private fun generateNativePointerName(structureName: String, fieldName: String) 
 	"${structureName}${fieldName.replaceFirstChar { it.uppercaseChar() }}Function"
 
 private fun generateNativePointerName(nativeStructure: NativeStructure, fieldName: String) =
-	generateNativePointerName(nativeStructure.name, fieldName)
+	generateNativePointerName(nativeStructure.name.value, fieldName)
 
 private fun TypeRef.defaultPropertySpec(
 	name: String

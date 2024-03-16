@@ -5,6 +5,9 @@ import mu.KotlinLogging
 
 private val logger = KotlinLogging.logger {}
 
+/**
+ * This sealed interface represents a native C/C++ or Objective-C declaration.
+ */
 sealed interface NativeDeclaration {
 	fun <T : NativeDeclaration> merge(other: T) {
 		logger.debug { "merging $this with $other is not relevant" }
@@ -30,10 +33,40 @@ sealed interface NativeDeclaration {
 	}
 }
 
-interface NameableDeclaration : NativeDeclaration {
-	val name: String
+/**
+ * This interface represents a nameable declaration.
+ */
+interface NameableDeclaration : SourceableDeclaration {
+	val name: NotBlankString
 }
 
 interface ResolvableDeclaration {
 	fun DeclarationRepository.resolve()
+}
+
+/**
+ * Represents the origin of a native declaration.
+ */
+sealed interface DeclarationOrigin {
+
+	/**
+	 * Represents an unknown origin of a native declaration.
+	 */
+	object Unknown : DeclarationOrigin
+
+	/**
+	 * Represents a platform-specific declaration like libc.
+	 */
+	object Platform : DeclarationOrigin
+
+	/**
+	 * Represents a header file used for native declarations in a library.
+	 *
+	 * @property file The path to the header file.
+	 */
+	class LibraryHeader(val file: String) : DeclarationOrigin
+}
+
+interface SourceableDeclaration : NativeDeclaration {
+	val source: DeclarationOrigin
 }

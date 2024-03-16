@@ -1,29 +1,33 @@
-TranslationUnitDecl 0x55fc13dc4e58 <<invalid sloc>> <invalid sloc>
-|-TypedefDecl 0x55fc13dc5680 <<invalid sloc>> <invalid sloc> implicit __int128_t '__int128'
-| `-BuiltinType 0x55fc13dc5420 '__int128'
-|-TypedefDecl 0x55fc13dc56f0 <<invalid sloc>> <invalid sloc> implicit __uint128_t 'unsigned __int128'
-| `-BuiltinType 0x55fc13dc5440 'unsigned __int128'
-|-TypedefDecl 0x55fc13dc59f8 <<invalid sloc>> <invalid sloc> implicit __NSConstantString 'struct __NSConstantString_tag'
-| `-RecordType 0x55fc13dc57d0 'struct __NSConstantString_tag'
-|   `-Record 0x55fc13dc5748 '__NSConstantString_tag'
-|-TypedefDecl 0x55fc13dc5a90 <<invalid sloc>> <invalid sloc> implicit __builtin_ms_va_list 'char *'
-| `-PointerType 0x55fc13dc5a50 'char *'
-|   `-BuiltinType 0x55fc13dc4f00 'char'
-|-TypedefDecl 0x55fc13dc5d88 <<invalid sloc>> <invalid sloc> implicit __builtin_va_list 'struct __va_list_tag[1]'
-| `-ConstantArrayType 0x55fc13dc5d30 'struct __va_list_tag[1]' 1 
-|   `-RecordType 0x55fc13dc5b70 'struct __va_list_tag'
-|     `-Record 0x55fc13dc5ae8 '__va_list_tag'
-|-EnumDecl 0x55fc13e21050 </workspace/functions.h:2:1, line:5:1> line:2:6 EnumName
-| |-EnumConstantDecl 0x55fc13e21150 <line:3:3, col:12> col:3 Value1 'int'
-| | `-ConstantExpr 0x55fc13e21130 <col:12> 'int'
+TranslationUnitDecl 0x559512f6ce58 <<invalid sloc>> <invalid sloc>
+|-TypedefDecl 0x559512f6d680 <<invalid sloc>> <invalid sloc> implicit __int128_t '__int128'
+| `-BuiltinType 0x559512f6d420 '__int128'
+|-TypedefDecl 0x559512f6d6f0 <<invalid sloc>> <invalid sloc> implicit __uint128_t 'unsigned __int128'
+| `-BuiltinType 0x559512f6d440 'unsigned __int128'
+|-TypedefDecl 0x559512f6d9f8 <<invalid sloc>> <invalid sloc> implicit __NSConstantString 'struct __NSConstantString_tag'
+| `-RecordType 0x559512f6d7d0 'struct __NSConstantString_tag'
+|   `-Record 0x559512f6d748 '__NSConstantString_tag'
+|-TypedefDecl 0x559512f6da90 <<invalid sloc>> <invalid sloc> implicit __builtin_ms_va_list 'char *'
+| `-PointerType 0x559512f6da50 'char *'
+|   `-BuiltinType 0x559512f6cf00 'char'
+|-TypedefDecl 0x559512f6dd88 <<invalid sloc>> <invalid sloc> implicit __builtin_va_list 'struct __va_list_tag[1]'
+| `-ConstantArrayType 0x559512f6dd30 'struct __va_list_tag[1]' 1 
+|   `-RecordType 0x559512f6db70 'struct __va_list_tag'
+|     `-Record 0x559512f6dae8 '__va_list_tag'
+|-EnumDecl 0x559512fc90b0 </workspace/functions.h:2:1, line:5:1> line:2:6 EnumName
+| |-EnumConstantDecl 0x559512fc91b0 <line:3:3, col:12> col:3 Value1 'int'
+| | `-ConstantExpr 0x559512fc9190 <col:12> 'int'
 | |   |-value: Int 2
-| |   `-IntegerLiteral 0x55fc13e21110 <col:12> 'int' 2
-| `-EnumConstantDecl 0x55fc13e211e0 <line:4:3, col:12> col:3 Value2 'int'
-|   `-ConstantExpr 0x55fc13e211c0 <col:12> 'int'
+| |   `-IntegerLiteral 0x559512fc9170 <col:12> 'int' 2
+| `-EnumConstantDecl 0x559512fc9240 <line:4:3, col:12> col:3 Value2 'int'
+|   `-ConstantExpr 0x559512fc9220 <col:12> 'int'
 |     |-value: Int 1
-|     `-IntegerLiteral 0x55fc13e211a0 <col:12> 'int' 1
-|-FunctionDecl 0x55fc13e214d8 <line:7:1, col:52> col:6 function 'char (int *, void *, enum EnumName)'
-| |-ParmVarDecl 0x55fc13e21270 <col:15, col:20> col:20 a 'int *'
-| |-ParmVarDecl 0x55fc13e212f0 <col:23, col:29> col:29 b 'void *'
-| `-ParmVarDecl 0x55fc13e213b0 <col:32, col:46> col:46 myEnum 'enum EnumName':'enum EnumName'
-`-FunctionDecl 0x55fc13e21630 <line:8:1, col:17> col:7 function2 'void *()'
+|     `-IntegerLiteral 0x559512fc9200 <col:12> 'int' 1
+|-RecordDecl 0x559512fc9290 <line:7:1, line:10:1> line:7:8 struct StructName definition
+| |-FieldDecl 0x559512fc93e0 <line:8:5, col:20> col:20 field1 'enum EnumName *'
+| `-FieldDecl 0x559512fc9440 <line:9:5, col:10> col:10 field3 'char'
+|-FunctionDecl 0x559512fc96f8 <line:12:1, col:52> col:6 function 'char (int *, void *, enum EnumName)'
+| |-ParmVarDecl 0x559512fc94d0 <col:15, col:20> col:20 a 'int *'
+| |-ParmVarDecl 0x559512fc9550 <col:23, col:29> col:29 b 'void *'
+| `-ParmVarDecl 0x559512fc95d8 <col:32, col:46> col:46 myEnum 'enum EnumName':'enum EnumName'
+|-FunctionDecl 0x559512fc9850 <line:13:1, col:17> col:7 function2 'void *()'
+`-FunctionDecl 0x559512fc9a20 <line:14:1, col:30> col:20 function3 'struct StructName *()'

@@ -3,18 +3,19 @@ package klang.domain
 import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.shouldBe
 import klang.InMemoryDeclarationRepository
+import klang.allDeclarationsFilter
 import klang.parser.testType
 
 class StringTypeResolving : FreeSpec({
 
 	val nativeTypeAlias = NativeTypeAlias(
-		name = "MyString",
+		name = NotBlankString("MyString"),
 		typeRef = testType("char *")
 	)
 
 	InMemoryDeclarationRepository().also { repository ->
 		repository.save(nativeTypeAlias)
-		repository.resolveTypes()
+		repository.resolveTypes(allDeclarationsFilter)
 	}
 
 	"should resolve string type as primitive" {

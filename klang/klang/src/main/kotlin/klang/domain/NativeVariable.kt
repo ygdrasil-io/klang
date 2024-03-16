@@ -1,3 +1,7 @@
 package klang.domain
 
-data class NativeVariable(override val name: String, val type: String): NameableDeclaration, NativeDeclaration
+data class NativeVariable(
+	override val name: NotBlankString,
+	val type: String,
+	override val source: DeclarationOrigin
+): NameableDeclaration, NativeDeclaration

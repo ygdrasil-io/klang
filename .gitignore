@@ -21,3 +21,9 @@ gradle-app.setting
 .classpath
 /.idea/
 /toolkit/*.log
+
+# Ignore native libraries
+*.dll
+*.dylib
+*.so
+*.jar

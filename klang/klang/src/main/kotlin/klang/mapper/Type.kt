@@ -5,31 +5,34 @@ import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import klang.domain.*
 
 // TODO add tests
-internal fun TypeRef.toType(packageName: String, nullable: Boolean = false) = when {
+internal fun TypeRef.toType(packageName: String, nullable: Boolean = false, fromStructure: Boolean = false, fromFunction: Boolean = false) = when {
 	isPointer -> when {
 		this is ResolvedTypeRef -> when (this.type.rootType()) {
 			is StringType -> when {
 				isArray -> ClassName("kotlin", "Array").parameterizedBy(ClassName("kotlin", "String"))
-				else -> ClassName("kotlin", "String")
+				else -> ClassName("kotlin", "String").copy(nullable = fromFunction)
 			}
 
-			is NativeStructure -> ClassName(packageName, typeName)
-			is FunctionPointerType -> jnaCallback
-			is PrimitiveType -> jnaPointer
-			else -> ClassName(packageName, typeName)
+			is NativeStructure -> when (fromStructure) {
+				true -> jnaNullablePointer
+				else -> ClassName(packageName, typeName.value)
+			}
+			is FunctionPointerType -> jnaCallback.copy(nullable = fromFunction)
+			is PrimitiveType -> jnaPointer.copy(nullable = fromFunction)
+			else -> ClassName(packageName, typeName.value)
 		}
 
 		else -> jnaPointer
 	}
-
+	this is ResolvedTypeRef && type is NativeTypeAlias -> ClassName(packageName, type.name.value)
 	this is ResolvedTypeRef -> when (this.type.rootType()) {
 		is FunctionPointerType -> jnaCallback
 		is VoidType -> ClassName("kotlin", "Unit")
 		is PrimitiveType -> toPrimitiveType(packageName)
-		else -> ClassName(packageName, typeName)
+		else -> ClassName(packageName, typeName.value)
 	}
 
-	else -> ClassName(packageName, typeName)
+	else -> ClassName(packageName, typeName.value)
 }.let { if (nullable) it.copy(nullable = true) else it }
 
 // @see https://github.com/java-native-access/jna/blob/master/www/Mappings.md
@@ -84,6 +87,6 @@ private fun ResolvedTypeRef.toPrimitiveType(packageName: String): ClassName = th
 			// Default
 			else -> null
 		}
-	} ?: ClassName(packageName, typeName)
+	} ?: ClassName(packageName, typeName.value)
 
 }

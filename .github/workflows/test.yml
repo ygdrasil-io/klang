@@ -13,16 +13,19 @@ concurrency:
 jobs:
   tests:
     strategy:
+      fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: [macos-14, ubuntu-latest]
     runs-on: ${{ matrix.os }}
     steps:
+      - name: print architecture
+        run: uname -m
       - uses: actions/checkout@v3
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
-          java-version: 17
+          java-version: 21
           cache: 'gradle'
       - name: Cache Gradle packages
         uses: actions/cache@v3
@@ -30,7 +33,15 @@ jobs:
           path: ~/.gradle/caches
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
           restore-keys: ${{ runner.os }}-gradle
-      - name: Build & test klang
+      - name: Build & test klang macos
+        if: matrix.os == 'macos-14'
+        run: |
+          cd ./klang
+          ./gradlew test
+      - name: Build & test klang ubuntu
+        if: matrix.os == 'ubuntu-latest'
+        env:
+          LIBCLANG_PATH: "/usr/lib/llvm-15/lib/libclang-15.so.1"
         run: |
           cd ./klang
           ./gradlew test

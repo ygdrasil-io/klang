@@ -26,7 +26,7 @@ class CocoaItTest : FreeSpec({
 			declarations
 				.asSequence()
 				.filterIsInstance<NameableDeclaration>()
-				.filter { it.name == "NSWindow" }
+				.filter { it.name.value == "NSWindow" }
 				.forEach { println(it) }
 		}
 

@@ -14,7 +14,7 @@ internal fun FunctionPointerType.toCallbackSpec(name: String, packageName: Strin
 			.addModifiers(KModifier.ABSTRACT)
 			.addParameters(
 				arguments
-					.map { it.toType(packageName) }
+					.map { it.toType(packageName, fromFunction = true) }
 					.mapIndexed { index, type ->
 						ParameterSpec
 							.builder("param${index + 1}", type)

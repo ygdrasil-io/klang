@@ -3,6 +3,7 @@ package klang.mapper
 import com.squareup.kotlinpoet.ClassName
 
 internal val jnaPointer by lazy { ClassName("com.sun.jna", "Pointer") }
+internal val jnaNullablePointer by lazy { jnaPointer.copy(nullable = true) }
 internal val jnaCallback by lazy { ClassName("com.sun.jna", "Callback") }
 internal val jnaStructure by lazy { ClassName("com.sun.jna", "Structure") }
 internal val jnaUnion by lazy { ClassName("com.sun.jna", "Union") }

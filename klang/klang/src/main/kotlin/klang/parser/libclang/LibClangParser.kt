@@ -1,103 +1,48 @@
 package klang.parser.libclang
 
 import klang.DeclarationRepository
-import klang.InMemoryDeclarationRepository
-import klang.domain.*
-import klang.jvm.AbstractIndexerCallback
-import klang.jvm.CursorKind
-import klang.jvm.DeclarationInfo
-import klang.jvm.createIndex
-import klang.parser.libclang.type.declareFunction
-import klang.parser.tools.OneTimeProvider
 import mu.KotlinLogging
+import java.io.File
+import java.nio.file.Path
+import kotlin.io.path.absolutePathString
+import kotlin.io.path.exists
 
 private val logger = KotlinLogging.logger {}
 
-internal data class ParsingContext(
-	var currentDefinition: NativeDeclaration? = null,
-	var lastTypeDefName: OneTimeProvider<String> = OneTimeProvider(),
-	val declarationRepository: DeclarationRepository = InMemoryDeclarationRepository()
-) {
-	inline fun <reified T : NativeDeclaration> getCurrentDefinitionAs(): T {
-		return (currentDefinition as? T)
-			?: throw IllegalStateException("Expected ${T::class.simpleName}")
+fun DeclarationRepository.parseFile(
+	fileAsString: String,
+	filePathAsString: String? = null,
+	headerPathsAsString: Array<String> = arrayOf(),
+	macros: Map<String, String?> = mapOf()
+): DeclarationRepository {
+
+	val fileToParse = computeFile(filePathAsString, fileAsString)
+	val path = computePath(filePathAsString)
+	val headerPaths = computeHeadersPaths(headerPathsAsString)
+
+	logger.info {
+		"will parse file at ${fileToParse.absolutePath} and paths ${headerPaths.map { it.toFile().absolutePath }}"
 	}
+
+	return parseFile(fileToParse, path, headerPaths, macros)
 }
 
-fun parseFile(file: String) =
-	ParsingContext()
-		.parse(file) { info: DeclarationInfo ->
-			logger.debug { "parsing unit at ${info.location}" }
-			when (info.cursor.kind) {
-				CursorKind.TYPEDEF_DECL -> when {
-					isEnumOrStruct(info) -> storeSpelling(info)
-					else -> declareTypeAlias(info)
-				}
+private fun computeHeadersPaths(headerPathsAsString: Array<String>) =
+	headerPathsAsString.map { Path.of(it).also { check(it.exists()) { "File not found ${it.absolutePathString()}" } } }.toTypedArray()
 
-				CursorKind.ENUM_DECL -> declareEnumeration(info)
-				CursorKind.STRUCT_DECL -> declareStructure(info)
-				CursorKind.ENUM_CONSTANT_DECL -> updateEnumerationField(info)
-				CursorKind.FIELD_DECL -> updateStructureField(info)
-				CursorKind.FUNCTION_DECL -> declareFunction(info)
+private fun computePath(filePathAsString: String?) = filePathAsString?.let { Path.of(it) }
+	?.also { check(it.exists()) }
 
-				else -> println("not found ${info.cursor.kind} ${info.cursor.spelling}")
-			}
+private fun computeFile(filePathAsString: String?, fileAsString: String) = when (filePathAsString != null) {
+	true -> filePathAsString.let { "$it/$fileAsString" }
+		.let(::File)
 
-		}
+	false -> File(fileAsString)
+}.also { check(it.exists()) }
 
-
-private fun ParsingContext.parse(file: String, block: ParsingContext.(DeclarationInfo) -> Unit) =
-	createIndex(excludeDeclarationsFromPCH = false, displayDiagnostics = false)
-		.use { index ->
-			index.indexSourceFile(object : AbstractIndexerCallback() {
-				override fun indexDeclaration(info: DeclarationInfo) {
-					block(info)
-				}
-			}, file)
-		}.let { declarationRepository }
-
-private fun isEnumOrStruct(info: DeclarationInfo) = info.cursor.children().isNotEmpty()
-	&& info.cursor.children().first().kind in listOf(CursorKind.ENUM_DECL, CursorKind.STRUCT_DECL)
-
-private fun ParsingContext.declareTypeAlias(info: DeclarationInfo) {
-	val name = info.cursor.spelling
-	val type = info.cursor.underlyingType.spelling
-	currentDefinition = NativeTypeAlias(
-		name = name,
-		typeRef = type.let(::typeOf).unchecked("fail to parse type $this")
-	).also(declarationRepository::save)
-}
-
-private fun ParsingContext.updateStructureField(info: DeclarationInfo) {
-	val name = info.cursor.spelling
-	val value = typeOf(info.cursor.type.spelling).unchecked("fail to parse type $this")
-	currentDefinition = getCurrentDefinitionAs<NativeStructure>().let {
-		declarationRepository.update(it) {
-			it.copy(fields = it.fields + (name to value))
-		}
-	}
-}
-
-private fun ParsingContext.updateEnumerationField(info: DeclarationInfo) {
-	val name = info.cursor.spelling
-	val value = info.cursor.getEnumConstantValue()
-	currentDefinition = getCurrentDefinitionAs<NativeEnumeration>().let {
-		declarationRepository.update(it) {
-			it.copy(values = it.values + (name to value))
-		}
-	}
-}
-
-private fun ParsingContext.declareStructure(info: DeclarationInfo) {
-	currentDefinition = NativeStructure(lastTypeDefName.consume() ?: info.cursor.spelling)
-		.also(declarationRepository::save)
-}
-
-private fun ParsingContext.declareEnumeration(info: DeclarationInfo) {
-	currentDefinition = NativeEnumeration(lastTypeDefName.consume() ?: info.cursor.spelling)
-		.also(declarationRepository::save)
-}
-
-private fun ParsingContext.storeSpelling(info: DeclarationInfo) {
-	lastTypeDefName.store(info.cursor.spelling)
-}
+private fun DeclarationRepository.parseFile(
+	file: File,
+	filePath: Path? = null,
+	headerPaths: Array<Path>,
+	macros: Map<String, String?>
+) = parseFileWithPanama(file.absolutePath, filePath, headerPaths, macros)

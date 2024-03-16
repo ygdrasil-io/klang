@@ -1,9 +1,11 @@
 package klang.mapper
 
+import com.squareup.kotlinpoet.ClassName
 import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import klang.InMemoryDeclarationRepository
+import klang.allDeclarationsFilter
 import klang.domain.*
 import klang.parser.TestData
 import klang.parser.testType
@@ -11,20 +13,20 @@ import klang.parser.testType
 class TypeTest : FreeSpec({
 
 	val structure = NativeStructure(
-		name = "MyStructure",
+		name = NotBlankString("MyStructure"),
 		fields = listOf(
-			"callback" to testType(TestData.basicFunctionPointer),
-			"callback2" to testType("MyAlias"),
+			TypeRefField("callback", testType(TestData.basicFunctionPointer)),
+			TypeRefField("callback2", testType("MyAlias")),
 		)
 	)
 
 	val typeAlias = NativeTypeAlias(
-		name = "MyAlias",
+		name = NotBlankString("MyAlias"),
 		typeRef = testType(TestData.basicFunctionPointer)
 	)
 
 	val primitiveArrayTypeAlias = NativeTypeAlias(
-		name = "MyAliasWithPrimitiveArray",
+		name = NotBlankString("MyAliasWithPrimitiveArray"),
 		typeRef = testType("int[10]")
 	)
 
@@ -32,15 +34,15 @@ class TypeTest : FreeSpec({
 		save(structure)
 		save(typeAlias)
 		save(primitiveArrayTypeAlias)
-		resolveTypes()
+		resolveTypes(allDeclarationsFilter)
 	}
 
 	"toType" {
-		structure.fields[0].second.toType("test") shouldBe jnaCallback
-		structure.fields[1].second.toType("test") shouldBe jnaCallback
+		(structure.fields[0] as TypeRefField).type.toType("test") shouldBe jnaCallback
+		(structure.fields[1]as TypeRefField).type.toType("test") shouldBe ClassName("test", "MyAlias")
 		primitiveArrayTypeAlias.typeRef
 			.let { it as? ResolvedTypeRef }
-			.also { it shouldNotBe  null }
+			.also { it shouldNotBe null }
 			?.also {
 				(it.type is FixeSizeType) shouldBe true
 				it.isArray shouldBe true

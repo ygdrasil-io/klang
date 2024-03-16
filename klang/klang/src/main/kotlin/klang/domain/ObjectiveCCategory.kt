@@ -5,9 +5,10 @@ import klang.DeclarationRepository
 internal val AnonymousCategoryName = "AnonymousCategory"
 
 data class ObjectiveCCategory(
-	override val name: String,
+	override val name: NotBlankString,
 	var superType: TypeRef,
-	val methods: List<ObjectiveCClass.Method>
+	val methods: List<ObjectiveCClass.Method>,
+	override val source: DeclarationOrigin = DeclarationOrigin.Unknown
 ) : NameableDeclaration, ResolvableDeclaration {
 
 	override fun DeclarationRepository.resolve() {

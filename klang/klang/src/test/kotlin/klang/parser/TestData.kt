@@ -2,7 +2,9 @@ package klang.parser
 
 import klang.domain.*
 
-fun testType(name: String) = typeOf(name).let {
+fun testType(name: String) = testType(NotBlankString(name))
+
+fun testType(name: NotBlankString) = typeOf(name.value).let {
 	it.unchecked("fail to create type $name, cause: ${it.leftOrNull()}")
 }
 
@@ -10,28 +12,34 @@ object TestData {
 
 	val functions = listOf(
 		NativeFunction(
-			name = "function",
+			name = NotBlankString("function"),
 			returnType = testType("char"),
 			arguments = listOf(
-				NativeFunction.Argument("a", testType("int *")),
-				NativeFunction.Argument("b", testType("void *")),
-				NativeFunction.Argument("myEnum", testType("enum EnumName")),
+				NativeFunction.Argument(NotBlankString("a"), testType("int *")),
+				NativeFunction.Argument(NotBlankString("b"), testType("void *")),
+				NativeFunction.Argument(NotBlankString("myEnum"), testType("enum EnumName")),
 			)
 		),
 		NativeFunction(
-			name = "function2",
+			name = NotBlankString("function2"),
 			returnType = testType("void *"),
+			arguments = listOf()
+		),
+
+		NativeFunction(
+			name = NotBlankString("function3"),
+			returnType = testType("struct StructName *"),
 			arguments = listOf()
 		)
 	)
 
 	val objectiveCEnumeration = listOf(
-		"MyEnum" to listOf(
+		NotBlankString("MyEnum") to listOf(
 			"kValue1" to 0L,
 			"kValue2" to 1L,
 			"kValue3" to 2L
 		),
-		"MyEnum2" to listOf(
+		NotBlankString("MyEnum2") to listOf(
 			"kValue4" to 0L,
 			"kValue5" to 1L,
 			"kValue6" to 2L
@@ -40,34 +48,34 @@ object TestData {
 
 	val objectiveCCategory = listOf(
 		ObjectiveCCategory(
-			name = "MyCategory",
+			name = NotBlankString("MyCategory"),
 			superType = testType("MyClass"),
 			methods = listOf(
-				ObjectiveCClass.Method("newMethod", testType("void"), true),
+				ObjectiveCClass.Method(NotBlankString("newMethod"), testType("void"), true),
 			)
 		)
 	)
 
 	val objectiveCProtocol = listOf(
 		ObjectiveCProtocol(
-			name = "MyProtocol",
+			name = NotBlankString("MyProtocol"),
 			protocols = setOf("NSObject"),
 			properties = listOf(),
 			methods = listOf(
-				ObjectiveCClass.Method("method1", testType("void"), true),
-				ObjectiveCClass.Method("method2", testType("NSString *"), true)
+				ObjectiveCClass.Method(NotBlankString("method1"), testType("void"), true),
+				ObjectiveCClass.Method(NotBlankString("method2"), testType("NSString *"), true)
 			)
 		)
 	)
 
 	val objectiveCClass = listOf(
 		ObjectiveCClass(
-			name = "TestClass",
+			name = NotBlankString("TestClass"),
 			superType = testType("NSObject"),
 			protocols = setOf(testType("NSCopying")),
 			properties = listOf(
 				ObjectiveCClass.Property(
-					"testProperty",
+					NotBlankString("testProperty"),
 					"NSString *",
 					nonatomic = true,
 					assign = true,
@@ -76,9 +84,9 @@ object TestData {
 				)
 			),
 			methods = listOf(
-				ObjectiveCClass.Method("testMethod", testType("void"), true),
+				ObjectiveCClass.Method(NotBlankString("testMethod"), testType("void"), true),
 				ObjectiveCClass.Method(
-					"testMethod:withParameter:", testType("BOOL"), false, listOf(
+					NotBlankString("testMethod:withParameter:"), testType("BOOL"), false, listOf(
 						ObjectiveCClass.Method.Argument("parameter", testType("NSString *")),
 						ObjectiveCClass.Method.Argument("testParameter", testType("NSString *")),
 					)
@@ -88,8 +96,8 @@ object TestData {
 	)
 
 	val enumerations = listOf(
-		"EnumName" to listOf("Value1" to 0x2L, "Value2" to 0x1L),
-		"EnumNameWithoutExplicitValues" to listOf(
+		NotBlankString("EnumName") to listOf("Value1" to 0x2L, "Value2" to 0x1L),
+		NotBlankString("EnumNameWithoutExplicitValues") to listOf(
 			"EnumNameWithoutExplicitValues_Value1" to 0L,
 			"EnumNameWithoutExplicitValues_Value2" to 1L
 		)
@@ -97,11 +105,11 @@ object TestData {
 
 	val union = listOf(
 		NativeStructure(
-			name = "MyUnion",
+			name = NotBlankString("MyUnion"),
 			fields = listOf(
-				"i" to testType("int"),
-				"f" to testType("float"),
-				"c" to testType("char"),
+				TypeRefField("i", testType("int")),
+				TypeRefField("f", testType("float")),
+				TypeRefField("c", testType("char")),
 
 				),
 			isUnion = true
@@ -111,19 +119,19 @@ object TestData {
 
 	val structures = listOf(
 		NativeStructure(
-			name = "StructName",
+			name = NotBlankString("StructName"),
 			fields = listOf(
-				"field1" to testType("enum EnumName *"),
-				"field2" to testType("EnumName2"),
-				"field3" to testType("char")
+				TypeRefField("field1", testType("enum EnumName *")),
+				TypeRefField("field2", testType("EnumName2")),
+				TypeRefField("field3", testType("char"))
 			)
 		),
 		NativeStructure(
-			name = "StructName2",
+			name = NotBlankString("StructName2"),
 			fields = listOf(
-				"field1" to testType("struct StructName"),
-				"field2" to testType("struct StructName *"),
-				"field3" to testType("char")
+				TypeRefField("field1", testType("struct StructName")),
+				TypeRefField("field2", testType("struct StructName *")),
+				TypeRefField("field3", testType("char"))
 			)
 		)
 	)
@@ -131,33 +139,120 @@ object TestData {
 	val typeDefStructures = listOf(
 
 		NativeStructure(
-			name = "StructName",
+			name = NotBlankString("StructName"),
 			fields = listOf(
-				"field1" to testType("enum EnumName *"),
-				"field2" to testType("EnumName2"),
-				"field3" to testType("char")
+				TypeRefField("field1", testType("enum EnumName *")),
+				TypeRefField("field2", testType("EnumName2")),
+				TypeRefField("field3", testType("char"))
 			)
 		),
 		NativeStructure(
-			name = "StructName2",
+			name = NotBlankString("StructName2"),
 			fields = listOf(
-				"field1" to testType("StructName"),
-				"field2" to testType("StructName *"),
-				"field3" to testType("char")
+				TypeRefField("field1", testType("StructName")),
+				TypeRefField("field2", testType("StructName *")),
+				TypeRefField("field3", testType("char"))
 			)
 		)
 	)
 
 	val typeDef = listOf(
 		NativeTypeAlias(
-			name = "NewType",
+			name = NotBlankString("NewType"),
 			typeRef = testType("void *")
 		),
 		NativeTypeAlias(
-			name = "NewStructureType",
+			name = NotBlankString("NewStructureType"),
 			typeRef = testType("struct OldStructureType *")
 		)
 	)
 
-	const val basicFunctionPointer = "void (*)(void *, char *, int)"
+	val basicFunctionPointer = NotBlankString("void (*)(void *, char *, int)")
+
+	val exaustiveTypeDef = listOf(
+		NativeTypeAlias(
+			name = NotBlankString("signed_char_t"),
+			typeRef = testType("char")
+		),
+		NativeTypeAlias(
+			name = NotBlankString("signed_int_t"),
+			typeRef = testType("int")
+		),
+		NativeTypeAlias(
+			name = NotBlankString("signed_short_t"),
+			typeRef = testType("short")
+		),
+		NativeTypeAlias(
+			name = NotBlankString("signed_long_t"),
+			typeRef = testType("long")
+		),
+		NativeTypeAlias(
+			name = NotBlankString("signed_long_long_t"),
+			typeRef = testType("long long")
+		),
+		NativeTypeAlias(
+			name = NotBlankString("unsigned_char_t"),
+			typeRef = testType("unsigned char")
+		),
+		NativeTypeAlias(
+			name = NotBlankString("unsigned_int_t"),
+			typeRef = testType("unsigned int")
+		),
+		NativeTypeAlias(
+			name = NotBlankString("unsigned_short_t"),
+			typeRef = testType("unsigned short")
+		),
+		NativeTypeAlias(
+			name = NotBlankString("unsigned_long_t"),
+			typeRef = testType("unsigned long")
+		),
+		NativeTypeAlias(
+			name = NotBlankString("unsigned_long_long_t"),
+			typeRef = testType("unsigned long long")
+		),
+		NativeTypeAlias(
+			name = NotBlankString("arr_of_int_t"),
+			typeRef = testType("int[10]")
+		),
+		NativeTypeAlias(
+			name = NotBlankString("arr_of_float_t"),
+			typeRef = testType("float[10]")
+		),
+		NativeTypeAlias(
+			name = NotBlankString("arr_of_char_t"),
+			typeRef = testType("char[10]")
+		),
+		NativeTypeAlias(
+			name = NotBlankString("arr_of_double_t"),
+			typeRef = testType("double[10]")
+		),
+		NativeTypeAlias(
+			name = NotBlankString("arr_of_unsigned_char_t"),
+			typeRef = testType("char[10]")
+		)
+	)
+
+	val stringConstants = listOf(
+		NativeConstant(NotBlankString("STRING_CONSTANT1"), "Hello"),
+		NativeConstant(NotBlankString("STRING_CONSTANT2"), "World"),
+		NativeConstant(NotBlankString("STRING_CONSTANT3"), "AI"),
+		NativeConstant(NotBlankString("STRING_CONSTANT4"), "Programming"),
+		NativeConstant(NotBlankString("STRING_CONSTANT5"), "Assistant")
+	)
+
+	val longConstants = listOf(
+		NativeConstant(NotBlankString("LONG_CONSTANT1"), 10000000000L),
+		NativeConstant(NotBlankString("LONG_CONSTANT2"), 20000000000L),
+		NativeConstant(NotBlankString("LONG_CONSTANT3"), 30000000000L),
+		NativeConstant(NotBlankString("LONG_CONSTANT4"), 40000000000L),
+		NativeConstant(NotBlankString("LONG_CONSTANT5"), 50000000000L)
+	)
+
+	val doubleConstants = listOf(
+		NativeConstant(NotBlankString("DOUBLE_CONSTANT1"), 1.11),
+		NativeConstant(NotBlankString("DOUBLE_CONSTANT2"), 2.22),
+		NativeConstant(NotBlankString("DOUBLE_CONSTANT3"), 3.33),
+		NativeConstant(NotBlankString("DOUBLE_CONSTANT4"), 4.44),
+		NativeConstant(NotBlankString("DOUBLE_CONSTANT5"), 5.55)
+	)
 }

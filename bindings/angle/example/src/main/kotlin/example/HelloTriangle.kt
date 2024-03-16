@@ -52,16 +52,16 @@ class HelloTriangle : SampleApplication("HelloTriangle") {
 		libGLESv2Library.glViewport(0, 0, window.width, window.height)
 
 		// Clear the color buffer
-		libGLESv2Library.glClear(GL_COLOR_BUFFER_BIT)
+		libGLESv2Library.glClear(GL_COLOR_BUFFER_BIT.toInt())
 
 		// Use the program object
 		libGLESv2Library.glUseProgram(mProgram)
 
 		// Load the vertex data
-		libGLESv2Library.glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE.toByte(), 0, verticesBuffer)
+		libGLESv2Library.glVertexAttribPointer(0, 3, GL_FLOAT.toInt(), GL_FALSE.toByte(), 0, verticesBuffer)
 		libGLESv2Library.glEnableVertexAttribArray(0)
 
-		libGLESv2Library.glDrawArrays(GL_TRIANGLES, 0, 3)
+		libGLESv2Library.glDrawArrays(GL_TRIANGLES.toInt(), 0, 3)
 	}
 
 }

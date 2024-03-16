@@ -1,28 +1,23 @@
 package example.toolkit
 
-import libangle.EGL_DONT_CARE
-import libangle.EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE
-import libangle.EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE
-import libangle.Feature
+import libangle.*
 import java.util.*
 
 class PlatformMethods
 
 class EGLPlatformParameters {
 	var renderer: Int = EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE
-	var majorVersion: Int = EGL_DONT_CARE
-	var minorVersion: Int = EGL_DONT_CARE
+	var majorVersion: Int = EGL_DONT_CARE.toInt()
+	var minorVersion: Int = EGL_DONT_CARE.toInt()
 	var deviceType: Int = EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE
-	var presentPath: Int = EGL_DONT_CARE
-	var debugLayersEnabled: Int = EGL_DONT_CARE
-	var robustness: Int = EGL_DONT_CARE
-	var displayPowerPreference: Int = EGL_DONT_CARE
+	var presentPath: Int = EGL_DONT_CARE.toInt()
+	var debugLayersEnabled: Int = EGL_DONT_CARE.toInt()
+	var robustness: Int = EGL_DONT_CARE.toInt()
+	var displayPowerPreference: Int = EGL_DONT_CARE.toInt()
 	var enabledFeatureOverrides: MutableList<Feature> = ArrayList()
 	var disabledFeatureOverrides: MutableList<Feature> = ArrayList()
 	var platformMethods: PlatformMethods? = null
-
 	constructor() // Constructor por defecto
-
 	constructor(renderer: Int) {
 		this.renderer = renderer
 	}

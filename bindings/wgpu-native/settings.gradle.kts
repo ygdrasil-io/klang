@@ -1,4 +1,3 @@
-rootProject.name = "wgpu"
 
 pluginManagement {
 	repositories {
@@ -8,6 +7,8 @@ pluginManagement {
 	}
 }
 
-include(":libwgpu")
+include(":libwgpu", ":binaries")
 findProject(":libwgpu")?.name = "wgpu4k"
+findProject(":binaries")?.name = "wgpu-binaries"
+include(":example")
 

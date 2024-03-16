@@ -1,8 +1,10 @@
+import io.ygdrasil.ParsingMethod
 import klang.domain.typeOf
 import klang.domain.unchecked
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
-import java.net.URL
+import java.net.URI
+import io.ygdrasil.noMacros
 
 buildscript {
 	dependencies {
@@ -16,7 +18,7 @@ buildscript {
 }
 
 plugins {
-	kotlin("jvm") version "1.9.10"
+	kotlin("jvm") version libs.versions.kotlin
 	alias(libs.plugins.klang)
 }
 
@@ -50,15 +52,19 @@ sourceSets.main {
 	java.srcDirs(buildDir)
 }
 
-val headerUrl = URL("https://github.com/klang-toolkit/ANGLE-binary/releases/download/2-beta/headers.zip")
+val headerUrl = URI("https://github.com/klang-toolkit/ANGLE-binary/releases/download/2-beta/headers.zip")
+	.toURL()
 
 klang {
+
+	parsingMethod = ParsingMethod.Libclang
+
 	download(headerUrl)
 		.let(::unpack)
 		.let {
-			parse(fileToParse = "GLES3/gl3.h", at = it) {
+			parse(fileToParse = "GLES3/gl3.h", at = it, noMacros) {
 				findFunctionByName("glShaderSource")?.let { function ->
-					function.arguments.first { it.name == "string" }.apply {
+					function.arguments.first { it.name?.value == "string" }.apply {
 						type = typeOf("char *").unchecked()
 					}
 				}

@@ -49,10 +49,11 @@ class InMemoryDeclarationRepository : DeclarationRepository {
 	}
 
 
-	override fun resolveTypes() {
+	override fun resolveTypes(filter: (ResolvableDeclaration) -> Boolean) {
 		nativeDeclarations
 			.asSequence()
 			.filterIsInstance<ResolvableDeclaration>()
+			.filter(filter)
 			.forEach { with(it) { resolve() } }
 	}
 }

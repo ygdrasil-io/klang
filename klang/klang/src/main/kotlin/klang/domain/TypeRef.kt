@@ -9,7 +9,8 @@ import mu.KotlinLogging
 
 private val logger = KotlinLogging.logger {}
 
-fun <A, B> Either<A, B>.unchecked(message: String = "unchecked Either lead to error") = getOrNull() ?: error(message)
+fun <A, B> Either<A, B>.unchecked(message: String = "unchecked Either lead to error") = getOrNull()
+	?: error(message)
 
 fun typeOf(reference: String): Either<String, TypeRef> = either {
 	var isArray = false
@@ -81,7 +82,7 @@ fun typeOf(reference: String): Either<String, TypeRef> = either {
 	}
 	UnresolvedTypeRef(
 		reference,
-		typeName,
+		NotBlankString(typeName),
 		isConstant,
 		isPointer,
 		isStructure,
@@ -98,7 +99,7 @@ fun typeOf(reference: String): Either<String, TypeRef> = either {
 sealed interface TypeRef {
 
 	val referenceAsString: String
-	val typeName: String
+	val typeName: NotBlankString
 	val isConstant: Boolean
 	val isPointer: Boolean
 	val isStructure: Boolean
@@ -111,8 +112,9 @@ sealed interface TypeRef {
 	val isCallback: Boolean
 
 	fun DeclarationRepository.resolveType(): TypeRef = when {
+		this@TypeRef is ResolvedTypeRef -> this@TypeRef
 		isCallback -> ResolvedTypeRef(this@TypeRef, typeName.toFunctionPointerType())
-		isPointer && typeName == "char" -> ResolvedTypeRef(this@TypeRef, StringType)
+		isPointer && typeName == NotBlankString("char") -> ResolvedTypeRef(this@TypeRef, StringType)
 		else -> findDeclarationByName<NameableDeclaration>(typeName)
 				?.let { ResolvedTypeRef(this@TypeRef, it) }
 				?: (this@TypeRef.also { logger.warn { "fail to resolve type : $it" } })
@@ -120,10 +122,10 @@ sealed interface TypeRef {
 
 }
 
-internal fun String.toFunctionPointerType(): FunctionPointerType {
-	val returnType = substringBefore("(").let { typeOf(it).unchecked() }
+internal fun NotBlankString.toFunctionPointerType(): FunctionPointerType {
+	val returnType = value.substringBefore("(").let { typeOf(it).unchecked() }
 
-	val arguments = substringAfter("(*)")
+	val arguments = value.substringAfter("(*)")
 		.replace("(", "")
 		.replace(")", "")
 		.split(",")
@@ -137,17 +139,17 @@ internal fun String.toFunctionPointerType(): FunctionPointerType {
 
 class UnresolvedTypeRef internal constructor(
 	override val referenceAsString: String,
-	override val typeName: String,
-	override val isConstant: Boolean,
-	override val isPointer: Boolean,
-	override val isStructure: Boolean,
-	override val isEnumeration: Boolean,
-	override val isNullable: Boolean?,
-	override val isVolatile: Boolean,
-	override val isUnion: Boolean,
-	override val isCallback: Boolean,
-	override var isArray: Boolean,
-	override var arraySize: Int?,
+	override val typeName: NotBlankString,
+	override val isConstant: Boolean = false,
+	override val isPointer: Boolean = false,
+	override val isStructure: Boolean = false,
+	override val isEnumeration: Boolean = false,
+	override val isNullable: Boolean? = null,
+	override val isVolatile: Boolean = false,
+	override val isUnion: Boolean = false,
+	override val isCallback: Boolean = false,
+	override var isArray: Boolean = false,
+	override var arraySize: Int? = null,
 ) : TypeRef {
 
 	override fun toString() = "UnresolvedType($typeName from declaration $referenceAsString)"
@@ -159,6 +161,7 @@ class UnresolvedTypeRef internal constructor(
 	override fun hashCode(): Int {
 		return typeName.hashCode()
 	}
+
 }
 
 class ResolvedTypeRef internal constructor(private val typeRef: TypeRef, val type: NativeDeclaration) :

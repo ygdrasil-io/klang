@@ -3,12 +3,15 @@ package klang.domain
 import klang.DeclarationRepository
 
 data class NativeTypeAlias(
-	override val name: String,
-	var typeRef: TypeRef
+	override val name: NotBlankString,
+	var typeRef: TypeRef,
+	override val source: DeclarationOrigin = DeclarationOrigin.Unknown
 ) :NameableDeclaration, NativeDeclaration, ResolvableDeclaration {
 
 	override fun DeclarationRepository.resolve() {
-		typeRef = with(typeRef) { resolveType() }
+		if (typeRef is UnresolvedTypeRef) {
+			typeRef = with(typeRef) { resolveType() }
+		}
 		typeRef.resolveIfFunctionPointerType(this)
 	}
 

@@ -1,6 +1,7 @@
 package klang.generator
 
 import generation.toKotlinType
+import klang.domain.NotBlankString
 import klang.domain.ObjectiveCClass
 import java.io.File
 
@@ -40,5 +41,5 @@ private fun ObjectiveCClass.Method.generateMethod(): String {
 	return "\tfun ${name.toMethodName()}(${arguments.joinToString { "${it.name}: ${it.type.toKotlinType()}" }}): ${returnType.toKotlinType()} = ObjectiveC.objc_msgSend(id, sel(\"${name}\"), ${arguments.joinToString { it.name }})"
 }
 
-private fun String.toMethodName(): String
+private fun NotBlankString.toMethodName(): String
 	= split(":").first()

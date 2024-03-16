@@ -2,13 +2,15 @@ package klang.generator
 
 import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.shouldBe
-import klang.domain.*
+import klang.domain.NotBlankString
+import klang.domain.ObjectiveCClass
+import klang.domain.typeOf
 import klang.mapper.toSpec
 
 class ObjectiveCGenerationTest : FreeSpec({
 
 	val objectiveC = ObjectiveCClass(
-		name = "MyObjectiveCClass",
+		name = NotBlankString("MyObjectiveCClass"),
 		superType = typeOf("NSObject").getOrNull(),
 		protocols = setOf(),
 		properties = listOf(),

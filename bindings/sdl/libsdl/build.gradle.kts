@@ -1,8 +1,10 @@
+import io.ygdrasil.ParsingMethod
+import klang.domain.TypeRefField
 import klang.domain.typeOf
 import klang.domain.unchecked
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
-import java.net.URL
+import java.net.URI
 
 buildscript {
 	dependencies {
@@ -16,7 +18,7 @@ buildscript {
 }
 
 plugins {
-	kotlin("jvm") version "1.9.10"
+	kotlin("jvm") version libs.versions.kotlin
 	alias(libs.plugins.klang)
 }
 
@@ -50,12 +52,16 @@ sourceSets.main {
 	java.srcDirs(buildDir)
 }
 
-val headerUrl = URL("https://github.com/klang-toolkit/SDL-binary/releases/download/2.28.2-Alpha3/headers.zip")
+val headerUrl = URI("https://github.com/klang-toolkit/SDL-binary/releases/download/2.30.0/headers.zip")
+	.toURL() ?: error("cannot create header url")
 
 klang {
+
+	parsingMethod = ParsingMethod.Libclang
+
 	download(headerUrl)
 		.let(::unpack)
-		.let {
+		.let { it ->
 			parse(fileToParse = "SDL2/SDL.h", at = it) {
 				findTypeAliasByName("Uint8")?.apply {
 					// Type is dumped as Int instead of char
@@ -64,15 +70,25 @@ klang {
 
 				// Replace SDL_PixelFormat by void * to avoid circular dependency when calculating size of structure
 				findStructureByName("SDL_PixelFormat")?.apply {
-					fields = fields.map { (name, fields) ->
-						when (name) {
-							"next" -> name to typeOf("void *").unchecked()
-							else -> name to fields
-						}
-					}
+					fields = fields
+						.filterIsInstance<TypeRefField>()
+						.map { (name, fields) ->
+							when (name) {
+								"next" -> name to typeOf("void *").unchecked()
+								else -> name to fields
+							}
+						}.map { TypeRefField(it.first, it.second) }
 				}
 			}
+			parse(fileToParse = "SDL2/SDL_syswm.h", at = it)
 		}
 
-	generateBinding("libsdl", "SDL2")
+	generateBinding("io.ygdrasil.libsdl", "SDL2")
+}
+
+tasks.named("compileJava", JavaCompile::class.java) {
+	options.compilerArgumentProviders.add(CommandLineArgumentProvider {
+		// Provide compiled Kotlin classes to javac – needed for Java/Kotlin mixed sources to work
+		listOf("--patch-module", "io.ygdrasil.libsdl=${sourceSets["main"].output.asPath}")
+	})
 }

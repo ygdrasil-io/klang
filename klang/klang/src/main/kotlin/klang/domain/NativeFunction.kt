@@ -3,13 +3,14 @@ package klang.domain
 import klang.DeclarationRepository
 
 data class NativeFunction(
-	override val name: String,
+	override val name: NotBlankString,
 	var returnType: TypeRef,
-	val arguments: List<Argument>
+	val arguments: List<Argument>,
+	override val source: DeclarationOrigin = DeclarationOrigin.Unknown
 ): NameableDeclaration, NativeDeclaration, ResolvableDeclaration {
 
 	data class Argument(
-		val name: String?,
+		val name: NotBlankString?,
 		var type: TypeRef
 	) : ResolvableDeclaration {
 

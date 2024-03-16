@@ -3,17 +3,18 @@ package klang.domain
 import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.shouldBe
 import klang.InMemoryDeclarationRepository
+import klang.allDeclarationsFilter
 
 class EnumerationTypeResolving : FreeSpec({
 
 	val enumeration = NativeEnumeration(
-		name = "MyEnumeration",
+		name = NotBlankString("MyEnumeration"),
 		values = listOf("first" to 1L)
 	)
 
 	InMemoryDeclarationRepository().also { repository ->
 		repository.save(enumeration)
-		repository.resolveTypes()
+		repository.resolveTypes(allDeclarationsFilter)
 	}
 
 	"should resolve enumeration type as primitive" {

@@ -11,7 +11,7 @@ import kotlinx.serialization.json.jsonPrimitive
 
 internal fun TranslationUnitNode.toObjectiveCCategory(): ObjectiveCCategory {
 	return ObjectiveCCategory(
-		name = json.nullableName() ?: AnonymousCategoryName,
+		name = NotBlankString(json.nullableName() ?: AnonymousCategoryName),
 		superType = json.superType(),
 		methods = json.methods()
 	)
@@ -32,7 +32,7 @@ private fun JsonObject.methods(): List<ObjectiveCClass.Method> = inner()
 	?.map { it.toMethod() } ?: listOf()
 
 private fun JsonObject.toMethod() = ObjectiveCClass.Method(
-	name = name(),
+	name = NotBlankString(name()),
 	returnType = returnType(),
 	instance = booleanValueOf("instance"),
 	arguments = arguments()

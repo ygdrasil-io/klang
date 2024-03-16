@@ -1,6 +1,5 @@
 package klang.parser.json.type
 
-import klang.domain.UnresolvedTypeRef
 import klang.domain.typeOf
 import kotlinx.serialization.json.*
 

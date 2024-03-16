@@ -815,9 +815,9 @@ public enum class TextureAspect(
 }
 
 public enum class TextureDimension(
-	public val `value`: Int,
+	public override val `value`: Int,
 	public val stringValue: String
-) {
+) : EnumerationWithValue {
 	`_1d`(0, "1d"),
 	`_2d`(1, "2d"),
 	`_3d`(2, "3d"),

@@ -21,7 +21,7 @@ data class BindGroupDescriptor(
 	data class BufferBinding(
 		var buffer: Buffer,
 		var offset: GPUSize64? = null,
-		var size: GPUSize64? = null
+		var size: GPUSize64? = buffer.size
 	) : BindGroupResource
 
 	data class SamplerBinding(

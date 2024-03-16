@@ -2,10 +2,7 @@ package io.ygdrasil.wgpu
 
 import com.sun.jna.NativeLong
 import com.sun.jna.Pointer
-import dev.krud.shapeshift.ShapeShiftBuilder
-import dev.krud.shapeshift.enums.AutoMappingStrategy
 import dev.krud.shapeshift.transformer.base.MappingTransformer
-import dev.krud.shapeshift.transformer.base.MappingTransformerContext
 import io.ygdrasil.wgpu.internal.jvm.*
 
 actual class Device(internal val handler: WGPUDeviceImpl) : AutoCloseable {
@@ -37,7 +34,7 @@ actual class Device(internal val handler: WGPUDeviceImpl) : AutoCloseable {
 			?.let(::Buffer) ?: error("fail to create buffer")
 
 	actual fun createBindGroup(descriptor: BindGroupDescriptor): BindGroup =
-		descriptor.convert()
+		bindGroupDescriptorMapper.map<BindGroupDescriptor, WGPUBindGroupDescriptor>(descriptor)
 			.let { wgpuDeviceCreateBindGroup(handler, it) }
 			?.let(::BindGroup) ?: error("fail to create bind group")
 
@@ -57,50 +54,33 @@ actual class Device(internal val handler: WGPUDeviceImpl) : AutoCloseable {
 
 }
 
-val textureDescriptorMapper = ShapeShiftBuilder()
-	.withMapping<TextureDescriptor, WGPUTextureDescriptor> {
-		autoMap(AutoMappingStrategy.BY_NAME)
-		TextureDescriptor::format mappedTo WGPUTextureDescriptor::format withTransformer EnumerationTransformer()
-		TextureDescriptor::dimension mappedTo WGPUTextureDescriptor::dimension withTransformer EnumerationTransformer()
-		TextureDescriptor::size mappedTo WGPUTextureDescriptor::size withTransformer GPUExtent3DDictStrictTransformer()
-	}
-	.build()
-
-val samplerDescriptorMapper = ShapeShiftBuilder()
-	.withMapping<SamplerDescriptor, WGPUSamplerDescriptor> {
-		autoMap(AutoMappingStrategy.BY_NAME)
-
-	}
-	.build()
-
-
-private fun TextureDescriptor.convert(): WGPUTextureDescriptor = WGPUTextureDescriptor().also {
-	it.size.apply {
-		width = size.width
-		height = size.height
-		depthOrArrayLayers = size.depthOrArrayLayers
-	}
-	it.format = format.value
-	it.usage = usage
-	/* Iterable<GPUIntegerCoordinate> | GPUExtent3DDictStrict */
-	it.mipLevelCount = mipLevelCount
-
-	it.sampleCount = sampleCount
-	it.dimension = dimension?.value
-	/* "1d" | "2d" | "3d" */
-
-	/* "r8unorm" | "r8snorm" | "r8uint" | "r8sint" | "r16uint" | "r16sint" | "r16float" | "rg8unorm" | "rg8snorm" | "rg8uint" | "rg8sint" | "r32uint" | "r32sint" | "r32float" | "rg16uint" | "rg16sint" | "rg16float" | "rgba8unorm" | "rgba8unorm-srgb" | "rgba8snorm" | "rgba8uint" | "rgba8sint" | "bgra8unorm" | "bgra8unorm-srgb" | "rgb9e5ufloat" | "rgb10a2uint" | "rgb10a2unorm" | "rg11b10ufloat" | "rg32uint" | "rg32sint" | "rg32float" | "rgba16uint" | "rgba16sint" | "rgba16float" | "rgba32uint" | "rgba32sint" | "rgba32float" | "stencil8" | "depth16unorm" | "depth24plus" | "depth24plus-stencil8" | "depth32float" | "depth32float-stencil8" | "bc1-rgba-unorm" | "bc1-rgba-unorm-srgb" | "bc2-rgba-unorm" | "bc2-rgba-unorm-srgb" | "bc3-rgba-unorm" | "bc3-rgba-unorm-srgb" | "bc4-r-unorm" | "bc4-r-snorm" | "bc5-rg-unorm" | "bc5-rg-snorm" | "bc6h-rgb-ufloat" | "bc6h-rgb-float" | "bc7-rgba-unorm" | "bc7-rgba-unorm-srgb" | "etc2-rgb8unorm" | "etc2-rgb8unorm-srgb" | "etc2-rgb8a1unorm" | "etc2-rgb8a1unorm-srgb" | "etc2-rgba8unorm" | "etc2-rgba8unorm-srgb" | "eac-r11unorm" | "eac-r11snorm" | "eac-rg11unorm" | "eac-rg11snorm" | "astc-4x4-unorm" | "astc-4x4-unorm-srgb" | "astc-5x4-unorm" | "astc-5x4-unorm-srgb" | "astc-5x5-unorm" | "astc-5x5-unorm-srgb" | "astc-6x5-unorm" | "astc-6x5-unorm-srgb" | "astc-6x6-unorm" | "astc-6x6-unorm-srgb" | "astc-8x5-unorm" | "astc-8x5-unorm-srgb" | "astc-8x6-unorm" | "astc-8x6-unorm-srgb" | "astc-8x8-unorm" | "astc-8x8-unorm-srgb" | "astc-10x5-unorm" | "astc-10x5-unorm-srgb" | "astc-10x6-unorm" | "astc-10x6-unorm-srgb" | "astc-10x8-unorm" | "astc-10x8-unorm-srgb" | "astc-10x10-unorm" | "astc-10x10-unorm-srgb" | "astc-12x10-unorm" | "astc-12x10-unorm-srgb" | "astc-12x12-unorm" | "astc-12x12-unorm-srgb" */
-	it.viewFormatCount
-	TODO()
-	//it.viewFormats = viewFormats
-	/* "r8unorm" | "r8snorm" | "r8uint" | "r8sint" | "r16uint" | "r16sint" | "r16float" | "rg8unorm" | "rg8snorm" | "rg8uint" | "rg8sint" | "r32uint" | "r32sint" | "r32float" | "rg16uint" | "rg16sint" | "rg16float" | "rgba8unorm" | "rgba8unorm-srgb" | "rgba8snorm" | "rgba8uint" | "rgba8sint" | "bgra8unorm" | "bgra8unorm-srgb" | "rgb9e5ufloat" | "rgb10a2uint" | "rgb10a2unorm" | "rg11b10ufloat" | "rg32uint" | "rg32sint" | "rg32float" | "rgba16uint" | "rgba16sint" | "rgba16float" | "rgba32uint" | "rgba32sint" | "rgba32float" | "stencil8" | "depth16unorm" | "depth24plus" | "depth24plus-stencil8" | "depth32float" | "depth32float-stencil8" | "bc1-rgba-unorm" | "bc1-rgba-unorm-srgb" | "bc2-rgba-unorm" | "bc2-rgba-unorm-srgb" | "bc3-rgba-unorm" | "bc3-rgba-unorm-srgb" | "bc4-r-unorm" | "bc4-r-snorm" | "bc5-rg-unorm" | "bc5-rg-snorm" | "bc6h-rgb-ufloat" | "bc6h-rgb-float" | "bc7-rgba-unorm" | "bc7-rgba-unorm-srgb" | "etc2-rgb8unorm" | "etc2-rgb8unorm-srgb" | "etc2-rgb8a1unorm" | "etc2-rgb8a1unorm-srgb" | "etc2-rgba8unorm" | "etc2-rgba8unorm-srgb" | "eac-r11unorm" | "eac-r11snorm" | "eac-rg11unorm" | "eac-rg11snorm" | "astc-4x4-unorm" | "astc-4x4-unorm-srgb" | "astc-5x4-unorm" | "astc-5x4-unorm-srgb" | "astc-5x5-unorm" | "astc-5x5-unorm-srgb" | "astc-6x5-unorm" | "astc-6x5-unorm-srgb" | "astc-6x6-unorm" | "astc-6x6-unorm-srgb" | "astc-8x5-unorm" | "astc-8x5-unorm-srgb" | "astc-8x6-unorm" | "astc-8x6-unorm-srgb" | "astc-8x8-unorm" | "astc-8x8-unorm-srgb" | "astc-10x5-unorm" | "astc-10x5-unorm-srgb" | "astc-10x6-unorm" | "astc-10x6-unorm-srgb" | "astc-10x8-unorm" | "astc-10x8-unorm-srgb" | "astc-10x10-unorm" | "astc-10x10-unorm-srgb" | "astc-12x10-unorm" | "astc-12x10-unorm-srgb" | "astc-12x12-unorm" | "astc-12x12-unorm-srgb" */
-
-	it.label = label
+private val textureDescriptorMapper = mapper<TextureDescriptor, WGPUTextureDescriptor> {
+	TextureDescriptor::format mappedTo WGPUTextureDescriptor::format withTransformer EnumerationTransformer()
+	TextureDescriptor::dimension mappedTo WGPUTextureDescriptor::dimension withTransformer EnumerationTransformer()
+	TextureDescriptor::size mappedTo WGPUTextureDescriptor::size withTransformer GPUExtent3DDictStrictTransformer()
 }
 
-private fun BindGroupDescriptor.convert(): WGPUBindGroupDescriptor = WGPUBindGroupDescriptor().also {
-	TODO()
+private val samplerDescriptorMapper = mapper<SamplerDescriptor, WGPUSamplerDescriptor> { }
+
+private val bindGroupDescriptorMapper = mapper<BindGroupDescriptor, WGPUBindGroupDescriptor> {
+	BindGroupDescriptor::layout mappedTo WGPUBindGroupDescriptor::layout withTransformer BindGroupLayoutTransformer()
+	BindGroupDescriptor::entries mappedTo WGPUBindGroupDescriptor::entries withTransformer MappingTransformer<Array<BindGroupDescriptor.BindGroupEntry>, Array<WGPUBindGroupEntry.ByReference>> { context ->
+		context.originalValue?.toStructureArray { bindGroupEntry ->
+			binding = bindGroupEntry.binding
+			when (val resource = bindGroupEntry.resource) {
+				is BindGroupDescriptor.BufferBinding -> {
+					size = resource.size
+					offset = resource.offset
+					buffer = resource.buffer.handler
+				}
+
+				is BindGroupDescriptor.SamplerBinding -> sampler = resource.sampler.handler
+				is BindGroupDescriptor.TextureViewBinding -> textureView = resource.view.handler
+			}
+		}
+	}
 }
+
 
 private fun BufferDescriptor.convert(): WGPUBufferDescriptor = WGPUBufferDescriptor().also {
 	it.usage = usage

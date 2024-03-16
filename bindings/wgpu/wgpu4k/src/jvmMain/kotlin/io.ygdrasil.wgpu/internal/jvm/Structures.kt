@@ -402,6 +402,7 @@ public open class WGPUAdapterProperties : Structure {
 	"textureView"
 )
 public open class WGPUBindGroupEntry : Structure {
+
 	/**
 	 * mapped from (typedef Optional[const WGPUChainedStruct] =
 	 * Declared([a8(next):[*:b1]i4(sType)x4](WGPUChainedStruct)))*
@@ -413,37 +414,37 @@ public open class WGPUBindGroupEntry : Structure {
 	 * mapped from uint32_t
 	 */
 	@JvmField
-	public var binding: Int = 0
+	public var binding: Int? = null
 
 	/**
 	 * mapped from WGPUBuffer
 	 */
 	@JvmField
-	public var buffer: WGPUBuffer = WGPUBufferImpl()
+	public var buffer: WGPUBuffer? = null
 
 	/**
 	 * mapped from uint64_t
 	 */
 	@JvmField
-	public var offset: Long = 0
+	public var offset: Long? = null
 
 	/**
 	 * mapped from uint64_t
 	 */
 	@JvmField
-	public var size: Long = 0
+	public var size: Long? = null
 
 	/**
 	 * mapped from WGPUSampler
 	 */
 	@JvmField
-	public var sampler: WGPUSampler = WGPUSamplerImpl()
+	public var sampler: WGPUSampler? = null
 
 	/**
 	 * mapped from WGPUTextureView
 	 */
 	@JvmField
-	public var textureView: WGPUTextureView = WGPUTextureViewImpl()
+	public var textureView: WGPUTextureView? = null
 
 	public constructor(pointer: Pointer?) : super(pointer)
 
@@ -2545,7 +2546,7 @@ public open class WGPUVertexAttribute : Structure {
 	) : WGPUVertexAttribute(pointer), Structure.ByValue
 }
 
-@Structure.FieldOrder("nextInChain", "label", "layout", "entryCount", "entries")
+@Structure.FieldOrder("nextInChain", "label", "layout", "entryCount", "entriesPtr")
 public open class WGPUBindGroupDescriptor : Structure {
 	/**
 	 * mapped from (typedef Optional[const WGPUChainedStruct] =
@@ -2564,20 +2565,29 @@ public open class WGPUBindGroupDescriptor : Structure {
 	 * mapped from WGPUBindGroupLayout
 	 */
 	@JvmField
-	public var layout: WGPUBindGroupLayout = WGPUBindGroupLayoutImpl()
+	public var layout: WGPUBindGroupLayout? = null
 
 	/**
 	 * mapped from size_t
 	 */
 	@JvmField
-	public var entryCount: NativeLong = com.sun.jna.NativeLong(0)
+	public var entryCount: NativeLong? = null
 
 	/**
 	 * mapped from (typedef Optional[const WGPUBindGroupEntry] =
 	 * Declared([a8(nextInChain):[*:b1]i4(binding)x4a8(buffer):[*:b1]j8(offset)j8(size)a8(sampler):[*:b1]a8(textureView):[*:b1]](WGPUBindGroupEntry)))*
 	 */
 	@JvmField
-	public var entries: Pointer? = null
+	public var entriesPtr: Pointer? = null
+
+	public var entries: Array<WGPUBindGroupEntry.ByReference>? = null
+
+	override fun write() {
+		entries?.forEach { it.write() }
+		entryCount = NativeLong(entries?.size?.toLong() ?: 0L)
+		entriesPtr = entries?.getOrNull(0)?.pointer
+		super.write()
+	}
 
 	public constructor(pointer: Pointer?) : super(pointer)
 
@@ -3134,7 +3144,7 @@ public open class WGPUTextureDescriptor : Structure {
 	 * mapped from WGPUTextureUsageFlags
 	 */
 	@JvmField
-	public var usage: WGPUTextureUsageFlags = 0
+	public var usage: WGPUTextureUsageFlags? = null
 
 	/**
 	 * mapped from WGPUTextureDimension
@@ -3146,13 +3156,13 @@ public open class WGPUTextureDescriptor : Structure {
 	 * mapped from WGPUExtent3D
 	 */
 	@JvmField
-	public var size: WGPUExtent3D = WGPUExtent3D()
+	public var size: WGPUExtent3D? = null
 
 	/**
 	 * mapped from WGPUTextureFormat
 	 */
 	@JvmField
-	public var format: Int = 0
+	public var format: Int? = null
 
 	/**
 	 * mapped from uint32_t

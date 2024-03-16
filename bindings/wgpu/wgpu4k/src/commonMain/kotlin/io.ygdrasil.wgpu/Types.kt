@@ -32,11 +32,11 @@ typealias GPUSignedOffset32 = Number
 
 typealias GPUSize32 = Int
 
-typealias GPUSize32Out = Number
+typealias GPUSize32Out = Int
 
 typealias GPUSize64 = Long
 
-typealias GPUSize64Out = Number
+typealias GPUSize64Out = Long
 
 typealias GPUStencilValue = Int
 

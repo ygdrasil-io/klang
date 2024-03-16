@@ -12,6 +12,9 @@ actual class Buffer(internal val handler: GPUBuffer) : AutoCloseable {
 		check(handler != null) { "handler should not be null" }
 	}
 
+	actual val size: GPUSize64
+		get() = handler.size
+
 	actual fun getMappedRange(offset: GPUSize64?, size: GPUSize64?): ByteArray = when {
 		size == null && offset != null -> handler.getMappedRange(offset)
 		size == null && offset == null -> handler.getMappedRange()

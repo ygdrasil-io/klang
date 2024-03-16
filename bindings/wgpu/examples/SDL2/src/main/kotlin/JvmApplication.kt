@@ -28,7 +28,6 @@ suspend fun jvmApplication() = (WGPU.createInstance() ?: error("fail to wgpu ins
 		?: error("fail to get device")
 
 	renderingContext.computeSurfaceCapabilities(adapter)
-	renderingContext.configure(device)
 
 	val application = object : Application(
 		renderingContext,

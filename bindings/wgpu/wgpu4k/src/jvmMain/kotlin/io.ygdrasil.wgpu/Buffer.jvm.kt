@@ -1,12 +1,12 @@
 package io.ygdrasil.wgpu
 
 import com.sun.jna.NativeLong
-import io.ygdrasil.wgpu.internal.jvm.WGPUBuffer
-import io.ygdrasil.wgpu.internal.jvm.wgpuBufferGetMappedRange
-import io.ygdrasil.wgpu.internal.jvm.wgpuBufferRelease
-import io.ygdrasil.wgpu.internal.jvm.wgpuBufferUnmap
+import io.ygdrasil.wgpu.internal.jvm.*
 
 actual class Buffer(internal val handler: WGPUBuffer) : AutoCloseable {
+
+	actual val size: GPUSize64
+		get() = wgpuBufferGetSize(handler)
 
 	actual fun getMappedRange(offset: GPUSize64?, size: GPUSize64?): ByteArray {
 		wgpuBufferGetMappedRange(handler, offset?.toNativeLong(), size?.toNativeLong())
